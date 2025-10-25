@@ -23,23 +23,27 @@ footer{text-align:center;font-size:0.8em;color:#888;padding:40px;}
 </style>
 </head>
 <body>
-<button id="music-btn" onclick="toggleMusic()">🎵</button>
+<button id="music-btn" onclick="toggleMusic()">🎧</button>
 <audio id="bgm" loop>
   <source src="https://cdn.pixabay.com/download/audio/2023/08/22/audio_b1f3d5bdbb.mp3?filename=future-beat-172475.mp3" type="audio/mpeg" />
 </audio>
+
 <header>
   <h1>AI ART DIARY ⚡</h1>
   <p>Where algorithm meets intuition — Culaliya’s creative & cosmic lab.</p>
 </header>
+
 <section>
   <h2>🎨 Featured Works</h2>
-  <p>🧹 SwiftUI Projects ｜ 🎵 Suno Music Prompts ｜ 🦙 Midjourney Concepts</p>
+  <p>🧩 SwiftUI Projects ｜ 🎵 Suno Music Prompts ｜ 🦙 Midjourney Concepts</p>
   <img src="IMG_4730.JPG" style="max-width:100%;border-radius:12px;margin-top:20px;" />
 </section>
+
 <section>
   <h2>📱 My Published Apps (From API)</h2>
   <div class="card-grid" id="app-grid">讀取中...</div>
 </section>
+
 <section>
   <h2>🔮 八字命盤分析 (API 模式)</h2>
   <p>輸入生日時間，網站會從 API 取得命盤資料：</p>
@@ -48,14 +52,18 @@ footer{text-align:center;font-size:0.8em;color:#888;padding:40px;}
   <button onclick="getFortune()">開始分析</button>
   <div id="result">等待輸入...</div>
 </section>
+
 <footer>
   <a href="https://github.com/Culaliya/ai-art-diary" style="color:#888;text-decoration:none;">View Source on GitHub</a>
 </footer>
+
 <script>
 function toggleMusic(){
-  const m=document.getElementById('bgm'), b=document.getElementById('music-btn');
-  if(m.paused){m.play(); b.textContent='\u23F8';} else {m.pause(); b.textContent='\uD83C\uDFB5';}
+  const m=document.getElementById('bgm');
+  const b=document.getElementById('music-btn');
+  if(m.paused){m.play(); b.textContent='⏸';} else {m.pause(); b.textContent='🎧';}
 }
+
 async function loadApps(){
   const grid=document.getElementById('app-grid');
   try{
@@ -71,9 +79,10 @@ async function loadApps(){
       </div>`;
     }).join('');
   }catch(err){
-    grid.textContent='\u26a0\ufe0f 無法載入 app 資料';
+    grid.textContent='⚠️ 無法載入 app 資料';
   }
 }
+
 async function getFortune(){
   const date=document.getElementById('birthDate').value;
   if(!date){alert('請輸入生日'); return;}
@@ -86,7 +95,7 @@ async function getFortune(){
       <p>主五行：<strong>${f.element}</strong></p>
       <p>${f.msg}</p>`;
   }catch(e){
-    r.textContent='\u26a0\ufe0f 無法讀取 API 資料';
+    r.textContent='⚠️ 無法讀取 API 資料';
   }
 }
 loadApps();
