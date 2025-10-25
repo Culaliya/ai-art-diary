@@ -1,73 +1,42 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Culaliya’s AI Art Diary 🌌</title>
 <style>
-body{
-  margin:0;
-  font-family:'Orbitron',sans-serif;
-  color:#fff;
-  background:radial-gradient(circle at 50% 30%,#101624 0%,#06090f 100%);
-  overflow-x:hidden;
-}
+body{margin:0;font-family:'Orbitron',sans-serif;color:#fff;
+background:radial-gradient(circle at 50% 30%,#101624 0%,#06090f 100%);
+overflow-x:hidden;}
 header{text-align:center;padding:80px 20px;}
-h1{font-size:3em;color:#0ff;text-shadow:0 0 20px #0ff;animation:glow 3s ease-in-out infinite alternate;}
-@keyframes glow{from{text-shadow:0 0 10px #0ff;}to{text-shadow:0 0 25px #ff3eff;}}
+h1{font-size:3em;color:#0ff;text-shadow:0 0 20px #0ff;
+animation:glow 3s ease-in-out infinite alternate;}
+@keyframes glow{from{text-shadow:0 0 10px #0ff;}
+to{text-shadow:0 0 25px #ff3eff;}}
 section{max-width:1000px;margin:auto;padding:60px 20px;}
 h2{color:#ff3eff;margin-bottom:20px;}
-.card-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:20px;
-}
-.card{
-  background:rgba(255,255,255,0.05);
-  border:1px solid #0ff3;
-  border-radius:12px;
-  padding:20px;
-  text-align:center;
-  transition:all .3s;
-}
-.card:hover{
-  transform:translateY(-5px);
-  box-shadow:0 0 20px #0ff5;
-}
-.card img{
-  max-width:100%;
-  border-radius:8px;
-}
-a.button{
-  display:inline-block;
-  margin-top:10px;
-  padding:6px 12px;
-  border:1px solid #0ff;
-  color:#0ff;
-  border-radius:6px;
-  text-decoration:none;
-}
-a.button:hover{
-  background:#0ff;
-  color:#000;
-}
-#result{
-  margin-top:20px;padding:20px;background:rgba(255,255,255,0.05);
-  border:1px solid #333;border-radius:8px;
-}
+.card-grid{display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;}
+.card{background:rgba(255,255,255,0.05);border:1px solid #0ff3;
+border-radius:12px;padding:20px;text-align:center;transition:all .3s;}
+.card:hover{transform:translateY(-5px);box-shadow:0 0 20px #0ff5;}
+.card img{max-width:100%;border-radius:8px;}
+a.button{display:inline-block;margin-top:10px;padding:6px 12px;
+border:1px solid #0ff;color:#0ff;border-radius:6px;text-decoration:none;}
+a.button:hover{background:#0ff;color:#000;}
+#result{margin-top:20px;padding:20px;background:rgba(255,255,255,0.05);
+border:1px solid #333;border-radius:8px;}
 footer{text-align:center;font-size:0.8em;color:#888;padding:40px;}
-#music-btn{
-  position:fixed;top:20px;right:20px;
-  background:rgba(0,0,0,0.4);border:1px solid #0ff;border-radius:50%;
-  color:#0ff;width:50px;height:50px;cursor:pointer;font-size:22px;
-  z-index:5;backdrop-filter:blur(4px);
-}
+#music-btn{position:fixed;top:20px;right:20px;
+background:rgba(0,0,0,0.4);border:1px solid #0ff;border-radius:50%;
+color:#0ff;width:50px;height:50px;cursor:pointer;font-size:22px;
+z-index:5;backdrop-filter:blur(4px);}
 </style>
 </head>
 <body>
 <button id="music-btn" onclick="toggleMusic()">🎧</button>
 <audio id="bgm" loop>
-  <source src="https://cdn.pixabay.com/download/audio/2023/08/22/audio_b1f3d5bdbb.mp3?filename=future-beat-172475.mp3" type="audio/mpeg">
+  <source src="https://cdn.pixabay.com/download/audio/2023/08/22/audio_b1f3d5bdbb.mp3?filename=future-beat-172475.mp3" type="audio/mpeg" />
 </audio>
 
 <header>
@@ -78,38 +47,19 @@ footer{text-align:center;font-size:0.8em;color:#888;padding:40px;}
 <section>
   <h2>🎨 Featured Works</h2>
   <p>🧩 SwiftUI Projects ｜ 🎵 Suno Music Prompts ｜ 🦙 Midjourney Concepts</p>
-  <img src="IMG_4730.JPG" style="max-width:100%;border-radius:12px;margin-top:20px;">
+  <img src="IMG_4730.JPG" style="max-width:100%;border-radius:12px;margin-top:20px;" />
 </section>
 
 <section>
-  <h2>📱 My Published Apps</h2>
-  <div class="card-grid">
-    <div class="card">
-      <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/00/aa/11/icon.png/460x0w.webp" alt="ChemoCat">
-      <h3>🧪 ChemoCat 化學貓</h3>
-      <p>化學學習 × 遊戲化互動實驗室。</p>
-      <a class="button" href="https://apps.apple.com/app/id1234567890" target="_blank">App Store</a>
-    </div>
-    <div class="card">
-      <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/ab/cc/33/icon.png/460x0w.webp" alt="Cloud Organizer">
-      <h3>☁️ Cloud Organizer 雲朵整理師</h3>
-      <p>療癒系待辦清單 App，讓雲朵替你收心。</p>
-      <a class="button" href="https://apps.apple.com/app/id0987654321" target="_blank">App Store</a>
-    </div>
-    <div class="card">
-      <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple231/v4/dd/ee/44/icon.png/460x0w.webp" alt="Spiral Wizard">
-      <h3>🪄 Spiral Wizard 螺旋魔法師</h3>
-      <p>數學×幻想×魔法邏輯的解謎冒險遊戲。</p>
-      <a class="button" href="https://apps.apple.com/app/id1357911131" target="_blank">App Store</a>
-    </div>
-  </div>
+  <h2>📱 My Published Apps (From API)</h2>
+  <div class="card-grid" id="app-grid">讀取中...</div>
 </section>
 
 <section>
   <h2>🔮 八字命盤分析 (API 模式)</h2>
   <p>輸入生日時間，網站會從 API 取得命盤資料：</p>
-  <input type="date" id="birthDate">
-  <input type="time" id="birthTime">
+  <input type="date" id="birthDate" />
+  <input type="time" id="birthTime" />
   <button onclick="getFortune()">開始分析</button>
   <div id="result">等待輸入...</div>
 </section>
@@ -119,29 +69,44 @@ footer{text-align:center;font-size:0.8em;color:#888;padding:40px;}
 </footer>
 
 <script>
+// === 音樂控制 ===
 function toggleMusic(){
-  const music=document.getElementById('bgm');
-  const btn=document.getElementById('music-btn');
-  if(music.paused){music.play();btn.textContent='⏸';}
-  else{music.pause();btn.textContent='🎧';}
+  const m=document.getElementById('bgm'),b=document.getElementById('music-btn');
+  if(m.paused){m.play();b.textContent='⏸';}else{m.pause();b.textContent='🎧';}
 }
 
-// === 模擬 API 模式 ===
-// 未來可改成 fetch('https://culaliya.github.io/data/fortune.json')
-async function getFortune(){
-  const d=document.getElementById('birthDate').value;
-  if(!d){alert('請輸入生日！');return;}
-  const res=await fetch('https://raw.githubusercontent.com/Culaliya/ai-art-diary/main/data/fortune.json')
-    .then(r=>r.json()).catch(()=>null);
-  const rDiv=document.getElementById('result');
-  if(!res){rDiv.textContent='⚠️ 無法讀取 API 資料';return;}
-  const {year,stem,branch,element,msg}=res;
-  rDiv.innerHTML=`
-  <h3>命理結果報告（來自 API）</h3>
-  <p>天干地支：<strong>${stem}${branch}</strong></p>
-  <p>主五行：<strong>${element}</strong></p>
-  <p>${msg}</p>`;
+// === 讀取 App 卡片資料 ===
+async function loadApps(){
+  const grid=document.getElementById('app-grid');
+  try{
+    const res=await fetch('https://raw.githubusercontent.com/Culaliya/ai-art-diary/main/data/apps.json');
+    const apps=await res.json();
+    grid.innerHTML=apps.map(app=>`
+      <div class="card">
+        <img src="${app.icon}" alt="${app.name}">
+        <h3>${app.name}</h3>
+        <p>${app.desc}</p>
+        <a class="button" href="${app.link}" target="_blank">App Store</a>
+      </div>`).join('');
+  }catch(e){grid.textContent='⚠️ 無法載入 app 資料';}
 }
+
+// === 八字 API 分析 ===
+async function getFortune(){
+  const date=document.getElementById('birthDate').value;
+  if(!date){alert('請輸入生日');return;}
+  const r=document.getElementById('result');
+  try{
+    const res=await fetch('https://raw.githubusercontent.com/Culaliya/ai-art-diary/main/data/fortune.json');
+    const f=await res.json();
+    r.innerHTML=`<h3>命理結果報告（來自 API）</h3>
+      <p>天干地支：<strong>${f.stem}${f.branch}</strong></p>
+      <p>主五行：<strong>${f.element}</strong></p>
+      <p>${f.msg}</p>`;
+  }catch(e){r.textContent='⚠️ 無法讀取 API 資料';}
+}
+
+loadApps();
 </script>
 </body>
 </html>
