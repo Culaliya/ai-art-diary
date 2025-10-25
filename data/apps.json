@@ -1,20 +1,23 @@
 [
   {
-    "name": "🥲 ChemoCat 化學貓",
-    "desc": "化學學習 × 遊戲化互動實驗室。",
+    "name": "🐱 ChemoCat 化學貓",
+    "desc": "化學學習 × 遊戲化作動工作室。",
     "icon": "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/00/aa/11/icon.png/460x0w.webp",
-    "link": "https://apps.apple.com/app/id1234567890"
+    "link": "https://apps.apple.com/app/id1234567890",
+    "music": "https://cdn.pixabay.com/download/audio/2023/08/22/audio_b1f3d5bdbb.mp3?filename=future-beat-172475.mp3"
   },
   {
     "name": "☁️ Cloud Organizer 雲朵整理師",
-    "desc": "療癒系待計清單 App，讓雲朵替你收心。",
+    "desc": "療癒系待證清單 App，讓雲朵替你收心。",
     "icon": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/ab/cc/33/icon.png/460x0w.webp",
-    "link": "https://apps.apple.com/app/id0987654321"
+    "link": "https://apps.apple.com/app/id0987654321",
+    "music": "https://cdn.pixabay.com/download/audio/2023/08/22/audio_b1f3d5bdbb.mp3?filename=future-beat-172475.mp3"
   },
   {
-    "name": "🧡 Spiral Wizard 螺旋魔法師",
-    "desc": "數學×幻想×魔法邏輯的解謎冒險遊戲。",
+    "name": "🤱 Spiral Wizard 螺旋魔法師",
+    "desc": "數學×幻想×魔法邏輯的解答冒險遊戲。",
     "icon": "https://is1-ssl.mzstatic.com/image/thumb/Purple231/v4/dd/ee/44/icon.png/460x0w.webp",
-    "link": "https://apps.apple.com/app/id1357911131"
+    "link": "https://apps.apple.com/app/id1357911131",
+    "music": "https://cdn.pixabay.com/download/audio/2023/08/22/audio_b1f3d5bdbb.mp3?filename=future-beat-172475.mp3"
   }
 ]
