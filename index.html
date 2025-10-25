@@ -5,58 +5,96 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Culaliya’s AI Art Diary 🌌</title>
 <style>
-  body{
-    margin:0;
-    font-family:'Orbitron',sans-serif;
-    color:#fff;
-    background:radial-gradient(circle at 50% 30%,#101624 0%,#06090f 100%);
-    overflow-x:hidden;
-  }
-  header{text-align:center;padding:80px 20px;}
-  h1{font-size:3em;color:#0ff;text-shadow:0 0 20px #0ff;animation:glow 3s ease-in-out infinite alternate;}
-  @keyframes glow{from{text-shadow:0 0 10px #0ff;}to{text-shadow:0 0 25px #ff3eff;}}
-  section{max-width:900px;margin:auto;padding:60px 20px;}
-  h2{color:#ff3eff;}
-  input,button{
-    background:#000;border:1px solid #0ff;color:#0ff;
-    padding:8px 12px;border-radius:4px;
-  }
-  #result{
-    margin-top:20px;
-    padding:20px;
-    background:rgba(255,255,255,0.05);
-    border:1px solid #333;
-    border-radius:8px;
-  }
-  footer{text-align:center;font-size:0.8em;color:#888;padding:40px;}
+body{
+  margin:0;
+  font-family:'Orbitron',sans-serif;
+  color:#fff;
+  background:radial-gradient(circle at 50% 30%,#101624 0%,#06090f 100%);
+  overflow:hidden;
+}
+header{text-align:center;padding:80px 20px;z-index:2;position:relative;}
+h1{font-size:3em;color:#0ff;text-shadow:0 0 20px #0ff;animation:glow 3s ease-in-out infinite alternate;}
+@keyframes glow{from{text-shadow:0 0 10px #0ff;}to{text-shadow:0 0 25px #ff3eff;}}
+section{max-width:900px;margin:auto;padding:40px 20px;z-index:2;position:relative;}
+h2{color:#ff3eff;}
+input,button{
+  background:#000;border:1px solid #0ff;color:#0ff;
+  padding:8px 12px;border-radius:4px;
+}
+#result{
+  margin-top:20px;padding:20px;background:rgba(255,255,255,0.05);
+  border:1px solid #333;border-radius:8px;
+}
+footer{text-align:center;font-size:0.8em;color:#888;padding:40px;z-index:2;position:relative;}
+#loader{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background:#000;display:flex;align-items:center;justify-content:center;
+  animation:fadeout 2s ease 2.5s forwards;z-index:10;
+}
+.dot{
+  width:10px;height:10px;margin:5px;border-radius:50%;
+  background:#0ff;box-shadow:0 0 15px #0ff;animation:blink 1.5s infinite alternate;
+}
+.dot:nth-child(2){animation-delay:0.2s;}
+.dot:nth-child(3){animation-delay:0.4s;}
+@keyframes blink{from{opacity:0.3;}to{opacity:1;transform:scale(1.3);}}
+@keyframes fadeout{to{opacity:0;visibility:hidden;}}
+#music-btn{
+  position:fixed;top:20px;right:20px;
+  background:rgba(0,0,0,0.4);border:1px solid #0ff;border-radius:50%;
+  color:#0ff;width:50px;height:50px;cursor:pointer;font-size:22px;
+  z-index:5;backdrop-filter:blur(4px);
+}
 </style>
 </head>
 <body>
-  <header>
-    <h1>AI ART DIARY ⚡</h1>
-    <p>Where algorithm meets intuition — Culaliya’s creative & cosmic lab.</p>
-  </header>
+<div id="loader">
+  <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+</div>
 
-  <section>
-    <h2>🎵 Featured Works</h2>
-    <p>🧩 SwiftUI Projects｜🎵 Suno Music Prompts｜🦙 Midjourney Concepts</p>
-    <img src="IMG_4730.JPG" style="max-width:100%;border-radius:12px;margin-top:20px;">
-  </section>
+<button id="music-btn" onclick="toggleMusic()">🎧</button>
+<audio id="bgm" loop>
+  <!-- 可換成你 Suno 生成音樂的連結 -->
+  <source src="https://cdn.pixabay.com/download/audio/2023/08/22/audio_b1f3d5bdbb.mp3?filename=future-beat-172475.mp3" type="audio/mpeg">
+</audio>
 
-  <section>
-    <h2>🔮 八字命盤分析 Beta</h2>
-    <p>輸入你的生日時間（西元）：</p>
-    <input type="date" id="birthDate"> 
-    <input type="time" id="birthTime">
-    <button onclick="analyze()">開始分析</button>
-    <div id="result"></div>
-  </section>
+<header>
+  <h1>AI ART DIARY ⚡</h1>
+  <p>Where algorithm meets intuition — Culaliya’s creative &amp; cosmic lab.</p>
+</header>
 
-  <footer>
-    <a href="https://github.com/Culaliya/ai-art-diary" style="color:#888;text-decoration:none;">View Source on GitHub</a>
-  </footer>
+<section>
+  <h2>🎨 Featured Works</h2>
+  <p>🧩 SwiftUI Projects ｜ 🎵 Suno Music Prompts ｜ 🦙 Midjourney Concepts</p>
+  <img src="IMG_4730.JPG" style="max-width:100%;border-radius:12px;margin-top:20px;">
+</section>
+
+<section>
+  <h2>🔮 八字命盤分析 v2</h2>
+  <p>輸入你的生日時間（西元）：</p>
+  <input type="date" id="birthDate">
+  <input type="time" id="birthTime">
+  <button onclick="analyze()">開始分析</button>
+  <div id="result"></div>
+</section>
+
+<footer>
+  <a href="https://github.com/Culaliya/ai-art-diary" style="color:#888;text-decoration:none;">View Source on GitHub</a>
+</footer>
 
 <script>
+// === 載入動畫 ===
+window.addEventListener('load',()=>{document.body.classList.add('loaded');});
+
+// === 背景音樂控制 ===
+function toggleMusic(){
+  const music=document.getElementById('bgm');
+  const btn=document.getElementById('music-btn');
+  if(music.paused){music.play();btn.textContent='⏸';}
+  else{music.pause();btn.textContent='🎧';}
+}
+
+// === 八字分析主程式（簡化模型） ===
 function analyze(){
   const d=document.getElementById('birthDate').value;
   const t=document.getElementById('birthTime').value||'00:00';
@@ -66,19 +104,34 @@ function analyze(){
   const month=date.getMonth()+1;
   const day=date.getDate();
   const hour=date.getHours();
-  // 簡化示例：用年尾數推五行
-  const elements=['木','火','土','金','水'];
-  const element=elements[year%5];
   const stems=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
   const branches=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+  const elements=['木','火','土','金','水'];
   const stem=stems[year%10];
   const branch=branches[year%12];
+  const element=elements[year%5];
+
+  // 模擬五行比例
+  const ratio=[0,0,0,0,0];for(let i=0;i<5;i++)ratio[i]=Math.random()*100|0;
+  const total=ratio.reduce((a,b)=>a+b);
+  const perc=ratio.map(r=>Math.round(r/total*100));
+
+  let msg="";
+  const dom=elements.indexOf(element);
+  if(dom===0) msg="你屬木，思考敏銳，適合創意發展與教育指導。";
+  if(dom===1) msg="你屬火，熱情外放，適合藝術、演藝、領導職。";
+  if(dom===2) msg="你屬土，穩重務實，擅長規劃、管理與資源整合。";
+  if(dom===3) msg="你屬金，堅毅果斷，適合科技、金融與法律領域。";
+  if(dom===4) msg="你屬水，靈感豐富，適合研究、創作與心理諮詢。";
+
   document.getElementById('result').innerHTML=
-  `<h3>結果報告</h3>
+  `<h3>命理結果報告</h3>
    <p>西元：${year} 年 ${month} 月 ${day} 日 ${hour} 時</p>
    <p>天干地支：<strong>${stem}${branch}</strong></p>
    <p>主五行傾向：<strong>${element}</strong></p>
-   <p>這只是快速示範版，可再連結完整命盤運算。</p>`;
+   <p>${msg}</p>
+   <h4>五行比例：</h4>
+   <ul>${elements.map((e,i)=>`<li>${e} ${perc[i]}%</li>`).join('')}</ul>`;
 }
 </script>
 </body>
