@@ -1,125 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <title>AI Art Diary 🎨 | Culaliya</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    :root {
-      --neon-blue: #0ff;
-      --deep-space: #06090f;
-      --accent: #ff3eff;
-    }
-    body {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: radial-gradient(circle at 50% 30%, #101624 0%, #06090f 100%);
-      color: white;
-      font-family: 'Orbitron', sans-serif;
-      overflow: hidden;
-    }
-    h1 {
-      font-size: 3em;
-      color: var(--neon-blue);
-      text-shadow: 0 0 20px var(--neon-blue);
-      letter-spacing: 2px;
-      margin-bottom: 0.4em;
-      animation: glow 3s ease-in-out infinite alternate;
-    }
-    @keyframes glow {
-      from { text-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue); }
-      to { text-shadow: 0 0 25px var(--accent), 0 0 50px var(--neon-blue); }
-    }
-    p {
-      font-size: 1.1em;
-      max-width: 600px;
-      text-align: center;
-      color: #cfd9e6;
-      line-height: 1.6;
-      margin: 0.4em 0;
-    }
-    .highlight {
-      margin-top: 2em;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.4em;
-      font-size: 1em;
-    }
-    .highlight span {
-      background: linear-gradient(90deg, var(--neon-blue), var(--accent));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: 1px;
-    }
-    footer {
-      position: absolute;
-      bottom: 20px;
-      font-size: 0.8em;
-      color: #666;
-    }
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: -1;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Culaliya’s AI Art Diary 🌌</title>
+<style>
+  body{
+    margin:0;
+    font-family:'Orbitron',sans-serif;
+    color:#fff;
+    background:radial-gradient(circle at 50% 30%,#101624 0%,#06090f 100%);
+    overflow-x:hidden;
+  }
+  header{text-align:center;padding:80px 20px;}
+  h1{font-size:3em;color:#0ff;text-shadow:0 0 20px #0ff;animation:glow 3s ease-in-out infinite alternate;}
+  @keyframes glow{from{text-shadow:0 0 10px #0ff;}to{text-shadow:0 0 25px #ff3eff;}}
+  section{max-width:900px;margin:auto;padding:60px 20px;}
+  h2{color:#ff3eff;}
+  input,button{
+    background:#000;border:1px solid #0ff;color:#0ff;
+    padding:8px 12px;border-radius:4px;
+  }
+  #result{
+    margin-top:20px;
+    padding:20px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid #333;
+    border-radius:8px;
+  }
+  footer{text-align:center;font-size:0.8em;color:#888;padding:40px;}
+</style>
 </head>
 <body>
-  <canvas id="stars"></canvas>
-  <h1>AI ART DIARY ⚡</h1>
-  <p>Exploring the edge between algorithm and imagination.<br>
-     A living archive of <strong>AI-generated music, art, and emotions</strong>.</p>
-  <div class="highlight">
-    <span>🧩 SwiftUI Projects</span>
-    <span>🎵 Suno Music Prompts</span>
-    <span>🦙 Midjourney Concept Art</span>
-  </div>
+  <header>
+    <h1>AI ART DIARY ⚡</h1>
+    <p>Where algorithm meets intuition — Culaliya’s creative & cosmic lab.</p>
+  </header>
+
+  <section>
+    <h2>🎵 Featured Works</h2>
+    <p>🧩 SwiftUI Projects｜🎵 Suno Music Prompts｜🦙 Midjourney Concepts</p>
+    <img src="IMG_4730.JPG" style="max-width:100%;border-radius:12px;margin-top:20px;">
+  </section>
+
+  <section>
+    <h2>🔮 八字命盤分析 Beta</h2>
+    <p>輸入你的生日時間（西元）：</p>
+    <input type="date" id="birthDate"> 
+    <input type="time" id="birthTime">
+    <button onclick="analyze()">開始分析</button>
+    <div id="result"></div>
+  </section>
+
   <footer>
     <a href="https://github.com/Culaliya/ai-art-diary" style="color:#888;text-decoration:none;">View Source on GitHub</a>
   </footer>
 
-  <script>
-    const canvas = document.getElementById('stars');
-    const ctx = canvas.getContext('2d');
-    let stars = [];
-    function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      stars = Array.from({length: 200}, () => ({
-        x: Math.random()*canvas.width,
-        y: Math.random()*canvas.height,
-        r: Math.random()*1.5,
-        o: 0.2+Math.random()*0.8
-      }));
-    }
-    function draw() {
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      ctx.fillStyle = 'rgba(255,255,255,0.8)';
-      for (let s of stars) {
-        ctx.beginPath();
-        ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-        ctx.fillStyle = `rgba(255,255,255,${s.o})`;
-        ctx.fill();
-      }
-    }
-    function animate() {
-      for (let s of stars) {
-        s.y += 0.05;
-        if (s.y > canvas.height) s.y = 0;
-      }
-      draw();
-      requestAnimationFrame(animate);
-    }
-    window.addEventListener('resize', resize);
-    resize();
-    animate();
-  </script>
+<script>
+function analyze(){
+  const d=document.getElementById('birthDate').value;
+  const t=document.getElementById('birthTime').value||'00:00';
+  if(!d){alert('請先輸入生日！');return;}
+  const date=new Date(`${d}T${t}`);
+  const year=date.getFullYear();
+  const month=date.getMonth()+1;
+  const day=date.getDate();
+  const hour=date.getHours();
+  // 簡化示例：用年尾數推五行
+  const elements=['木','火','土','金','水'];
+  const element=elements[year%5];
+  const stems=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+  const branches=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+  const stem=stems[year%10];
+  const branch=branches[year%12];
+  document.getElementById('result').innerHTML=
+  `<h3>結果報告</h3>
+   <p>西元：${year} 年 ${month} 月 ${day} 日 ${hour} 時</p>
+   <p>天干地支：<strong>${stem}${branch}</strong></p>
+   <p>主五行傾向：<strong>${element}</strong></p>
+   <p>這只是快速示範版，可再連結完整命盤運算。</p>`;
+}
+</script>
 </body>
 </html>
