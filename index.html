@@ -169,15 +169,6 @@ window.addEventListener('load', () => {
   <div id="result">等待輸入...</div>
 </section>
 
-<!-- 💡 Inspiration Quote (本地靈感模式 + hover 閃爍) -->
-<section>
-  <h2>💡 Inspiration Quote</h2>
-  <div id="quoteSection" class="quote" style="color:#0ff;font-size:1.1em;text-align:center;">
-    <span id="localQuote">🌙 Loading inspiration...</span>
-  </div>
-</section>
-
-
 <script>
 const memeCat = document.getElementById("memeCat");
 let isThinking = false;
@@ -192,16 +183,28 @@ async function talkToCat() {
   isThinking = true;
 
   try {
+    console.log('Sending request to /api/gemini with prompt:', input);
     const res = await fetch("/api/gemini", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ prompt: input }),
     });
+    
+    console.log('Response status:', res.status);
+    
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    
     const data = await res.json();
-    const text = data.reply || "喵喵喵～（訊號被黑洞吃掉）";
+    console.log('Response data:', data);
+    
+    // 支援多種可能的回應格式
+    const text = data.reply || data.response || data.message || data.text || "喵喵喵～（訊號被黑洞吃掉）";
     replyBox.innerText = text;
   } catch (err) {
-    replyBox.innerText = "喵？（系統炸掉了，快請奴才修理）";
+    console.error('Gemini API error:', err);
+    replyBox.innerText = `喵？錯誤：${err.message}（請檢查 Console 了解詳情）`;
   } finally {
     memeCat.style.transform = "scale(1) rotate(0deg)";
     isThinking = false;
@@ -238,40 +241,6 @@ memeCat.addEventListener("mouseleave", () => {
 </script>
 
   
-
-<script>
-// === 本地靈感語錄 ===
-const localQuotes = [
-  "✨ 問題不是 AI 是否有靈魂，而是我們是否還保有想像 ✨",
-  "🎵 Let algorithms dream with us.",
-  "🌙 藝術，不需要睡覺。",
-  "💫 Creativity is coded chaos.",
-  "🌌 Every pixel remembers its light.",
-  "🪞 想像力是人類最古老的運算。",
-  "🧩 You are the glitch the universe adores."
-];
-
-// 每次載入顯示隨機一句
-document.getElementById('localQuote').innerText =
-  localQuotes[Math.floor(Math.random()*localQuotes.length)];
-</script>
-
-<style>
-/* Hover 閃爍動畫 */
-#localQuote {
-  display:inline-block;
-  cursor:pointer;
-  transition:filter 0.3s ease, text-shadow 0.3s ease;
-}
-#localQuote:hover {
-  animation:glimmer 1.2s ease-in-out infinite alternate;
-}
-@keyframes glimmer {
-  0% { text-shadow:0 0 6px #0ff; filter:brightness(1); }
-  50% { text-shadow:0 0 20px #ff3eff; filter:brightness(1.4); }
-  100% { text-shadow:0 0 6px #0ff; filter:brightness(1); }
-}
-</style>
 
 
 <!-- Utterances 留言牆 -->
@@ -415,31 +384,21 @@ async function loadWeather(){
 }
 loadWeather();
 
-// ====== 靈感語錄 API ======
-async function loadQuote(){
-  try{
-    const res=await fetch('https://api.quotable.io/random?nocache='+Date.now());
-    const data=await res.json();
-    document.getElementById('quoteSection').innerText=`"${data.content}" — ${data.author}`;
-  }catch{
-    document.getElementById('quoteSection').innerText='靈感語錄載入失敗';
-  }
-}
-loadQuote();
-
 // ====== NASA APOD ======
 async function loadApod(){
   const apodDiv=document.getElementById('apod');
   try{
     const res=await fetch('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY');
     const data=await res.json();
+    console.log('NASA APOD data:', data); // 調試用
     if(data.media_type==='image'){
-      apodDiv.innerHTML=`<img src="${data.url}" alt="${data.title}" style="max-width:100%;border-radius:12px;box-shadow:0 0 20px #0ff5;"><p>${data.title}</p>`;
-    }else{
-      apodDiv.innerHTML=`<iframe src="${data.url}" frameborder="0" allowfullscreen style="width:100%;height:400px;border-radius:12px;"></iframe><p>${data.title}</p>`;
+      apodDiv.innerHTML=`<img src="${data.url}" alt="${data.title}" style="max-width:100%;border-radius:12px;box-shadow:0 0 20px #0ff5;"><p style="margin-top:15px;color:#aaf;">${data.title}</p><p style="color:#ccc;font-size:0.9em;margin-top:8px;">${data.explanation}</p>`;
+    }else if(data.media_type==='video'){
+      apodDiv.innerHTML=`<iframe src="${data.url}" frameborder="0" allowfullscreen style="width:100%;height:400px;border-radius:12px;"></iframe><p style="margin-top:15px;color:#aaf;">${data.title}</p>`;
     }
-  }catch{
-    apodDiv.innerText='NASA 星圖載入失敗';
+  }catch(err){
+    console.error('NASA APOD error:', err);
+    apodDiv.innerText='NASA 星圖載入失敗: ' + err.message;
   }
 }
 loadApod();
