@@ -280,16 +280,15 @@ async function loadApod(){
   }
 }
 loadApod();
-
-// ====== Le Chat 靈感互動機 ======
-lelet LECHAT_API_KEY = localStorage.getItem('LECHAT_API_KEY');
+// Le Chat feature removed
+async function askAI() {
+  alert('Le Chat 功能已移除');}
+// ====== Le Chat 靈感互動機 ======lelet LECHAT_API_KEY = localStorage.getItem('LECHAT_API_KEY');
 if (!LECHAT_API_KEY) {
   LECHAT_API_KEY = prompt('請輸入你的 Le Chat API 金鑰:');
   localStorage.setItem('LECHAT_API_KEY', LECHAT_API_KEY);
 }
-
-async function askAI(){
-  const input=document.getElementById('chatInput').value.trim();
+/*async function ask alert('Le Chat 功能已移除');return;AI(){  const input=document.getElementById('chatInput').value.trim();
   if(!input){alert('請輸入內容');return;}
   document.getElementById('chatOutput').innerText='思考中...';
   try{
@@ -308,8 +307,11 @@ async function askAI(){
     document.getElementById('chatOutput').innerText=data.reply||data.choices?.[0]?.message?.content||'AI沒有回覆';
   }catch{
     document.getElementById('chatOutput').innerText='AI 回覆失敗';
-  }
-}
-</script>
+/  }}
+*
+
+ document.querySelector('.chat')?.style.display = 'none';async function askAI() {
+  alert('Le Chat 功能已移除');
+}//script>
 </body>
 </html>
