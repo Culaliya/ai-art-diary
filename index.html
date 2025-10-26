@@ -17,7 +17,7 @@ h2{color:#ff3eff;margin-bottom:16px;}
 #particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-2;background:#000;}
 .app-container{display:flex;flex-direction:column;gap:20px;}
 .app-card{display:flex;align-items:center;gap:20px;background:rgba(255,255,255,0.05);border:1px solid #0ff3;border-radius:12px;padding:20px;transition:transform .3s, box-shadow .3s;position:relative;}
-.app-card:hover{transform:translateY(-5px);box-shadow:0 0 25px #0ff;}
+.app-card:hover{transform:translateY(-5px);box-shadow:0 0 25px #0ff;} -->
 .app-image{width:120px;height:120px;border-radius:16px;object-fit:cover;}
 .app-info h3{margin:0 0 8px 0;color:#0ff;}
 .app-info p{color:#ccc;margin:0 0 10px 0;}
@@ -202,7 +202,7 @@ async function talkToCat() {
     replyBox.innerText = text;
   } catch (err) {
     replyBox.innerText = "喵？（系統炸掉了，快請奴才修理）";
-  } finally {
+  } finally 
     memeCat.style.transform = "scale(1) rotate(0deg)";
     isThinking = false;
   }
@@ -236,7 +236,7 @@ memeCat.addEventListener("mouseenter", () => {
 memeCat.addEventListener("mouseleave", () => {
   if (!isThinking) memeCat.style.transform = "rotate(0deg) scale(1)";
 });
-</script>
+</ -->scrit>
 
   
 
