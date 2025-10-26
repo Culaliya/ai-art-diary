@@ -1,130 +1,236 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Culaliya’s AI Art Diary 🌌</title>
 <style>
-body{margin:0;font-family:'Orbitron',sans-serif;color:#fff;background:radial-gradient(circle at 50% 30%,#101624 0%,#06090f 100%);overflow-x:hidden;}
+/* ====== 全域樣式 ====== */
+body{
+  margin:0;font-family:'Orbitron',sans-serif;color:#fff;
+  overflow-x:hidden;background:#000;position:relative;
+}
 header{text-align:center;padding:80px 20px;}
-h1{font-size:3em;color:#0ff;text-shadow:0 0 20px #0ff;animation:glow 3s ease-in-out infinite alternate;}
-@keyframes glow{from{text-shadow:0 0 10px #0ff;}to{text-shadow:0 0 25px #ff3eff;}}
+h1{font-size:3em;color:#0ff;text-shadow:0 0 20px #0ff;
+  animation:glow 3s ease-in-out infinite alternate;}
+@keyframes glow{from{text-shadow:0 0 10px #0ff;}
+  to{text-shadow:0 0 25px #ff3eff;}}
 section{max-width:1000px;margin:auto;padding:60px 20px;}
 h2{color:#ff3eff;margin-bottom:20px;}
+
+/* ====== 光粒子背景 ====== */
+#particles{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  z-index:-2;background:#000;
+}
+
+/* ====== App 卡片橫向排列 ====== */
+.app-container{display:flex;flex-direction:column;gap:20px;}
+.app-card{
+  display:flex;align-items:center;gap:20px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid #0ff3;
+  border-radius:12px;padding:20px;
+  transition:transform .3s, box-shadow .3s;
+  position:relative;
+}
+.app-card:hover{
+  transform:translateY(-5px);box-shadow:0 0 25px #0ff;
+}
+.app-image{width:120px;height:120px;border-radius:16px;object-fit:cover;}
+.app-info h3{margin:0 0 8px 0;color:#0ff;}
+.app-info p{color:#ccc;margin:0 0 10px 0;}
+.button{
+  display:inline-block;padding:6px 12px;border:1px solid #0ff;
+  color:#0ff;border-radius:6px;text-decoration:none;transition:.2s;
+}
+.button:hover{background:#0ff;color:#000;}
+
+/* ====== 影音區塊 ====== */
 .media-flex{display:flex;flex-wrap:wrap;gap:20px;}
 .video-container{flex:2;min-width:300px;aspect-ratio:16/9;}
 .spotify-container{flex:1;min-width:300px;}
-.video-container iframe,.spotify-container iframe{width:100%;height:100%;border:none;border-radius:12px;}
+.video-container iframe,.spotify-container iframe{
+  width:100%;height:100%;border:none;border-radius:12px;
+}
+
+/* ====== Midjourney 輪播 ====== */
 .slideshow-container{position:relative;width:100%;max-width:800px;margin:auto;}
 .slide{display:none;width:100%;border-radius:12px;box-shadow:0 0 20px #0ff5;}
-.app-card{display:flex;align-items:center;gap:20px;background:rgba(255,255,255,0.05);border:1px solid #0ff3;border-radius:12px;padding:20px;margin-bottom:20px;}
-.app-image{width:120px;height:120px;border-radius:16px;object-fit:cover;}
-.app-info h3{margin:0 0 8px 0;color:#0ff;}
-.app-info p{color:#ccc;margin-bottom:10px;}
-a.button{display:inline-block;margin-top:4px;padding:6px 12px;border:1px solid #0ff;color:#0ff;border-radius:6px;text-decoration:none;}
-a.button:hover{background:#0ff;color:#000;}
-#result{margin-top:20px;padding:20px;background:rgba(255,255,255,0.05);border:1px solid #333;border-radius:8px;}
-footer{text-align:center;font-size:0.8em;color:#888;padding:40px;}
-#music-btn{position:fixed;top:20px;right:20px;background:rgba(0,0,0,0.4);border:1px solid #0ff;border-radius:50%;color:#0ff;width:50px;height:50px;cursor:pointer;font-size:22px;z-index:5;backdrop-filter:blur(4px);}
+
+/* ====== 點擊亮光特效 ====== */
+.ripple{
+  position:fixed;border-radius:50%;pointer-events:none;
+  border:2px solid #0ff;animation:ripple 0.6s ease-out;
+}
+@keyframes ripple{
+  from{transform:scale(0);opacity:0.8;}
+  to{transform:scale(10);opacity:0;}
+}
 </style>
 </head>
 <body>
-<button id="music-btn" onclick="toggleMusic()">🎧</button>
-<audio id="bgm" loop>
-  <source src="https://cdn.pixabay.com/download/audio/2023/08/22/audio_b1f3d5bdbb.mp3?filename=future-beat-172475.mp3" type="audio/mpeg">
-</audio>
+<canvas id="particles"></canvas>
+
+<!-- 音效檔 -->
+<audio id="hover-sound" src="music/hover.mp3"></audio>
+<audio id="click-sound" src="music/click.mp3"></audio>
+
 <header>
-<h1>AI ART DIARY ⚡</h1>
-<p>Where algorithm meets intuition — Culaliya’s creative & cosmic lab.</p>
+  <h1>AI ART DIARY ⚡</h1>
+  <p>Where algorithm meets intuition — Culaliya’s creative & cosmic lab.</p>
 </header>
+
+<!-- Featured 影片 + Spotify -->
 <section>
-<h2>🎥 Featured Video & Music</h2>
-<div class="media-flex">
-  <div class="video-container">
-    <iframe src="https://www.youtube.com/embed/videoseries?list=PLf1VNbciujbc-QSR2wNNCvYZCv1cZ88ef" title="YouTube playlist" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  <h2>🎥 Featured Video & Music</h2>
+  <div class="media-flex">
+    <div class="video-container">
+      <iframe src="https://www.youtube.com/embed/videoseries?list=PLf1VNbciujbc-QSR2wNNCvYZCv1cZ88ef"
+        title="YouTube playlist" allow="autoplay; clipboard-write; encrypted-media; fullscreen"
+        allowfullscreen></iframe>
+    </div>
+    <div class="spotify-container">
+      <iframe style="border-radius:12px"
+        src="https://open.spotify.com/embed/track/41kWAOvNb6WWtB6o7nRkzz?utm_source=generator"
+        width="100%" height="352" frameborder="0"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+    </div>
   </div>
-  <div class="spotify-container">
-    <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/41kWAOvNb6WWtB6o7nRkzz?utm_source=generator" width="100%" height="352" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+</section>
+
+<!-- Midjourney 輪播 -->
+<section>
+  <h2>🪄 Midjourney Gallery</h2>
+  <div class="slideshow-container">
+    <img class="slide" src="assets/midjourney/mid1.jpg">
+    <img class="slide" src="assets/midjourney/mid2.jpg">
+    <img class="slide" src="assets/midjourney/mid3.jpg">
   </div>
-</div>
 </section>
+
+<!-- App Cards -->
 <section>
-<h2>🪄 Midjourney Gallery</h2>
-<div class="slideshow-container">
-  <img class="slide" src="assets/midjourney/mid1.jpg">
-  <img class="slide" src="assets/midjourney/mid2.jpg">
-  <img class="slide" src="assets/midjourney/mid3.jpg">
-</div>
+  <h2>📱 My Published Apps</h2>
+  <div class="app-container" id="app-container">Loading apps...</div>
 </section>
+
+<!-- 八字命盤分析 -->
 <section>
-<h2>📱 My Published Apps</h2>
-<div id="app-container"></div>
+  <h2>🔮 八字命盤分析 (API 模式)</h2>
+  <p>輸入生日時間，網站會從 API 取得命盤資料：</p>
+  <input type="date" id="birthDate">
+  <input type="time" id="birthTime">
+  <button class="button" onclick="getFortune()">開始分析</button>
+  <div id="result">等待輸入...</div>
 </section>
-<section>
-<h2>🔮 八字命盤分析 (API 模式)</h2>
-<p>輸入生日時間，網站會從 API 取得命盤資料：</p>
-<input type="date" id="birthDate">
-<input type="time" id="birthTime">
-<button onclick="getFortune()">開始分析</button>
-<div id="result">等待輸入...</div>
-</section>
-<footer>
-<a href="https://github.com/Culaliya/ai-art-diary" style="color:#888;text-decoration:none;">View Source on GitHub</a>
+
+<footer style="text-align:center;color:#888;padding:40px;">
+  <a href="https://github.com/Culaliya/ai-art-diary" style="color:#888;text-decoration:none;">View Source on GitHub</a>
 </footer>
+
 <script>
-// background music control
-function toggleMusic(){
-  const m = document.getElementById('bgm');
-  const btn = document.getElementById('music-btn');
-  if(m.paused){ m.play(); btn.textContent = '⏸'; } else { m.pause(); btn.textContent = '🎧'; }
+// ====== 光粒子背景 ======
+const canvas=document.getElementById('particles');
+const ctx=canvas.getContext('2d');
+let particles=[];
+function resizeCanvas(){
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+  particles=[];
+  for(let i=0;i<80;i++){
+    particles.push({
+      x:Math.random()*canvas.width,
+      y:Math.random()*canvas.height,
+      r:Math.random()*2+0.5,
+      dx:(Math.random()-0.5)*0.5,
+      dy:(Math.random()-0.5)*0.5,
+      hue:Math.random()*360
+    });
+  }
 }
-// load apps horizontally
+function drawParticles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{
+    p.x+=p.dx;p.y+=p.dy;
+    if(p.x<0||p.x>canvas.width)p.dx*=-1;
+    if(p.y<0||p.y>canvas.height)p.dy*=-1;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=`hsla(${p.hue},100%,65%,0.7)`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawParticles);
+}
+window.addEventListener('resize',resizeCanvas);
+resizeCanvas();drawParticles();
+
+// ====== Midjourney 輪播 ======
+let slideIndex=0;
+function showSlides(){
+  const slides=document.querySelectorAll('.slide');
+  slides.forEach((s,i)=>s.style.display=i===slideIndex?'block':'none');
+  slideIndex=(slideIndex+1)%slides.length;
+}
+setInterval(showSlides,3000);showSlides();
+
+// ====== App Cards 載入 ======
 async function loadApps(){
-  const container = document.getElementById('app-container');
+  const c=document.getElementById('app-container');
   try{
-    const res = await fetch('https://raw.githubusercontent.com/Culaliya/ai-art-diary/main/data/apps.json');
-    const apps = await res.json();
-    container.innerHTML = apps.map(app => {
-      return `<div class="app-card">
-        <img class="app-image" src="${app.icon}" alt="${app.name}">
+    const res=await fetch('https://raw.githubusercontent.com/Culaliya/ai-art-diary/main/data/apps.json');
+    const apps=await res.json();
+    c.innerHTML='';
+    apps.forEach(app=>{
+      const card=document.createElement('div');
+      card.className='app-card';
+      card.innerHTML=`
+        <img class="app-image" src="${app.icon}">
         <div class="app-info">
           <h3>${app.name}</h3>
           <p>${app.desc}</p>
           <a class="button" href="${app.link}" target="_blank">App Store</a>
-        </div>
-      </div>`;
-    }).join('');
-  } catch (e) {
-    container.textContent = '⚠️ 無法載入 app 資料';
-  }
+        </div>`;
+      c.appendChild(card);
+    });
+    addHoverSounds();
+  }catch(e){c.textContent='⚠️ 無法載入 app 資料';}
 }
-// fortune analysis
-async function getFortune(){
-  const date = document.getElementById('birthDate').value;
-  if(!date){ alert('請輸入生日'); return; }
-  const r = document.getElementById('result');
-  try{
-    const res = await fetch('https://raw.githubusercontent.com/Culaliya/ai-art-diary/main/data/fortune.json');
-    const f = await res.json();
-    r.innerHTML = `<h3>命理結果報告（來自 API）</h3>
-      <p>天干地支：<strong>${f.stem}${f.branch}</strong></p>
-      <p>主五行：<strong>${f.element}</strong></p>
-      <p>${f.msg}</p>`;
-  } catch(e){
-    r.textContent = '⚠️ 無法讀取 API 資料';
-  }
-}
-// slideshow for midjourney
-let slideIndex = 0;
-function showSlides(){
-  const slides = document.querySelectorAll('.slide');
-  slides.forEach((slide, idx) => {
-    slide.style.display = (idx === slideIndex) ? 'block' : 'none';
-  });
-  slideIndex = (slideIndex + 1) % slides.length;
-}
-setInterval(showSlides, 3000);
 loadApps();
+
+// ====== 八字分析 ======
+async function getFortune(){
+  const date=document.getElementById('birthDate').value;
+  if(!date){alert('請輸入生日');return;}
+  const r=document.getElementById('result');
+  try{
+    const res=await fetch('https://raw.githubusercontent.com/Culaliya/ai-art-diary/main/data/fortune.json');
+    const f=await res.json();
+    r.innerHTML=`<h3>命理結果報告（來自 API）</h3>
+      <p>天干地支：<strong>${f.stem}${f.branch}</strong></p>
+      <p>主五行：<strong>${f.element}</strong></p><p>${f.msg}</p>`;
+  }catch(e){r.textContent='⚠️ 無法讀取 API 資料';}
+}
+
+// ====== Hover 音效 ======
+function addHoverSounds(){
+  const hoverSound=document.getElementById('hover-sound');
+  document.querySelectorAll('.app-card,.button').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{hoverSound.currentTime=0;hoverSound.play();});
+  });
+}
+
+// ====== 點擊亮光特效 + 音效 ======
+document.addEventListener('click',e=>{
+  const clickSound=document.getElementById('click-sound');
+  clickSound.currentTime=0;clickSound.play();
+  const ripple=document.createElement('div');
+  ripple.className='ripple';
+  ripple.style.left=`${e.clientX}px`;
+  ripple.style.top=`${e.clientY}px`;
+  document.body.appendChild(ripple);
+  ripple.addEventListener('animationend',()=>ripple.remove());
+});
 </script>
 </body>
 </html>
