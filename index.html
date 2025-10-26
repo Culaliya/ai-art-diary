@@ -45,15 +45,48 @@ h2{color:#ff3eff;margin-bottom:16px;}
 <header>
   <h1>AI ART DIARY ⚡</h1>
   <p>Where algorithm meets intuition — Culaliya’s creative & cosmic lab.</p>
-  <!-- 天氣 + Le Chat 互動機 -->
-  <div id="weather-quote">
-    <span id="weather">載入天氣中…</span>
-    <div class="chat">
-      <input type="text" id="chatInput" placeholder="輸入靈感或問題..." style="padding:4px;border-radius:4px;border:1px solid #0ff;background:#111;color:#0ff;width:70%;">
-      <button class="button" onclick="askAI()" style="margin-left:5px;">送出</button>
-      <div id="chatOutput" style="margin-top:6px;color:#0ff;min-height:20px;"></div>
-    </div>
+  <!-- 天氣 + 靈感語錄條 -->
+<div id="weather-quote">
+  <span id="weather">載入天氣中…</span>
+
+  <!-- 靈感語錄條 -->
+  <div id="inspiration-bar" style="text-align:center;margin-top:12px;color:#0ff;font-size:1.1em;opacity:0;transition:opacity 1.2s ease-in-out;">
+    <span id="inspirationText">✨ 問題不是 AI 是否有靈魂，而是我們是否還保有想像 ✨</span>
   </div>
+</div>
+
+<script>
+// === 靈感語錄自動切換 + 淡入淡出動畫 ===
+const quotes = [
+  "✨ 問題不是 AI 是否有靈魂，而是我們是否還保有想像 ✨",
+  "🎵 Let algorithms dream with us.",
+  "💫 Creativity is coded chaos.",
+  "🌙 藝術，不需要睡覺。",
+  "🌌 Every pixel remembers its light.",
+  "🪞 想像力是人類最古老的運算。",
+  "🧩 You are the glitch the universe adores."
+];
+
+let index = 0;
+const inspirationBar = document.getElementById('inspiration-bar');
+const inspirationText = document.getElementById('inspirationText');
+
+function fadeQuote() {
+  inspirationBar.style.opacity = 0;
+  setTimeout(() => {
+    index = (index + 1) % quotes.length;
+    inspirationText.innerText = quotes[index];
+    inspirationBar.style.opacity = 1;
+  }, 1200);
+}
+
+// 每 8 秒換一句（含淡入淡出）
+setInterval(fadeQuote, 8000);
+window.addEventListener('load', () => {
+  inspirationBar.style.opacity = 1; // 首次淡入
+});
+</script>
+
 </header>
 
 <!-- Featured 影片 + Spotify -->
