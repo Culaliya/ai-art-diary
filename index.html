@@ -138,11 +138,48 @@ window.addEventListener('load', () => {
   <div id="result">等待輸入...</div>
 </section>
 
-<!-- 靈感語錄：移到八字分析下面 -->
+<!-- 💡 Inspiration Quote (本地靈感模式 + hover 閃爍) -->
 <section>
   <h2>💡 Inspiration Quote</h2>
-  <div id="quoteSection" class="quote">載入靈感中…</div>
+  <div id="quoteSection" class="quote" style="color:#0ff;font-size:1.1em;text-align:center;">
+    <span id="localQuote">🌙 Loading inspiration...</span>
+  </div>
 </section>
+
+<script>
+// === 本地靈感語錄 ===
+const localQuotes = [
+  "✨ 問題不是 AI 是否有靈魂，而是我們是否還保有想像 ✨",
+  "🎵 Let algorithms dream with us.",
+  "🌙 藝術，不需要睡覺。",
+  "💫 Creativity is coded chaos.",
+  "🌌 Every pixel remembers its light.",
+  "🪞 想像力是人類最古老的運算。",
+  "🧩 You are the glitch the universe adores."
+];
+
+// 每次載入顯示隨機一句
+document.getElementById('localQuote').innerText =
+  localQuotes[Math.floor(Math.random()*localQuotes.length)];
+</script>
+
+<style>
+/* Hover 閃爍動畫 */
+#localQuote {
+  display:inline-block;
+  cursor:pointer;
+  transition:filter 0.3s ease, text-shadow 0.3s ease;
+}
+#localQuote:hover {
+  animation:glimmer 1.2s ease-in-out infinite alternate;
+}
+@keyframes glimmer {
+  0% { text-shadow:0 0 6px #0ff; filter:brightness(1); }
+  50% { text-shadow:0 0 20px #ff3eff; filter:brightness(1.4); }
+  100% { text-shadow:0 0 6px #0ff; filter:brightness(1); }
+}
+</style>
+
 
 <!-- Utterances 留言牆 -->
 <section>
