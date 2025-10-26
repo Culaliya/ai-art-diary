@@ -282,7 +282,12 @@ async function loadApod(){
 loadApod();
 
 // ====== Le Chat 靈感互動機 ======
-const LECHAT_API_KEY='Q9j7v7FfiGdpLY9mxcoBQJ37EHwkFfYD'; // 🔑← 將此處替換為你的 Le Chat API 金鑰
+lelet LECHAT_API_KEY = localStorage.getItem('LECHAT_API_KEY');
+if (!LECHAT_API_KEY) {
+  LECHAT_API_KEY = prompt('請輸入你的 Le Chat API 金鑰:');
+  localStorage.setItem('LECHAT_API_KEY', LECHAT_API_KEY);
+}
+
 async function askAI(){
   const input=document.getElementById('chatInput').value.trim();
   if(!input){alert('請輸入內容');return;}
