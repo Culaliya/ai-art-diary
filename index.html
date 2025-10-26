@@ -10,13 +10,13 @@ body{
   margin:0;font-family:'Orbitron',sans-serif;color:#fff;
   overflow-x:hidden;background:#000;position:relative;
 }
-header{text-align:center;padding:80px 20px;}
+header{text-align:center;padding:60px 20px;}
 h1{font-size:3em;color:#0ff;text-shadow:0 0 20px #0ff;
   animation:glow 3s ease-in-out infinite alternate;}
 @keyframes glow{from{text-shadow:0 0 10px #0ff;}
   to{text-shadow:0 0 25px #ff3eff;}}
-section{max-width:1000px;margin:auto;padding:60px 20px;}
-h2{color:#ff3eff;margin-bottom:20px;}
+section{max-width:1000px;margin:auto;padding:40px 20px;}
+h2{color:#ff3eff;margin-bottom:16px;}
 
 /* ====== 光粒子背景 ====== */
 #particles{
@@ -67,6 +67,19 @@ h2{color:#ff3eff;margin-bottom:20px;}
   from{transform:scale(0);opacity:0.8;}
   to{transform:scale(10);opacity:0;}
 }
+
+/* ====== 天氣與靈感區塊 ====== */
+#weather-quote{
+  text-align:center;
+  margin-top:10px;
+  color:#aaf;
+  font-size:1em;
+}
+#weather-quote .quote{
+  margin-top:6px;
+  color:#ccc;
+  font-style:italic;
+}
 </style>
 </head>
 <body>
@@ -79,6 +92,10 @@ h2{color:#ff3eff;margin-bottom:20px;}
 <header>
   <h1>AI ART DIARY ⚡</h1>
   <p>Where algorithm meets intuition — Culaliya’s creative & cosmic lab.</p>
+  <div id="weather-quote">
+    <span id="weather">載入天氣中…</span>
+    <div class="quote" id="quote">載入靈感中…</div>
+  </div>
 </header>
 
 <!-- Featured 影片 + Spotify -->
@@ -99,7 +116,7 @@ h2{color:#ff3eff;margin-bottom:20px;}
   </div>
 </section>
 
-<!-- 改成通用標題的圖集 -->
+<!-- 圖集（更通用標題） -->
 <section>
   <h2>🖼️ Gallery</h2>
   <div class="slideshow-container">
@@ -107,6 +124,12 @@ h2{color:#ff3eff;margin-bottom:20px;}
     <img class="slide" src="assets/midjourney/mid2.jpg">
     <img class="slide" src="assets/midjourney/mid3.jpg">
   </div>
+</section>
+
+<!-- NASA APOD -->
+<section>
+  <h2>🌌 NASA Astronomy Picture of the Day</h2>
+  <div id="apod" style="text-align:center;">載入星圖中…</div>
 </section>
 
 <!-- App Cards -->
@@ -125,12 +148,25 @@ h2{color:#ff3eff;margin-bottom:20px;}
   <div id="result">等待輸入...</div>
 </section>
 
+<!-- Utterances 留言牆 -->
+<section>
+  <h2>💬 Comments</h2>
+  <!-- Utterances 會在這裡嵌入留言 -->
+  <script src="https://utteranc.es/client.js"
+    repo="Culaliya/ai-art-diary"
+    issue-term="pathname"
+    theme="github-dark"
+    crossorigin="anonymous"
+    async>
+  </script>
+</section>
+
 <footer style="text-align:center;color:#888;padding:40px;">
   <a href="https://github.com/Culaliya/ai-art-diary" style="color:#888;text-decoration:none;">View Source on GitHub</a>
 </footer>
 
 <script>
-// 光粒子背景
+// ====== 光粒子背景 ======
 const canvas=document.getElementById('particles');
 const ctx=canvas.getContext('2d');
 let particles=[];
@@ -165,7 +201,7 @@ function drawParticles(){
 window.addEventListener('resize',resizeCanvas);
 resizeCanvas();drawParticles();
 
-// 輪播
+// ====== 輪播 ======
 let slideIndex=0;
 function showSlides(){
   const slides=document.querySelectorAll('.slide');
@@ -174,7 +210,7 @@ function showSlides(){
 }
 setInterval(showSlides,3000);showSlides();
 
-// App Cards
+// ====== App Cards ======
 async function loadApps(){
   const c=document.getElementById('app-container');
   try{
@@ -198,7 +234,7 @@ async function loadApps(){
 }
 loadApps();
 
-// 八字 API
+// ====== 八字 API ======
 async function getFortune(){
   const date=document.getElementById('birthDate').value;
   if(!date){alert('請輸入生日');return;}
@@ -213,7 +249,7 @@ async function getFortune(){
   }catch{ r.textContent='⚠️ 無法讀取 API 資料'; }
 }
 
-// Hover 音效
+// ====== Hover 音效 ======
 function addHoverSounds(){
   const hoverSound=document.getElementById('hover-sound');
   document.querySelectorAll('.app-card,.button').forEach(el=>{
@@ -223,7 +259,7 @@ function addHoverSounds(){
   });
 }
 
-// 點擊特效 + 音效
+// ====== 點擊特效 + 音效 ======
 document.addEventListener('click',e=>{
   const clickSound=document.getElementById('click-sound');
   clickSound.currentTime=0;clickSound.play();
@@ -234,6 +270,69 @@ document.addEventListener('click',e=>{
   document.body.appendChild(ripple);
   ripple.addEventListener('animationend',()=>ripple.remove());
 });
+
+// ====== 天氣 API ======
+async function loadWeather(){
+  // 新竹市經緯度：緯度 24.8138, 經度 120.9675
+  const url='https://api.open-meteo.com/v1/forecast?latitude=24.8138&longitude=120.9675&current_weather=true';
+  try{
+    const res=await fetch(url);
+    const data=await res.json();
+    const w=data.current_weather;
+    // 簡易天氣代碼描述
+    const codes={
+      0:'晴朗',1:'主要晴朗',2:'部分多雲',3:'多雲',
+      45:'霧',48:'霧凇',
+      51:'細雨',53:'中雨',55:'大雨',
+      61:'小雨',63:'中雨',65:'大雨',
+      71:'小雪',73:'中雪',75:'大雪',
+      80:'陣雨',81:'中陣雨',82:'暴雨'
+    };
+    const weatherText=codes[w.weathercode]||'未知';
+    document.getElementById('weather').innerText=`新竹 ${w.temperature}°C，${weatherText}`;
+    // 根據天氣簡單改變粒子顏色（例如雨天偏藍、晴天偏黃）
+    particles.forEach(p=>{
+      if(w.weathercode>=51 && w.weathercode<=82){
+        p.hue=200+Math.random()*40; // 雨/雪 → 藍紫色系
+      }else{
+        p.hue=40+Math.random()*40; // 晴天 → 金黃橙色系
+      }
+    });
+  }catch{
+    document.getElementById('weather').innerText='天氣載入失敗';
+  }
+}
+loadWeather();
+
+// ====== 靈感語錄 API ======
+async function loadQuote(){
+  try{
+    const res=await fetch('https://api.quotable.io/random');
+    const data=await res.json();
+    document.getElementById('quote').innerText=`“${data.content}” — ${data.author}`;
+  }catch{
+    document.getElementById('quote').innerText='靈感語錄載入失敗';
+  }
+}
+loadQuote();
+
+// ====== NASA APOD ======
+async function loadApod(){
+  const apodDiv=document.getElementById('apod');
+  try{
+    const res=await fetch('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY');
+    const data=await res.json();
+    // 有些 APOD 可能是影片，需檢查 media_type
+    if(data.media_type==='image'){
+      apodDiv.innerHTML=`<img src="${data.url}" alt="${data.title}" style="max-width:100%;border-radius:12px;box-shadow:0 0 20px #0ff5;"><p>${data.title}</p>`;
+    }else{
+      apodDiv.innerHTML=`<iframe src="${data.url}" frameborder="0" allowfullscreen style="width:100%;height:400px;border-radius:12px;"></iframe><p>${data.title}</p>`;
+    }
+  }catch{
+    apodDiv.innerText='NASA 星圖載入失敗';
+  }
+}
+loadApod();
 </script>
 </body>
 </html>
