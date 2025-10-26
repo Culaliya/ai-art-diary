@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Culaliya’s AI Art Diary 🌌</title>
 <style>
-body{
+body {
   margin:0;font-family:'Orbitron',sans-serif;color:#fff;
   overflow-x:hidden;background:#000;position:relative;
 }
@@ -17,7 +17,7 @@ h2{color:#ff3eff;margin-bottom:16px;}
 #particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-2;background:#000;}
 .app-container{display:flex;flex-direction:column;gap:20px;}
 .app-card{display:flex;align-items:center;gap:20px;background:rgba(255,255,255,0.05);border:1px solid #0ff3;border-radius:12px;padding:20px;transition:transform .3s, box-shadow .3s;position:relative;}
-.app-card:hover{transform:translateY(-5px);box-shadow:0 0 25px #0ff;} -->
+.app-card:hover{transform:translateY(-5px);box-shadow:0 0 25px #0ff;}
 .app-image{width:120px;height:120px;border-radius:16px;object-fit:cover;}
 .app-info h3{margin:0 0 8px 0;color:#0ff;}
 .app-info p{color:#ccc;margin:0 0 10px 0;}
@@ -39,36 +39,46 @@ h2{color:#ff3eff;margin-bottom:16px;}
   50%  { box-shadow: 0 0 40px #0ff8, 0 0 80px #0ff4; }
   100% { box-shadow: 0 0 20px #0ff5, 0 0 40px #0ff2; }
 }
-  #catSection img {
-  animation: float 4s ease-in-out infinite alternate;
-  box-shadow: 0 0 25px #0ff8, 0 0 60px #0ff2; /* ✨藍光暈+柔光 */
+#catSection img {
+  animation: float 4s ease-in-out infinite alternate, glowPulse 3s ease-in-out infinite;
   cursor: pointer;
 }
 @keyframes float {
   from { transform: translateY(0px); }
   to { transform: translateY(-10px) rotate(1deg); }
 }
-
+#localQuote {
+  display:inline-block;cursor:pointer;
+  transition:filter 0.3s ease, text-shadow 0.3s ease;
+}
+#localQuote:hover {
+  animation:glimmer 1.2s ease-in-out infinite alternate;
+}
+@keyframes glimmer {
+  0% { text-shadow:0 0 6px #0ff; filter:brightness(1); }
+  50% { text-shadow:0 0 20px #ff3eff; filter:brightness(1.4); }
+  100% { text-shadow:0 0 6px #0ff; filter:brightness(1); }
+}
 </style>
 </head>
 <body>
 <canvas id="particles"></canvas>
 
-  <!-- ====== 🐱 AI Cosmic Meme Cat (Gemini) ====== -->
-<section>
+<!-- 🐈‍⬛ AI Cosmic Meme Cat -->
+<section id="catSection">
   <h2>🐈‍⬛ AI Cosmic Meme Cat 🪐</h2>
   <div id="catBox" style="text-align:center; margin:30px 0;">
-    <img id="memeCat" src="assets/blackcat.png"
-      alt="Meme Cat"
-      style="width:160px; border-radius:50%; box-shadow:0 0 20px #0ff8; transition:transform 0.3s;">
+    <img id="memeCat" src="assets/blackcat.png" alt="Meme Cat"
+      style="width:160px; border-radius:50%; transition:transform 0.3s;">
     <div style="margin-top:15px;">
-      <input id="catInput" placeholder="輸入一句話給貓咪..." 
+      <input id="catInput" placeholder="輸入一句話給貓咪..."
         style="padding:6px 10px; width:70%; border-radius:6px; border:1px solid #0ff; background:#111; color:#0ff;">
       <button class="button" onclick="talkToCat()">召喚喵言</button>
     </div>
     <div id="catReply" style="margin-top:20px; color:#0ff; min-height:40px; font-family:'Courier New', monospace;"></div>
   </div>
 </section>
+
 <!-- 音效 -->
 <audio id="hover-sound" src="music/hover.mp3"></audio>
 <audio id="click-sound" src="music/click.mp3"></audio>
@@ -76,51 +86,16 @@ h2{color:#ff3eff;margin-bottom:16px;}
 <header>
   <h1>AI ART DIARY ⚡</h1>
   <p>Where algorithm meets intuition — Culaliya’s creative & cosmic lab.</p>
-  <!-- 天氣 + 靈感語錄條 -->
-<div id="weather-quote">
-  <span id="weather">載入天氣中…</span>
 
-  <!-- 靈感語錄條 -->
-  <div id="inspiration-bar" style="text-align:center;margin-top:12px;color:#0ff;font-size:1.1em;opacity:0;transition:opacity 1.2s ease-in-out;">
-    <span id="inspirationText">✨ 問題不是 AI 是否有靈魂，而是我們是否還保有想像 ✨</span>
+  <div id="weather-quote">
+    <span id="weather">載入天氣中…</span>
+    <div id="inspiration-bar" style="text-align:center;margin-top:12px;color:#0ff;font-size:1.1em;opacity:0;transition:opacity 1.2s ease-in-out;">
+      <span id="inspirationText">✨ 問題不是 AI 是否有靈魂，而是我們是否還保有想像 ✨</span>
+    </div>
   </div>
-</div>
-
-<script>
-// === 靈感語錄自動切換 + 淡入淡出動畫 ===
-const quotes = [
-  "✨ 問題不是 AI 是否有靈魂，而是我們是否還保有想像 ✨",
-  "🎵 Let algorithms dream with us.",
-  "💫 Creativity is coded chaos.",
-  "🌙 藝術，不需要睡覺。",
-  "🌌 Every pixel remembers its light.",
-  "🪞 想像力是人類最古老的運算。",
-  "🧩 You are the glitch the universe adores."
-];
-
-let index = 0;
-const inspirationBar = document.getElementById('inspiration-bar');
-const inspirationText = document.getElementById('inspirationText');
-
-function fadeQuote() {
-  inspirationBar.style.opacity = 0;
-  setTimeout(() => {
-    index = (index + 1) % quotes.length;
-    inspirationText.innerText = quotes[index];
-    inspirationBar.style.opacity = 1;
-  }, 1200);
-}
-
-// 每 8 秒換一句（含淡入淡出）
-setInterval(fadeQuote, 8000);
-window.addEventListener('load', () => {
-  inspirationBar.style.opacity = 1; // 首次淡入
-});
-</script>
-
 </header>
 
-<!-- Featured 影片 + Spotify -->
+<!-- Featured Video & Music -->
 <section>
   <h2>🎥 Featured Video & Music</h2>
   <div class="media-flex">
@@ -137,7 +112,7 @@ window.addEventListener('load', () => {
   </div>
 </section>
 
-<!-- 圖集（通用標題） -->
+<!-- Gallery -->
 <section>
   <h2>🖼️ Gallery</h2>
   <div class="slideshow-container">
@@ -147,19 +122,19 @@ window.addEventListener('load', () => {
   </div>
 </section>
 
-<!-- App Cards -->
+<!-- Apps -->
 <section>
   <h2>📱 My Published Apps</h2>
   <div class="app-container" id="app-container">Loading apps...</div>
 </section>
 
-<!-- NASA APOD（維持位置，可以放在 App Cards 後方） -->
+<!-- NASA APOD -->
 <section>
   <h2>🌌 NASA Astronomy Picture of the Day</h2>
   <div id="apod" style="text-align:center;">載入星圖中…</div>
 </section>
 
-<!-- 八字命盤分析 -->
+<!-- 八字命盤 -->
 <section>
   <h2>🔮 八字命盤分析 (API 模式)</h2>
   <p>輸入生日時間，網站會從 API 取得命盤資料：</p>
@@ -169,7 +144,7 @@ window.addEventListener('load', () => {
   <div id="result">等待輸入...</div>
 </section>
 
-<!-- 💡 Inspiration Quote (本地靈感模式 + hover 閃爍) -->
+<!-- 靈感語錄 -->
 <section>
   <h2>💡 Inspiration Quote</h2>
   <div id="quoteSection" class="quote" style="color:#0ff;font-size:1.1em;text-align:center;">
@@ -177,106 +152,7 @@ window.addEventListener('load', () => {
   </div>
 </section>
 
-
-<script>
-const memeCat = document.getElementById("memeCat");
-let isThinking = false;
-
-async function talkToCat() {
-  const input = document.getElementById("catInput").value.trim();
-  if (!input) { alert("喵？說點什麼嘛～"); return; }
-
-  const replyBox = document.getElementById("catReply");
-  replyBox.innerText = "（貓咪正在通靈中...）🌌🐾";
-  memeCat.style.transform = "scale(1.1) rotate(10deg)";
-  isThinking = true;
-
-  try {
-    const res = await fetch("/api/gemini", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt: input }),
-    });
-    const data = await res.json();
-    const text = data.reply || "喵喵喵～（訊號被黑洞吃掉）";
-    replyBox.innerText = text;
-  } catch (err) {
-    replyBox.innerText = "喵？（系統炸掉了，快請奴才修理）";
-  } finally 
-    memeCat.style.transform = "scale(1) rotate(0deg)";
-    isThinking = false;
-  }
-}
-<script>
-// === 🐈‍⬛ 貓咪喵叫特效 ===
-const blackCat = document.getElementById("memeCat");
-
-// 預載音效
-const meowSound = new Audio("music/meow.mp3");
-
-blackCat.addEventListener("click", () => {
-  blackCat.style.transform = "scale(1.1) rotate(5deg)";
-  meowSound.pause();
-  meowSound.currentTime = 0;
-  meowSound.play();
-  blackCat.style.transition = "transform 0.2s ease";
-  blackCat.style.transform = "scale(1.1) rotate(5deg)";
-  setTimeout(() => {
-    blackCat.style.transform = "scale(1) rotate(0deg)";
-  }, 350);
-});
-</script>
-
-  
-
-// 小彩蛋：滑鼠經過貓咪時
-memeCat.addEventListener("mouseenter", () => {
-  if (!isThinking) memeCat.style.transform = "rotate(15deg) scale(1.05)";
-});
-memeCat.addEventListener("mouseleave", () => {
-<script>
-  if (!isThinking) memeCat.style.transform = "rotate(0deg) scale(1)";
-});
-</ - -->->scrit>
-
-  
-
-<script>
-// === 本地靈感語錄 ===
-const localQuotes = [
-  "✨ 問題不是 AI 是否有靈魂，而是我們是否還保有想像 ✨",
-  "🎵 Let algorithms dream with us.",
-  "🌙 藝術，不需要睡覺。",
-  "💫 Creativity is coded chaos.",
-  "🌌 Every pixel remembers its light.",
-  "🪞 想像力是人類最古老的運算。",
-  "🧩 You are the glitch the universe adores."
-];
-
-// 每次載入顯示隨機一句
-document.getElementById('localQuote').innerText =
-  localQuotes[Math.floor(Math.random()*localQuotes.length)];
-</script>
-
-<style>
-/* Hover 閃爍動畫 */
-#localQuote {
-  display:inline-block;
-  cursor:pointer;
-<!--   transition:filter 0.3s ease, text-shadow 0.3s ease;
-}
-#localQuote:hover {
-  animation:glimmer 1.2s ease-in-out infinite alternate;
-}
-@keyframes glimmer {
-  0% { text-shadow:0 0 6px #0ff; filter:brightness(1); }
-  50% { text-shadow:0 0 20px #ff3eff; filter:brightness(1.4); }
-  100% { text-shadow:0 0 6px #0ff; filter:brightness(1); }
-}
-</style>
-
-
-<!-- Utterances 留言牆 -->
+<!-- Comments -->
 <section>
   <h2>💬 Comments</h2>
   <script src="https://utteranc.es/client.js"
@@ -291,185 +167,52 @@ document.getElementById('localQuote').innerText =
   <a href="https://github.com/Culaliya/ai-art-diary" style="color:#888;text-decoration:none;">View Source on GitHub</a>
 </footer>
 
+<!-- === SCRIPT === -->
 <script>
-// ====== 光粒子背景 ======
-const canvas=document.getElementById('particles');
-const ctx=canvas.getContext('2d');
-let particles=[];
-function resizeCanvas(){
-  canvas.width=window.innerWidth;
-  canvas.height=window.innerHeight;
-  particles=[];
-  for(let i=0;i<80;i++){
-    particles.push({
-      x:Math.random()*canvas.width,
-      y:Math.random()*canvas.height,
-      r:Math.random()*2+0.5,
-      dx:(Math.random()-0.5)*0.5,
-      dy:(Math.random()-0.5)*0.5,
-      hue:Math.random()*360
-    });
-  }
-}
-function drawParticles(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  particles.forEach(p=>{
-    p.x+=p.dx;p.y+=p.dy;
-    if(p.x<0||p.x>canvas.width)p.dx*=-1;
-    if(p.y<0||p.y>canvas.height)p.dy*=-1;
-    ctx.beginPath();
-    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle=`hsla(${p.hue},100%,65%,0.7)`;
-    ctx.fill();
-  });
-  requestAnimationFrame(drawParticles);
-}
-window.addEventListener('resize',resizeCanvas);
-resizeCanvas();drawParticles();
-
-// ====== 輪播 ======
-let slideIndex=0;
-function showSlides(){
-  const slides=document.querySelectorAll('.slide');
-  slides.forEach((s,i)=>s.style.display=i===slideIndex?'block':'none');
-  slideIndex=(slideIndex+1)%slides.length;
-}
-setInterval(showSlides,3000);showSlides();
-
-// ====== App Cards ======
-async function loadApps(){
-  const c=document.getElementById('app-container');
+// 🐱 Gemini互動
+const memeCat=document.getElementById("memeCat");
+let isThinking=false;
+async function talkToCat(){
+  const input=document.getElementById("catInput").value.trim();
+  if(!input){alert("喵？說點什麼嘛～");return;}
+  const replyBox=document.getElementById("catReply");
+  replyBox.innerText="（貓咪正在通靈中...）🌌🐾";
+  memeCat.style.transform="scale(1.1) rotate(10deg)";
+  isThinking=true;
   try{
-    const res=await fetch('https://raw.githubusercontent.com/Culaliya/ai-art-diary/main/data/apps.json');
-    const apps=await res.json();
-    c.innerHTML='';
-    apps.forEach(app=>{
-      const card=document.createElement('div');
-      card.className='app-card';
-      card.innerHTML=`
-        <img class="app-image" src="${app.icon}">
-        <div class="app-info">
-          <h3>${app.name}</h3>
-          <p>${app.desc}</p>
-          <a class="button" href="${app.link}" target="_blank">App Store</a>
-        </div>`;
-      c.appendChild(card);
-    });
-    addHoverSounds();
-  }catch{ c.textContent='⚠️ 無法載入 app 資料'; }
+    const res=await fetch("/api/gemini",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:input})});
+    const data=await res.json();
+    replyBox.innerText=data.reply||"喵喵喵～（訊號被黑洞吃掉）";
+  }catch{replyBox.innerText="喵？（系統炸掉了，快請奴才修理）";}
+  finally{memeCat.style.transform="scale(1) rotate(0deg)";isThinking=false;}
 }
-loadApps();
-
-// ====== 八字 API ======
-async function getFortune(){
-  const date=document.getElementById('birthDate').value;
-  if(!date){alert('請輸入生日');return;}
-  const r=document.getElementById('result');
-  try{
-    const res=await fetch('https://raw.githubusercontent.com/Culaliya/ai-art-diary/main/data/fortune.json');
-    const f=await res.json();
-    r.innerHTML=`<h3>命理結果報告（來自 API）</h3>
-      <p>天干地支：<strong>${f.stem}${f.branch}</strong></p>
-      <p>主五行：<strong>${f.element}</strong></p>
-      <p>${f.msg}</p>`;
-  }catch{ r.textContent='⚠️ 無法讀取 API 資料'; }
-}
-
-// ====== Hover 音效 ======
-function addHoverSounds(){
-  const hoverSound=document.getElementById('hover-sound');
-  document.querySelectorAll('.app-card,.button').forEach(el=>{
-    el.addEventListener('mouseenter',()=>{
-      hoverSound.currentTime=0;hoverSound.play();
-    });
-  });
-}
-
-// ====== 點擊特效 + 音效 ======
-document.addEventListener('click',e=>{
-  const clickSound=document.getElementById('click-sound');
-  clickSound.currentTime=0;clickSound.play();
-  const ripple=document.createElement('div');
-  ripple.className='ripple';
-  ripple.style.left=`${e.clientX}px`;
-  ripple.style.top=`${e.clientY}px`;
-  document.body.appendChild(ripple);
-  ripple.addEventListener('animationend',()=>ripple.remove());
+// 喵叫特效
+const meowSound=new Audio("music/meow.mp3");
+memeCat.addEventListener("click",()=>{
+  meowSound.pause();meowSound.currentTime=0;meowSound.play();
+  memeCat.style.transition="transform 0.2s ease";
+  memeCat.style.transform="scale(1.1) rotate(5deg)";
+  setTimeout(()=>{memeCat.style.transform="scale(1) rotate(0deg)";},350);
 });
+// 滑鼠經過貓咪
+memeCat.addEventListener("mouseenter",()=>{if(!isThinking)memeCat.style.transform="rotate(15deg) scale(1.05)";});
+memeCat.addEventListener("mouseleave",()=>{if(!isThinking)memeCat.style.transform="rotate(0deg) scale(1)";});
 
-// ====== 天氣 API ======
-async function loadWeather(){
-  const url='https://api.open-meteo.com/v1/forecast?latitude=24.8138&longitude=120.9675&current_weather=true';
-  try{
-    const res=await fetch(url);
-    const data=await res.json();
-    const w=data.current_weather;
-    const codes={0:'晴朗',1:'主要晴朗',2:'部分多雲',3:'多雲',45:'霧',48:'霧凇',51:'細雨',53:'中雨',55:'大雨',61:'小雨',63:'中雨',65:'大雨',71:'小雪',73:'中雪',75:'大雪',80:'陣雨',81:'中陣雨',82:'暴雨'};
-    const weatherText=codes[w.weathercode]||'未知';
-    document.getElementById('weather').innerText=`新竹 ${w.temperature}°C，${weatherText}`;
-    particles.forEach(p=>{
-      if(w.weathercode>=51 && w.weathercode<=82){p.hue=200+Math.random()*40;}
-      else{p.hue=40+Math.random()*40;}
-    });
-  }catch{
-    document.getElementById('weather').innerText='天氣載入失敗';
-  }
-}
-loadWeather();
+// 本地靈感語錄
+const localQuotes=[
+"✨ 問題不是 AI 是否有靈魂，而是我們是否還保有想像 ✨",
+"🎵 Let algorithms dream with us.",
+"🌙 藝術，不需要睡覺。",
+"💫 Creativity is coded chaos.",
+"🌌 Every pixel remembers its light.",
+"🪞 想像力是人類最古老的運算。",
+"🧩 You are the glitch the universe adores."
+];
+document.getElementById('localQuote').innerText=localQuotes[Math.floor(Math.random()*localQuotes.length)];
 
-// ====== 靈感語錄 API ======
-async function loadQuote(){
-  try{
-    const res=await fetch('https://api.quotable.io/random?nocache='+Date.now());
-    const data=await res.json();
-    document.getElementById('quoteSection').innerText=`“${data.content}” — ${data.author}`;
-  }catch{
-    document.getElementById('quoteSection').innerText='靈感語錄載入失敗';
-  }
-}
-loadQuote();
-
-// ====== NASA APOD ======
-async function loadApod(){
-  const apodDiv=document.getElementById('apod');
-  try{
-    const res=await fetch('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY');
-    const data=await res.json();
-    if(data.media_type==='image'){
-      apodDiv.innerHTML=`<img src="${data.url}" alt="${data.title}" style="max-width:100%;border-radius:12px;box-shadow:0 0 20px #0ff5;"><p>${data.title}</p>`;
-    }else{
-      apodDiv.innerHTML=`<iframe src="${data.url}" frameborder="0" allowfullscreen style="width:100%;height:400px;border-radius:12px;"></iframe><p>${data.title}</p>`;
-    }
-  }catch{
-    apodDiv.innerText='NASA 星圖載入失敗';
-  }
-}
-loadApod();
-
-// ====== Le Chat 靈感互動機 ======
-const LECHAT_API_KEY='Q9j7v7FfiGdpLY9mxcoBQJ37EHwkFfYD'; // 🔑← 將此處替換為你的 Le Chat API 金鑰
-async function askAI(){
-  const input=document.getElementById('chatInput').value.trim();
-  if(!input){alert('請輸入內容');return;}
-  document.getElementById('chatOutput').innerText='思考中...';
-  try{
-    const res=await fetch('https://api.lechat.ai/v1/chat',{
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'Authorization':'Bearer '+LECHAT_API_KEY
-      },
-      body:JSON.stringify({
-        model:'gpt-4',
-        messages:[{role:'user',content:input}]
-      })
-    });
-    const data=await res.json();
-    document.getElementById('chatOutput').innerText=data.reply||data.choices?.[0]?.message?.content||'AI沒有回覆';
-  }catch{
-    document.getElementById('chatOutput').innerText='AI 回覆失敗';
-  }
-}
+// 光粒子背景
+const canvas=document.getElementById('particles');const ctx=canvas.getContext('2d');let particles=[];
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;particles=[];for(let i=0;i<80;i++){particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2+0.5,dx:(Math.random()-0.5)*0.5,dy:(Math.random()-0.5)*0.5,hue:Math.random()*360});}}function drawParticles(){ctx.clearRect(0,0,canvas.width,canvas.height);particles.forEach(p=>{p.x+=p.dx;p.y+=p.dy;if(p.x<0||p.x>canvas.width)p.dx*=-1;if(p.y<0||p.y>canvas.height)p.dy*=-1;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`hsla(${p.hue},100%,65%,0.7)`;ctx.fill();});requestAnimationFrame(drawParticles);}window.addEventListener('resize',resizeCanvas);resizeCanvas();drawParticles();
 </script>
 </body>
 </html>
