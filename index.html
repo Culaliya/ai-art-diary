@@ -54,7 +54,7 @@ h2{color:#ff3eff;margin-bottom:20px;}
   width:100%;height:100%;border:none;border-radius:12px;
 }
 
-/* ====== Midjourney 輪播 ====== */
+/* ====== 圖片輪播 ====== */
 .slideshow-container{position:relative;width:100%;max-width:800px;margin:auto;}
 .slide{display:none;width:100%;border-radius:12px;box-shadow:0 0 20px #0ff5;}
 
@@ -72,7 +72,7 @@ h2{color:#ff3eff;margin-bottom:20px;}
 <body>
 <canvas id="particles"></canvas>
 
-<!-- 音效檔 -->
+<!-- 音效 -->
 <audio id="hover-sound" src="music/hover.mp3"></audio>
 <audio id="click-sound" src="music/click.mp3"></audio>
 
@@ -99,9 +99,9 @@ h2{color:#ff3eff;margin-bottom:20px;}
   </div>
 </section>
 
-<!-- Midjourney 輪播 -->
+<!-- 改成通用標題的圖集 -->
 <section>
-  <h2>🪄 Midjourney Gallery</h2>
+  <h2>🖼️ Gallery</h2>
   <div class="slideshow-container">
     <img class="slide" src="assets/midjourney/mid1.jpg">
     <img class="slide" src="assets/midjourney/mid2.jpg">
@@ -130,7 +130,7 @@ h2{color:#ff3eff;margin-bottom:20px;}
 </footer>
 
 <script>
-// ====== 光粒子背景 ======
+// 光粒子背景
 const canvas=document.getElementById('particles');
 const ctx=canvas.getContext('2d');
 let particles=[];
@@ -165,7 +165,7 @@ function drawParticles(){
 window.addEventListener('resize',resizeCanvas);
 resizeCanvas();drawParticles();
 
-// ====== Midjourney 輪播 ======
+// 輪播
 let slideIndex=0;
 function showSlides(){
   const slides=document.querySelectorAll('.slide');
@@ -174,7 +174,7 @@ function showSlides(){
 }
 setInterval(showSlides,3000);showSlides();
 
-// ====== App Cards 載入 ======
+// App Cards
 async function loadApps(){
   const c=document.getElementById('app-container');
   try{
@@ -194,11 +194,11 @@ async function loadApps(){
       c.appendChild(card);
     });
     addHoverSounds();
-  }catch(e){c.textContent='⚠️ 無法載入 app 資料';}
+  }catch{ c.textContent='⚠️ 無法載入 app 資料'; }
 }
 loadApps();
 
-// ====== 八字分析 ======
+// 八字 API
 async function getFortune(){
   const date=document.getElementById('birthDate').value;
   if(!date){alert('請輸入生日');return;}
@@ -208,19 +208,22 @@ async function getFortune(){
     const f=await res.json();
     r.innerHTML=`<h3>命理結果報告（來自 API）</h3>
       <p>天干地支：<strong>${f.stem}${f.branch}</strong></p>
-      <p>主五行：<strong>${f.element}</strong></p><p>${f.msg}</p>`;
-  }catch(e){r.textContent='⚠️ 無法讀取 API 資料';}
+      <p>主五行：<strong>${f.element}</strong></p>
+      <p>${f.msg}</p>`;
+  }catch{ r.textContent='⚠️ 無法讀取 API 資料'; }
 }
 
-// ====== Hover 音效 ======
+// Hover 音效
 function addHoverSounds(){
   const hoverSound=document.getElementById('hover-sound');
   document.querySelectorAll('.app-card,.button').forEach(el=>{
-    el.addEventListener('mouseenter',()=>{hoverSound.currentTime=0;hoverSound.play();});
+    el.addEventListener('mouseenter',()=>{
+      hoverSound.currentTime=0;hoverSound.play();
+    });
   });
 }
 
-// ====== 點擊亮光特效 + 音效 ======
+// 點擊特效 + 音效
 document.addEventListener('click',e=>{
   const clickSound=document.getElementById('click-sound');
   clickSound.currentTime=0;clickSound.play();
