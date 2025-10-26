@@ -29,6 +29,12 @@ h2{color:#ff3eff;margin-bottom:16px;}
 .video-container iframe,.spotify-container iframe{width:100%;height:100%;border:none;border-radius:12px;}
 .slideshow-container{position:relative;width:100%;max-width:800px;margin:auto;}
 .slide{display:none;width:100%;border-radius:12px;box-shadow:0 0 20px #0ff5;}
+.slide-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,255,255,0.3);color:#0ff;border:2px solid #0ff;font-size:24px;padding:10px 15px;cursor:pointer;border-radius:6px;transition:all 0.3s;z-index:10;}
+.slide-btn:hover{background:rgba(0,255,255,0.6);box-shadow:0 0 15px #0ff;}
+.slide-btn.prev{left:10px;}
+.slide-btn.next{right:10px;}
+.dot{display:inline-block;width:12px;height:12px;margin:0 5px;background:#0ff3;border-radius:50%;cursor:pointer;transition:all 0.3s;}
+.dot:hover,.dot.active{background:#0ff;box-shadow:0 0 10px #0ff;}
 .ripple{position:fixed;border-radius:50%;pointer-events:none;border:2px solid #0ff;animation:ripple 0.6s ease-out;}
 @keyframes ripple{from{transform:scale(0);opacity:0.8;} to{transform:scale(10);opacity:0;}}
 #weather-quote{text-align:center;margin-top:10px;color:#aaf;font-size:1em;}
@@ -144,6 +150,15 @@ window.addEventListener('load', () => {
     <img class="slide" src="assets/midjourney/mid1.jpg">
     <img class="slide" src="assets/midjourney/mid2.jpg">
     <img class="slide" src="assets/midjourney/mid3.jpg">
+    <!-- 上一張/下一張按鈕 -->
+    <button class="slide-btn prev" onclick="changeSlide(-1)">❮</button>
+    <button class="slide-btn next" onclick="changeSlide(1)">❯</button>
+    <!-- 指示點 -->
+    <div style="text-align:center; margin-top:15px;">
+      <span class="dot" onclick="currentSlide(0)"></span>
+      <span class="dot" onclick="currentSlide(1)"></span>
+      <span class="dot" onclick="currentSlide(2)"></span>
+    </div>
   </div>
 </section>
 
@@ -294,14 +309,36 @@ function drawParticles(){
 window.addEventListener('resize',resizeCanvas);
 resizeCanvas();drawParticles();
 
-// ====== 輪播 ======
+// ====== 輪播（自動 + 手動控制）======
 let slideIndex=0;
+let slideTimer;
+
 function showSlides(){
   const slides=document.querySelectorAll('.slide');
+  const dots=document.querySelectorAll('.dot');
+  
   slides.forEach((s,i)=>s.style.display=i===slideIndex?'block':'none');
+  dots.forEach((d,i)=>d.classList.toggle('active',i===slideIndex));
+  
   slideIndex=(slideIndex+1)%slides.length;
+  
+  // 重設計時器
+  clearTimeout(slideTimer);
+  slideTimer=setTimeout(showSlides,3000);
 }
-setInterval(showSlides,3000);showSlides();
+
+function changeSlide(n){
+  const slides=document.querySelectorAll('.slide');
+  slideIndex=(slideIndex+n+slides.length-1)%slides.length;
+  showSlides();
+}
+
+function currentSlide(n){
+  slideIndex=n;
+  showSlides();
+}
+
+showSlides();
 
 // ====== App Cards ======
 async function loadApps(){
@@ -388,7 +425,7 @@ loadWeather();
 async function loadApod(){
   const apodDiv=document.getElementById('apod');
   try{
-    const res=await fetch('https://api.nasa.gov/planetary/apod?api_key=QCUm1wVbVLFqsiNJdaTKolWUuXTo4Qdxjc1zF4f3');
+    const res=await fetch('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY');
     const data=await res.json();
     console.log('NASA APOD data:', data); // 調試用
     if(data.media_type==='image'){
