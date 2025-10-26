@@ -5,39 +5,86 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Culaliya’s AI Art Diary 🌌</title>
 <style>
+/* ====== 全域樣式 ====== */
 body{
   margin:0;font-family:'Orbitron',sans-serif;color:#fff;
   overflow-x:hidden;background:#000;position:relative;
 }
 header{text-align:center;padding:60px 20px;}
-h1{font-size:3em;color:#0ff;text-shadow:0 0 20px #0ff;animation:glow 3s ease-in-out infinite alternate;}
-@keyframes glow{from{text-shadow:0 0 10px #0ff;} to{text-shadow:0 0 25px #ff3eff;}}
+h1{font-size:3em;color:#0ff;text-shadow:0 0 20px #0ff;
+  animation:glow 3s ease-in-out infinite alternate;}
+@keyframes glow{from{text-shadow:0 0 10px #0ff;}
+  to{text-shadow:0 0 25px #ff3eff;}}
 section{max-width:1000px;margin:auto;padding:40px 20px;}
 h2{color:#ff3eff;margin-bottom:16px;}
-#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-2;background:#000;}
+
+/* ====== 光粒子背景 ====== */
+#particles{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  z-index:-2;background:#000;
+}
+
+/* ====== App 卡片橫向排列 ====== */
 .app-container{display:flex;flex-direction:column;gap:20px;}
-.app-card{display:flex;align-items:center;gap:20px;background:rgba(255,255,255,0.05);border:1px solid #0ff3;border-radius:12px;padding:20px;transition:transform .3s, box-shadow .3s;position:relative;}
-.app-card:hover{transform:translateY(-5px);box-shadow:0 0 25px #0ff;}
+.app-card{
+  display:flex;align-items:center;gap:20px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid #0ff3;
+  border-radius:12px;padding:20px;
+  transition:transform .3s, box-shadow .3s;
+  position:relative;
+}
+.app-card:hover{
+  transform:translateY(-5px);box-shadow:0 0 25px #0ff;
+}
 .app-image{width:120px;height:120px;border-radius:16px;object-fit:cover;}
 .app-info h3{margin:0 0 8px 0;color:#0ff;}
 .app-info p{color:#ccc;margin:0 0 10px 0;}
-.button{display:inline-block;padding:6px 12px;border:1px solid #0ff;color:#0ff;border-radius:6px;text-decoration:none;transition:.2s;}
+.button{
+  display:inline-block;padding:6px 12px;border:1px solid #0ff;
+  color:#0ff;border-radius:6px;text-decoration:none;transition:.2s;
+}
 .button:hover{background:#0ff;color:#000;}
+
+/* ====== 影音區塊 ====== */
 .media-flex{display:flex;flex-wrap:wrap;gap:20px;}
 .video-container{flex:2;min-width:300px;aspect-ratio:16/9;}
 .spotify-container{flex:1;min-width:300px;}
-.video-container iframe,.spotify-container iframe{width:100%;height:100%;border:none;border-radius:12px;}
+.video-container iframe,.spotify-container iframe{
+  width:100%;height:100%;border:none;border-radius:12px;
+}
+
+/* ====== 圖片輪播 ====== */
 .slideshow-container{position:relative;width:100%;max-width:800px;margin:auto;}
 .slide{display:none;width:100%;border-radius:12px;box-shadow:0 0 20px #0ff5;}
-.ripple{position:fixed;border-radius:50%;pointer-events:none;border:2px solid #0ff;animation:ripple 0.6s ease-out;}
-@keyframes ripple{from{transform:scale(0);opacity:0.8;} to{transform:scale(10);opacity:0;}}
-#weather-quote{text-align:center;margin-top:10px;color:#aaf;font-size:1em;}
-#weather-quote .chat{margin-top:10px;}
-#weather-quote .quote{margin-top:8px;color:#ccc;font-style:italic;}
+
+/* ====== 點擊亮光特效 ====== */
+.ripple{
+  position:fixed;border-radius:50%;pointer-events:none;
+  border:2px solid #0ff;animation:ripple 0.6s ease-out;
+}
+@keyframes ripple{
+  from{transform:scale(0);opacity:0.8;}
+  to{transform:scale(10);opacity:0;}
+}
+
+/* ====== 天氣與靈感區塊 ====== */
+#weather-quote{
+  text-align:center;
+  margin-top:10px;
+  color:#aaf;
+  font-size:1em;
+}
+#weather-quote .quote{
+  margin-top:6px;
+  color:#ccc;
+  font-style:italic;
+}
 </style>
 </head>
 <body>
 <canvas id="particles"></canvas>
+
 <!-- 音效 -->
 <audio id="hover-sound" src="music/hover.mp3"></audio>
 <audio id="click-sound" src="music/click.mp3"></audio>
@@ -45,14 +92,9 @@ h2{color:#ff3eff;margin-bottom:16px;}
 <header>
   <h1>AI ART DIARY ⚡</h1>
   <p>Where algorithm meets intuition — Culaliya’s creative & cosmic lab.</p>
-  <!-- 天氣 + Le Chat 互動機 -->
   <div id="weather-quote">
     <span id="weather">載入天氣中…</span>
-    <div class="chat">
-      <input type="text" id="chatInput" placeholder="輸入靈感或問題..." style="padding:4px;border-radius:4px;border:1px solid #0ff;background:#111;color:#0ff;width:70%;">
-      <button class="button" onclick="askAI()" style="margin-left:5px;">送出</button>
-      <div id="chatOutput" style="margin-top:6px;color:#0ff;min-height:20px;"></div>
-    </div>
+    <div class="quote" id="quote">載入靈感中…</div>
   </div>
 </header>
 
@@ -62,7 +104,8 @@ h2{color:#ff3eff;margin-bottom:16px;}
   <div class="media-flex">
     <div class="video-container">
       <iframe src="https://www.youtube.com/embed/videoseries?list=PLf1VNbciujbc-QSR2wNNCvYZCv1cZ88ef"
-        title="YouTube playlist" allow="autoplay; clipboard-write; encrypted-media; fullscreen" allowfullscreen></iframe>
+        title="YouTube playlist" allow="autoplay; clipboard-write; encrypted-media; fullscreen"
+        allowfullscreen></iframe>
     </div>
     <div class="spotify-container">
       <iframe style="border-radius:12px"
@@ -73,7 +116,7 @@ h2{color:#ff3eff;margin-bottom:16px;}
   </div>
 </section>
 
-<!-- 圖集（通用標題） -->
+<!-- 圖集（更通用標題） -->
 <section>
   <h2>🖼️ Gallery</h2>
   <div class="slideshow-container">
@@ -83,16 +126,16 @@ h2{color:#ff3eff;margin-bottom:16px;}
   </div>
 </section>
 
+<!-- NASA APOD -->
+<section>
+  <h2>🌌 NASA Astronomy Picture of the Day</h2>
+  <div id="apod" style="text-align:center;">載入星圖中…</div>
+</section>
+
 <!-- App Cards -->
 <section>
   <h2>📱 My Published Apps</h2>
   <div class="app-container" id="app-container">Loading apps...</div>
-</section>
-
-<!-- NASA APOD（維持位置，可以放在 App Cards 後方） -->
-<section>
-  <h2>🌌 NASA Astronomy Picture of the Day</h2>
-  <div id="apod" style="text-align:center;">載入星圖中…</div>
 </section>
 
 <!-- 八字命盤分析 -->
@@ -105,21 +148,17 @@ h2{color:#ff3eff;margin-bottom:16px;}
   <div id="result">等待輸入...</div>
 </section>
 
-<!-- 靈感語錄：移到八字分析下面 -->
-<section>
-  <h2>💡 Inspiration Quote</h2>
-  <div id="quoteSection" class="quote">載入靈感中…</div>
-</section>
-
 <!-- Utterances 留言牆 -->
 <section>
   <h2>💬 Comments</h2>
+  <!-- Utterances 會在這裡嵌入留言 -->
   <script src="https://utteranc.es/client.js"
     repo="Culaliya/ai-art-diary"
     issue-term="pathname"
     theme="github-dark"
     crossorigin="anonymous"
-    async></script>
+    async>
+  </script>
 </section>
 
 <footer style="text-align:center;color:#888;padding:40px;">
@@ -234,17 +273,30 @@ document.addEventListener('click',e=>{
 
 // ====== 天氣 API ======
 async function loadWeather(){
+  // 新竹市經緯度：緯度 24.8138, 經度 120.9675
   const url='https://api.open-meteo.com/v1/forecast?latitude=24.8138&longitude=120.9675&current_weather=true';
   try{
     const res=await fetch(url);
     const data=await res.json();
     const w=data.current_weather;
-    const codes={0:'晴朗',1:'主要晴朗',2:'部分多雲',3:'多雲',45:'霧',48:'霧凇',51:'細雨',53:'中雨',55:'大雨',61:'小雨',63:'中雨',65:'大雨',71:'小雪',73:'中雪',75:'大雪',80:'陣雨',81:'中陣雨',82:'暴雨'};
+    // 簡易天氣代碼描述
+    const codes={
+      0:'晴朗',1:'主要晴朗',2:'部分多雲',3:'多雲',
+      45:'霧',48:'霧凇',
+      51:'細雨',53:'中雨',55:'大雨',
+      61:'小雨',63:'中雨',65:'大雨',
+      71:'小雪',73:'中雪',75:'大雪',
+      80:'陣雨',81:'中陣雨',82:'暴雨'
+    };
     const weatherText=codes[w.weathercode]||'未知';
     document.getElementById('weather').innerText=`新竹 ${w.temperature}°C，${weatherText}`;
+    // 根據天氣簡單改變粒子顏色（例如雨天偏藍、晴天偏黃）
     particles.forEach(p=>{
-      if(w.weathercode>=51 && w.weathercode<=82){p.hue=200+Math.random()*40;}
-      else{p.hue=40+Math.random()*40;}
+      if(w.weathercode>=51 && w.weathercode<=82){
+        p.hue=200+Math.random()*40; // 雨/雪 → 藍紫色系
+      }else{
+        p.hue=40+Math.random()*40; // 晴天 → 金黃橙色系
+      }
     });
   }catch{
     document.getElementById('weather').innerText='天氣載入失敗';
@@ -255,11 +307,11 @@ loadWeather();
 // ====== 靈感語錄 API ======
 async function loadQuote(){
   try{
-    const res=await fetch('https://api.quotable.io/random?nocache='+Date.now());
+    const res=await fetch('https://api.quotable.io/random');
     const data=await res.json();
-    document.getElementById('quoteSection').innerText=`“${data.content}” — ${data.author}`;
+    document.getElementById('quote').innerText=`“${data.content}” — ${data.author}`;
   }catch{
-    document.getElementById('quoteSection').innerText='靈感語錄載入失敗';
+    document.getElementById('quote').innerText='靈感語錄載入失敗';
   }
 }
 loadQuote();
@@ -270,6 +322,7 @@ async function loadApod(){
   try{
     const res=await fetch('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY');
     const data=await res.json();
+    // 有些 APOD 可能是影片，需檢查 media_type
     if(data.media_type==='image'){
       apodDiv.innerHTML=`<img src="${data.url}" alt="${data.title}" style="max-width:100%;border-radius:12px;box-shadow:0 0 20px #0ff5;"><p>${data.title}</p>`;
     }else{
@@ -280,38 +333,6 @@ async function loadApod(){
   }
 }
 loadApod();
-// Le Chat feature removed
-async function askAI() {
-  alert('Le Chat 功能已移除');}
-// ====== Le Chat 靈感互動機 ======lelet LECHAT_API_KEY = localStorage.getItem('LECHAT_API_KEY');
-if (!LECHAT_API_KEY) {
-  LECHAT_API_KEY = prompt('請輸入你的 Le Chat API 金鑰:');
-  localStorage.setItem('LECHAT_API_KEY', LECHAT_API_KEY);
-}
-/*async function ask alert('Le Chat 功能已移除');return;AI(){  const input=document.getElementById('chatInput').value.trim();
-  if(!input){alert('請輸入內容');return;}
-  document.getElementById('chatOutput').innerText='思考中...';
-  try{
-    const res=await fetch('https://api.lechat.ai/v1/chat',{
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'Authorization':'Bearer '+LECHAT_API_KEY
-      },
-      body:JSON.stringify({
-        model:'gpt-4',
-        messages:[{role:'user',content:input}]
-      })
-    });
-    const data=await res.json();
-    document.getElementById('chatOutput').innerText=data.reply||data.choices?.[0]?.message?.content||'AI沒有回覆';
-  }catch{
-    document.getElementById('chatOutput').innerText='AI 回覆失敗';
-/  }}
-*
-
- document.querySelector('.chat')?.style.display = 'none';async function askAI() {
-  alert('Le Chat 功能已移除');
-}//script>
+</script>
 </body>
 </html>
