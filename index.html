@@ -34,10 +34,41 @@ h2{color:#ff3eff;margin-bottom:16px;}
 #weather-quote{text-align:center;margin-top:10px;color:#aaf;font-size:1em;}
 #weather-quote .chat{margin-top:10px;}
 #weather-quote .quote{margin-top:8px;color:#ccc;font-style:italic;}
+@keyframes glowPulse {
+  0%   { box-shadow: 0 0 20px #0ff5, 0 0 40px #0ff2; }
+  50%  { box-shadow: 0 0 40px #0ff8, 0 0 80px #0ff4; }
+  100% { box-shadow: 0 0 20px #0ff5, 0 0 40px #0ff2; }
+}
+  #catSection img {
+  animation: float 4s ease-in-out infinite alternate;
+  box-shadow: 0 0 25px #0ff8, 0 0 60px #0ff2; /* ✨藍光暈+柔光 */
+  cursor: pointer;
+}
+@keyframes float {
+  from { transform: translateY(0px); }
+  to { transform: translateY(-10px) rotate(1deg); }
+}
+
 </style>
 </head>
 <body>
 <canvas id="particles"></canvas>
+
+  <!-- ====== 🐱 AI Cosmic Meme Cat (Gemini) ====== -->
+<section>
+  <h2>🐈‍⬛ AI Cosmic Meme Cat 🪐</h2>
+  <div id="catBox" style="text-align:center; margin:30px 0;">
+    <img id="memeCat" src="assets/blackcat.png"
+      alt="Meme Cat"
+      style="width:160px; border-radius:50%; box-shadow:0 0 20px #0ff8; transition:transform 0.3s;">
+    <div style="margin-top:15px;">
+      <input id="catInput" placeholder="輸入一句話給貓咪..." 
+        style="padding:6px 10px; width:70%; border-radius:6px; border:1px solid #0ff; background:#111; color:#0ff;">
+      <button class="button" onclick="talkToCat()">召喚喵言</button>
+    </div>
+    <div id="catReply" style="margin-top:20px; color:#0ff; min-height:40px; font-family:'Courier New', monospace;"></div>
+  </div>
+</section>
 <!-- 音效 -->
 <audio id="hover-sound" src="music/hover.mp3"></audio>
 <audio id="click-sound" src="music/click.mp3"></audio>
@@ -145,21 +176,7 @@ window.addEventListener('load', () => {
     <span id="localQuote">🌙 Loading inspiration...</span>
   </div>
 </section>
-<!-- ====== 🐱 AI Cosmic Meme Cat (Gemini) ====== -->
-<section>
-  <h2>🐈‍⬛ AI Cosmic Meme Cat 🪐</h2>
-  <div id="catBox" style="text-align:center; margin:30px 0;">
-    <img id="memeCat" src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif"
-      alt="Meme Cat"
-      style="width:160px; border-radius:50%; box-shadow:0 0 20px #0ff8; transition:transform 0.3s;">
-    <div style="margin-top:15px;">
-      <input id="catInput" placeholder="輸入一句話給貓咪..." 
-        style="padding:6px 10px; width:70%; border-radius:6px; border:1px solid #0ff; background:#111; color:#0ff;">
-      <button class="button" onclick="talkToCat()">召喚喵言</button>
-    </div>
-    <div id="catReply" style="margin-top:20px; color:#0ff; min-height:40px; font-family:'Courier New', monospace;"></div>
-  </div>
-</section>
+
 
 <script>
 const memeCat = document.getElementById("memeCat");
@@ -190,6 +207,27 @@ async function talkToCat() {
     isThinking = false;
   }
 }
+<script>
+// === 🐈‍⬛ 貓咪喵叫特效 ===
+const blackCat = document.getElementById("memeCat");
+
+// 預載音效
+const meowSound = new Audio("music/meow.mp3");
+
+blackCat.addEventListener("click", () => {
+  blackCat.style.transform = "scale(1.1) rotate(5deg)";
+  meowSound.pause();
+  meowSound.currentTime = 0;
+  meowSound.play();
+  blackCat.style.transition = "transform 0.2s ease";
+  blackCat.style.transform = "scale(1.1) rotate(5deg)";
+  setTimeout(() => {
+    blackCat.style.transform = "scale(1) rotate(0deg)";
+  }, 350);
+});
+</script>
+
+  
 
 // 小彩蛋：滑鼠經過貓咪時
 memeCat.addEventListener("mouseenter", () => {
