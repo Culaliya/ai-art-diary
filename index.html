@@ -145,6 +145,62 @@ window.addEventListener('load', () => {
     <span id="localQuote">🌙 Loading inspiration...</span>
   </div>
 </section>
+<!-- ====== 🐱 AI Cosmic Meme Cat (Gemini) ====== -->
+<section>
+  <h2>🐈‍⬛ AI Cosmic Meme Cat 🪐</h2>
+  <div id="catBox" style="text-align:center; margin:30px 0;">
+    <img id="memeCat" src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif"
+      alt="Meme Cat"
+      style="width:160px; border-radius:50%; box-shadow:0 0 20px #0ff8; transition:transform 0.3s;">
+    <div style="margin-top:15px;">
+      <input id="catInput" placeholder="輸入一句話給貓咪..." 
+        style="padding:6px 10px; width:70%; border-radius:6px; border:1px solid #0ff; background:#111; color:#0ff;">
+      <button class="button" onclick="talkToCat()">召喚喵言</button>
+    </div>
+    <div id="catReply" style="margin-top:20px; color:#0ff; min-height:40px; font-family:'Courier New', monospace;"></div>
+  </div>
+</section>
+
+<script>
+const memeCat = document.getElementById("memeCat");
+let isThinking = false;
+
+async function talkToCat() {
+  const input = document.getElementById("catInput").value.trim();
+  if (!input) { alert("喵？說點什麼嘛～"); return; }
+
+  const replyBox = document.getElementById("catReply");
+  replyBox.innerText = "（貓咪正在通靈中...）🌌🐾";
+  memeCat.style.transform = "scale(1.1) rotate(10deg)";
+  isThinking = true;
+
+  try {
+    const res = await fetch("/api/gemini", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt: input }),
+    });
+    const data = await res.json();
+    const text = data.reply || "喵喵喵～（訊號被黑洞吃掉）";
+    replyBox.innerText = text;
+  } catch (err) {
+    replyBox.innerText = "喵？（系統炸掉了，快請奴才修理）";
+  } finally {
+    memeCat.style.transform = "scale(1) rotate(0deg)";
+    isThinking = false;
+  }
+}
+
+// 小彩蛋：滑鼠經過貓咪時
+memeCat.addEventListener("mouseenter", () => {
+  if (!isThinking) memeCat.style.transform = "rotate(15deg) scale(1.05)";
+});
+memeCat.addEventListener("mouseleave", () => {
+  if (!isThinking) memeCat.style.transform = "rotate(0deg) scale(1)";
+});
+</script>
+
+  
 
 <script>
 // === 本地靈感語錄 ===
