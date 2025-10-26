@@ -30,20 +30,20 @@
     "link": "https://apps.apple.com/tw/app/alarmtunes/id6752111993"
   },
   {
-    "name": "喵喵番花鐘MeowFocus Timer",
-    "desc": "每一顆番花，都有一聲「喵～」",
+    "name": "喵喵番茄鐘MeowFocus Timer",
+    "desc": "每一顆番茄，都有一聲『喵～』",
     "icon": "assets/icons/meowfocus.png",
     "link": "https://apps.apple.com/tw/app/%E5%96%B5%E5%96%B5%E7%95%AA%E8%8C%84%E9%90%98meowfocus-timer/id6753789886"
   },
   {
     "name": "螺旋魔法師Spiral Wizard",
-    "desc": "數學｜動物｜還有巧妙的運算遊戲",
+    "desc": "數學、動物、邏輯的奇幻解謎冒險",
     "icon": "assets/icons/spiralwizard.png",
     "link": "https://apps.apple.com/tw/app/%E8%9E%BA%E6%97%8B%E9%AD%94%E6%B3%95%E5%B8%ABspiral-wizard/id6752797711"
   },
   {
     "name": "QuickMood",
-    "desc": "簡單優雅的每日心情記錄工具",
+    "desc": "簡單優雅的每日心情紀錄工具",
     "icon": "assets/icons/quickmood.png",
     "link": "https://apps.apple.com/tw/app/quickmood/id6752010083"
   }
