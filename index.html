@@ -388,7 +388,7 @@ loadWeather();
 async function loadApod(){
   const apodDiv=document.getElementById('apod');
   try{
-    const res=await fetch('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY');
+    const res=await fetch('https://api.nasa.gov/planetary/apod?api_key=QCUm1wVbVLFqsiNJdaTKolWUuXTo4Qdxjc1zF4f3');
     const data=await res.json();
     console.log('NASA APOD data:', data); // 調試用
     if(data.media_type==='image'){
