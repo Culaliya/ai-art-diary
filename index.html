@@ -416,17 +416,6 @@ async function loadWeather(){
 }
 loadWeather();
 
-// ====== 靈感語錄 API ======
-async function loadQuote(){
-  try{
-    const res=await fetch('https://api.quotable.io/random?nocache='+Date.now());
-    const data=await res.json();
-    document.getElementById('quoteSection').innerText=`“${data.content}” — ${data.author}`;
-  }catch{
-    document.getElementById('quoteSection').innerText='靈感語錄載入失敗';
-  }
-}
-loadQuote();
 
 // ====== NASA APOD ======
 async function loadApod(){
@@ -445,29 +434,7 @@ async function loadApod(){
 }
 loadApod();
 
-// ====== Le Chat 靈感互動機 ======
-const LECHAT_API_KEY='Q9j7v7FfiGdpLY9mxcoBQJ37EHwkFfYD'; // 🔑← 將此處替換為你的 Le Chat API 金鑰
-async function askAI(){
-  const input=document.getElementById('chatInput').value.trim();
-  if(!input){alert('請輸入內容');return;}
-  document.getElementById('chatOutput').innerText='思考中...';
-  try{
-    const res=await fetch('https://api.lechat.ai/v1/chat',{
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'Authorization':'Bearer '+LECHAT_API_KEY
-      },
-      body:JSON.stringify({
-        model:'gpt-4',
-        messages:[{role:'user',content:input}]
-      })
-    });
-    const data=await res.json();
-    document.getElementById('chatOutput').innerText=data.reply||data.choices?.[0]?.message?.content||'AI沒有回覆';
-  }catch{
-    document.getElementById('chatOutput').innerText='AI 回覆失敗';
-  }
+
 }
 </script>
 </body>
