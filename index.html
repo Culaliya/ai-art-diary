@@ -207,7 +207,7 @@ async function talkToCat() {
   memeCat.style.transform = 'scale(1.1) rotate(10deg)';
   isThinking = true;
   try {
-    const res = await fetch('/api/gemini', {
+    const res = await fetch('/api/gpt', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt: input }),
