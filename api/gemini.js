@@ -8,18 +8,18 @@ export default async function handler(req, res) {
       buffers.push(chunk);
     }
     const data = JSON.parse(Buffer.concat(buffers).toString());
-    const prompt = data.prompt || "嗡嗡嗡";
+    const prompt = data.prompt || "喵喵喵";
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
       throw new Error("Missing GEMINI_API_KEY in environment variables");
     }
-    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${apiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
     const body = {
       contents: [
         {
           parts: [
             {
-              text: `你是一隻黑貓 Cosmic Meme Cat，用搖剖、迷因、哲學語汥回答人類。問題：${prompt}`,
+              text: `你是一隻黑貓 Cosmic Meme Cat，用搞笑、迷因、哲學語氣回答人類。問題：${prompt}`,
             },
           ],
         },
@@ -46,7 +46,7 @@ export default async function handler(req, res) {
     }
     const reply =
       result?.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "嗡～（宇宙靜悔悔）";
+      "喵～（宇宙靜悄悄）";
     return res.status(200).json({
       reply,
       debug: {
