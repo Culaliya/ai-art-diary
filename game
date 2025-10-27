@@ -1,1 +1,448 @@
 
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<title>Disaster Kitten — with Audio</title>
+<style>
+:root{
+  --bg:#0e0f14; --fg:#e6e7eb; --accent:#6cf; --accent2:#ff7ab6; --muted:#8a8f98; --panel:#171923;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:linear-gradient(180deg,#0b0c12,#151728 60%,#0b0c12);}
+body{font-family:ui-rounded,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji"; color:var(--fg); display:flex; align-items:center; justify-content:center;}
+#wrap{width:min(92vw,720px); aspect-ratio:9/16; position:relative; border-radius:18px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,.5), inset 0 0 0 1px rgba(255,255,255,.06);}
+canvas{width:100%; height:100%; display:block; background:
+  radial-gradient(120% 70% at 50% 0%, rgba(255,255,255,.06), transparent 35%),
+  linear-gradient(180deg, rgba(255,255,255,.02), transparent 18%),
+  linear-gradient(180deg,#0b0c12,#0b0c12 30%,#0c1020 80%,#090b12);}
+.hud{position:absolute; inset:0; pointer-events:none; padding:10px 12px; display:flex; justify-content:space-between; font-weight:600; text-shadow:0 1px 0 rgba(0,0,0,.5);}
+.hud .left,.hud .right{display:flex; gap:10px; align-items:center}
+.chip{background:rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.08); padding:6px 10px; border-radius:12px; font-size:14px}
+.btnbar{position:absolute; right:10px; bottom:10px; display:flex; gap:8px; pointer-events:auto}
+.btn{background:var(--panel); color:var(--fg); border:1px solid rgba(255,255,255,.08); padding:10px 12px; border-radius:12px; font-weight:700; cursor:pointer; user-select:none}
+.btn:active{transform:translateY(1px)}
+.badge{color:var(--accent)}
+.hearts{letter-spacing:2px}
+.overlay{position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,.45),rgba(0,0,0,.65)); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:16px; text-align:center; padding:20px}
+.card{background:rgba(20,22,33,.85); border:1px solid rgba(255,255,255,.08); padding:22px; border-radius:16px; max-width:85%}
+.title{font-size:28px; font-weight:900; letter-spacing:.5px}
+.subtitle{color:var(--muted); margin-top:8px; line-height:1.5}
+.cta{margin-top:14px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap}
+.cta .btn{font-size:16px; padding:12px 16px}
+.note{font-size:12px; color:var(--muted)}
+.audioBtn{position:absolute; left:10px; bottom:10px; pointer-events:auto}
+</style>
+</head>
+<body>
+<div id="wrap" aria-label="Disaster Kitten game area">
+  <canvas id="game" width="360" height="640"></canvas>
+
+  <div class="hud" aria-hidden="true">
+    <div class="left">
+      <div class="chip"><span class="badge">Score</span> <span id="score">0</span></div>
+      <div class="chip"><span class="badge">Level</span> <span id="level">1</span></div>
+    </div>
+    <div class="right">
+      <div class="chip hearts" id="lives">❤️❤️❤️</div>
+    </div>
+
+    <div class="btnbar">
+      <button class="btn audioBtn" id="audioBtn" title="Mute/Unmute">🔊</button>
+      <button class="btn" id="pauseBtn" title="Pause/Resume (P)">⏸️</button>
+      <button class="btn" id="restartBtn" title="Restart (R)">⟳</button>
+    </div>
+  </div>
+
+  <!-- Overlays -->
+  <div class="overlay" id="menu">
+    <div class="card">
+      <div class="title">Disaster Kitten 🐱</div>
+      <div class="subtitle">
+        接住 <b>🐟</b> 得分、閃避 <b>🦅</b> 別被抓。<br/>
+        手機：手指拖曳；電腦：← → 或 A D。按下 Start 後開啟音效/BGM。
+      </div>
+      <div class="cta">
+        <button class="btn" id="startBtn">▶ Start</button>
+        <button class="btn" id="howBtn">❓ How to play</button>
+      </div>
+      <div class="note">單檔、可離線；音訊全部即時合成。</div>
+    </div>
+  </div>
+
+  <div class="overlay" id="help" style="display:none">
+    <div class="card">
+      <div class="title">玩法說明</div>
+      <div class="subtitle" style="text-align:left">
+        • 接到 🐟 +10 分；連續3條魚有額外 +20 連段。<br/>
+        • 被 🦅 擊中扣 1❤️，掉到 0 就 Game Over。<br/>
+        • 速度與出現率會隨時間提升（等級↑），BGM 節拍也會加快。<br/>
+        • P ＝暫停/繼續，R ＝重來。🔊 可靜音。
+      </div>
+      <div class="cta"><button class="btn" id="backBtn">返回</button></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="pause" style="display:none">
+    <div class="card">
+      <div class="title">已暫停 ⏸️</div>
+      <div class="subtitle">按「繼續」或 P 回到戰場。</div>
+      <div class="cta">
+        <button class="btn" id="resumeBtn">▶ 繼續</button>
+        <button class="btn" id="restartBtn2">⟳ 重來</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="gameover" style="display:none">
+    <div class="card">
+      <div class="title">Game Over</div>
+      <div class="subtitle">Score：<b id="finalScore">0</b>　Level：<b id="finalLevel">1</b></div>
+      <div class="cta"><button class="btn" id="againBtn">再來一局</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(()=>{
+// ---------- Canvas / UI ----------
+const cvs = document.getElementById('game');
+const ctx = cvs.getContext('2d');
+const scoreEl = document.getElementById('score');
+const levelEl = document.getElementById('level');
+const livesEl = document.getElementById('lives');
+const pauseBtn = document.getElementById('pauseBtn');
+const restartBtn = document.getElementById('restartBtn');
+const audioBtn = document.getElementById('audioBtn');
+
+const menu = document.getElementById('menu');
+const help = document.getElementById('help');
+const pauseOv = document.getElementById('pause');
+const over = document.getElementById('gameover');
+const finalScore = document.getElementById('finalScore');
+const finalLevel = document.getElementById('finalLevel');
+
+document.getElementById('startBtn').onclick = start;
+document.getElementById('howBtn').onclick = ()=>{ menu.style.display='none'; help.style.display='flex'; playClick(); };
+document.getElementById('backBtn').onclick = ()=>{ help.style.display='none'; menu.style.display='flex'; playClick(); };
+document.getElementById('resumeBtn').onclick = ()=>{ playClick(); resume(); };
+document.getElementById('restartBtn2').onclick = ()=>{ playClick(); restart(); };
+document.getElementById('againBtn').onclick = ()=>{ playClick(); restart(); };
+
+pauseBtn.onclick = ()=> (state==='playing'? (playClick(), pause()) : (playClick(), resume()));
+restartBtn.onclick = ()=>{ playClick(); restart(); };
+audioBtn.onclick = ()=>{ toggleMute(); playClick(); };
+
+const BASE_W=360, BASE_H=640;
+function fitCanvas(){
+  const dpr = Math.max(1, Math.min(2, window.devicePixelRatio||1));
+  cvs.width = Math.floor(BASE_W*dpr);
+  cvs.height= Math.floor(BASE_H*dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+}
+fitCanvas(); addEventListener('resize', fitCanvas);
+
+// ---------- Game State ----------
+let state='menu';
+let score=0, level=1, lives=3, combo=0;
+const player={x:BASE_W/2, y:BASE_H-70, r:22, speed:260, targetX:null};
+let items=[];
+let lastSpawn=0, spawnCd=650;
+let t0=0, last=0, raf=null;
+
+const keys = new Set();
+addEventListener('keydown', e=>{
+  if (['ArrowLeft','ArrowRight','a','A','d','D','p','P','r','R',' '].includes(e.key)) e.preventDefault();
+  if (e.key==='p'||e.key==='P') return (state==='playing'? pause(): state==='paused'? resume(): null);
+  if (e.key==='r'||e.key==='R') return restart();
+  if (state==='playing') keys.add(e.key);
+});
+addEventListener('keyup', e=> keys.delete(e.key));
+
+const wrap = document.getElementById('wrap');
+function setTarget(evt){
+  const rect = cvs.getBoundingClientRect();
+  const x = (evt.clientX - rect.left) / rect.width * BASE_W;
+  player.targetX = Math.max(16, Math.min(BASE_W-16, x));
+}
+wrap.addEventListener('pointerdown', e=>{ if(state==='playing'){ setTarget(e); wrap.setPointerCapture(e.pointerId); }});
+wrap.addEventListener('pointermove', e=>{ if(state==='playing') setTarget(e); });
+wrap.addEventListener('pointerup', e=>{ if(state==='playing') player.targetX=null; });
+
+const TYPE_FISH='fish', TYPE_EAGLE='eagle';
+
+// ---------- Audio (WebAudio, procedural) ----------
+let AC=null, master=null, bgmGain=null, sfxGain=null, isMuted=false, bgmTimer=null;
+
+function initAudio(){
+  if (AC) return;
+  AC = new (window.AudioContext || window.webkitAudioContext)();
+  master = AC.createGain(); master.gain.value=0.9; master.connect(AC.destination);
+  sfxGain = AC.createGain(); sfxGain.gain.value=0.9; sfxGain.connect(master);
+  bgmGain = AC.createGain(); bgmGain.gain.value=0.5; bgmGain.connect(master);
+}
+
+function toggleMute(){
+  isMuted = !isMuted;
+  if(!master) return;
+  master.gain.value = isMuted? 0 : 0.9;
+  audioBtn.textContent = isMuted? '🔇' : '🔊';
+}
+
+function env(when, dur, peak=1, node){
+  const g = node.gain || node; // support GainNode or AudioParam
+  const now = when ?? AC.currentTime;
+  g.cancelScheduledValues(now);
+  g.setValueAtTime(0.0001, now);
+  g.exponentialRampToValueAtTime(peak, now+0.01);
+  g.exponentialRampToValueAtTime(0.0001, now+dur);
+}
+
+function tone({type='sine', freq=440, dur=0.2, gain=0.5, when}={}){
+  const t = when??AC.currentTime;
+  const o = AC.createOscillator(); o.type=type; o.frequency.setValueAtTime(freq, t);
+  const g = AC.createGain(); g.gain.value=0;
+  o.connect(g).connect(sfxGain);
+  env(t, dur, gain, g.gain);
+  o.start(t); o.stop(t+dur+0.02);
+}
+
+function noise({dur=0.2,gain=0.3,when}={}){
+  const t = when??AC.currentTime;
+  const buf = AC.createBuffer(1, AC.sampleRate*dur, AC.sampleRate);
+  const data = buf.getChannelData(0);
+  for(let i=0;i<data.length;i++) data[i]=Math.random()*2-1;
+  const src = AC.createBufferSource(); src.buffer=buf;
+  const g = AC.createGain(); g.gain.value=0;
+  const bp = AC.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=800; bp.Q.value=1.2;
+  src.connect(bp).connect(g).connect(sfxGain);
+  env(t, dur, gain, g.gain);
+  src.start(t); src.stop(t+dur+0.02);
+}
+
+function sfxCatch(){
+  // 小跳兩音
+  tone({type:'square', freq:880, dur:0.08, gain:0.35});
+  tone({type:'square', freq:1320, dur:0.08, gain:0.28, when:AC.currentTime+0.08});
+}
+function sfxHit(){
+  tone({type:'sawtooth', freq:300, dur:0.12, gain:0.4});
+  noise({dur:0.12, gain:0.25});
+}
+function sfxLevelUp(){
+  const t=AC.currentTime;
+  tone({type:'triangle', freq:660, dur:0.08, gain:0.4, when:t});
+  tone({type:'triangle', freq:880, dur:0.08, gain:0.35, when:t+0.08});
+  tone({type:'triangle', freq:1100, dur:0.10, gain:0.35, when:t+0.16});
+}
+function sfxGameOver(){
+  const t=AC.currentTime;
+  tone({type:'sine', freq:440, dur:0.35, gain:0.35, when:t});
+  tone({type:'sine', freq:330, dur:0.45, gain:0.32, when:t+0.25});
+  tone({type:'sine', freq:247, dur:0.55, gain:0.3, when:t+0.55});
+}
+function playClick(){ if(!AC) return; tone({type:'triangle', freq:880, dur:0.04, gain:0.18}); }
+
+// BGM：簡單 8-bit 分解和弦循環（C-Am-F-G），隨 level 加快
+function startBGM(){
+  if (!AC) return;
+  stopBGM();
+  const seq = [  // 每拍四個 16th
+    523,659,784,659,  // C/E/G/E
+    440,554,659,554,  // A/C/E/C
+    349,440,523,440,  // F/A/C/A
+    392,494,587,494   // G/B/D/B
+  ];
+  const osc = AC.createOscillator(); osc.type='square';
+  const g = AC.createGain(); g.gain.value=0; osc.connect(g).connect(bgmGain);
+  osc.start();
+
+  function step(){
+    if(state!=='playing'){ bgmTimer = setTimeout(step, 250); return; }
+    const bpmBase = 96; // 起始 BPM
+    const bpm = Math.min(168, bpmBase + (level-1)*6); // 隨 level 加速
+    const beatDur = 60/bpm; // 一拍
+    // 每拍連打4小步（16分音符）
+    let t = AC.currentTime + 0.02;
+    for(let i=0;i<4;i++){
+      const idx = Math.floor(Math.random()*seq.length);
+      osc.frequency.setValueAtTime(seq[idx], t);
+      env(t, beatDur*0.45, 0.18, g.gain);
+      t += beatDur/4;
+    }
+    bgmTimer = setTimeout(step, beatDur*1000);
+  }
+  step();
+
+  // 把節點存起來方便停止
+  startBGM._osc = osc; startBGM._gain = g;
+}
+function stopBGM(){
+  if (bgmTimer){ clearTimeout(bgmTimer); bgmTimer=null; }
+  if (startBGM._osc){
+    try{ startBGM._osc.stop(); }catch{}
+    startBGM._osc.disconnect(); startBGM._gain.disconnect();
+    startBGM._osc=null; startBGM._gain=null;
+  }
+}
+
+// ---------- Game Flow ----------
+function reset(){
+  score=0; level=1; lives=3; combo=0;
+  items.length=0; lastSpawn=0; spawnCd=650; t0=0; last=0;
+  player.x=BASE_W/2; player.targetX=null;
+  updateHud();
+}
+function start(){
+  initAudio(); // 建立 AudioContext（由使用者手動點擊觸發）
+  if (AC.state==='suspended') AC.resume();
+  reset();
+  state='playing';
+  menu.style.display='none'; help.style.display='none'; pauseOv.style.display='none'; over.style.display='none';
+  startBGM();
+  loop(performance.now());
+}
+function resume(){
+  if (state!=='paused') return;
+  state='playing';
+  pauseOv.style.display='none';
+  if (AC && AC.state==='suspended') AC.resume();
+  startBGM();
+  loop(performance.now());
+}
+function pause(){
+  if (state!=='playing') return;
+  state='paused';
+  pauseOv.style.display='flex';
+  stopBGM();
+}
+function gameOver(){
+  state='over';
+  finalScore.textContent = score; finalLevel.textContent = level;
+  over.style.display='flex';
+  stopBGM(); sfxGameOver();
+}
+function restart(){
+  reset();
+  state='playing';
+  menu.style.display='none'; help.style.display='none'; pauseOv.style.display='none'; over.style.display='none';
+  startBGM();
+  loop(performance.now());
+}
+function updateHud(){
+  scoreEl.textContent=score; levelEl.textContent=level;
+  livesEl.textContent='❤️'.repeat(lives)+'🖤'.repeat(3-lives);
+  pauseBtn.textContent=(state==='playing')?'⏸️':'▶';
+}
+
+// ---------- Loop / Spawning / Render ----------
+function spawn(){
+  const pEagle = Math.min(.35 + level*0.03, 0.8);
+  const type = Math.random() < (1 - pEagle) ? TYPE_FISH : TYPE_EAGLE;
+  const x = 20 + Math.random()*(BASE_W-40);
+  const vy = (120 + level*20) + Math.random()*(120 + level*20)*0.6;
+  const size = 20 + Math.random()*8;
+  items.push({type,x,y:-20,vy,size,rot:0,rv:(Math.random()*2-1)*0.02});
+}
+
+function loop(now){
+  if (state!=='playing') return;
+  if (!t0){ t0=now; last=now; }
+  const dt = Math.min(1/30, (now-last)/1000); last=now;
+
+  // Level ramp
+  const elapsed = (now - t0)/1000;
+  const newLevel = Math.floor(elapsed/12)+1;
+  if (newLevel!==level){ level=newLevel; spawnCd=Math.max(210, 650-(level-1)*45); score+=5*level; updateHud(); sfxLevelUp(); }
+
+  // Move player
+  const left = keys.has('ArrowLeft')||keys.has('a')||keys.has('A');
+  const right= keys.has('ArrowRight')||keys.has('d')||keys.has('D');
+  let vx=0; if (left) vx-=player.speed; if (right) vx+=player.speed;
+  if (player.targetX!=null){ const dx=player.targetX-player.x; vx=Math.sign(dx)*Math.min(Math.abs(dx)*12, player.speed*1.35); }
+  player.x=Math.max(16, Math.min(BASE_W-16, player.x + vx*dt));
+
+  // Spawn
+  if (now-lastSpawn>spawnCd){
+    lastSpawn=now;
+    const n=1 + (Math.random()<Math.min(0.35,(level-1)*0.05)?1:0);
+    for(let i=0;i<n;i++) spawn();
+  }
+
+  // Update items
+  for (const it of items){ it.y += it.vy*dt; it.rot += it.rv; }
+
+  // Collision / cleanup
+  const pr = player.r;
+  items = items.filter(it=>{
+    if (it.y > BASE_H+40) return false;
+    const dx=it.x-player.x, dy=it.y-player.y;
+    const rr=(pr + it.size*0.8); if (dx*dx+dy*dy < rr*rr){
+      if (it.type===TYPE_FISH){
+        const gain = 10 + Math.min(20, Math.floor(combo/3)*5);
+        combo++; score+=gain; sfxCatch();
+      }else{
+        lives--; combo=0; sfxHit(); if(lives<=0){ updateHud(); gameOver(); return false; }
+      }
+      return false;
+    }
+    return true;
+  });
+
+  // Render
+  draw();
+
+  updateHud();
+  raf = requestAnimationFrame(loop);
+}
+
+function drawBg(){
+  ctx.save(); ctx.globalAlpha=0.08;
+  const s=20; ctx.beginPath();
+  for(let x=0;x<=BASE_W;x+=s){ ctx.moveTo(x,0); ctx.lineTo(x,BASE_H); }
+  for(let y=0;y<=BASE_H;y+=s){ ctx.moveTo(0,y); ctx.lineTo(BASE_W,y); }
+  ctx.strokeStyle='#9cf'; ctx.stroke(); ctx.restore();
+}
+
+function draw(){
+  ctx.clearRect(0,0,BASE_W,BASE_H);
+  drawBg();
+
+  // Player
+  ctx.save();
+  ctx.fillStyle='#fff'; // 讓 emoji 在深底不隱形
+  ctx.font='28px Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji';
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.shadowColor='rgba(0,0,0,.35)'; ctx.shadowBlur=8;
+  ctx.translate(player.x, player.y);
+  ctx.rotate(Math.max(-0.2, Math.min(0.2, (player.targetX? (player.targetX-player.x):0)/120 )));
+  ctx.fillText('🐱',0,0);
+  ctx.lineWidth=1.5; ctx.strokeStyle='rgba(0,0,0,.35)'; ctx.strokeText('🐱',0,0);
+  ctx.restore();
+
+  // Items
+  for (const it of items){
+    ctx.save();
+    ctx.fillStyle='#fff';
+    ctx.translate(it.x,it.y); ctx.rotate(it.rot);
+    ctx.font=(24+Math.floor(it.size))+'px Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.shadowColor='rgba(0,0,0,.35)'; ctx.shadowBlur=8;
+    ctx.fillText(it.type===TYPE_FISH?'🐟':'🦅',0,0);
+    ctx.restore();
+  }
+
+  // Ground glow
+  const grd = ctx.createLinearGradient(0, BASE_H-80, 0, BASE_H);
+  grd.addColorStop(0,'rgba(108,204,255,.0)'); grd.addColorStop(1,'rgba(108,204,255,.25)');
+  ctx.fillStyle=grd; ctx.fillRect(0, BASE_H-80, BASE_W, 80);
+}
+
+// Accessibility: click to pause on desktop
+cvs.addEventListener('click', ()=>{ if(state==='playing' && !matchMedia('(pointer:coarse)').matches) pause(); });
+
+})();
+</script>
+</body>
+</html>
