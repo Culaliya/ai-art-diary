@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    // ✅ 正確解析 body
+    // parse request body
     const buffers = [];
     for await (const chunk of req) buffers.push(chunk);
     const data = JSON.parse(Buffer.concat(buffers).toString());
@@ -12,28 +12,49 @@ export default async function handler(req, res) {
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      throw new Error("Missing GEMINI_API_KEY in environment variables.");
+      throw new Error("❌ Missing GEMINI_API_KEY in environment variables");
     }
 
-    // ✅ 呼叫 Gemini API
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-        }),
-      }
-    );
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const body = {
+      contents: [
+        {
+          parts: [
+            {
+              text: `你是一隻黑貓 Cosmic Meme Cat，用搗辣、迷因、哲學語氣回答人類。問題：${prompt}`,
+            },
+          ],
+        },
+      ],
+    };
 
-    const result = await response.json();
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+
+    const resultText = await response.text();
+    let result;
+    try {
+      result = JSON.parse(resultText);
+    } catch {
+      result = { raw: resultText };
+    }
+
+    if (!response.ok) {
+      return res.status(response.status).json({
+        error: "❌ Gemini API Error",
+        status: response.status,
+        result,
+      });
+    }
+
     const reply =
       result?.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "喵～（宇宙靜悄悄）";
-
-    res.status(200).json({ reply });
+      "(\u6c92\u6709\u56de\u8986\u5167\u5bb9)";
+    res.status(200).json({ reply, debug: { status: response.status, result } });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: "Server Error", detail: err.message });
   }
 }
