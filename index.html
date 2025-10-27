@@ -81,7 +81,7 @@ pre.debug-output {
     <div style="margin-top:15px;">
       <input id="catInput" placeholder="輸入一句話給貓咪..." style="padding:6px 10px; width:70%; border-radius:6px; border:1px solid #0ff; background:#111; color:#0ff;">
       <button class="button" onclick="talkToCat()">召喚喵言</button>
-      <button class="button" style="display:none;">Debug</button>
+      <button class="button" onclick="toggleDebug()">Debug</button>
     </div>
     <div id="catReply" style="margin-top:20px; color:#0ff; min-height:40px; font-family:'Courier New', monospace;"></div>
     <pre id="debugOutput" class="debug-output" style="display:none;"></pre>
@@ -228,7 +228,7 @@ async function talkToCat() {
     isThinking = false;
   }
 }
-function () {
+function toggleDebug() {
   const dbg = document.getElementById('debugOutput');
   if (dbg.style.display === 'none') {
     dbg.style.display = 'block';
