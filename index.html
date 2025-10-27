@@ -8,6 +8,7 @@
 body {
   margin:0;font-family:'Orbitron',sans-serif;color:#fff;
   overflow-x:hidden;background:#000;position:relative;
+  cursor: none; /* 隱藏預設滑鼠游標 */
 }
 header{text-align:center;padding:60px 20px;}
 h1{font-size:3em;color:#0ff;text-shadow:0 0 20px #0ff;animation:glow 3s ease-in-out infinite alternate;}
@@ -15,14 +16,48 @@ h1{font-size:3em;color:#0ff;text-shadow:0 0 20px #0ff;animation:glow 3s ease-in-
 section{max-width:1000px;margin:auto;padding:40px 20px;}
 h2{color:#ff3eff;margin-bottom:16px;}
 #particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-2;background:#000;}
+
+/* ===== 滑鼠跟隨特效 ===== */
+#cursor {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #0ff;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.1s ease;
+  box-shadow: 0 0 20px #0ff, inset 0 0 10px #0ff;
+}
+#cursor-trail {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+}
+.rainbow-trail {
+  position: fixed;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9997;
+  animation: fadeOut 1s ease-out forwards;
+}
+@keyframes fadeOut {
+  to { opacity: 0; transform: scale(2); }
+}
+
 .app-container{display:flex;flex-direction:column;gap:20px;}
 .app-card{display:flex;align-items:center;gap:20px;background:rgba(255,255,255,0.05);border:1px solid #0ff3;border-radius:12px;padding:20px;transition:transform .3s, box-shadow .3s;position:relative;}
 .app-card:hover{transform:translateY(-5px);box-shadow:0 0 25px #0ff;}
 .app-image{width:120px;height:120px;border-radius:16px;object-fit:cover;}
 .app-info h3{margin:0 0 8px 0;color:#0ff;}
 .app-info p{color:#ccc;margin:0 0 10px 0;}
-.button{display:inline-block;padding:6px 12px;border:1px solid #0ff;color:#0ff;border-radius:6px;text-decoration:none;transition:.2s;cursor:pointer;background:transparent;}
-.button:hover{background:#0ff;color:#000;}
+.button{display:inline-block;padding:8px 16px;border:1px solid #0ff;color:#0ff;border-radius:6px;text-decoration:none;transition:.2s;cursor:pointer;background:transparent;font-size:14px;}
+.button:hover{background:#0ff;color:#000;transform:scale(1.05);}
 .media-flex{display:flex;flex-wrap:wrap;gap:20px;}
 .video-container{flex:2;min-width:300px;aspect-ratio:16/9;}
 .spotify-container{flex:1;min-width:300px;}
@@ -41,14 +76,223 @@ h2{color:#ff3eff;margin-bottom:16px;}
 .ripple{position:fixed;border-radius:50%;pointer-events:none;border:2px solid #0ff;animation:ripple 0.6s ease-out;}
 @keyframes ripple{from{transform:scale(0);opacity:0.8;} to{transform:scale(10);opacity:0;}}
 #weather-quote{text-align:center;margin-top:10px;color:#aaf;font-size:1em;}
-#weather-quote .chat{margin-top:10px;}
-#weather-quote .quote{margin-top:8px;color:#ccc;font-style:italic;}
+
+/* ===== 超級對話框樣式 ===== */
+#chatContainer {
+  max-width: 800px;
+  margin: 30px auto;
+  background: rgba(0, 255, 255, 0.05);
+  border: 2px solid #0ff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+}
+#chatHistory {
+  height: 300px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  border: 1px solid #0ff3;
+}
+#chatHistory::-webkit-scrollbar {
+  width: 8px;
+}
+#chatHistory::-webkit-scrollbar-track {
+  background: rgba(0, 255, 255, 0.1);
+  border-radius: 4px;
+}
+#chatHistory::-webkit-scrollbar-thumb {
+  background: #0ff;
+  border-radius: 4px;
+}
+.message {
+  margin: 15px 0;
+  display: flex;
+  align-items: flex-start;
+  animation: messageSlideIn 0.3s ease-out;
+}
+@keyframes messageSlideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.message.user {
+  justify-content: flex-end;
+}
+.message.ai {
+  justify-content: flex-start;
+}
+.message-bubble {
+  max-width: 70%;
+  padding: 12px 16px;
+  border-radius: 18px;
+  position: relative;
+  word-wrap: break-word;
+}
+.message.user .message-bubble {
+  background: linear-gradient(135deg, #0ff, #00d4ff);
+  color: #000;
+  border-bottom-right-radius: 4px;
+}
+.message.ai .message-bubble {
+  background: rgba(255, 62, 255, 0.2);
+  border: 1px solid #ff3eff;
+  color: #fff;
+  border-bottom-left-radius: 4px;
+}
+.message-avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  margin: 0 10px;
+  border: 2px solid #0ff;
+  box-shadow: 0 0 10px #0ff;
+}
+.message.user .message-avatar {
+  order: 2;
+}
+.typing-indicator {
+  display: none;
+  padding: 10px 16px;
+}
+.typing-indicator span {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #0ff;
+  margin: 0 3px;
+  animation: typing 1.4s infinite;
+}
+.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typing {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-10px); }
+}
+#chatInputArea {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+#catInput {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 25px;
+  border: 2px solid #0ff;
+  background: rgba(0, 0, 0, 0.5);
+  color: #0ff;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s;
+}
+#catInput:focus {
+  box-shadow: 0 0 15px #0ff;
+  background: rgba(0, 0, 0, 0.7);
+}
+#sendBtn {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #0ff, #00d4ff);
+  border: none;
+  border-radius: 25px;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 14px;
+}
+#sendBtn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #0ff;
+}
+#quickQuestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+.quick-btn {
+  padding: 6px 12px;
+  background: rgba(0, 255, 255, 0.1);
+  border: 1px solid #0ff;
+  border-radius: 15px;
+  color: #0ff;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.quick-btn:hover {
+  background: rgba(0, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+#chatControls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+#catMood {
+  font-size: 12px;
+  color: #0ff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+#moodIcon {
+  font-size: 20px;
+  animation: bounce 2s ease-in-out infinite;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+#clearChat {
+  padding: 6px 12px;
+  background: rgba(255, 62, 255, 0.2);
+  border: 1px solid #ff3eff;
+  border-radius: 15px;
+  color: #ff3eff;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+#clearChat:hover {
+  background: rgba(255, 62, 255, 0.4);
+}
+
+/* 遊戲按鈕 */
+#gameBtn {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  z-index: 1000;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #ff3eff, #ff00aa);
+  border: 2px solid #ff3eff;
+  border-radius: 25px;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 0 20px rgba(255, 62, 255, 0.5);
+}
+#gameBtn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 30px rgba(255, 62, 255, 0.8);
+}
 
 /* 貓咪動畫效果 */
 #memeCat {
   animation: float 4s ease-in-out infinite alternate;
   cursor: pointer;
   transition: transform 0.3s ease;
+  width: 120px;
+  border-radius: 50%;
+  box-shadow: 0 0 20px #0ff;
 }
 @keyframes float {
   from { transform: translateY(0px); }
@@ -95,21 +339,14 @@ h2{color:#ff3eff;margin-bottom:16px;}
   0%, 100% { box-shadow: 0 0 10px #0ff; }
   50% { box-shadow: 0 0 25px #0ff, 0 0 40px #0ff; }
 }
-
-pre.debug-output {
-  background:rgba(255,255,255,0.05);
-  border:1px solid #0ff3;
-  padding:10px;
-  border-radius:8px;
-  max-height:200px;
-  overflow:auto;
-  color:#0ff;
-  font-size:0.8em;
-}
 </style>
 </head>
 <body>
 <canvas id="particles"></canvas>
+
+<!-- 自訂滑鼠游標 -->
+<div id="cursor"></div>
+<div id="cursor-trail"></div>
 
 <!-- 背景音樂播放器按鈕 -->
 <button id="bgm-control" title="播放/暫停背景音樂">🎵</button>
@@ -117,18 +354,10 @@ pre.debug-output {
   <source src="music/background.mp3" type="audio/mpeg">
 </audio>
 
-<!-- AI Cosmic Meme Cat Section -->
-<section id="catSection">
-  <h2>🐈‍⬛ AI Cosmic Meme Cat 🌐</h2>
-  <div id="catBox" style="text-align:center; margin:30px 0;">
-    <img id="memeCat" src="assets/blackcat.png" alt="Meme Cat" style="width:160px; border-radius:50%;">
-    <div style="margin-top:15px;">
-      <input id="catInput" placeholder="輸入一句話給貓咪..." style="padding:6px 10px; width:70%; border-radius:6px; border:1px solid #0ff; background:#111; color:#0ff;">
-      <button class="button" onclick="talkToCat()">召喚喵言</button>
-    </div>
-    <div id="catReply" style="margin-top:20px; color:#0ff; min-height:40px; font-family:'Courier New', monospace;"></div>
-  </div>
-</section>
+<!-- 遊戲按鈕 -->
+<a href="game.html" id="gameBtn" title="前往貓咪小遊戲">
+  🎮 貓咪遊戲
+</a>
 
 <!-- 音效元素 -->
 <audio id="hover-sound" src="music/hover.mp3"></audio>
@@ -146,6 +375,55 @@ pre.debug-output {
   </div>
 </header>
 
+<!-- ===== 超級 AI 對話框 ===== -->
+<section id="catSection">
+  <h2>🐈‍⬛ AI Cosmic Meme Cat 🌐</h2>
+  <div style="text-align:center; margin-bottom:20px;">
+    <img id="memeCat" src="assets/blackcat.png" alt="Meme Cat">
+  </div>
+  
+  <div id="chatContainer">
+    <!-- 對話歷史 -->
+    <div id="chatHistory">
+      <div class="message ai">
+        <img class="message-avatar" src="assets/blackcat.png" alt="Cat">
+        <div class="message-bubble">
+          喵～我是宇宙喵星人！有什麼想聊的嗎？ 🌌✨
+        </div>
+      </div>
+    </div>
+    
+    <!-- 快速問題按鈕 -->
+    <div id="quickQuestions">
+      <button class="quick-btn" onclick="askQuick('告訴我一個宇宙冷知識')">🌌 宇宙冷知識</button>
+      <button class="quick-btn" onclick="askQuick('給我一個創作靈感')">💡 創作靈感</button>
+      <button class="quick-btn" onclick="askQuick('說個笑話')">😹 說笑話</button>
+      <button class="quick-btn" onclick="askQuick('推薦一首歌')">🎵 推薦歌曲</button>
+      <button class="quick-btn" onclick="askQuick('今天適合做什麼')">🎲 今日建議</button>
+    </div>
+    
+    <!-- 輸入區 -->
+    <div id="chatInputArea">
+      <input id="catInput" type="text" placeholder="輸入訊息給貓咪..." onkeypress="handleEnter(event)">
+      <button id="sendBtn" onclick="sendMessage()">發送 ✨</button>
+    </div>
+    
+    <!-- 打字指示器 -->
+    <div class="typing-indicator" id="typingIndicator">
+      <span></span><span></span><span></span>
+    </div>
+    
+    <!-- 控制按鈕 -->
+    <div id="chatControls">
+      <div id="catMood">
+        <span id="moodIcon">😺</span>
+        <span id="moodText">心情愉快</span>
+      </div>
+      <button id="clearChat" onclick="clearChatHistory()">🗑️ 清除對話</button>
+    </div>
+  </div>
+</section>
+
 <!-- Featured Video & Music -->
 <section>
   <h2>🎥 Featured Video & Music</h2>
@@ -159,18 +437,16 @@ pre.debug-output {
   </div>
 </section>
 
-<!-- Gallery with controls -->
+<!-- Gallery -->
 <section>
   <h2>🖼️ Gallery</h2>
   <div class="slideshow-container">
     <img class="slide" src="assets/midjourney/mid1.jpg">
     <img class="slide" src="assets/midjourney/mid2.jpg">
     <img class="slide" src="assets/midjourney/mid3.jpg">
-    <!-- 左右按鈕 -->
     <button class="slide-btn prev" onclick="changeSlide(-1)">❮</button>
     <button class="slide-btn next" onclick="changeSlide(1)">❯</button>
   </div>
-  <!-- 指示點 -->
   <div style="text-align:center; margin-top:15px;">
     <span class="dot" onclick="currentSlide(0)"></span>
     <span class="dot" onclick="currentSlide(1)"></span>
@@ -184,7 +460,7 @@ pre.debug-output {
   <div class="app-container" id="app-container">Loading apps...</div>
 </section>
 
-<!-- NASA APOD with your API key -->
+<!-- NASA APOD -->
 <section>
   <h2>🌌 NASA Astronomy Picture of the Day</h2>
   <div id="apod" style="text-align:center;">載入星圖中…</div>
@@ -216,11 +492,57 @@ pre.debug-output {
 </footer>
 
 <script>
-// ================== Inspiration quotes fade ==================
+// ===== 滑鼠跟隨特效 =====
+const cursor = document.getElementById('cursor');
+const cursorTrail = document.getElementById('cursor-trail');
+let mouseX = 0, mouseY = 0;
+let cursorX = 0, cursorY = 0;
+let trailX = 0, trailY = 0;
+
+// 彩虹顏色
+const rainbowColors = ['#ff0080', '#ff8000', '#ffff00', '#00ff00', '#0080ff', '#8000ff'];
+let colorIndex = 0;
+
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  
+  // 創建彩虹軌跡
+  if (Math.random() > 0.7) {
+    const trail = document.createElement('div');
+    trail.className = 'rainbow-trail';
+    trail.style.left = e.clientX + 'px';
+    trail.style.top = e.clientY + 'px';
+    trail.style.background = rainbowColors[colorIndex % rainbowColors.length];
+    document.body.appendChild(trail);
+    colorIndex++;
+    
+    setTimeout(() => trail.remove(), 1000);
+  }
+});
+
+function updateCursor() {
+  // 平滑追蹤
+  cursorX += (mouseX - cursorX) * 0.15;
+  cursorY += (mouseY - cursorY) * 0.15;
+  trailX += (mouseX - trailX) * 0.08;
+  trailY += (mouseY - trailY) * 0.08;
+  
+  cursor.style.left = cursorX + 'px';
+  cursor.style.top = cursorY + 'px';
+  cursorTrail.style.left = trailX + 'px';
+  cursorTrail.style.top = trailY + 'px';
+  cursorTrail.style.background = rainbowColors[Math.floor(colorIndex / 2) % rainbowColors.length];
+  
+  requestAnimationFrame(updateCursor);
+}
+updateCursor();
+
+// ===== Inspiration quotes fade =====
 const quotes = [
   "✨ 問題不是 AI 是否有靈魂，而是我們是否還保有想像 ✨",
   "🎶 Let algorithms dream with us.",
-  "🎭  藝術，不需要睡覺。",
+  "🎭 藝術，不需要睡覺。",
   "💥 Creativity is coded chaos.",
   "🌠 Every pixel remembers its light.",
   "🧪 想像力是人類最古老的運算。",
@@ -240,12 +562,11 @@ function fadeQuote() {
 setInterval(fadeQuote, 8000);
 window.addEventListener('load', () => { inspirationBar.style.opacity = 1; });
 
-// ================== Background Music Control ==================
+// ===== 背景音樂控制 =====
 const bgm = document.getElementById('bgm');
 const bgmControl = document.getElementById('bgm-control');
 let isMusicPlaying = false;
-
-bgm.volume = 0.3; // 設定音量為 30%
+bgm.volume = 0.3;
 
 bgmControl.addEventListener('click', () => {
   if (isMusicPlaying) {
@@ -260,96 +581,207 @@ bgmControl.addEventListener('click', () => {
   isMusicPlaying = !isMusicPlaying;
 });
 
-// ================== Cat Interaction with GPT API ==================
+// ===== 超級對話框系統 =====
+const chatHistory = document.getElementById('chatHistory');
+const catInput = document.getElementById('catInput');
+const typingIndicator = document.getElementById('typingIndicator');
 const memeCat = document.getElementById('memeCat');
-let isThinking = false;
+const moodIcon = document.getElementById('moodIcon');
+const moodText = document.getElementById('moodText');
+let messageCount = 0;
 
-async function talkToCat() {
-  const input = document.getElementById('catInput').value.trim();
-  if (!input) { alert('喵？說點什麼嘛～'); return; }
+// 貓咪心情狀態
+const moods = {
+  happy: { icon: '😺', text: '心情愉快' },
+  thinking: { icon: '🤔', text: '思考中...' },
+  excited: { icon: '😻', text: '超興奮！' },
+  sleepy: { icon: '😴', text: '有點睏' },
+  playful: { icon: '😸', text: '想玩耍' }
+};
+
+function updateMood(mood) {
+  moodIcon.innerText = moods[mood].icon;
+  moodText.innerText = moods[mood].text;
+}
+
+function addMessage(text, isUser = false) {
+  const message = document.createElement('div');
+  message.className = `message ${isUser ? 'user' : 'ai'}`;
   
-  const replyBox = document.getElementById('catReply');
-  replyBox.innerText = '（貓咪正在通靈中...）🌐🐾';
-  memeCat.style.transform = 'scale(1.1) rotate(10deg)';
-  isThinking = true;
+  const avatar = document.createElement('img');
+  avatar.className = 'message-avatar';
+  avatar.src = isUser ? 'https://via.placeholder.com/35/0ff/000?text=You' : 'assets/blackcat.png';
+  
+  const bubble = document.createElement('div');
+  bubble.className = 'message-bubble';
+  bubble.innerText = text;
+  
+  if (isUser) {
+    message.appendChild(bubble);
+    message.appendChild(avatar);
+  } else {
+    message.appendChild(avatar);
+    message.appendChild(bubble);
+  }
+  
+  chatHistory.appendChild(message);
+  chatHistory.scrollTop = chatHistory.scrollHeight;
+  messageCount++;
+  
+  // 根據對話數更新心情
+  if (messageCount > 10) updateMood('excited');
+  else if (messageCount > 5) updateMood('playful');
+}
+
+function typewriterEffect(text, element) {
+  let index = 0;
+  element.innerText = '';
+  
+  const interval = setInterval(() => {
+    if (index < text.length) {
+      element.innerText += text.charAt(index);
+      chatHistory.scrollTop = chatHistory.scrollHeight;
+      index++;
+    } else {
+      clearInterval(interval);
+    }
+  }, 30);
+}
+
+async function sendMessage() {
+  const text = catInput.value.trim();
+  if (!text) return;
+  
+  // 添加使用者訊息
+  addMessage(text, true);
+  catInput.value = '';
+  
+  // 顯示打字指示器
+  typingIndicator.style.display = 'block';
+  updateMood('thinking');
+  memeCat.style.transform = 'scale(1.1) rotate(5deg)';
   
   try {
-    console.log('Sending request to /api/gpt');
     const res = await fetch('/api/gpt', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt: input }),
+      body: JSON.stringify({ prompt: text }),
     });
     
-    console.log('Response status:', res.status);
     const data = await res.json();
-    console.log('Response data:', data);
+    const reply = data.reply || data.response || data.message || '喵喵喵～';
     
-    if (res.ok) {
-      replyBox.innerText = data.reply || data.response || data.message || '喵喵喵～';
-    } else {
-      replyBox.innerText = '🐾 貓咪連線失敗！' + (data.error || '');
-    }
+    // 隱藏打字指示器
+    typingIndicator.style.display = 'none';
+    
+    // 創建 AI 訊息
+    const message = document.createElement('div');
+    message.className = 'message ai';
+    
+    const avatar = document.createElement('img');
+    avatar.className = 'message-avatar';
+    avatar.src = 'assets/blackcat.png';
+    
+    const bubble = document.createElement('div');
+    bubble.className = 'message-bubble';
+    
+    message.appendChild(avatar);
+    message.appendChild(bubble);
+    chatHistory.appendChild(message);
+    
+    // 打字機效果
+    typewriterEffect(reply, bubble);
+    updateMood('happy');
+    
   } catch (err) {
-    console.error('Error:', err);
-    replyBox.innerText = `喵？錯誤：${err.message}`;
+    typingIndicator.style.display = 'none';
+    addMessage('喵？系統出錯了... 🐾', false);
+    console.error(err);
   } finally {
     memeCat.style.transform = 'scale(1) rotate(0deg)';
-    isThinking = false;
   }
 }
 
-// ================== Cat hover & click effects ==================
+function askQuick(question) {
+  catInput.value = question;
+  sendMessage();
+}
+
+function handleEnter(event) {
+  if (event.key === 'Enter') {
+    sendMessage();
+  }
+}
+
+function clearChatHistory() {
+  if (confirm('確定要清除所有對話記錄嗎？')) {
+    chatHistory.innerHTML = `
+      <div class="message ai">
+        <img class="message-avatar" src="assets/blackcat.png" alt="Cat">
+        <div class="message-bubble">
+          喵～我是宇宙喵星人！有什麼想聊的嗎？ 🌌✨
+        </div>
+      </div>
+    `;
+    messageCount = 0;
+    updateMood('happy');
+  }
+}
+
+// ===== 貓咪點擊效果 =====
 const meowSound = document.getElementById('meow-sound');
 memeCat.addEventListener('click', () => {
-  meowSound.pause(); 
-  meowSound.currentTime = 0; 
-  meowSound.volume = 0.2; 
+  meowSound.pause();
+  meowSound.currentTime = 0;
+  meowSound.volume = 0.2;
   meowSound.play();
-  memeCat.style.transition = 'transform 0.2s ease';
   memeCat.style.transform = 'scale(1.2) rotate(10deg)';
-  setTimeout(() => { 
-    memeCat.style.transform = 'scale(1) rotate(0deg)'; 
+  setTimeout(() => {
+    memeCat.style.transform = 'scale(1) rotate(0deg)';
   }, 350);
 });
 
-// ================== Particle background ==================
+// ===== 粒子背景 =====
 const canvas = document.getElementById('particles');
 const ctx = canvas.getContext('2d');
 let particles = [];
+
 function resizeCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   particles = [];
   for (let i = 0; i < 80; i++) {
     particles.push({
-      x: Math.random()*canvas.width,
-      y: Math.random()*canvas.height,
-      r: Math.random()*2+0.5,
-      dx: (Math.random()-0.5)*0.5,
-      dy: (Math.random()-0.5)*0.5,
-      hue: Math.random()*360
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 2 + 0.5,
+      dx: (Math.random() - 0.5) * 0.5,
+      dy: (Math.random() - 0.5) * 0.5,
+      hue: Math.random() * 360
     });
   }
 }
+
 function drawParticles() {
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   particles.forEach(p => {
-    p.x += p.dx; p.y += p.dy;
+    p.x += p.dx;
+    p.y += p.dy;
     if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
     if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
     ctx.beginPath();
-    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
     ctx.fillStyle = `hsla(${p.hue},100%,65%,0.7)`;
     ctx.fill();
   });
   requestAnimationFrame(drawParticles);
 }
+
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 drawParticles();
 
-// ================== Slideshow with manual controls ==================
+// ===== 輪播 =====
 let slideIndex = 0;
 let slideTimer;
 
@@ -357,12 +789,10 @@ function showSlides() {
   const slides = document.querySelectorAll('.slide');
   const dots = document.querySelectorAll('.dot');
   
-  slides.forEach((s,i) => s.style.display = i === slideIndex ? 'block' : 'none');
-  dots.forEach((d,i) => d.classList.toggle('active', i === slideIndex));
+  slides.forEach((s, i) => s.style.display = i === slideIndex ? 'block' : 'none');
+  dots.forEach((d, i) => d.classList.toggle('active', i === slideIndex));
   
   slideIndex = (slideIndex + 1) % slides.length;
-  
-  // 重設自動播放計時器
   clearTimeout(slideTimer);
   slideTimer = setTimeout(showSlides, 3000);
 }
@@ -380,7 +810,7 @@ function currentSlide(n) {
 
 showSlides();
 
-// ================== Load apps ==================
+// ===== Load apps =====
 async function loadApps() {
   const c = document.getElementById('app-container');
   try {
@@ -400,38 +830,45 @@ async function loadApps() {
       c.appendChild(card);
     });
     addHoverSounds();
-  } catch { c.textContent = '⚠️ 無法載入 app 資料'; }
+  } catch {
+    c.textContent = '⚠️ 無法載入 app 資料';
+  }
 }
 loadApps();
 
-// ================== Fortune API ==================
-async function getFortune(){
+// ===== Fortune API =====
+async function getFortune() {
   const date = document.getElementById('birthDate').value;
-  if(!date){ alert('請輸入生日'); return; }
+  if (!date) {
+    alert('請輸入生日');
+    return;
+  }
   const r = document.getElementById('result');
   try {
     const res = await fetch('https://raw.githubusercontent.com/Culaliya/ai-art-diary/main/data/fortune.json');
     const f = await res.json();
-    r.innerHTML=`<h3>命理結果報告（來自 API）</h3>
+    r.innerHTML = `<h3>命理結果報告（來自 API）</h3>
       <p>天干地支：<strong>${f.stem}${f.branch}</strong></p>
       <p>主五行：<strong>${f.element}</strong></p>
       <p>${f.msg}</p>`;
-  } catch { r.textContent='⚠️ 無法讀取 API 資料'; }
+  } catch {
+    r.textContent = '⚠️ 無法讀取 API 資料';
+  }
 }
 
-// ================== Hover and click sounds ==================
-function addHoverSounds(){
+// ===== Hover sounds =====
+function addHoverSounds() {
   const hoverSound = document.getElementById('hover-sound');
   hoverSound.volume = 0.2;
   document.querySelectorAll('.app-card,.button').forEach(el => {
-    el.addEventListener('mouseenter', () => { 
-      hoverSound.currentTime = 0; 
-      hoverSound.play(); 
+    el.addEventListener('mouseenter', () => {
+      hoverSound.currentTime = 0;
+      hoverSound.play();
     });
   });
 }
 
-// Click sound ripple
+// ===== Click sound =====
 document.addEventListener('click', e => {
   const clickSound = document.getElementById('click-sound');
   clickSound.volume = 0.2;
@@ -445,36 +882,34 @@ document.addEventListener('click', e => {
   ripple.addEventListener('animationend', () => ripple.remove());
 });
 
-// ================== Weather API ==================
-async function loadWeather(){
-  const url='https://api.open-meteo.com/v1/forecast?latitude=24.8138&longitude=120.9675&current_weather=true';
+// ===== Weather API =====
+async function loadWeather() {
+  const url = 'https://api.open-meteo.com/v1/forecast?latitude=24.8138&longitude=120.9675&current_weather=true';
   try {
     const res = await fetch(url);
     const data = await res.json();
     const w = data.current_weather;
-    const codes = {0:'晴朗',1:'主要晴朗',2:'部分多雲',3:'多雲',45:'霧',48:'霧凇',51:'細雨',53:'中雨',55:'大雨',61:'小雨',63:'中雨',65:'大雨',71:'小雪',73:'中雪',75:'大雪',80:'陣雨',81:'中陣雨',82:'暴雨'};
+    const codes = {
+      0: '晴朗', 1: '主要晴朗', 2: '部分多雲', 3: '多雲', 45: '霧', 48: '霧凇',
+      51: '細雨', 53: '中雨', 55: '大雨', 61: '小雨', 63: '中雨', 65: '大雨',
+      71: '小雪', 73: '中雪', 75: '大雪', 80: '陣雨', 81: '中陣雨', 82: '暴雨'
+    };
     const weatherText = codes[w.weathercode] || '未知';
     document.getElementById('weather').innerText = `新竹 ${w.temperature}°C，${weatherText}`;
-    particles.forEach(p => {
-      if(w.weathercode>=51 && w.weathercode<=82){ p.hue = 200 + Math.random()*40; }
-      else { p.hue = 40 + Math.random()*40; }
-    });
   } catch {
     document.getElementById('weather').innerText = '天氣載入失敗';
   }
 }
 loadWeather();
 
-// ================== NASA APOD with your API key ==================
-async function loadApod(){
+// ===== NASA APOD =====
+async function loadApod() {
   const apodDiv = document.getElementById('apod');
   try {
-    console.log('Loading NASA APOD...');
     const res = await fetch('https://api.nasa.gov/planetary/apod?api_key=QCUm1wVbVLFqsiNJdaTKolWUuXTo4Qdxjc1zF4f3');
     const data = await res.json();
-    console.log('NASA APOD data:', data);
     
-    if(data.media_type === 'image'){
+    if (data.media_type === 'image') {
       apodDiv.innerHTML = `
         <img src="${data.url}" alt="${data.title}" 
              style="max-width:100%;border-radius:12px;box-shadow:0 0 20px #0ff5;">
@@ -482,7 +917,7 @@ async function loadApod(){
         <p style="color:#ccc;font-size:0.95em;margin-top:10px;line-height:1.6;">${data.explanation}</p>
         <p style="color:#888;font-size:0.85em;margin-top:10px;">📅 ${data.date}</p>
       `;
-    } else if(data.media_type === 'video'){
+    } else if (data.media_type === 'video') {
       apodDiv.innerHTML = `
         <iframe src="${data.url}" frameborder="0" allowfullscreen 
                 style="width:100%;height:400px;border-radius:12px;box-shadow:0 0 20px #0ff5;"></iframe>
@@ -491,9 +926,9 @@ async function loadApod(){
         <p style="color:#888;font-size:0.85em;margin-top:10px;">📅 ${data.date}</p>
       `;
     }
-  } catch(err) {
+  } catch (err) {
     console.error('NASA APOD error:', err);
-    apodDiv.innerText = 'NASA 星圖載入失敗: ' + err.message;
+    apodDiv.innerText = 'NASA 星圖載入失敗';
   }
 }
 loadApod();
