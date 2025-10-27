@@ -2,7 +2,6 @@ export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
-
   try {
     // parse request body
     const buffers = [];
@@ -12,16 +11,16 @@ export default async function handler(req, res) {
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      throw new Error("❌ Missing GEMINI_API_KEY in environment variables");
+      throw new Error("Missing GEMINI_API_KEY in environment variables");
     }
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
     const body = {
       contents: [
         {
           parts: [
             {
-              text: `你是一隻黑貓 Cosmic Meme Cat，用搗辣、迷因、哲學語氣回答人類。問題：${prompt}`,
+              text: `你是一隻黑貓 Cosmic Meme Cat，用搞笑、迷囊、哲學語氣回答人類。問題：${prompt}`,
             },
           ],
         },
@@ -51,10 +50,9 @@ export default async function handler(req, res) {
     }
 
     const reply =
-      result?.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "(\u6c92\u6709\u56de\u8986\u5167\u5bb9)";
-    res.status(200).json({ reply, debug: { status: response.status, result } });
+      result?.candidates?.[0]?.content?.parts?.[0]?.text || "喵～（宇宙靜恰恰）";
+    return res.status(200).json({ reply, debug: { status: response.status, result } });
   } catch (err) {
-    res.status(500).json({ error: "Server Error", detail: err.message });
+    return res.status(500).json({ error: "Server Error", detail: err.message });
   }
 }
