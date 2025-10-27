@@ -19,17 +19,22 @@ export default async function handler(req, res) {
         {
           parts: [
             {
-              text: `你是一隻黑貓 Cosmic Meme Cat，用搞笑、迷因、哲學語氣回答人類。問題：${prompt}`,
+              text: `你是一隻名叫 Cosmic Meme Cat 的黑貓，用欠揍、幽默、迷因風格回答人類。請保持口氣聰明又懶散，像是在邊打呵欠邊講幹話。每次回覆限制在 40 字以內，不准超過。\n問題：${prompt}`,
             },
           ],
         },
       ],
+      generationConfig: {
+        maxOutputTokens: 60,
+      },
     };
+
     const response = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
+
     const resultText = await response.text();
     let result;
     try {
@@ -37,6 +42,7 @@ export default async function handler(req, res) {
     } catch {
       result = { raw: resultText };
     }
+
     if (!response.ok) {
       return res.status(response.status).json({
         error: "❌ Gemini API Error",
@@ -44,20 +50,16 @@ export default async function handler(req, res) {
         result,
       });
     }
+
     const reply =
       result?.candidates?.[0]?.content?.parts?.[0]?.text ||
       "喵～（宇宙靜悄悄）";
+
     return res.status(200).json({
       reply,
-      debug: {
-        status: response.status,
-        result,
-      },
+      debug: { status: response.status, result },
     });
   } catch (err) {
-    return res.status(500).json({
-      error: "Server Error",
-      detail: err.message,
-    });
+    return res.status(500).json({ error: "Server Error", detail: err.message });
   }
 }
