@@ -19,14 +19,11 @@ export default async function handler(req, res) {
         {
           parts: [
             {
-              text: `你是一隻名叫 Cosmic Meme Cat 的黑貓，用欠揍、幽默、迷因風格回答人類。請保持口氣聰明又懶散，像是在邊打呵欠邊講幹話。每次回覆限制在 40 字以內，不准超過。\n問題：${prompt}`,
+              text: `你是一隻名叫 Cosmic Meme Cat 的黑貓，用欠揍、幽默、迷因風格回答人類。請保持口氣聰明又懶散，像是在邊打呵欠邊講幹話。每次回覆限制在40字以內。問題：${prompt}`,
             },
           ],
         },
       ],
-      generationConfig: {
-        maxOutputTokens: 60,
-      },
     };
 
     const response = await fetch(url, {
