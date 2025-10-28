@@ -61,5 +61,12 @@
     "icon": "😏😄",
     "link": "emoji-detective.html",
     "updated": "2025/10/28"
-  }
+  },
+  {
+    "name": "彩虹跑酷",
+    "desc": "在七彩彩虹地面上奔跑",
+    "icon": "🌈💎",
+    "link": "rainbowrushgame.html",
+    "updated": "2025/10/28"
+  },
 ]
