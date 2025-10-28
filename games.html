@@ -14,20 +14,23 @@ body {
   overflow:hidden;
 }
 h1 {
-  margin-top:60px;
+  margin-top:50px;
+  font-size:2em;
   color:#0ff;
   text-shadow:0 0 20px #0ff;
 }
-.game-container {
+.carousel {
   display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:30px;
-  margin-top:50px;
+  gap:40px;
+  overflow-x:auto;
+  scroll-behavior:smooth;
+  padding:40px;
+  scrollbar-width:none;
 }
+.carousel::-webkit-scrollbar {display:none;}
 .game-card {
-  width:220px;
-  height:220px;
+  flex:0 0 250px;
+  height:260px;
   background:rgba(255,255,255,0.05);
   border:2px solid #0ff;
   border-radius:16px;
@@ -36,25 +39,18 @@ h1 {
   justify-content:center;
   align-items:center;
   cursor:pointer;
-  transition:transform .3s, box-shadow .3s;
+  transition:transform .4s, box-shadow .4s;
   box-shadow:0 0 15px rgba(0,255,255,0.3);
 }
 .game-card:hover {
-  transform:translateY(-10px);
+  transform:translateY(-10px) scale(1.05);
   box-shadow:0 0 25px #0ff;
 }
-.game-icon {
-  font-size:50px;
-  margin-bottom:10px;
-}
-a {
-  color:#0ff;
-  text-decoration:none;
-}
+.game-icon {font-size:50px;margin-bottom:10px;}
+a {color:#0ff;text-decoration:none;}
 .back-home {
   position:fixed;
-  bottom:20px;
-  left:20px;
+  bottom:20px;left:20px;
   padding:10px 20px;
   border:2px solid #0ff;
   border-radius:20px;
@@ -69,7 +65,7 @@ a {
 <body>
 <h1>🎮 Culaliya’s Mini Game Lab</h1>
 
-<div class="game-container">
+<div class="carousel" id="carousel">
   <a href="https://pixel-jumper-c0acae97.base44.app?is_new_user=true" class="game-card">
     <div class="game-icon">🐸</div>
     <h3>青蛙跳躍</h3>
@@ -87,10 +83,33 @@ a {
     <h3>井字遊戲</h3>
     <p>經典 AI 對戰模式</p>
   </a>
+
+  <a href="cat_shooting_game.html" class="game-card">
+    <div class="game-icon">🔫🐱</div>
+    <h3>貓咪射擊</h3>
+    <p>射擊外星敵人的反應小遊戲</p>
+  </a>
+
+  <a href="cattetris.html" class="game-card">
+    <div class="game-icon">🐾🧱</div>
+    <h3>貓咪俄羅斯方塊</h3>
+    <p>經典方塊挑戰的貓咪版</p>
+  </a>
 </div>
 
 <a href="index.html" class="back-home">🏠 回首頁</a>
 
+<script>
+// 自動滾動輪播
+const carousel=document.getElementById('carousel');
+let scrollAmount=0;
+function autoScroll(){
+  scrollAmount+=2;
+  if(scrollAmount>carousel.scrollWidth-carousel.clientWidth) scrollAmount=0;
+  carousel.scrollTo({left:scrollAmount,behavior:'smooth'});
+}
+setInterval(autoScroll,50);
+</script>
+
 </body>
 </html>
-
