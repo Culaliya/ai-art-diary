@@ -6,7 +6,16 @@
 <title>🐈 Disaster Kitten v1.1</title>
 <style>
   html,body{margin:0;height:100%;background:#000;overflow:hidden;}
-  canvas{display:block;width:100%;height:100%;background:linear-gradient(#030416,#0c0d1a,#090a12);}
+  canvas {
+  display: block;
+  background: linear-gradient(#030416,#0c0d1a,#090a12);
+  margin: auto;
+  aspect-ratio: 2 / 3;     /* 維持比例 */
+  max-height: 100vh;       /* 不超過螢幕高 */
+  max-width: 100vw;        /* 不超過螢幕寬 */
+  image-rendering: pixelated; /* 防止模糊 (像素風會更清晰) */
+}
+
   #backHome{
     position:fixed;top:10px;left:10px;
     background:rgba(0,255,255,0.1);
@@ -30,6 +39,12 @@
 const canvas=document.getElementById("game");
 const ctx=canvas.getContext("2d");
 canvas.width=480;canvas.height=720;
+  // 提高清晰度
+const scale = window.devicePixelRatio || 1;
+canvas.width = 480 * scale;
+canvas.height = 720 * scale;
+ctx.scale(scale, scale);
+
 
 let catImg=new Image();
 catImg.src="assets/blackcat.png";
