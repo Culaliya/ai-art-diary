@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>🐈 Disaster Kitten v1.5</title>
 <style>
   html,body{margin:0;height:100%;background:#000;overflow:hidden;}
@@ -23,6 +23,78 @@
     cursor:pointer;z-index:10;transition:.3s;
   }
   #backHome:hover{background:rgba(0,255,255,0.3);}
+  
+  /* 手機虛擬按鈕 */
+  #mobileControls{
+    display:none;
+    position:fixed;
+    bottom:20px;
+    left:0;
+    right:0;
+    justify-content:space-between;
+    padding:0 30px;
+    pointer-events:none;
+    z-index:100;
+  }
+  #mobileControls.active{display:flex;}
+  
+  .direction-pad{
+    display:flex;
+    gap:15px;
+    pointer-events:all;
+  }
+  
+  .mobile-btn{
+    width:70px;
+    height:70px;
+    background:rgba(0,255,255,0.15);
+    border:3px solid rgba(0,255,255,0.6);
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+    user-select:none;
+    -webkit-user-select:none;
+    touch-action:none;
+    cursor:pointer;
+    transition:all 0.1s;
+    backdrop-filter:blur(10px);
+    box-shadow:0 0 20px rgba(0,255,255,0.3);
+  }
+  
+  .mobile-btn:active{
+    background:rgba(0,255,255,0.4);
+    transform:scale(0.92);
+    box-shadow:0 0 30px rgba(0,255,255,0.6);
+  }
+  
+  .jump-btn{
+    pointer-events:all;
+    width:80px;
+    height:80px;
+    background:rgba(255,182,233,0.2);
+    border:3px solid rgba(255,107,198,0.7);
+    box-shadow:0 0 20px rgba(255,107,198,0.4);
+  }
+  
+  .jump-btn:active{
+    background:rgba(255,182,233,0.5);
+    box-shadow:0 0 30px rgba(255,107,198,0.8);
+  }
+  
+  @media (max-width:768px){
+    #mobileControls{display:flex;}
+    #backHome{font-size:12px;padding:6px 10px;}
+  }
+  
+  @media (max-width:480px){
+    .mobile-btn{width:60px;height:60px;font-size:24px;}
+    .jump-btn{width:70px;height:70px;}
+    #mobileControls{padding:0 15px;bottom:15px;}
+    .direction-pad{gap:10px;}
+  }
+  
   #loading{
     position:fixed;inset:0;background:#000;
     color:#0ff;font-family:'Orbitron',sans-serif;
@@ -44,11 +116,25 @@
 <canvas id="game"></canvas>
 <button id="backHome" onclick="window.history.back()">🏠 回首頁</button>
 
+<!-- 手機觸控控制 -->
+<div id="mobileControls" class="mobile-controls">
+  <div class="direction-pad">
+    <div class="mobile-btn" id="leftBtn">⬅️</div>
+    <div class="mobile-btn" id="rightBtn">➡️</div>
+  </div>
+  <div class="mobile-btn jump-btn" id="jumpBtn">⬆️</div>
+</div>
+
 <script>
 const canvas=document.getElementById("game");
 const ctx=canvas.getContext("2d");
 const scale=window.devicePixelRatio||1;
 canvas.width=480*scale;canvas.height=720*scale;ctx.scale(scale,scale);
+
+const mobileControls=document.getElementById("mobileControls");
+const leftBtn=document.getElementById("leftBtn");
+const rightBtn=document.getElementById("rightBtn");
+const jumpBtn=document.getElementById("jumpBtn");
 
 // 🐈 貓咪圖片（使用外部圖片）
 let catImg = new Image();
@@ -67,13 +153,11 @@ function drawFishImage() {
   fishCanvas.height = 20;
   const fishCtx = fishCanvas.getContext('2d');
   
-  // 魚身體
   fishCtx.fillStyle = '#ff7ab6';
   fishCtx.beginPath();
   fishCtx.ellipse(15, 10, 10, 6, 0, 0, Math.PI * 2);
   fishCtx.fill();
   
-  // 魚尾
   fishCtx.beginPath();
   fishCtx.moveTo(5, 10);
   fishCtx.lineTo(0, 5);
@@ -81,7 +165,6 @@ function drawFishImage() {
   fishCtx.closePath();
   fishCtx.fill();
   
-  // 魚鰭
   fishCtx.beginPath();
   fishCtx.moveTo(15, 4);
   fishCtx.lineTo(12, 0);
@@ -89,7 +172,6 @@ function drawFishImage() {
   fishCtx.closePath();
   fishCtx.fill();
   
-  // 眼睛
   fishCtx.fillStyle = '#fff';
   fishCtx.beginPath();
   fishCtx.arc(20, 9, 2, 0, Math.PI * 2);
@@ -118,7 +200,6 @@ function drawSparkleImage() {
   sparkleCtx.fillStyle = gradient;
   sparkleCtx.fillRect(0, 0, 80, 80);
   
-  // 星星效果
   sparkleCtx.fillStyle = 'rgba(255, 255, 255, 0.8)';
   sparkleCtx.beginPath();
   for(let i = 0; i < 8; i++) {
@@ -139,14 +220,13 @@ let gameOver=false,loaded=true;
 let cat={x:210,y:580,vx:0,vy:0,w:60,h:60,onGround:false,glow:0};
 let keys={},score=0;
 
-// 🎮 調整平台高度，讓貓咪更容易跳！
 let platforms=[
-  {x:0,y:660,w:480,h:60},        // 地板
-  {x:120,y:580,w:120,h:15},      // 第一層（降低了40）
-  {x:280,y:510,w:120,h:15},      // 第二層（降低了80）
-  {x:150,y:440,w:120,h:15},      // 第三層（降低了100）
-  {x:80,y:370,w:100,h:15},       // 第四層（降低了120）
-  {x:300,y:300,w:120,h:15}       // 第五層（新增！）
+  {x:0,y:660,w:480,h:60},
+  {x:120,y:580,w:120,h:15},
+  {x:280,y:510,w:120,h:15},
+  {x:150,y:440,w:120,h:15},
+  {x:80,y:370,w:100,h:15},
+  {x:300,y:300,w:120,h:15}
 ];
 
 let fishes=[];
@@ -155,7 +235,7 @@ function spawnFish(){
   if(fishes.length>=5)return;
   fishes.push({
     x:Math.random()*420+30,
-    y:Math.random()*350+100,  // 調整魚的生成高度範圍
+    y:Math.random()*350+100,
     vx:(Math.random()-0.5)*1.5,
     vy:(Math.random()-0.5)*1.5,
     life:600
@@ -167,8 +247,48 @@ for(let i=0;i<3;i++)spawnFish();
 let effects=[];
 function addEffect(x,y){effects.push({x,y,alpha:1});}
 
+// 鍵盤控制
 document.addEventListener("keydown",e=>keys[e.code]=true);
 document.addEventListener("keyup",e=>keys[e.code]=false);
+
+// 手機觸控控制
+function handleTouchStart(e, keyCode) {
+  e.preventDefault();
+  keys[keyCode] = true;
+}
+
+function handleTouchEnd(e, keyCode) {
+  e.preventDefault();
+  keys[keyCode] = false;
+}
+
+// 左按鈕
+leftBtn.addEventListener('touchstart', (e) => handleTouchStart(e, 'ArrowLeft'));
+leftBtn.addEventListener('touchend', (e) => handleTouchEnd(e, 'ArrowLeft'));
+leftBtn.addEventListener('touchcancel', (e) => handleTouchEnd(e, 'ArrowLeft'));
+
+// 右按鈕
+rightBtn.addEventListener('touchstart', (e) => handleTouchStart(e, 'ArrowRight'));
+rightBtn.addEventListener('touchend', (e) => handleTouchEnd(e, 'ArrowRight'));
+rightBtn.addEventListener('touchcancel', (e) => handleTouchEnd(e, 'ArrowRight'));
+
+// 跳躍按鈕
+jumpBtn.addEventListener('touchstart', (e) => handleTouchStart(e, 'Space'));
+jumpBtn.addEventListener('touchend', (e) => handleTouchEnd(e, 'Space'));
+jumpBtn.addEventListener('touchcancel', (e) => handleTouchEnd(e, 'Space'));
+
+// 滑鼠支援（方便電腦測試）
+leftBtn.addEventListener('mousedown', (e) => handleTouchStart(e, 'ArrowLeft'));
+leftBtn.addEventListener('mouseup', (e) => handleTouchEnd(e, 'ArrowLeft'));
+leftBtn.addEventListener('mouseleave', (e) => handleTouchEnd(e, 'ArrowLeft'));
+
+rightBtn.addEventListener('mousedown', (e) => handleTouchStart(e, 'ArrowRight'));
+rightBtn.addEventListener('mouseup', (e) => handleTouchEnd(e, 'ArrowRight'));
+rightBtn.addEventListener('mouseleave', (e) => handleTouchEnd(e, 'ArrowRight'));
+
+jumpBtn.addEventListener('mousedown', (e) => handleTouchStart(e, 'Space'));
+jumpBtn.addEventListener('mouseup', (e) => handleTouchEnd(e, 'Space'));
+jumpBtn.addEventListener('mouseleave', (e) => handleTouchEnd(e, 'Space'));
 
 // 🎵 簡易音效生成
 function playJumpSound() {
@@ -272,19 +392,17 @@ function update(){
   if(cat.glow>0)cat.glow--;
 }
 
-// 🐾 繪製預設貓咪（當圖片載入失敗時使用）
+// 🐾 繪製預設貓咪
 function drawDefaultCat(x, y, w, h) {
   ctx.fillStyle = '#1a1a1a';
   ctx.fillRect(x, y, w, h);
   
-  // 眼睛
   ctx.fillStyle = '#0ff';
   ctx.beginPath();
   ctx.arc(x + w * 0.35, y + h * 0.3, 4, 0, Math.PI * 2);
   ctx.arc(x + w * 0.65, y + h * 0.3, 4, 0, Math.PI * 2);
   ctx.fill();
   
-  // 耳朵
   ctx.fillStyle = '#1a1a1a';
   ctx.beginPath();
   ctx.moveTo(x + 10, y);
@@ -302,7 +420,6 @@ function drawDefaultCat(x, y, w, h) {
 function draw(){
   ctx.clearRect(0,0,480,720);
   
-  // 星星背景
   ctx.fillStyle="#0ff3";
   for(let i=0;i<25;i++){
     let x=Math.sin(i*13+Date.now()/600)*200+240;
@@ -310,7 +427,6 @@ function draw(){
     ctx.fillRect(x,y,2,2);
   }
   
-  // 平台
   ctx.fillStyle="#222";
   ctx.strokeStyle="#0ff";
   ctx.lineWidth=2;
@@ -319,12 +435,10 @@ function draw(){
     ctx.strokeRect(p.x,p.y,p.w,p.h);
   }
   
-  // 魚
   for(let f of fishes){
     ctx.drawImage(fishImg,f.x-15,f.y-10,30,20);
   }
   
-  // +1 特效
   for(let e of effects){
     ctx.globalAlpha=e.alpha;
     ctx.fillStyle="#ffb6e9";
@@ -333,21 +447,18 @@ function draw(){
     ctx.globalAlpha=1;
   }
   
-  // 貓（使用外部圖片或預設圖形）
   if(catImgLoaded && catImg.complete) {
     ctx.drawImage(catImg,cat.x,cat.y,cat.w,cat.h);
   } else {
     drawDefaultCat(cat.x, cat.y, cat.w, cat.h);
   }
   
-  // 發光效果
   if(cat.glow>0){
     ctx.globalAlpha=cat.glow/40;
     ctx.drawImage(sparkle,cat.x-10,cat.y-10,cat.w+20,cat.h+20);
     ctx.globalAlpha=1;
   }
   
-  // UI
   ctx.fillStyle="#0ff";
   ctx.font="bold 20px Arial, sans-serif";
   ctx.fillText("🐟 Score: "+score,20,30);
@@ -362,9 +473,9 @@ function loop(){
   requestAnimationFrame(loop);
 }
 
-// 啟動遊戲
 setTimeout(() => {
   document.getElementById("loading").style.display="none";
+  mobileControls.classList.add("active");
   loop();
 }, 2000);
 </script>
