@@ -3,134 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emoji 星際偵探局</title>
+    <title>Emoji 星際偵探局 v2.0</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Comic Sans MS', cursive, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
             color: white;
             overflow: hidden;
             height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         h1 {
             margin: 20px 0;
-            font-size: 2.5em;
-            text-shadow: 0 0 15px rgba(255,255,255,0.5);
-            animation: glow 2s ease-in-out infinite alternate;
+            font-size: 2.8em;
+            text-shadow: 0 0 20px #fff, 0 0 30px #ff0;
+            animation: titleGlow 2s ease-in-out infinite alternate;
         }
 
-        @keyframes glow {
-            from { text-shadow: 0 0 10px #fff; }
-            to { text-shadow: 0 0 20px #ff0, 0 0 30px #ff0; }
+        @keyframes titleGlow {
+            from { text-shadow: 0 0 10px #fff, 0 0 20px #ff0; }
+            to { text-shadow: 0 0 20px #fff, 0 0 40px #ff0, 0 0 50px #ff0; }
         }
 
         #gameContainer {
             display: flex;
             justify-content: center;
-            gap: 40px;
+            gap: 50px;
             flex-wrap: wrap;
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 20px auto;
             position: relative;
+            z-index: 10;
         }
 
         .side {
-            background: rgba(255,255,255,0.1);
-            padding: 20px;
-            border-radius: 25px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            width: 380px;
-            height: 500px;
+            background: rgba(255,255,255,0.15);
+            padding: 25px;
+            border-radius: 30px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            width: 400px;
+            height: 520px;
             overflow: hidden;
             position: relative;
+            border: 2px solid rgba(255,255,255,0.2);
         }
 
         .emojiGrid {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-            padding: 10px;
+            gap: 10px;
+            padding: 15px;
             height: 100%;
         }
 
         .emoji {
-            font-size: 38px;
+            font-size: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255,255,255,0.2);
-            border-radius: 15px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 18px;
             cursor: pointer;
             transition: all 0.2s;
             user-select: none;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
         .emoji:hover {
-            transform: scale(1.15);
-            background: rgba(255,255,0,0.4);
-            box-shadow: 0 0 20px #ff0;
+            transform: scale(1.2) rotate(5deg);
+            background: rgba(255,255,0,0.5);
+            box-shadow: 0 0 25px #ff0, 0 0 40px #ff0;
             z-index: 10;
         }
 
         .emoji.correct {
-            animation: correctPop 0.6s ease-out;
-            background: linear-gradient(45deg, #4CAF50, #8BC34A) !important;
+            animation: correctBoom 0.8s ease-out;
+            background: linear-gradient(45deg, #00C853, #64DD17) !important;
+            transform: scale(1.5);
         }
 
         .emoji.wrong {
-            animation: shake 0.4s;
+            animation: shake 0.5s, flashRed 0.5s;
             background: #f44336 !important;
         }
 
-        @keyframes correctPop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.4); }
-            100% { transform: scale(1); }
+        @keyframes correctBoom {
+            0% { transform: scale(1) rotate(0); }
+            50% { transform: scale(1.8) rotate(180deg); }
+            100% { transform: scale(1) rotate(360deg); }
         }
 
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-8px); }
-            75% { transform: translateX(8px); }
+            25% { transform: translateX(-12px); }
+            75% { transform: translateX(12px); }
+        }
+
+        @keyframes flashRed {
+            0%, 100% { box-shadow: 0 0 10px #f44336; }
+            50% { box-shadow: 0 0 30px #f44336, 0 0 50px #ff0000; }
+        }
+
+        /* 新關卡動畫 */
+        @keyframes levelUp {
+            0% { transform: scale(0) rotate(0); opacity: 0; }
+            50% { transform: scale(1.3) rotate(180deg); opacity: 1; }
+            100% { transform: scale(1) rotate(360deg); opacity: 0; }
+        }
+
+        .level-up {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5em;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 0 0 30px #ff0, 0 0 50px #ff0;
+            z-index: 1000;
+            pointer-events: none;
+            animation: levelUp 1.5s ease-out forwards;
         }
 
         #timer {
             position: absolute;
-            top: -60px;
+            top: -70px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 2em;
+            font-size: 2.5em;
             font-weight: bold;
-            text-shadow: 0 0 10px #000;
+            text-shadow: 0 0 15px #000;
         }
 
-        #timer.low { color: #ff4444; animation: pulse 1s infinite; }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+        #timer.low { 
+            color: #ff1744; 
+            animation: heartbeat 0.8s infinite; 
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1) translateX(-50%); }
+            50% { transform: scale(1.3) translateX(-50%); }
         }
 
         #scoreBoard {
             display: flex;
-            gap: 30px;
-            font-size: 1.5em;
-            margin: 10px 0;
+            gap: 40px;
+            font-size: 1.6em;
+            margin: 15px 0;
+            z-index: 20;
         }
 
-        #level, #score { font-weight: bold; }
+        #level, #score { 
+            font-weight: bold; 
+            padding: 8px 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+        }
 
         #startScreen, #gameOver {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.92);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -139,60 +188,73 @@
             transition: opacity 0.5s;
         }
 
-        #startScreen h2, #gameOver h2 {
-            font-size: 3em;
-            margin-bottom: 20px;
-            background: linear-gradient(45deg, #FFD700, #FFA500);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
         .btn {
             background: linear-gradient(45deg, #FFD93D, #FF6B6B);
             border: none;
-            padding: 18px 40px;
-            font-size: 1.5em;
+            padding: 20px 45px;
+            font-size: 1.6em;
             font-weight: bold;
             border-radius: 50px;
             cursor: pointer;
             margin: 15px;
-            box-shadow: 0 8px 20px rgba(255,107,107,0.4);
+            box-shadow: 0 10px 25px rgba(255,107,107,0.5);
             transition: all 0.3s;
             color: white;
             text-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
 
         .btn:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 15px 30px rgba(255,107,107,0.6);
+            transform: translateY(-8px) scale(1.08);
+            box-shadow: 0 20px 40px rgba(255,107,107,0.7);
         }
 
         .sparkle {
             position: absolute;
-            font-size: 30px;
+            font-size: 35px;
             pointer-events: none;
-            animation: sparkle 1s ease-out forwards;
+            animation: sparkleFly 1.2s ease-out forwards;
+            z-index: 99;
         }
 
-        @keyframes sparkle {
-            0% { transform: scale(0) rotate(0); opacity: 1; }
-            100% { transform: scale(1.5) rotate(180deg); opacity: 0; }
+        @keyframes sparkleFly {
+            0% { transform: scale(0) rotate(0) translateY(0); opacity: 1; }
+            100% { transform: scale(1.5) rotate(360deg) translateY(-100px); opacity: 0; }
         }
 
-        #hint {
-            margin-top: 10px;
-            font-size: 1.1em;
-            opacity: 0.8;
-            font-style: italic;
+        /* 音效按鈕 */
+        #soundToggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2em;
+            cursor: pointer;
+            z-index: 200;
+            transition: all 0.3s;
+        }
+
+        #soundToggle.muted { opacity: 0.5; transform: scale(0.9); }
+
+        /* 新增：Emoji 進入動畫 */
+        @keyframes bounceIn {
+            0% { transform: scale(0) translateY(-50px); opacity: 0; }
+            60% { transform: scale(1.2) translateY(0); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        .emoji-enter {
+            animation: bounceIn 0.5s ease-out forwards;
         }
     </style>
 </head>
 <body>
 
+    <!-- 音效控制 -->
+    <div id="soundToggle">🔊</div>
+
+    <!-- 開始畫面 -->
     <div id="startScreen">
-        <h2>Emoji 星際偵探局</h2>
-        <p>找出右邊那個「不一樣的黃臉」！</p>
-        <p id="hint">限時 30 秒，連續答對加分！</p>
+        <h2>Emoji 星際偵探局 v2.0</h2>
+        <p>🔊 音效已開啟！準備好挑戰眼力極限了吗？</p>
         <button class="btn" onclick="startGame()">開始挑戰！</button>
     </div>
 
@@ -209,6 +271,7 @@
         <div class="side" id="rightSide"></div>
     </div>
 
+    <!-- 結束畫面 -->
     <div id="gameOver" style="display:none;">
         <h2>時間到啦！</h2>
         <p>最終分數: <span id="finalScore">0</span></p>
@@ -217,7 +280,46 @@
         <button class="btn" onclick="location.reload()">回到主畫面</button>
     </div>
 
+    <!-- 音效資源 -->
+    <audio id="bgm" loop>
+        <source src="https://cdn.jsdelivr.net/gh/mdn/webaudio-examples/audio-analyser/space.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="correct"><source src="https://cdn.freesound.org/previews/657/657463_5674468-lq.mp3" type="audio/mpeg"></audio>
+    <audio id="wrong"><source src="https://cdn.freesound.org/previews/657/657462_5674468-lq.mp3" type="audio/mpeg"></audio>
+    <audio id="levelup"><source src="https://cdn.freesound.org/previews/320/320653_5270804-lq.mp3" type="audio/mpeg"></audio>
+    <audio id="countdown"><source src="https://cdn.freesound.org/previews/657/657461_5674468-lq.mp3" type="audio/mpeg"></audio>
+
     <script>
+        // === 音效系統 ===
+        const sounds = {
+            bgm: document.getElementById('bgm'),
+            correct: document.getElementById('correct'),
+            wrong: document.getElementById('wrong'),
+            levelup: document.getElementById('levelup'),
+            countdown: document.getElementById('countdown')
+        };
+
+        let soundEnabled = true;
+        const soundToggle = document.getElementById('soundToggle');
+
+        soundToggle.addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            soundToggle.textContent = soundEnabled ? '🔊' : '🔇';
+            soundToggle.classList.toggle('muted', !soundEnabled);
+            if (!soundEnabled) sounds.bgm.pause();
+            else if (game && game.timeLeft > 0) sounds.bgm.play().catch(() => {});
+        });
+
+        function play(soundName) {
+            if (!soundEnabled) return;
+            const audio = sounds[soundName];
+            if (audio) {
+                audio.currentTime = 0;
+                audio.play().catch(() => {});
+            }
+        }
+
+        // === 遊戲邏輯 ===
         const emojis = ['😊','😃','😄','😁','😆','😅','😂','🤣','😇','🙂','😉','😍','🥰','😘','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🥳','😏','😒','😞','😔','😟','😕','🙁','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🤭','🤫','🤥','😶','😐','😑','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😵','🤐','🥴','🤧','😷','🤒','🤕'];
 
         let game = {
@@ -238,6 +340,7 @@
             
             game = { level: 1, score: 0, timeLeft: 30, timer: null, gridSize: 5, diffIndex: -1 };
             updateUI();
+            if (soundEnabled) sounds.bgm.play().catch(() => {});
             startTimer();
             nextLevel();
         }
@@ -249,6 +352,12 @@
             game.timer = setInterval(() => {
                 game.timeLeft--;
                 updateTimer();
+
+                // 最後5秒心跳
+                if (game.timeLeft === 5 && soundEnabled) {
+                    play('countdown');
+                }
+
                 if (game.timeLeft <= 0) endGame();
             }, 1000);
         }
@@ -265,7 +374,11 @@
         }
 
         function nextLevel() {
-            // 增加難度
+            if (game.level > 1) {
+                showLevelUp();
+                play('levelup');
+            }
+
             if (game.level % 3 === 0) game.gridSize = Math.min(7, game.gridSize + 1);
             
             leftSide.innerHTML = '';
@@ -275,22 +388,24 @@
             const baseEmoji = getRandomEmoji();
             const diffEmoji = getDifferentEmoji(baseEmoji);
 
-            // 左邊：全部一樣
+            // 左邊
             for (let i = 0; i < total; i++) {
                 const div = createEmojiDiv(baseEmoji, false);
+                div.style.animationDelay = `${i * 0.03}s`;
                 leftSide.appendChild(div);
             }
 
-            // 右邊：一個不一樣
+            // 右邊
             game.diffIndex = Math.floor(Math.random() * total);
             for (let i = 0; i < total; i++) {
                 const emoji = i === game.diffIndex ? diffEmoji : baseEmoji;
                 const div = createEmojiDiv(emoji, true);
                 div.dataset.index = i;
+                div.style.animationDelay = `${i * 0.03}s`;
                 rightSide.appendChild(div);
             }
 
-            // 動態 grid
+            // 動態 grid + 進入動畫
             const cols = game.gridSize;
             [leftSide, rightSide].forEach(side => {
                 side.querySelector('.emojiGrid')?.remove();
@@ -298,7 +413,10 @@
                 grid.className = 'emojiGrid';
                 grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
                 side.appendChild(grid);
-                side.querySelectorAll('.emoji').forEach(e => grid.appendChild(e));
+                side.querySelectorAll('.emoji').forEach(e => {
+                    e.classList.add('emoji-enter');
+                    grid.appendChild(e);
+                });
             });
         }
 
@@ -328,21 +446,21 @@
         function checkAnswer(clickedDiv) {
             const index = parseInt(clickedDiv.dataset.index);
             if (index === game.diffIndex) {
-                // 正確！
                 clickedDiv.classList.add('correct');
                 createSparkles(clickedDiv);
+                play('correct');
                 
-                game.score += 100 + (game.level * 10) + (game.timeLeft * 2);
+                game.score += 100 + (game.level * 10) + (game.timeLeft * 3);
                 game.level++;
                 updateUI();
 
                 setTimeout(() => {
                     if (game.timeLeft > 0) nextLevel();
-                }, 800);
+                }, 1000);
             } else {
-                // 錯誤
                 clickedDiv.classList.add('wrong');
-                game.timeLeft = Math.max(5, game.timeLeft - 3);
+                play('wrong');
+                game.timeLeft = Math.max(3, game.timeLeft - 2);
                 updateTimer();
                 setTimeout(() => clickedDiv.classList.remove('wrong'), 600);
             }
@@ -353,26 +471,37 @@
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
 
-            for (let i = 0; i < 15; i++) {
+            const sparkleEmojis = ['✨','⭐','💫','🌟','⚡','💥','🎉','🏆'];
+            for (let i = 0; i < 20; i++) {
                 const sparkle = document.createElement('div');
                 sparkle.className = 'sparkle';
-                sparkle.textContent = ['✨','⭐','💫','🌟','⚡'][Math.floor(Math.random()*5)];
-                sparkle.style.left = centerX + 'px';
-                sparkle.style.top = centerY + 'px';
+                sparkle.textContent = sparkleEmojis[Math.floor(Math.random()*sparkleEmojis.length)];
+                sparkle.style.left = (centerX + (Math.random()-0.5)*100) + 'px';
+                sparkle.style.top = (centerY + (Math.random()-0.5)*100) + 'px';
+                sparkle.style.animationDelay = `${i * 0.05}s`;
                 document.body.appendChild(sparkle);
 
-                setTimeout(() => sparkle.remove(), 1000);
+                setTimeout(() => sparkle.remove(), 1200);
             }
+        }
+
+        function showLevelUp() {
+            const levelUp = document.createElement('div');
+            levelUp.className = 'level-up';
+            levelUp.textContent = `等級 ${game.level}!`;
+            document.body.appendChild(levelUp);
+            setTimeout(() => levelUp.remove(), 1600);
         }
 
         function endGame() {
             clearInterval(game.timer);
+            sounds.bgm.pause();
             document.getElementById('finalScore').textContent = game.score;
             document.getElementById('finalLevel').textContent = game.level;
             document.getElementById('gameOver').style.display = 'flex';
         }
 
-        // 初始畫面
+        // 初始
         document.getElementById('startScreen').style.display = 'flex';
     </script>
 </body>
