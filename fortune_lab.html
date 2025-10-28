@@ -3,180 +3,735 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>🔮 Culaliya's Fortune Lab</title>
+<title>🔮 紫微斗數排盤系統</title>
 <style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  margin:0;
-  font-family:'Orbitron',sans-serif;
-  background:radial-gradient(circle at 50% 20%, #0b0610 0%, #090214 70%, #000 100%);
-  color:#0ff;
-  text-align:center;
-  overflow:hidden;
-}
-h1 {
-  margin-top:50px;
-  font-size:2.2em;
-  color:#0ff;
-  text-shadow:0 0 25px #ff3eff, 0 0 45px #0ff;
-  animation:glowPulse 3s infinite alternate;
-}
-@keyframes glowPulse {
-  from { text-shadow:0 0 15px #0ff; }
-  to { text-shadow:0 0 35px #ff3eff, 0 0 60px #0ff; }
-}
-.panel {
-  background:rgba(255,255,255,0.05);
-  border:2px solid #0ff;
-  border-radius:16px;
-  width:320px;
-  margin:50px auto;
-  padding:20px;
-  box-shadow:0 0 25px rgba(0,255,255,0.5);
-  animation:glowFlow 4s infinite;
-}
-@keyframes glowFlow {
-  0% { border-color:#0ff; box-shadow:0 0 20px #0ff; }
-  50% { border-color:#ff3eff; box-shadow:0 0 25px #ff3eff; }
-  100% { border-color:#0ff; box-shadow:0 0 20px #0ff; }
-}
-label {
-  display:block;
-  margin-top:15px;
-  font-size:1em;
-  color:#aaf;
-}
-input,select {
-  margin-top:5px;
-  padding:10px;
-  width:80%;
-  border-radius:8px;
-  border:1px solid #0ff;
-  background:rgba(0,0,0,0.6);
-  color:#0ff;
-  font-family:'Orbitron',sans-serif;
-}
-button {
-  margin-top:20px;
-  padding:10px 25px;
-  border:2px solid #ff3eff;
-  border-radius:10px;
-  background:linear-gradient(135deg,#0ff,#ff3eff);
-  color:#000;
-  font-weight:bold;
-  cursor:pointer;
-  box-shadow:0 0 15px #ff3eff;
-  transition:transform .3s;
-}
-button:hover {
-  transform:scale(1.05);
-}
-#result {
-  margin-top:30px;
-  padding:20px;
-  border:1px solid #0ff;
-  border-radius:12px;
-  background:rgba(255,255,255,0.05);
-  max-width:500px;
-  margin-left:auto;
-  margin-right:auto;
-  box-shadow:0 0 25px rgba(0,255,255,0.3);
+  font-family: 'Microsoft JhengHei', 'PingFang TC', sans-serif;
+  background: radial-gradient(circle at 50% 20%, #0b0610 0%, #090214 70%, #000 100%);
+  color: #0ff;
+  min-height: 100vh;
+  padding: 20px;
+  position: relative;
+  overflow-x: hidden;
 }
 canvas#stars {
-  position:fixed;
-  top:0;left:0;width:100%;height:100%;
-  z-index:-1;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
 }
-a {
-  color:#0ff;
-  text-decoration:none;
-  border:1px solid #0ff;
-  padding:8px 16px;
-  border-radius:12px;
-  background:rgba(0,255,255,0.1);
-  transition:.3s;
-  position:fixed;
-  bottom:20px;
-  left:20px;
+h1 {
+  text-align: center;
+  font-size: 2.5em;
+  margin: 30px 0;
+  color: #0ff;
+  text-shadow: 0 0 25px #ff3eff, 0 0 45px #0ff;
+  animation: glowPulse 3s infinite alternate;
 }
-a:hover {background:rgba(0,255,255,0.3);}
+@keyframes glowPulse {
+  from { text-shadow: 0 0 15px #0ff; }
+  to { text-shadow: 0 0 35px #ff3eff, 0 0 60px #0ff; }
+}
+.input-section {
+  max-width: 500px;
+  margin: 0 auto 40px;
+  background: rgba(255,255,255,0.05);
+  border: 2px solid #0ff;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 0 25px rgba(0,255,255,0.5);
+}
+.input-group {
+  margin-bottom: 20px;
+}
+label {
+  display: block;
+  margin-bottom: 8px;
+  color: #aaf;
+  font-size: 1.1em;
+}
+input, select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #0ff;
+  background: rgba(0,0,0,0.6);
+  color: #0ff;
+  font-size: 1em;
+  font-family: inherit;
+}
+.time-select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #0ff;
+  background: rgba(0,0,0,0.6);
+  color: #0ff;
+  font-size: 1em;
+}
+button {
+  width: 100%;
+  margin-top: 20px;
+  padding: 15px;
+  border: 2px solid #ff3eff;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #0ff, #ff3eff);
+  color: #000;
+  font-weight: bold;
+  font-size: 1.2em;
+  cursor: pointer;
+  box-shadow: 0 0 15px #ff3eff;
+  transition: transform 0.3s;
+}
+button:hover {
+  transform: scale(1.05);
+}
+.chart-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: none;
+}
+.chart-info {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  border: 1px solid #0ff;
+}
+.chart-info h3 {
+  color: #ff3eff;
+  margin-bottom: 15px;
+  font-size: 1.5em;
+}
+.chart-info p {
+  color: #aaf;
+  margin: 8px 0;
+  font-size: 1.1em;
+}
+.palace-wrapper {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 3px;
+  background: #0ff;
+  border: 4px solid #0ff;
+  box-shadow: 0 0 30px rgba(0,255,255,0.6);
+  max-width: 1200px;
+  margin: 0 auto;
+  aspect-ratio: 1;
+}
+.palace {
+  background: rgba(10,5,20,0.95);
+  padding: 12px;
+  position: relative;
+  border: 1px solid rgba(0,255,255,0.3);
+  display: flex;
+  flex-direction: column;
+  min-height: 180px;
+}
+.center-info {
+  background: rgba(10,5,30,0.98);
+  grid-column: 2 / 4;
+  grid-row: 2 / 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ff3eff;
+  padding: 20px;
+}
+.center-info h2 {
+  color: #ff3eff;
+  font-size: 2em;
+  margin-bottom: 15px;
+  text-shadow: 0 0 15px #ff3eff;
+}
+.center-info .main-palace {
+  color: #0ff;
+  font-size: 1.5em;
+  margin: 10px 0;
+}
+.center-info .life-master {
+  color: #ffb74d;
+  font-size: 1.2em;
+  margin: 5px 0;
+}
+.palace-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #ff3eff;
+}
+.palace-name {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #ff3eff;
+  text-shadow: 0 0 10px #ff3eff;
+}
+.palace-branch {
+  font-size: 1em;
+  color: #0ff;
+  font-weight: bold;
+}
+.palace-attrs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.attr-tag {
+  font-size: 0.75em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(0,0,0,0.4);
+  color: #aaf;
+  border: 1px solid rgba(0,255,255,0.3);
+}
+.stars-container {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  align-content: flex-start;
+}
+.star {
+  padding: 3px 7px;
+  border-radius: 5px;
+  font-size: 0.8em;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+.star-ziwei { background: #8b5cf6; color: #fff; border: 1px solid #a78bfa; }
+.star-tianfu { background: #ec4899; color: #fff; border: 1px solid #f472b6; }
+.star-major { background: #ff3eff; color: #fff; border: 1px solid #ff6bff; }
+.star-lucky { background: #10b981; color: #fff; border: 1px solid #34d399; }
+.star-unlucky { background: #ef4444; color: #fff; border: 1px solid #f87171; }
+.star-helper { background: rgba(0,255,255,0.25); color: #0ff; border: 1px solid #0ff; }
+.star-minor { background: rgba(255,183,77,0.2); color: #ffb74d; border: 1px solid #ffb74d; }
+.elements-info {
+  margin-top: 30px;
+  padding: 25px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  border: 1px solid #0ff;
+}
+.elements-info h3 {
+  color: #ff3eff;
+  margin-bottom: 20px;
+  font-size: 1.5em;
+  text-align: center;
+}
+.elements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+}
+.element-item {
+  padding: 15px;
+  background: rgba(0,0,0,0.4);
+  border-radius: 8px;
+  border: 1px solid #0ff;
+  text-align: center;
+}
+.element-item strong {
+  color: #ff3eff;
+  font-size: 1.3em;
+}
+@media (max-width: 1024px) {
+  .palace {
+    min-height: 140px;
+    padding: 8px;
+  }
+  .palace-name {
+    font-size: 1em;
+  }
+  .star {
+    font-size: 0.7em;
+    padding: 2px 5px;
+  }
+  .center-info h2 {
+    font-size: 1.5em;
+  }
+}
 </style>
 </head>
 <body>
 <canvas id="stars"></canvas>
-<h1>🔮 AI 紫微八字排盤</h1>
 
-<div class="panel">
-  <label>生日日期：</label>
-  <input type="date" id="birthDate">
+<h1>🔮 紫微斗數排盤系統</h1>
 
-  <label>出生時間：</label>
-  <select id="birthTime">
-    <option value="">選擇時辰</option>
-    <option>子時 (23:00-00:59)</option>
-    <option>丑時 (01:00-02:59)</option>
-    <option>寅時 (03:00-04:59)</option>
-    <option>卯時 (05:00-06:59)</option>
-    <option>辰時 (07:00-08:59)</option>
-    <option>巳時 (09:00-10:59)</option>
-    <option>午時 (11:00-12:59)</option>
-    <option>未時 (13:00-14:59)</option>
-    <option>申時 (15:00-16:59)</option>
-    <option>酉時 (17:00-18:59)</option>
-    <option>戌時 (19:00-20:59)</option>
-    <option>亥時 (21:00-22:59)</option>
-  </select>
-
-  <button onclick="analyze()">🔮 生成命盤</button>
+<div class="input-section">
+  <div class="input-group">
+    <label>姓名：</label>
+    <input type="text" id="name" placeholder="請輸入姓名">
+  </div>
+  
+  <div class="input-group">
+    <label>性別：</label>
+    <select id="gender">
+      <option value="male">男</option>
+      <option value="female">女</option>
+    </select>
+  </div>
+  
+  <div class="input-group">
+    <label>陽曆生日：</label>
+    <input type="date" id="birthDate" max="2025-12-31">
+  </div>
+  
+  <div class="input-group">
+    <label>出生時辰：</label>
+    <select id="birthTime" class="time-select">
+      <option value="0">子時 (23:00-00:59)</option>
+      <option value="1">丑時 (01:00-02:59)</option>
+      <option value="2">寅時 (03:00-04:59)</option>
+      <option value="3">卯時 (05:00-06:59)</option>
+      <option value="4">辰時 (07:00-08:59)</option>
+      <option value="5">巳時 (09:00-10:59)</option>
+      <option value="6">午時 (11:00-12:59)</option>
+      <option value="7">未時 (13:00-14:59)</option>
+      <option value="8">申時 (15:00-16:59)</option>
+      <option value="9">酉時 (17:00-18:59)</option>
+      <option value="10">戌時 (19:00-20:59)</option>
+      <option value="11">亥時 (21:00-22:59)</option>
+    </select>
+  </div>
+  
+  <button onclick="generateChart()">🔮 開始排盤</button>
 </div>
 
-<div id="result"></div>
-<a href="index.html">🏠 返回首頁</a>
-
+<div class="chart-container" id="chartContainer">
+  <div class="chart-info" id="chartInfo"></div>
+  <div class="palace-wrapper" id="palaceWrapper"></div>
+  <div class="elements-info" id="elementsInfo"></div>
+</div>
 
 <script>
-// 星星背景動畫
-const canvas=document.getElementById('stars');
-const ctx=canvas.getContext('2d');
-let w,h,stars=[];
-function resize(){w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight;}
-window.addEventListener('resize',resize);
-resize();
-for(let i=0;i<100;i++){
-  stars.push({x:Math.random()*w,y:Math.random()*h,size:Math.random()*1.5,speed:Math.random()*0.3+0.1});
+// 星空背景
+const canvas = document.getElementById('stars');
+const ctx = canvas.getContext('2d');
+let w, h, stars = [];
+function resize() {
+  w = canvas.width = window.innerWidth;
+  h = canvas.height = window.innerHeight;
 }
-function drawStars(){
-  ctx.clearRect(0,0,w,h);
-  ctx.fillStyle='#0ff';
-  for(const s of stars){
-    ctx.globalAlpha=Math.random()*0.7+0.3;
+window.addEventListener('resize', resize);
+resize();
+for (let i = 0; i < 120; i++) {
+  stars.push({
+    x: Math.random() * w,
+    y: Math.random() * h,
+    size: Math.random() * 1.8,
+    speed: Math.random() * 0.4 + 0.1
+  });
+}
+function drawStars() {
+  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = '#0ff';
+  for (const s of stars) {
+    ctx.globalAlpha = Math.random() * 0.7 + 0.3;
     ctx.beginPath();
-    ctx.arc(s.x,s.y,s.size,0,Math.PI*2);
+    ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
     ctx.fill();
-    s.y+=s.speed;if(s.y>h)s.y=0;
+    s.y += s.speed;
+    if (s.y > h) s.y = 0;
   }
   requestAnimationFrame(drawStars);
 }
 drawStars();
 
-// 命理分析
-function analyze(){
-  const date=document.getElementById('birthDate').value;
-  const time=document.getElementById('birthTime').value;
-  const res=document.getElementById('result');
-  if(!date||!time){res.innerHTML="<p>請完整輸入生日與時辰 🕰️</p>";return;}
-  // 模擬生成結果
-  const elements=['金','木','水','火','土'];
-  const random=()=>elements[Math.floor(Math.random()*elements.length)];
-  res.innerHTML=`
-    <h2>✨ AI 命理分析結果 ✨</h2>
-    <p>生日：${date}</p>
-    <p>時辰：${time}</p>
-    <p>五行主勢：<strong>${random()}</strong></p>
-    <p>命格傾向：<strong>${['貴氣星','財帛宮','桃花運','事業宮','智慧星'][Math.floor(Math.random()*5)]}</strong></p>
-    <p>吉運期：${2025+Math.floor(Math.random()*5)} - ${2025+Math.floor(Math.random()*10)}</p>
-    <p style="color:#ff7bff;">💫 小提示：保持正念、順勢而行，命運永遠由你掌控。</p>
-  `;
+// ========== 紫微斗數核心演算法 ==========
+const EARTHLY_BRANCHES = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+const HEAVENLY_STEMS = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+const PALACE_NAMES = ['命宮', '父母宮', '福德宮', '田宅宮', '官祿宮', '僕役宮', 
+                      '遷移宮', '疾厄宮', '財帛宮', '子女宮', '夫妻宮', '兄弟宮'];
+
+// 紫微星系安星表（以農曆生日為準）
+const ZIWEI_TABLE = {
+  // 紫微星位置表（依五行局數和生日）
+  positions: [
+    [2,3,4,4,5,5,6,7,8,8,9,9,10,11,0,0,1,1,2,3,4,4,5,5,6,7,8,8,9,9],  // 二局
+    [3,4,4,5,6,6,7,8,8,9,10,10,11,0,0,1,2,2,3,4,4,5,6,6,7,8,8,9,10,10], // 三局
+    [4,5,5,6,7,7,8,9,9,10,11,11,0,1,1,2,3,3,4,5,5,6,7,7,8,9,9,10,11,11], // 四局
+    [5,6,6,7,8,8,9,10,10,11,0,0,1,2,2,3,4,4,5,6,6,7,8,8,9,10,10,11,0,0], // 五局
+  ]
+};
+
+// 天府星系（逆時針推算）
+const TIANFU_OFFSET = 0; // 天府永遠與紫微相對
+
+// 十四主星與紫微關係位置
+const MAJOR_STARS_OFFSET = {
+  '紫微': 0,
+  '天機': 1,  // 紫微順行一位
+  '太陽': 3,  // 紫微順行三位
+  '武曲': 4,  // 紫微順行四位
+  '天同': 5,  // 紫微順行五位
+  '廉貞': 8,  // 紫微順行八位
+  '天府': 0,  // 與紫微對宮
+  '太陰': -1, // 天府逆行一位
+  '貪狼': -2, // 天府逆行二位
+  '巨門': -3, // 天府逆行三位
+  '天相': -4, // 天府逆行四位
+  '天梁': -5, // 天府逆行五位
+  '七殺': -6, // 天府逆行六位
+  '破軍': -8  // 天府逆行八位
+};
+
+// 六吉星安星法
+const HELPER_STARS_RULES = {
+  '文昌': (year, month) => (10 - month) % 12,  // 從戌宫起正月逆推
+  '文曲': (year, month) => (4 + month) % 12,   // 從巳宫起正月順推
+  '左輔': (year, month) => (month - 1) % 12,   // 從辰宫起正月順推
+  '右弼': (year, month) => (10 - month) % 12,  // 從戌宫起正月逆推
+  '天魁': (year) => {  // 依年干
+    const kui = ['丑','子','亥','亥','丑','子','寅','寅','丑','亥'];
+    return EARTHLY_BRANCHES.indexOf(kui[year % 10]);
+  },
+  '天鉞': (year) => {  // 依年干
+    const yue = ['未','申','酉','酉','未','申','午','午','未','酉'];
+    return EARTHLY_BRANCHES.indexOf(yue[year % 10]);
+  }
+};
+
+// 六煞星
+const UNLUCKY_STARS_RULES = {
+  '擎羊': (year) => (year + 1) % 12,
+  '陀羅': (year) => (year - 1 + 12) % 12,
+  '火星': (year, time) => {
+    const base = [1,0,11,9,8,7,1,0,11,9,8,7]; // 依年支
+    return (base[year % 12] + time) % 12;
+  },
+  '鈴星': (year, time) => {
+    const base = [7,6,5,3,2,1,7,6,5,3,2,1]; // 依年支
+    return (base[year % 12] + time) % 12;
+  },
+  '地空': (time) => (11 - time) % 12,
+  '地劫': (time) => (time + 1) % 12
+};
+
+// 祿存與四化
+const LUCUN_TABLE = [2,3,5,6,5,6,8,9,11,0,2,3]; // 依年干
+
+// 計算五行局
+function calculateWuxingJu(year, month, day, time) {
+  // 簡化版：根據年支和月份計算納音五行局
+  const yearBranch = (year - 4) % 12;
+  const juTable = [
+    [2,3,3,3,3,4,4,4,4,5,5,5],  // 子年
+    [5,5,2,2,3,3,3,3,4,4,4,4],  // 丑年
+    [4,5,5,2,2,3,3,3,3,4,4,4],  // 寅年
+    [4,4,5,5,2,2,3,3,3,3,4,4],  // 卯年
+    [4,4,4,5,5,2,2,3,3,3,3,4],  // 辰年
+    [4,4,4,4,5,5,2,2,3,3,3,3],  // 巳年
+    [3,4,4,4,4,5,5,2,2,3,3,3],  // 午年
+    [3,3,4,4,4,4,5,5,2,2,3,3],  // 未年
+    [3,3,3,4,4,4,4,5,5,2,2,3],  // 申年
+    [3,3,3,3,4,4,4,4,5,5,2,2],  // 酉年
+    [2,3,3,3,3,4,4,4,4,5,5,5],  // 戌年
+    [5,2,3,3,3,3,4,4,4,4,5,5]   // 亥年
+  ];
+  return juTable[yearBranch][month - 1];
 }
+
+// 計算命宮位置
+function calculateMingGong(month, time) {
+  // 命宮 = 寅宮起正月，順數至生月，再從生月起子時，逆數至生時
+  let pos = (2 + month - 1) % 12; // 寅宮起正月
+  pos = (pos - time + 12) % 12;    // 逆數時辰
+  return pos;
+}
+
+// 計算身宮位置
+function calculateShenGong(month, time) {
+  // 身宮 = 寅宮起正月，順數至生月，再從生月起子時，順數至生時
+  let pos = (2 + month - 1) % 12; // 寅宮起正月
+  pos = (pos + time) % 12;         // 順數時辰
+  return pos;
+}
+
+// 安紫微星系
+function placeZiweiStars(day, wuxingJu) {
+  const positions = {};
+  
+  // 根據五行局和生日定紫微位置
+  const juIndex = wuxingJu - 2; // 二局=0, 三局=1...
+  if (juIndex >= 0 && juIndex < ZIWEI_TABLE.positions.length) {
+    const ziweiPos = ZIWEI_TABLE.positions[juIndex][day - 1];
+    
+    // 安紫微星系
+    positions['紫微'] = ziweiPos;
+    positions['天機'] = (ziweiPos + 1) % 12;
+    positions['太陽'] = (ziweiPos + 3) % 12;
+    positions['武曲'] = (ziweiPos + 4) % 12;
+    positions['天同'] = (ziweiPos + 5) % 12;
+    positions['廉貞'] = (ziweiPos + 8) % 12;
+    
+    // 安天府星系（與紫微相對）
+    const tianfuPos = (ziweiPos + 6) % 12;
+    positions['天府'] = tianfuPos;
+    positions['太陰'] = (tianfuPos - 1 + 12) % 12;
+    positions['貪狼'] = (tianfuPos - 2 + 12) % 12;
+    positions['巨門'] = (tianfuPos - 3 + 12) % 12;
+    positions['天相'] = (tianfuPos - 4 + 12) % 12;
+    positions['天梁'] = (tianfuPos - 5 + 12) % 12;
+    positions['七殺'] = (tianfuPos - 6 + 12) % 12;
+    positions['破軍'] = (tianfuPos - 8 + 12) % 12;
+  }
+  
+  return positions;
+}
+
+// 安六吉星
+function placeHelperStars(year, month, time) {
+  const positions = {};
+  const yearStem = (year - 4) % 10;
+  const yearBranch = (year - 4) % 12;
+  
+  positions['文昌'] = HELPER_STARS_RULES['文昌'](yearBranch, month);
+  positions['文曲'] = HELPER_STARS_RULES['文曲'](yearBranch, month);
+  positions['左輔'] = HELPER_STARS_RULES['左輔'](yearBranch, month);
+  positions['右弼'] = HELPER_STARS_RULES['右弼'](yearBranch, month);
+  positions['天魁'] = HELPER_STARS_RULES['天魁'](yearStem);
+  positions['天鉞'] = HELPER_STARS_RULES['天鉞'](yearStem);
+  
+  return positions;
+}
+
+// 安六煞星
+function placeUnluckyStars(year, time) {
+  const positions = {};
+  const yearStem = (year - 4) % 10;
+  const yearBranch = (year - 4) % 12;
+  
+  positions['擎羊'] = UNLUCKY_STARS_RULES['擎羊'](yearBranch);
+  positions['陀羅'] = UNLUCKY_STARS_RULES['陀羅'](yearBranch);
+  positions['火星'] = UNLUCKY_STARS_RULES['火星'](yearBranch, time);
+  positions['鈴星'] = UNLUCKY_STARS_RULES['鈴星'](yearBranch, time);
+  positions['地空'] = UNLUCKY_STARS_RULES['地空'](time);
+  positions['地劫'] = UNLUCKY_STARS_RULES['地劫'](time);
+  
+  return positions;
+}
+
+// 安祿存
+function placeLucun(year) {
+  const yearStem = (year - 4) % 10;
+  return { '祿存': LUCUN_TABLE[yearStem] };
+}
+
+// 其他小星（簡化）
+function placeMinorStars(month, day, time) {
+  return {
+    '天馬': (2 + time) % 12,
+    '紅鸞': (3 + month) % 12,
+    '天喜': (9 + month) % 12,
+    '天刑': (9 + month) % 12,
+    '天姚': (month - 1) % 12,
+    '天巫': (month - 1) % 12,
+    '天月': (month - 1) % 12,
+    '陰煞': (9 - month + 12) % 12,
+    '台輔': (month - 1) % 12,
+    '封誥': (month + 1) % 12,
+    '龍池': (time + 2) % 12,
+    '鳳閣': (time - 2 + 12) % 12,
+  };
+}
+
+// 主函數：生成完整命盤
+function generateChart() {
+  const name = document.getElementById('name').value || '未命名';
+  const gender = document.getElementById('gender').value;
+  const birthDate = document.getElementById('birthDate').value;
+  const timeIndex = parseInt(document.getElementById('birthTime').value);
+  
+  if (!birthDate) {
+    alert('請選擇生日！');
+    return;
+  }
+  
+  // 解析日期
+  const date = new Date(birthDate);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  
+  // 計算基本資訊
+  const wuxingJu = calculateWuxingJu(year, month, day, timeIndex);
+  const mingGongPos = calculateMingGong(month, timeIndex);
+  const shenGongPos = calculateShenGong(month, timeIndex);
+  
+  // 安各類星曜
+  const majorStars = placeZiweiStars(day, wuxingJu);
+  const helperStars = placeHelperStars(year, month, timeIndex);
+  const unluckyStars = placeUnluckyStars(year, timeIndex);
+  const lucun = placeLucun(year);
+  const minorStars = placeMinorStars(month, day, timeIndex);
+  
+  // 合併所有星曜
+  const allStars = {
+    ...majorStars,
+    ...helperStars,
+    ...unluckyStars,
+    ...lucun,
+    ...minorStars
+  };
+  
+  // 初始化12宮
+  const palaces = [];
+  for (let i = 0; i < 12; i++) {
+    const palacePos = (mingGongPos + i) % 12;
+    palaces.push({
+      name: PALACE_NAMES[i],
+      branch: EARTHLY_BRANCHES[palacePos],
+      branchIndex: palacePos,
+      isMing: i === 0,
+      isShen: palacePos === shenGongPos,
+      stars: []
+    });
+  }
+  
+  // 將星曜放入對應宮位
+  for (const [starName, starPos] of Object.entries(allStars)) {
+    const palace = palaces.find(p => p.branchIndex === starPos);
+    if (palace) {
+      let starType = 'minor';
+      if (['紫微','天機','太陽','武曲','天同','廉貞','天府','太陰','貪狼','巨門','天相','天梁','七殺','破軍'].includes(starName)) {
+        starType = starName === '紫微' ? 'ziwei' : starName === '天府' ? 'tianfu' : 'major';
+      } else if (['文昌','文曲','左輔','右弼','天魁','天鉞'].includes(starName)) {
+        starType = 'helper';
+      } else if (['擎羊','陀羅','火星','鈴星','地空','地劫'].includes(starName)) {
+        starType = 'unlucky';
+      } else if (starName === '祿存') {
+        starType = 'lucky';
+      }
+      palace.stars.push({ name: starName, type: starType });
+    }
+  }
+  
+  // 顯示命盤
+  displayChart(name, gender, birthDate, timeIndex, palaces, wuxingJu, mingGongPos);
+}
+
+function displayChart(name, gender, birthDate, timeIndex, palaces, wuxingJu, mingGongPos) {
+  const genderText = gender === 'male' ? '男命' : '女命';
+  const timeNames = ['子時','丑時','寅時','卯時','辰時','巳時','午時','未時','申時','酉時','戌時','亥時'];
+  const wuxingNames = ['', '', '水二局', '木三局', '金四局', '土五局', '火六局'];
+  
+  // 找到命主和身主星（簡化）
+  const mingZhu = '貪狼';
+  const shenZhu = '天相';
+  
+  document.getElementById('chartInfo').innerHTML = `
+    <h3>✨ 命盤資訊 ✨</h3>
+    <p><strong>${name}</strong> (${genderText})</p>
+    <p><strong>陽曆：</strong>${birthDate} ${timeNames[timeIndex]}</p>
+    <p><strong>命宮：</strong>${palaces[0].branch} | <strong>身宮：</strong>${palaces.find(p => p.isShen)?.branch || '未知'}</p>
+    <p><strong>五行局：</strong>${wuxingNames[wuxingJu] || '未知'}</p>
+  `;
+  
+  // 傳統12宮排列（逆時針，命宮在右下角）
+  const gridOrder = [
+    11, 10, 9, 8,    // 第一行：兄弟、夫妻、子女、財帛
+    null, null, null, 7,  // 第二行：中間空，疾厄
+    null, null, null, 6,  // 第三行：中間空，遷移
+    0, 1, 2, 3      // 第四行：命宮、父母、福德、田宅（後面接官祿、僕役）
+  ];
+  
+  const wrapper = document.getElementById('palaceWrapper');
+  wrapper.innerHTML = '';
+  
+  gridOrder.forEach((idx, pos) => {
+    if (idx === null) {
+      // 中間資訊區
+      if (pos === 5) {
+        const centerDiv = document.createElement('div');
+        centerDiv.className = 'center-info';
+        centerDiv.innerHTML = `
+          <h2>${name}</h2>
+          <div class="main-palace">${palaces[0].branch}宮</div>
+          <div class="life-master">命主：${mingZhu}</div>
+          <div class="life-master">身主：${shenZhu}</div>
+          <div class="life-master" style="margin-top:15px;font-size:1em;">
+            ${wuxingNames[wuxingJu] || ''}
+          </div>
+        `;
+        wrapper.appendChild(centerDiv);
+      }
+      return;
+    }
+    
+    const palace = palaces[idx];
+    const div = document.createElement('div');
+    div.className = 'palace';
+    
+    // 宮位標籤
+    const attrs = [];
+    if (palace.isMing) attrs.push('命');
+    if (palace.isShen) attrs.push('身');
+    
+    const attrsHTML = attrs.length > 0 
+      ? `<div class="palace-attrs">${attrs.map(a => `<span class="attr-tag">${a}</span>`).join('')}</div>`
+      : '';
+    
+    // 星曜
+    const starsHTML = palace.stars
+      .map(star => `<span class="star star-${star.type}">${star.name}</span>`)
+      .join('');
+    
+    div.innerHTML = `
+      <div class="palace-header">
+        <span class="palace-name">${palace.name}</span>
+        <span class="palace-branch">${palace.branch}</span>
+      </div>
+      ${attrsHTML}
+      <div class="stars-container">${starsHTML}</div>
+    `;
+    
+    wrapper.appendChild(div);
+  });
+  
+  // 五行分析
+  const elements = { '金': 0, '木': 0, '水': 0, '火': 0, '土': 0 };
+  palaces.forEach(p => {
+    p.stars.forEach(s => {
+      if (['紫微','武曲','七殺','破軍'].includes(s.name)) elements['金']++;
+      if (['天機','天梁','貪狼'].includes(s.name)) elements['木']++;
+      if (['太陽','廉貞'].includes(s.name)) elements['火']++;
+      if (['太陰','天同'].includes(s.name)) elements['水']++;
+      if (['天府','天相','巨門'].includes(s.name)) elements['土']++;
+    });
+  });
+  
+  const maxElement = Object.keys(elements).reduce((a, b) => elements[a] > elements[b] ? a : b);
+  
+  document.getElementById('elementsInfo').innerHTML = `
+    <h3>⚡ 五行分析</h3>
+    <div class="elements-grid">
+      ${Object.entries(elements).map(([el, count]) => `
+        <div class="element-item">
+          <div><strong>${el}</strong></div>
+          <div style="color:#aaf;margin-top:5px;">${count} ${el === maxElement ? '★' : ''}</div>
+        </div>
+      `).join('')}
+    </div>
+    <p style="margin-top:20px;text-align:center;color:#ff7bff;font-size:1.1em;">
+      💫 五行主勢：<strong style="color:#ff3eff;font-size:1.3em;">${maxElement}</strong>
+    </p>
+  `;
+  
+  document.getElementById('chartContainer').style.display = 'block';
+  document.getElementById('chartContainer').scrollIntoView({ behavior: 'smooth' });
+}
+
+// 設置預設值
+document.getElementById('birthDate').valueAsDate = new Date();
 </script>
 </body>
 </html>
