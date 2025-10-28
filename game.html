@@ -121,7 +121,12 @@ function countdownStart(){
       clearInterval(timer);
       overlay.style.display="none";
       gameRunning=true;
-      loop();
+      // 等圖片載入完成後才開始遊戲
+Promise.all([
+  new Promise(r => catImg.onload = r),
+  new Promise(r => fishImg.onload = r)
+]).then(() => loop());
+
     }
   },1000);
 }
