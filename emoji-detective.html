@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emoji 星際偵探局</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            margin: 20px 0;
+            font-size: 2.5em;
+            text-shadow: 0 0 15px rgba(255,255,255,0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #fff; }
+            to { text-shadow: 0 0 20px #ff0, 0 0 30px #ff0; }
+        }
+
+        #gameContainer {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            max-width: 1000px;
+            margin: 20px auto;
+            position: relative;
+        }
+
+        .side {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            width: 380px;
+            height: 500px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .emojiGrid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            padding: 10px;
+            height: 100%;
+        }
+
+        .emoji {
+            font-size: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.2);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .emoji:hover {
+            transform: scale(1.15);
+            background: rgba(255,255,0,0.4);
+            box-shadow: 0 0 20px #ff0;
+            z-index: 10;
+        }
+
+        .emoji.correct {
+            animation: correctPop 0.6s ease-out;
+            background: linear-gradient(45deg, #4CAF50, #8BC34A) !important;
+        }
+
+        .emoji.wrong {
+            animation: shake 0.4s;
+            background: #f44336 !important;
+        }
+
+        @keyframes correctPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.4); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        #timer {
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2em;
+            font-weight: bold;
+            text-shadow: 0 0 10px #000;
+        }
+
+        #timer.low { color: #ff4444; animation: pulse 1s infinite; }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        #scoreBoard {
+            display: flex;
+            gap: 30px;
+            font-size: 1.5em;
+            margin: 10px 0;
+        }
+
+        #level, #score { font-weight: bold; }
+
+        #startScreen, #gameOver {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: opacity 0.5s;
+        }
+
+        #startScreen h2, #gameOver h2 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #FFD93D, #FF6B6B);
+            border: none;
+            padding: 18px 40px;
+            font-size: 1.5em;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 15px;
+            box-shadow: 0 8px 20px rgba(255,107,107,0.4);
+            transition: all 0.3s;
+            color: white;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(255,107,107,0.6);
+        }
+
+        .sparkle {
+            position: absolute;
+            font-size: 30px;
+            pointer-events: none;
+            animation: sparkle 1s ease-out forwards;
+        }
+
+        @keyframes sparkle {
+            0% { transform: scale(0) rotate(0); opacity: 1; }
+            100% { transform: scale(1.5) rotate(180deg); opacity: 0; }
+        }
+
+        #hint {
+            margin-top: 10px;
+            font-size: 1.1em;
+            opacity: 0.8;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="startScreen">
+        <h2>Emoji 星際偵探局</h2>
+        <p>找出右邊那個「不一樣的黃臉」！</p>
+        <p id="hint">限時 30 秒，連續答對加分！</p>
+        <button class="btn" onclick="startGame()">開始挑戰！</button>
+    </div>
+
+    <h1>Emoji 星際偵探局</h1>
+    
+    <div id="scoreBoard">
+        <div>等級: <span id="level">1</span></div>
+        <div>分數: <span id="score">0</span></div>
+        <div id="timer">30</div>
+    </div>
+
+    <div id="gameContainer">
+        <div class="side" id="leftSide"></div>
+        <div class="side" id="rightSide"></div>
+    </div>
+
+    <div id="gameOver" style="display:none;">
+        <h2>時間到啦！</h2>
+        <p>最終分數: <span id="finalScore">0</span></p>
+        <p>最高等級: <span id="finalLevel">1</span></p>
+        <button class="btn" onclick="startGame()">再挑戰一次！</button>
+        <button class="btn" onclick="location.reload()">回到主畫面</button>
+    </div>
+
+    <script>
+        const emojis = ['😊','😃','😄','😁','😆','😅','😂','🤣','😇','🙂','😉','😍','🥰','😘','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🥳','😏','😒','😞','😔','😟','😕','🙁','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🤭','🤫','🤥','😶','😐','😑','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😵','🤐','🥴','🤧','😷','🤒','🤕'];
+
+        let game = {
+            level: 1,
+            score: 0,
+            timeLeft: 30,
+            timer: null,
+            gridSize: 5,
+            diffIndex: -1
+        };
+
+        const leftSide = document.getElementById('leftSide');
+        const rightSide = document.getElementById('rightSide');
+
+        function startGame() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('gameOver').style.display = 'none';
+            
+            game = { level: 1, score: 0, timeLeft: 30, timer: null, gridSize: 5, diffIndex: -1 };
+            updateUI();
+            startTimer();
+            nextLevel();
+        }
+
+        function startTimer() {
+            clearInterval(game.timer);
+            game.timeLeft = 30;
+            updateTimer();
+            game.timer = setInterval(() => {
+                game.timeLeft--;
+                updateTimer();
+                if (game.timeLeft <= 0) endGame();
+            }, 1000);
+        }
+
+        function updateTimer() {
+            const timerEl = document.getElementById('timer');
+            timerEl.textContent = game.timeLeft;
+            timerEl.className = game.timeLeft <= 10 ? 'low' : '';
+        }
+
+        function updateUI() {
+            document.getElementById('level').textContent = game.level;
+            document.getElementById('score').textContent = game.score;
+        }
+
+        function nextLevel() {
+            // 增加難度
+            if (game.level % 3 === 0) game.gridSize = Math.min(7, game.gridSize + 1);
+            
+            leftSide.innerHTML = '';
+            rightSide.innerHTML = '';
+
+            const total = game.gridSize * game.gridSize;
+            const baseEmoji = getRandomEmoji();
+            const diffEmoji = getDifferentEmoji(baseEmoji);
+
+            // 左邊：全部一樣
+            for (let i = 0; i < total; i++) {
+                const div = createEmojiDiv(baseEmoji, false);
+                leftSide.appendChild(div);
+            }
+
+            // 右邊：一個不一樣
+            game.diffIndex = Math.floor(Math.random() * total);
+            for (let i = 0; i < total; i++) {
+                const emoji = i === game.diffIndex ? diffEmoji : baseEmoji;
+                const div = createEmojiDiv(emoji, true);
+                div.dataset.index = i;
+                rightSide.appendChild(div);
+            }
+
+            // 動態 grid
+            const cols = game.gridSize;
+            [leftSide, rightSide].forEach(side => {
+                side.querySelector('.emojiGrid')?.remove();
+                const grid = document.createElement('div');
+                grid.className = 'emojiGrid';
+                grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+                side.appendChild(grid);
+                side.querySelectorAll('.emoji').forEach(e => grid.appendChild(e));
+            });
+        }
+
+        function createEmojiDiv(emoji, clickable) {
+            const div = document.createElement('div');
+            div.className = 'emoji';
+            div.textContent = emoji;
+            if (clickable) {
+                div.style.cursor = 'pointer';
+                div.onclick = () => checkAnswer(div);
+            }
+            return div;
+        }
+
+        function getRandomEmoji() {
+            return emojis[Math.floor(Math.random() * emojis.length)];
+        }
+
+        function getDifferentEmoji(base) {
+            let diff;
+            do {
+                diff = getRandomEmoji();
+            } while (diff === base);
+            return diff;
+        }
+
+        function checkAnswer(clickedDiv) {
+            const index = parseInt(clickedDiv.dataset.index);
+            if (index === game.diffIndex) {
+                // 正確！
+                clickedDiv.classList.add('correct');
+                createSparkles(clickedDiv);
+                
+                game.score += 100 + (game.level * 10) + (game.timeLeft * 2);
+                game.level++;
+                updateUI();
+
+                setTimeout(() => {
+                    if (game.timeLeft > 0) nextLevel();
+                }, 800);
+            } else {
+                // 錯誤
+                clickedDiv.classList.add('wrong');
+                game.timeLeft = Math.max(5, game.timeLeft - 3);
+                updateTimer();
+                setTimeout(() => clickedDiv.classList.remove('wrong'), 600);
+            }
+        }
+
+        function createSparkles(element) {
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            for (let i = 0; i < 15; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.textContent = ['✨','⭐','💫','🌟','⚡'][Math.floor(Math.random()*5)];
+                sparkle.style.left = centerX + 'px';
+                sparkle.style.top = centerY + 'px';
+                document.body.appendChild(sparkle);
+
+                setTimeout(() => sparkle.remove(), 1000);
+            }
+        }
+
+        function endGame() {
+            clearInterval(game.timer);
+            document.getElementById('finalScore').textContent = game.score;
+            document.getElementById('finalLevel').textContent = game.level;
+            document.getElementById('gameOver').style.display = 'flex';
+        }
+
+        // 初始畫面
+        document.getElementById('startScreen').style.display = 'flex';
+    </script>
+</body>
+</html>
