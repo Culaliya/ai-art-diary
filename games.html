@@ -1,1 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎮 遊戲選單 | Culaliya</title>
+<style>
+body {
+  margin:0;
+  font-family:'Orbitron',sans-serif;
+  background:radial-gradient(circle at 50% 20%, #0e0f1a 0%, #080910 70%, #000 100%);
+  color:#0ff;
+  text-align:center;
+  overflow:hidden;
+}
+h1 {
+  margin-top:60px;
+  color:#0ff;
+  text-shadow:0 0 20px #0ff;
+}
+.game-container {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:30px;
+  margin-top:50px;
+}
+.game-card {
+  width:220px;
+  height:220px;
+  background:rgba(255,255,255,0.05);
+  border:2px solid #0ff;
+  border-radius:16px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  cursor:pointer;
+  transition:transform .3s, box-shadow .3s;
+  box-shadow:0 0 15px rgba(0,255,255,0.3);
+}
+.game-card:hover {
+  transform:translateY(-10px);
+  box-shadow:0 0 25px #0ff;
+}
+.game-icon {
+  font-size:50px;
+  margin-bottom:10px;
+}
+a {
+  color:#0ff;
+  text-decoration:none;
+}
+.back-home {
+  position:fixed;
+  bottom:20px;
+  left:20px;
+  padding:10px 20px;
+  border:2px solid #0ff;
+  border-radius:20px;
+  color:#0ff;
+  text-decoration:none;
+  background:rgba(0,255,255,0.1);
+  transition:.3s;
+}
+.back-home:hover {background:rgba(0,255,255,0.3);}
+</style>
+</head>
+<body>
+<h1>🎮 Culaliya’s Mini Game Lab</h1>
+
+<div class="game-container">
+  <a href="https://pixel-jumper-c0acae97.base44.app?is_new_user=true" class="game-card">
+    <div class="game-icon">🐸</div>
+    <h3>青蛙跳躍</h3>
+    <p>像素風平台跳躍遊戲</p>
+  </a>
+
+  <a href="game.html" class="game-card">
+    <div class="game-icon">🐈‍⬛</div>
+    <h3>貓咪冒險</h3>
+    <p>收集魚魚的夜空挑戰</p>
+  </a>
+
+  <a href="tictactoe.html" class="game-card">
+    <div class="game-icon">⭕❌</div>
+    <h3>井字遊戲</h3>
+    <p>經典 AI 對戰模式</p>
+  </a>
+</div>
+
+<a href="index.html" class="back-home">🏠 回首頁</a>
+
+</body>
+</html>
 
