@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>🐈 Disaster Kitten</title>
+<title>🐈 Disaster Kitten v1.1</title>
 <style>
   html,body{margin:0;height:100%;background:#000;overflow:hidden;}
-  canvas{display:block;width:100%;height:100%;background:#111;}
+  canvas{display:block;width:100%;height:100%;background:linear-gradient(#030416,#0c0d1a,#090a12);}
   #backHome{
     position:fixed;top:10px;left:10px;
     background:rgba(0,255,255,0.1);
@@ -14,23 +14,46 @@
     padding:8px 14px;border-radius:8px;
     font-family:sans-serif;font-weight:600;
     cursor:pointer;z-index:10;
+    transition:0.3s;
   }
+  #backHome:hover{background:rgba(0,255,255,0.3);}
 </style>
 </head>
 <body>
 <canvas id="game"></canvas>
 <a id="backHome" href="index.html">🏠 回首頁</a>
+
+<audio id="jumpSound" src="music/jump.mp3"></audio>
+<audio id="eatSound" src="music/eat.mp3"></audio>
+
 <script>
 const canvas=document.getElementById("game");
 const ctx=canvas.getContext("2d");
 canvas.width=480;canvas.height=720;
 
+let catImg=new Image();
+catImg.src="assets/blackcat.png";
+
 // 遊戲元素
-let cat={x:220,y:600,vx:0,vy:0,w:40,h:40,onGround:false};
+let cat={x:220,y:600,vx:0,vy:0,w:60,h:60,onGround:false};
 let keys={};
-let fish={x:Math.random()*400+20,y:Math.random()*400+100,w:30,h:20,got:false};
-let floorY=660;
+let fishes=[];
+let platforms=[
+  {x:0,y:660,w:480,h:60},
+  {x:100,y:500,w:100,h:15},
+  {x:300,y:400,w:120,h:15},
+  {x:150,y:300,w:80,h:15}
+];
 let score=0;
+
+function spawnFish(){
+  fishes.push({
+    x:Math.random()*400+30,
+    y:Math.random()*300+100,
+    r:12,alpha:1
+  });
+}
+for(let i=0;i<3;i++)spawnFish();
 
 document.addEventListener("keydown",e=>keys[e.code]=true);
 document.addEventListener("keyup",e=>keys[e.code]=false);
@@ -40,39 +63,74 @@ function update(){
   if(keys["ArrowLeft"]) cat.vx=-3;
   else if(keys["ArrowRight"]) cat.vx=3;
   else cat.vx=0;
-
-  if(keys["Space"]&&cat.onGround){cat.vy=-8;cat.onGround=false;}
+  if(keys["Space"]&&cat.onGround){
+    cat.vy=-9;
+    cat.onGround=false;
+    document.getElementById("jumpSound").play();
+  }
 
   // 物理
-  cat.vy+=0.4;cat.y+=cat.vy;cat.x+=cat.vx;
-  if(cat.y+cat.h>=floorY){cat.y=floorY-cat.h;cat.vy=0;cat.onGround=true;}
+  cat.vy+=0.5;
+  cat.y+=cat.vy; cat.x+=cat.vx;
+
+  // 平台碰撞
+  cat.onGround=false;
+  for(let p of platforms){
+    if(cat.x+cat.w>p.x && cat.x<p.x+p.w && cat.y+cat.h>=p.y && cat.y+cat.h<=p.y+20 && cat.vy>=0){
+      cat.y=p.y-cat.h;
+      cat.vy=0;
+      cat.onGround=true;
+    }
+  }
   if(cat.x<0)cat.x=0;if(cat.x+cat.w>canvas.width)cat.x=canvas.width-cat.w;
+  if(cat.y>canvas.height){cat.y=600;cat.vy=0;score=Math.max(0,score-1);} // 掉下去扣分
+
+  // 魚閃爍
+  for(let f of fishes) f.alpha=Math.sin(Date.now()/200+f.x)*0.5+0.5;
 
   // 撞魚
-  if(!fish.got && cat.x<fish.x+fish.w && cat.x+cat.w>fish.x &&
-     cat.y<fish.y+fish.h && cat.y+cat.h>fish.y){
-    fish.got=true;score++;
-    setTimeout(()=>{fish={x:Math.random()*400+20,y:Math.random()*400+100,w:30,h:20,got:false};},800);
+  for(let f of fishes){
+    if(Math.abs(cat.x+cat.w/2 - f.x)<30 && Math.abs(cat.y+cat.h/2 - f.y)<30){
+      document.getElementById("eatSound").play();
+      score++;
+      f.x=Math.random()*400+30;
+      f.y=Math.random()*300+100;
+    }
   }
 }
 
 function draw(){
-  ctx.fillStyle="#111";ctx.fillRect(0,0,canvas.width,canvas.height);
-  // 地面
-  ctx.fillStyle="#222";ctx.fillRect(0,floorY,canvas.width,60);
-  // 貓
-  ctx.fillStyle="#0ff";ctx.fillRect(cat.x,cat.y,cat.w,cat.h);
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // 星星背景
+  ctx.fillStyle="#0ff2";
+  for(let i=0;i<40;i++){
+    let sx=Math.sin(i*13.3+Date.now()/800)*240+240;
+    let sy=(i*37+Date.now()/20)%720;
+    ctx.fillRect(sx,sy,2,2);
+  }
+
+  // 平台
+  ctx.fillStyle="#222";
+  for(let p of platforms) ctx.fillRect(p.x,p.y,p.w,p.h);
+
   // 魚
-  if(!fish.got){
-    ctx.fillStyle="#ff7ab6";
+  for(let f of fishes){
+    ctx.fillStyle=`rgba(255,122,182,${f.alpha})`;
     ctx.beginPath();
-    ctx.ellipse(fish.x+fish.w/2,fish.y+fish.h/2,fish.w/2,fish.h/2,0,0,Math.PI*2);
+    ctx.ellipse(f.x,f.y,12,8,0,0,Math.PI*2);
     ctx.fill();
   }
+
+  // 貓
+  if(catImg.complete) ctx.drawImage(catImg,cat.x,cat.y,cat.w,cat.h);
+  else {ctx.fillStyle="#0ff";ctx.fillRect(cat.x,cat.y,cat.w,cat.h);}
+
   // 分數
   ctx.fillStyle="#0ff";
   ctx.font="20px Orbitron, monospace";
   ctx.fillText("Score: "+score,20,30);
+  ctx.fillText("← → 移動, 空白鍵跳",20,55);
 }
 
 function loop(){
