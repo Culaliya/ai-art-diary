@@ -13,7 +13,6 @@
     aspect-ratio:2/3;
     max-height:100vh;
     max-width:100vw;
-    image-rendering:pixelated;
   }
   #backHome{
     position:fixed;top:10px;left:10px;
@@ -24,7 +23,6 @@
     cursor:pointer;z-index:10;transition:.3s;
   }
   #backHome:hover{background:rgba(0,255,255,0.3);}
-  /* 🐾 載入畫面 */
   #loading{
     position:fixed;inset:0;background:#000;
     color:#0ff;font-family:'Orbitron',sans-serif;
@@ -44,10 +42,7 @@
 <body>
 <div id="loading">Loading...<div id="paw">🐾</div></div>
 <canvas id="game"></canvas>
-<a id="backHome" href="index.html">🏠 回首頁</a>
-
-<audio id="jumpSound" src="music/jump.mp3"></audio>
-<audio id="eatSound" src="music/eat.mp3"></audio>
+<button id="backHome" onclick="window.history.back()">🏠 回首頁</button>
 
 <script>
 const canvas=document.getElementById("game");
@@ -55,25 +50,118 @@ const ctx=canvas.getContext("2d");
 const scale=window.devicePixelRatio||1;
 canvas.width=480*scale;canvas.height=720*scale;ctx.scale(scale,scale);
 
-let catImg=new Image();catImg.src="assets/blackcat.png";
-let fishImg=new Image();fishImg.src="assets/fish.png";
-let sparkle=new Image();sparkle.src="assets/sparkle.png";
+// 🐈 貓咪圖片（使用外部圖片）
+let catImg = new Image();
+catImg.src = "assets/blackcat.png";
+let catImgLoaded = false;
+catImg.onload = () => { catImgLoaded = true; };
+catImg.onerror = () => { 
+  console.log("貓咪圖片載入失敗，使用預設圖形");
+  catImgLoaded = false; 
+};
 
-let gameOver=false,loaded=false;
+// 🐟 用 Canvas 繪製魚圖像
+function drawFishImage() {
+  const fishCanvas = document.createElement('canvas');
+  fishCanvas.width = 30;
+  fishCanvas.height = 20;
+  const fishCtx = fishCanvas.getContext('2d');
+  
+  // 魚身體
+  fishCtx.fillStyle = '#ff7ab6';
+  fishCtx.beginPath();
+  fishCtx.ellipse(15, 10, 10, 6, 0, 0, Math.PI * 2);
+  fishCtx.fill();
+  
+  // 魚尾
+  fishCtx.beginPath();
+  fishCtx.moveTo(5, 10);
+  fishCtx.lineTo(0, 5);
+  fishCtx.lineTo(0, 15);
+  fishCtx.closePath();
+  fishCtx.fill();
+  
+  // 魚鰭
+  fishCtx.beginPath();
+  fishCtx.moveTo(15, 4);
+  fishCtx.lineTo(12, 0);
+  fishCtx.lineTo(18, 6);
+  fishCtx.closePath();
+  fishCtx.fill();
+  
+  // 眼睛
+  fishCtx.fillStyle = '#fff';
+  fishCtx.beginPath();
+  fishCtx.arc(20, 9, 2, 0, Math.PI * 2);
+  fishCtx.fill();
+  
+  fishCtx.fillStyle = '#000';
+  fishCtx.beginPath();
+  fishCtx.arc(20, 9, 1, 0, Math.PI * 2);
+  fishCtx.fill();
+  
+  return fishCanvas;
+}
+
+// ✨ 用 Canvas 繪製光效
+function drawSparkleImage() {
+  const sparkleCanvas = document.createElement('canvas');
+  sparkleCanvas.width = 80;
+  sparkleCanvas.height = 80;
+  const sparkleCtx = sparkleCanvas.getContext('2d');
+  
+  const gradient = sparkleCtx.createRadialGradient(40, 40, 0, 40, 40, 40);
+  gradient.addColorStop(0, 'rgba(0, 255, 255, 0.5)');
+  gradient.addColorStop(0.5, 'rgba(0, 255, 255, 0.2)');
+  gradient.addColorStop(1, 'rgba(0, 255, 255, 0)');
+  
+  sparkleCtx.fillStyle = gradient;
+  sparkleCtx.fillRect(0, 0, 80, 80);
+  
+  // 星星效果
+  sparkleCtx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+  sparkleCtx.beginPath();
+  for(let i = 0; i < 8; i++) {
+    const angle = (i * Math.PI) / 4;
+    const x = 40 + Math.cos(angle) * 25;
+    const y = 40 + Math.sin(angle) * 25;
+    sparkleCtx.arc(x, y, 2, 0, Math.PI * 2);
+  }
+  sparkleCtx.fill();
+  
+  return sparkleCanvas;
+}
+
+let fishImg = drawFishImage();
+let sparkle = drawSparkleImage();
+
+let gameOver=false,loaded=true;
 let cat={x:210,y:580,vx:0,vy:0,w:60,h:60,onGround:false,glow:0};
 let keys={},score=0;
+
+// 🎮 調整平台高度，讓貓咪更容易跳！
 let platforms=[
-  {x:0,y:660,w:480,h:60},
-  {x:120,y:520,w:120,h:15},
-  {x:280,y:430,w:120,h:15},
-  {x:150,y:340,w:120,h:15},
-  {x:80,y:250,w:100,h:15}
+  {x:0,y:660,w:480,h:60},        // 地板
+  {x:120,y:580,w:120,h:15},      // 第一層（降低了40）
+  {x:280,y:510,w:120,h:15},      // 第二層（降低了80）
+  {x:150,y:440,w:120,h:15},      // 第三層（降低了100）
+  {x:80,y:370,w:100,h:15},       // 第四層（降低了120）
+  {x:300,y:300,w:120,h:15}       // 第五層（新增！）
 ];
+
 let fishes=[];
+
 function spawnFish(){
   if(fishes.length>=5)return;
-  fishes.push({x:Math.random()*420+30,y:Math.random()*250+120,vx:(Math.random()-0.5)*1,vy:(Math.random()-0.5)*1,life:600});
+  fishes.push({
+    x:Math.random()*420+30,
+    y:Math.random()*350+100,  // 調整魚的生成高度範圍
+    vx:(Math.random()-0.5)*1.5,
+    vy:(Math.random()-0.5)*1.5,
+    life:600
+  });
 }
+
 for(let i=0;i<3;i++)spawnFish();
 
 let effects=[];
@@ -82,97 +170,203 @@ function addEffect(x,y){effects.push({x,y,alpha:1});}
 document.addEventListener("keydown",e=>keys[e.code]=true);
 document.addEventListener("keyup",e=>keys[e.code]=false);
 
+// 🎵 簡易音效生成
+function playJumpSound() {
+  try {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    
+    oscillator.frequency.setValueAtTime(300, audioCtx.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(500, audioCtx.currentTime + 0.1);
+    
+    gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+    
+    oscillator.start(audioCtx.currentTime);
+    oscillator.stop(audioCtx.currentTime + 0.1);
+  } catch(e) {}
+}
+
+function playEatSound() {
+  try {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    
+    oscillator.frequency.setValueAtTime(600, audioCtx.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.05);
+    
+    gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+    
+    oscillator.start(audioCtx.currentTime);
+    oscillator.stop(audioCtx.currentTime + 0.1);
+  } catch(e) {}
+}
+
 function update(){
   if(!loaded)return;
+  
   if(keys["ArrowLeft"]) cat.vx=-3;
   else if(keys["ArrowRight"]) cat.vx=3;
   else cat.vx=0;
+  
   if(keys["Space"]&&cat.onGround){
-    cat.vy=-10;cat.onGround=false;
-    document.getElementById("jumpSound").play();
+    cat.vy=-10;
+    cat.onGround=false;
+    playJumpSound();
   }
 
-  cat.vy+=0.5;cat.y+=cat.vy;cat.x+=cat.vx;
-  if(cat.x<0)cat.x=0;if(cat.x+cat.w>480)cat.x=480-cat.w;
+  cat.vy+=0.5;
+  cat.y+=cat.vy;
+  cat.x+=cat.vx;
+  
+  if(cat.x<0)cat.x=0;
+  if(cat.x+cat.w>480)cat.x=480-cat.w;
+  
   cat.onGround=false;
   for(let p of platforms){
     if(cat.x+cat.w>p.x&&cat.x<p.x+p.w&&cat.y+cat.h>=p.y&&cat.y+cat.h<=p.y+20&&cat.vy>=0){
-      cat.y=p.y-cat.h;cat.vy=0;cat.onGround=true;
+      cat.y=p.y-cat.h;
+      cat.vy=0;
+      cat.onGround=true;
     }
   }
-  if(cat.y>720){cat.y=580;cat.vy=0;score=Math.max(0,score-1);}
+  
+  if(cat.y>720){
+    cat.y=580;
+    cat.vy=0;
+    score=Math.max(0,score-1);
+  }
 
   for(let f of fishes){
-    f.x+=f.vx;f.y+=f.vy;f.life--;
+    f.x+=f.vx;
+    f.y+=f.vy;
+    f.life--;
     if(f.x<20||f.x>460)f.vx*=-1;
-    if(f.y<100||f.y>500)f.vy*=-1;
+    if(f.y<80||f.y>550)f.vy*=-1;
   }
+  
   fishes=fishes.filter(f=>f.life>0);
   if(Math.random()<0.02)spawnFish();
 
   for(let f of fishes){
     if(Math.abs(cat.x+cat.w/2-f.x)<35&&Math.abs(cat.y+cat.h/2-f.y)<35){
       score++;
-      document.getElementById("eatSound").play();
+      playEatSound();
       addEffect(f.x,f.y);
       cat.glow=40;
       f.life=0;
     }
   }
+  
   for(let e of effects)e.alpha-=0.03;
   effects=effects.filter(e=>e.alpha>0);
   if(cat.glow>0)cat.glow--;
 }
 
+// 🐾 繪製預設貓咪（當圖片載入失敗時使用）
+function drawDefaultCat(x, y, w, h) {
+  ctx.fillStyle = '#1a1a1a';
+  ctx.fillRect(x, y, w, h);
+  
+  // 眼睛
+  ctx.fillStyle = '#0ff';
+  ctx.beginPath();
+  ctx.arc(x + w * 0.35, y + h * 0.3, 4, 0, Math.PI * 2);
+  ctx.arc(x + w * 0.65, y + h * 0.3, 4, 0, Math.PI * 2);
+  ctx.fill();
+  
+  // 耳朵
+  ctx.fillStyle = '#1a1a1a';
+  ctx.beginPath();
+  ctx.moveTo(x + 10, y);
+  ctx.lineTo(x, y - 10);
+  ctx.lineTo(x + 15, y + 5);
+  ctx.fill();
+  
+  ctx.beginPath();
+  ctx.moveTo(x + w - 10, y);
+  ctx.lineTo(x + w, y - 10);
+  ctx.lineTo(x + w - 15, y + 5);
+  ctx.fill();
+}
+
 function draw(){
   ctx.clearRect(0,0,480,720);
+  
+  // 星星背景
   ctx.fillStyle="#0ff3";
   for(let i=0;i<25;i++){
     let x=Math.sin(i*13+Date.now()/600)*200+240;
     let y=(i*37+Date.now()/15)%720;
     ctx.fillRect(x,y,2,2);
   }
+  
+  // 平台
   ctx.fillStyle="#222";
-  for(let p of platforms)ctx.fillRect(p.x,p.y,p.w,p.h);
-  for(let f of fishes){
-    if(fishImg.complete)ctx.drawImage(fishImg,f.x-15,f.y-10,30,20);
-    else{ctx.fillStyle="#ff7ab6";ctx.beginPath();ctx.ellipse(f.x,f.y,15,10,0,0,Math.PI*2);ctx.fill();}
+  ctx.strokeStyle="#0ff";
+  ctx.lineWidth=2;
+  for(let p of platforms){
+    ctx.fillRect(p.x,p.y,p.w,p.h);
+    ctx.strokeRect(p.x,p.y,p.w,p.h);
   }
+  
+  // 魚
+  for(let f of fishes){
+    ctx.drawImage(fishImg,f.x-15,f.y-10,30,20);
+  }
+  
+  // +1 特效
   for(let e of effects){
     ctx.globalAlpha=e.alpha;
     ctx.fillStyle="#ffb6e9";
-    ctx.font="20px Orbitron, monospace";
+    ctx.font="bold 20px Arial, sans-serif";
     ctx.fillText("+1",e.x,e.y);
     ctx.globalAlpha=1;
   }
-  if(catImg.complete)ctx.drawImage(catImg,cat.x,cat.y,cat.w,cat.h);
-  else{ctx.fillStyle="#0ff";ctx.fillRect(cat.x,cat.y,cat.w,cat.h);}
+  
+  // 貓（使用外部圖片或預設圖形）
+  if(catImgLoaded && catImg.complete) {
+    ctx.drawImage(catImg,cat.x,cat.y,cat.w,cat.h);
+  } else {
+    drawDefaultCat(cat.x, cat.y, cat.w, cat.h);
+  }
+  
+  // 發光效果
   if(cat.glow>0){
     ctx.globalAlpha=cat.glow/40;
     ctx.drawImage(sparkle,cat.x-10,cat.y-10,cat.w+20,cat.h+20);
     ctx.globalAlpha=1;
   }
+  
+  // UI
   ctx.fillStyle="#0ff";
-  ctx.font="20px Orbitron, monospace";
-  ctx.fillText("Score: "+score,20,30);
+  ctx.font="bold 20px Arial, sans-serif";
+  ctx.fillText("🐟 Score: "+score,20,30);
+  ctx.font="16px Arial, sans-serif";
   ctx.fillText("← → 移動，空白鍵跳",20,55);
 }
 
 function loop(){
   if(gameOver)return;
-  update();draw();
+  update();
+  draw();
   requestAnimationFrame(loop);
 }
 
-// ✅ 等圖載入後再開始
-Promise.all([
-  new Promise(r=>{if(catImg.complete)r();else catImg.onload=r;}),
-  new Promise(r=>{if(fishImg.complete)r();else fishImg.onload=r;})
-]).then(()=>{
+// 啟動遊戲
+setTimeout(() => {
   document.getElementById("loading").style.display="none";
-  loaded=true;
   loop();
-});
+}, 2000);
 </script>
 </body>
 </html>
