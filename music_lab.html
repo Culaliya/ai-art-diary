@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>🎧 Culaliya's Music Lab</title>
+<style>
+body {
+  margin:0;
+  font-family:'Orbitron',sans-serif;
+  background:radial-gradient(circle at 50% 20%, #030616 0%, #0a0120 80%, #000 100%);
+  color:#0ff;
+  text-align:center;
+  overflow:hidden;
+}
+h1 {
+  margin-top:50px;
+  color:#0ff;
+  font-size:2.2em;
+  text-shadow:0 0 25px #00ffff, 0 0 45px #0077ff;
+  animation:glowPulse 3s infinite alternate;
+}
+@keyframes glowPulse {
+  from { text-shadow:0 0 15px #00ffff; }
+  to { text-shadow:0 0 35px #ff3eff, 0 0 60px #00ffff; }
+}
+.neon-box {
+  background:rgba(255,255,255,0.05);
+  border:2px solid #0ff;
+  border-radius:16px;
+  box-shadow:0 0 25px rgba(0,255,255,0.5);
+  width:80%;
+  max-width:800px;
+  margin:50px auto;
+  padding:30px;
+  animation:glowFlow 4s infinite;
+}
+@keyframes glowFlow {
+  0% { border-color:#0ff; box-shadow:0 0 20px #0ff; }
+  50% { border-color:#ff3eff; box-shadow:0 0 25px #ff3eff; }
+  100% { border-color:#0ff; box-shadow:0 0 20px #0ff; }
+}
+iframe {
+  width:100%;
+  height:380px;
+  border:none;
+  border-radius:16px;
+  box-shadow:0 0 25px rgba(0,255,255,0.3);
+}
+a.back-home {
+  position:fixed;
+  bottom:20px;
+  left:20px;
+  padding:10px 20px;
+  border:2px solid #0ff;
+  border-radius:20px;
+  color:#0ff;
+  text-decoration:none;
+  background:rgba(0,255,255,0.1);
+  transition:.3s;
+}
+a.back-home:hover {background:rgba(0,255,255,0.3);}
+canvas#stars {
+  position:fixed;
+  top:0;left:0;width:100%;height:100%;
+  z-index:-1;
+}
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+<h1>🎧 AI 音樂實驗室</h1>
+
+<div class="neon-box">
+  <p>✨ 精選播放清單 ✨</p>
+  <iframe style="border-radius:12px"
+    src="https://open.spotify.com/embed/playlist/37i9dQZF1DX4dyzvuaRJ0n?utm_source=generator"
+    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+</div>
+
+<div class="neon-box">
+  <p>💫 Culaliya 精選作品 💫</p>
+  <iframe style="border-radius:12px"
+    src="https://open.spotify.com/embed/artist/5zO1nPz5xVnbQPh7BqJ0ch?utm_source=generator"
+    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+</div>
+
+<a href="index.html" class="back-home">🏠 回首頁</a>
+
+<script>
+// 星星背景動畫
+const canvas=document.getElementById('stars');
+const ctx=canvas.getContext('2d');
+let w,h,stars=[];
+function resize(){w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight;}
+window.addEventListener('resize',resize);
+resize();
+for(let i=0;i<100;i++){
+  stars.push({x:Math.random()*w,y:Math.random()*h,size:Math.random()*1.5,speed:Math.random()*0.3+0.1});
+}
+function drawStars(){
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle='#0ff';
+  for(const s of stars){
+    ctx.globalAlpha=Math.random()*0.7+0.3;
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,s.size,0,Math.PI*2);
+    ctx.fill();
+    s.y+=s.speed;if(s.y>h)s.y=0;
+  }
+  requestAnimationFrame(drawStars);
+}
+drawStars();
+</script>
+</body>
+</html>
