@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🌸 櫻花精靈 Sakura Spirit</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: linear-gradient(180deg, #0a0e27 0%, #1a1147 50%, #2d1b4e 100%);
+    overflow: hidden;
+    font-family: 'Arial', sans-serif;
+    height: 100vh;
+  }
+  canvas {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    max-height: 100vh;
+    background: radial-gradient(circle at 30% 20%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 60%, rgba(255, 105, 180, 0.1) 0%, transparent 50%);
+  }
+  #ui {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    text-align: center;
+    z-index: 10;
+    font-size: 20px;
+    text-shadow: 0 0 10px rgba(255, 182, 193, 0.8);
+  }
+  #score {
+    font-size: 32px;
+    font-weight: bold;
+    color: #ffb6d9;
+    margin-bottom: 5px;
+  }
+  #combo {
+    font-size: 18px;
+    color: #ffd700;
+    animation: pulse 0.5s infinite alternate;
+  }
+  @keyframes pulse {
+    to { transform: scale(1.1); }
+  }
+  .particle {
+    position: fixed;
+    pointer-events: none;
+    animation: float-up 2s ease-out forwards;
+  }
+  @keyframes float-up {
+    to {
+      transform: translateY(-100px);
+      opacity: 0;
+    }
+  }
+  #instructions {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #ffb6d9;
+    font-size: 16px;
+    text-shadow: 0 0 5px rgba(255, 182, 193, 0.5);
+  }
+  #powerup-bar {
+    position: fixed;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  #powerup-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #ff69b4, #ffd700);
+    transition: width 0.3s;
+  }
+</style>
+</head>
+<body>
+<canvas id="game"></canvas>
+<div id="ui">
+  <div id="score">🌸 0</div>
+  <div id="combo" style="display:none;">COMBO x<span id="combo-num">0</span> ✨</div>
+</div>
+<div id="powerup-bar"><div id="powerup-fill"></div></div>
+<div id="instructions">← → 移動 | 收集櫻花 🌸 | 避開烏雲 ☁️</div>
+
+<script>
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+canvas.width = 800;
+canvas.height = 600;
+
+// 🧚 精靈
+const fairy = {
+  x: 400,
+  y: 500,
+  width: 40,
+  height: 40,
+  speed: 5,
+  dx: 0,
+  trail: [],
+  invincible: 0,
+  powerup: 0
+};
+
+// 遊戲狀態
+let score = 0;
+let combo = 0;
+let comboTimer = 0;
+let gameTime = 0;
+let powerupCharge = 0;
+
+// 物品陣列
+let sakuras = [];
+let stars = [];
+let clouds = [];
+let particles = [];
+let moonbeams = [];
+
+// 鍵盤控制
+const keys = {};
+document.addEventListener('keydown', e => {
+  keys[e.code] = true;
+  if (e.code === 'Space' && powerupCharge >= 100) {
+    activatePowerup();
+  }
+});
+document.addEventListener('keyup', e => keys[e.code] = false);
+
+// 生成櫻花
+function spawnSakura() {
+  sakuras.push({
+    x: Math.random() * (canvas.width - 30) + 15,
+    y: -20,
+    size: Math.random() * 15 + 15,
+    speed: Math.random() * 2 + 1.5,
+    rotation: Math.random() * Math.PI * 2,
+    rotSpeed: (Math.random() - 0.5) * 0.1,
+    sway: Math.random() * 2 - 1,
+    alpha: 1
+  });
+}
+
+// 生成流星
+function spawnStar() {
+  stars.push({
+    x: Math.random() * canvas.width,
+    y: -20,
+    size: Math.random() * 10 + 8,
+    speed: Math.random() * 3 + 3,
+    type: Math.random() > 0.7 ? 'gold' : 'silver',
+    trail: []
+  });
+}
+
+// 生成烏雲（障礙物）
+function spawnCloud() {
+  clouds.push({
+    x: Math.random() * (canvas.width - 60) + 30,
+    y: -40,
+    width: Math.random() * 40 + 50,
+    height: 30,
+    speed: Math.random() * 1.5 + 1
+  });
+}
+
+// 生成月光束（加分道具）
+function spawnMoonbeam() {
+  moonbeams.push({
+    x: Math.random() * (canvas.width - 40) + 20,
+    y: -30,
+    width: 30,
+    height: 100,
+    speed: 2,
+    alpha: 0.6
+  });
+}
+
+// 更新遊戲
+function update() {
+  gameTime++;
+  
+  // 精靈移動
+  if (keys['ArrowLeft']) fairy.dx = -fairy.speed;
+  else if (keys['ArrowRight']) fairy.dx = fairy.speed;
+  else fairy.dx = 0;
+  
+  fairy.x += fairy.dx;
+  if (fairy.x < 0) fairy.x = 0;
+  if (fairy.x > canvas.width - fairy.width) fairy.x = canvas.width - fairy.width;
+  
+  // 軌跡效果
+  fairy.trail.unshift({ x: fairy.x + fairy.width / 2, y: fairy.y + fairy.height / 2 });
+  if (fairy.trail.length > 10) fairy.trail.pop();
+  
+  if (fairy.invincible > 0) fairy.invincible--;
+  if (fairy.powerup > 0) fairy.powerup--;
+  
+  // Combo計時器
+  if (comboTimer > 0) {
+    comboTimer--;
+    if (comboTimer === 0) {
+      combo = 0;
+      document.getElementById('combo').style.display = 'none';
+    }
+  }
+  
+  // 生成物品
+  if (gameTime % 40 === 0) spawnSakura();
+  if (gameTime % 120 === 0) spawnStar();
+  if (gameTime % 180 === 0) spawnCloud();
+  if (gameTime % 200 === 0) spawnMoonbeam();
+  
+  // 更新櫻花
+  for (let i = sakuras.length - 1; i >= 0; i--) {
+    const s = sakuras[i];
+    s.y += s.speed;
+    s.x += Math.sin(s.y * 0.02) * s.sway;
+    s.rotation += s.rotSpeed;
+    
+    // 碰撞檢測
+    if (checkCollision(fairy, { x: s.x, y: s.y, width: s.size, height: s.size })) {
+      collectSakura(s);
+      sakuras.splice(i, 1);
+    } else if (s.y > canvas.height) {
+      sakuras.splice(i, 1);
+    }
+  }
+  
+  // 更新流星
+  for (let i = stars.length - 1; i >= 0; i--) {
+    const st = stars[i];
+    st.y += st.speed;
+    st.trail.unshift({ x: st.x, y: st.y });
+    if (st.trail.length > 5) st.trail.pop();
+    
+    if (checkCollision(fairy, { x: st.x, y: st.y, width: st.size, height: st.size })) {
+      collectStar(st);
+      stars.splice(i, 1);
+    } else if (st.y > canvas.height) {
+      stars.splice(i, 1);
+    }
+  }
+  
+  // 更新烏雲
+  for (let i = clouds.length - 1; i >= 0; i--) {
+    const c = clouds[i];
+    c.y += c.speed;
+    
+    if (checkCollision(fairy, c) && fairy.invincible === 0) {
+      hitCloud();
+      clouds.splice(i, 1);
+    } else if (c.y > canvas.height) {
+      clouds.splice(i, 1);
+    }
+  }
+  
+  // 更新月光束
+  for (let i = moonbeams.length - 1; i >= 0; i--) {
+    const m = moonbeams[i];
+    m.y += m.speed;
+    
+    if (checkCollision(fairy, m)) {
+      collectMoonbeam();
+      moonbeams.splice(i, 1);
+    } else if (m.y > canvas.height) {
+      moonbeams.splice(i, 1);
+    }
+  }
+  
+  // 更新粒子
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.life--;
+    p.x += p.vx;
+    p.y += p.vy;
+    p.alpha -= 0.02;
+    if (p.life <= 0) particles.splice(i, 1);
+  }
+}
+
+// 繪製遊戲
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  // 繪製背景星星
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+  for (let i = 0; i < 50; i++) {
+    const x = (i * 137.5) % canvas.width;
+    const y = (i * 234.7 + gameTime * 0.2) % canvas.height;
+    ctx.fillRect(x, y, 2, 2);
+  }
+  
+  // 繪製月光束
+  for (const m of moonbeams) {
+    const gradient = ctx.createLinearGradient(m.x, m.y, m.x, m.y + m.height);
+    gradient.addColorStop(0, `rgba(255, 255, 200, ${m.alpha})`);
+    gradient.addColorStop(1, 'rgba(255, 255, 200, 0)');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(m.x, m.y, m.width, m.height);
+  }
+  
+  // 繪製櫻花
+  for (const s of sakuras) {
+    ctx.save();
+    ctx.translate(s.x, s.y);
+    ctx.rotate(s.rotation);
+    ctx.globalAlpha = s.alpha;
+    
+    // 花瓣
+    ctx.fillStyle = '#ffb6d9';
+    for (let i = 0; i < 5; i++) {
+      ctx.save();
+      ctx.rotate((Math.PI * 2 / 5) * i);
+      ctx.beginPath();
+      ctx.ellipse(0, -s.size / 3, s.size / 3, s.size / 2, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+    
+    // 花心
+    ctx.fillStyle = '#fff0f5';
+    ctx.beginPath();
+    ctx.arc(0, 0, s.size / 4, 0, Math.PI * 2);
+    ctx.fill();
+    
+    ctx.restore();
+  }
+  
+  // 繪製流星
+  for (const st of stars) {
+    // 軌跡
+    for (let i = 0; i < st.trail.length; i++) {
+      const t = st.trail[i];
+      const alpha = 1 - i / st.trail.length;
+      ctx.fillStyle = st.type === 'gold' 
+        ? `rgba(255, 215, 0, ${alpha * 0.5})` 
+        : `rgba(192, 192, 192, ${alpha * 0.5})`;
+      ctx.beginPath();
+      ctx.arc(t.x, t.y, st.size * (1 - i / st.trail.length), 0, Math.PI * 2);
+      ctx.fill();
+    }
+    
+    // 星星
+    ctx.fillStyle = st.type === 'gold' ? '#ffd700' : '#c0c0c0';
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = st.type === 'gold' ? '#ffd700' : '#fff';
+    ctx.beginPath();
+    ctx.arc(st.x, st.y, st.size, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+  
+  // 繪製烏雲
+  for (const c of clouds) {
+    ctx.fillStyle = '#4a4a6a';
+    ctx.beginPath();
+    ctx.arc(c.x, c.y + c.height / 2, c.width / 3, 0, Math.PI * 2);
+    ctx.arc(c.x + c.width / 3, c.y, c.width / 2.5, 0, Math.PI * 2);
+    ctx.arc(c.x + c.width / 1.5, c.y + c.height / 2, c.width / 3, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  
+  // 繪製粒子
+  for (const p of particles) {
+    ctx.globalAlpha = p.alpha;
+    ctx.fillStyle = p.color;
+    ctx.fillRect(p.x, p.y, p.size, p.size);
+  }
+  ctx.globalAlpha = 1;
+  
+  // 繪製精靈軌跡
+  for (let i = 0; i < fairy.trail.length; i++) {
+    const t = fairy.trail[i];
+    const alpha = 1 - i / fairy.trail.length;
+    ctx.fillStyle = `rgba(255, 182, 217, ${alpha * 0.3})`;
+    ctx.beginPath();
+    ctx.arc(t.x, t.y, 10 * (1 - i / fairy.trail.length), 0, Math.PI * 2);
+    ctx.fill();
+  }
+  
+  // 繪製精靈
+  const glowColor = fairy.invincible > 0 ? '#00ffff' : 
+                    fairy.powerup > 0 ? '#ffd700' : '#ffb6d9';
+  
+  ctx.save();
+  ctx.translate(fairy.x + fairy.width / 2, fairy.y + fairy.height / 2);
+  
+  // 發光效果
+  ctx.shadowBlur = 20;
+  ctx.shadowColor = glowColor;
+  
+  // 身體
+  ctx.fillStyle = glowColor;
+  ctx.beginPath();
+  ctx.arc(0, 0, fairy.width / 2, 0, Math.PI * 2);
+  ctx.fill();
+  
+  // 翅膀
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+  ctx.beginPath();
+  ctx.ellipse(-15, 0, 12, 20, -0.3, 0, Math.PI * 2);
+  ctx.ellipse(15, 0, 12, 20, 0.3, 0, Math.PI * 2);
+  ctx.fill();
+  
+  // 眼睛
+  ctx.fillStyle = '#fff';
+  ctx.beginPath();
+  ctx.arc(-8, -5, 4, 0, Math.PI * 2);
+  ctx.arc(8, -5, 4, 0, Math.PI * 2);
+  ctx.fill();
+  
+  ctx.fillStyle = '#000';
+  ctx.beginPath();
+  ctx.arc(-8, -5, 2, 0, Math.PI * 2);
+  ctx.arc(8, -5, 2, 0, Math.PI * 2);
+  ctx.fill();
+  
+  ctx.restore();
+}
+
+// 碰撞檢測
+function checkCollision(rect1, rect2) {
+  return rect1.x < rect2.x + (rect2.width || rect2.size) &&
+         rect1.x + rect1.width > rect2.x &&
+         rect1.y < rect2.y + (rect2.height || rect2.size) &&
+         rect1.y + rect1.height > rect2.y;
+}
+
+// 收集櫻花
+function collectSakura(s) {
+  score += 10;
+  combo++;
+  comboTimer = 60;
+  powerupCharge = Math.min(100, powerupCharge + 5);
+  
+  updateUI();
+  createParticles(s.x, s.y, '#ffb6d9', 8);
+  playSound('collect');
+}
+
+// 收集流星
+function collectStar(st) {
+  const points = st.type === 'gold' ? 50 : 25;
+  score += points;
+  combo += 2;
+  comboTimer = 60;
+  powerupCharge = Math.min(100, powerupCharge + 15);
+  
+  updateUI();
+  createParticles(st.x, st.y, st.type === 'gold' ? '#ffd700' : '#c0c0c0', 12);
+  playSound('star');
+}
+
+// 收集月光束
+function collectMoonbeam() {
+  score += 30;
+  combo += 3;
+  comboTimer = 90;
+  powerupCharge = Math.min(100, powerupCharge + 25);
+  
+  updateUI();
+  createParticles(fairy.x + fairy.width / 2, fairy.y, '#ffffcc', 15);
+  playSound('moonbeam');
+}
+
+// 撞到烏雲
+function hitCloud() {
+  score = Math.max(0, score - 20);
+  combo = 0;
+  comboTimer = 0;
+  fairy.invincible = 60;
+  
+  updateUI();
+  createParticles(fairy.x + fairy.width / 2, fairy.y + fairy.height / 2, '#666', 10);
+  playSound('hit');
+}
+
+// 啟動能量爆發
+function activatePowerup() {
+  fairy.powerup = 180;
+  powerupCharge = 0;
+  score += 100;
+  
+  // 清除所有烏雲
+  clouds = [];
+  
+  updateUI();
+  createParticles(fairy.x + fairy.width / 2, fairy.y, '#ffd700', 30);
+  playSound('powerup');
+}
+
+// 創建粒子效果
+function createParticles(x, y, color, count) {
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x: x,
+      y: y,
+      vx: (Math.random() - 0.5) * 4,
+      vy: (Math.random() - 0.5) * 4,
+      size: Math.random() * 4 + 2,
+      color: color,
+      life: 30,
+      alpha: 1
+    });
+  }
+}
+
+// 更新UI
+function updateUI() {
+  document.getElementById('score').textContent = `🌸 ${score}`;
+  
+  if (combo > 1) {
+    document.getElementById('combo').style.display = 'block';
+    document.getElementById('combo-num').textContent = combo;
+  }
+  
+  document.getElementById('powerup-fill').style.width = powerupCharge + '%';
+}
+
+// 簡易音效
+function playSound(type) {
+  try {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    
+    switch(type) {
+      case 'collect':
+        oscillator.frequency.setValueAtTime(523, audioCtx.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(784, audioCtx.currentTime + 0.1);
+        gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+        oscillator.stop(audioCtx.currentTime + 0.1);
+        break;
+      case 'star':
+        oscillator.frequency.setValueAtTime(659, audioCtx.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(1047, audioCtx.currentTime + 0.15);
+        gainNode.gain.setValueAtTime(0.25, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+        oscillator.stop(audioCtx.currentTime + 0.15);
+        break;
+      case 'moonbeam':
+        oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(1320, audioCtx.currentTime + 0.2);
+        gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+        oscillator.stop(audioCtx.currentTime + 0.2);
+        break;
+      case 'hit':
+        oscillator.frequency.setValueAtTime(200, audioCtx.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.2);
+        gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+        oscillator.stop(audioCtx.currentTime + 0.2);
+        break;
+      case 'powerup':
+        oscillator.frequency.setValueAtTime(440, audioCtx.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.3);
+        gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+        oscillator.stop(audioCtx.currentTime + 0.3);
+        break;
+    }
+    
+    oscillator.start(audioCtx.currentTime);
+  } catch(e) {}
+}
+
+// 遊戲循環
+function gameLoop() {
+  update();
+  draw();
+  requestAnimationFrame(gameLoop);
+}
+
+gameLoop();
+</script>
+</body>
+</html>
