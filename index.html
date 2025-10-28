@@ -959,28 +959,48 @@ async function loadApps() {
     const res = await fetch('data/apps.json');
     const apps = await res.json();
     c.innerHTML = '';
+
+    const today = new Date();
+
     apps.forEach(app => {
       const card = document.createElement('div');
       card.className = 'app-card';
+
+      // 判斷是否為新版本（七天內更新）
+      let isNew = false;
+      if (app.updated) {
+        const updatedDate = new Date(app.updated.replace(/\//g, '-'));
+        const diffDays = (today - updatedDate) / (1000 * 60 * 60 * 24);
+        if (diffDays <= 7) isNew = true;
+      }
+
+      // 卡片內容
       card.innerHTML = `
-  <img class="app-image" src="${app.icon}">
-  <div class="app-info">
-    <h3>${app.name}</h3>
-    <p>${app.desc}</p>
-    <p style="color:#aaa;font-size:0.85em;margin-top:6px;">
-      🗓️ 更新：${app.updated}　|　版本：${app.version}
-    </p>
-    <a class="button" href="${app.link}" target="_blank">App Store</a>
-  </div>`;
+        <img class="app-image" src="${app.icon}">
+        <div class="app-info">
+          <h3 style="display:flex;align-items:center;gap:8px;">
+            ${app.name}
+            ${isNew ? `<span style="font-size:0.75em;background:linear-gradient(135deg,#00ffff,#ff3eff);
+            padding:2px 6px;border-radius:6px;color:#000;font-weight:bold;box-shadow:0 0 10px #0ff;">🆕 NEW</span>` : ''}
+          </h3>
+          <p>${app.desc}</p>
+          ${app.updated && app.version ? `
+            <p style="color:#aaa;font-size:0.85em;margin-top:6px;text-align:right;">
+              🗓️ ${app.updated}　|　版本：${app.version}
+            </p>` : ''}
+          <a class="button" href="${app.link}" target="_blank">App Store</a>
+        </div>`;
 
       c.appendChild(card);
     });
+
     addHoverSounds();
   } catch {
     c.textContent = '⚠️ 無法載入 app 資料';
   }
 }
 loadApps();
+
 
 // ===== Fortune API =====
 async function getFortune() {
