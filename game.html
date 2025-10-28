@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cat Mini Game</title>
+<style>
+body { margin:0; background:#0e0f14; color:#e6e7eb; display:flex; align-items:center; justify-content:center; height:100vh; font-family:Arial, sans-serif; }
+canvas { background:#171923; border:1px solid #333; border-radius:12px; }
+</style>
+</head>
+<body>
+<a href="index.html" style="position:absolute; top:10px; left:10px; color:#0ff; text-decoration:none; background:rgba(0,0,0,0.4); padding:6px 12px; border-radius:8px; font-weight:600;">🏠 回首頁</a>
+<canvas id="gameCanvas" width="480" height="720"></canvas>
+
+<script>
+window.addEventListener('load', () => {
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+  const cat = new Image();
+  cat.src = 'assets/blackcat.png';
+  cat.onload = () => {
+    ctx.drawImage(cat, canvas.width / 2 - 60, canvas.height / 2 - 60, 120, 120);
+  };
+});
+</script>
+</body>
+</html>
