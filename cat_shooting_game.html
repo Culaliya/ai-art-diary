@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>貓咪偵探射擊氣球！</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            user-select: none;
+        }
+        #gameCanvas {
+            display: block;
+            margin: 0 auto;
+            background-color: #fff5f5;
+            border: 3px solid #ffcccb;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+        }
+        #scoreDisplay {
+            text-align: center;
+            font-size: 24px;
+            color: #ff6b6b;
+            margin-top: 10px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        #timeDisplay {
+            text-align: center;
+            font-size: 20px;
+            color: #48dbfb;
+            margin-bottom: 10px;
+        }
+        #startScreen, #gameOverScreen {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+        button {
+            background-color: #ff9ff3;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background-color: #ff7675;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div id="timeDisplay">時間：60秒</div>
+    <canvas id="gameCanvas" width="800" height="500"></canvas>
+    <div id="scoreDisplay">得分：0</div>
+
+    <div id="startScreen">
+        <h1>貓咪偵探射擊氣球！</h1>
+        <p>點擊氣球得分，60秒內看你能得幾分！</p>
+        <button id="startButton">開始遊戲</button>
+    </div>
+
+    <div id="gameOverScreen">
+        <h1>遊戲結束！</h1>
+        <p id="finalScore">你的得分：0</p>
+        <button id="restartButton">再玩一次</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const startScreen = document.getElementById('startScreen');
+        const gameOverScreen = document.getElementById('gameOverScreen');
+        const startButton = document.getElementById('startButton');
+        const restartButton = document.getElementById('restartButton');
+        const finalScoreDisplay = document.getElementById('finalScore');
+
+        // 貓咪偵探圖片（你可以替換成自己的圖片）
+        const catDetective = new Image();
+        catDetective.src = 'https://via.placeholder.com/100/FFA500/FFFFFF?text=貓咪'; // 請替換為你的貓咪圖片連結
+
+        // 氣球圖片（可以替換成老鼠/魚骨頭等）
+        const balloonImg = new Image();
+        balloonImg.src = 'https://via.placeholder.com/50/FF69B4/FFFFFF?text=氣球'; // 請替換為你的氣球圖片連結
+
+        let score = 0;
+        let timeLeft = 60;
+        let gameActive = false;
+        let balloons = [];
+        let animationId;
+
+        // 初始化遊戲
+        function init() {
+            score = 0;
+            timeLeft = 60;
+            scoreDisplay.textContent = `得分：${score}`;
+            timeDisplay.textContent = `時間：${timeLeft}秒`;
+            balloons = [];
+            gameActive = true;
+            startScreen.style.display = 'none';
+            gameOverScreen.style.display = 'none';
+            canvas.style.display = 'block';
+            gameLoop();
+        }
+
+        // 遊戲主迴圈
+        function gameLoop() {
+            if (!gameActive) return;
+
+            // 清空畫布
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 畫貓咪偵探
+            ctx.drawImage(catDetective, canvas.width / 2 - 50, canvas.height - 100, 100, 100);
+
+            // 更新氣球
+            updateBalloons();
+
+            // 畫氣球
+            drawBalloons();
+
+            // 更新時間
+            updateTime();
+
+            // 繼續動畫
+            animationId = requestAnimationFrame(gameLoop);
+        }
+
+        // 更新氣球
+        function updateBalloons() {
+            // 隨機生成新氣球
+            if (Math.random() < 0.03) {
+                balloons.push({
+                    x: Math.random() * (canvas.width - 50),
+                    y: canvas.height,
+                    speed: 1 + Math.random() * 3,
+                    size: 30 + Math.random() * 30
+                });
+            }
+
+            // 移動氣球
+            for (let i = balloons.length - 1; i >= 0; i--) {
+                balloons[i].y -= balloons[i].speed;
+
+                // 移除超出畫面的氣球
+                if (balloons[i].y < -balloons[i].size) {
+                    balloons.splice(i, 1);
+                }
+            }
+        }
+
+        // 畫氣球
+        function drawBalloons() {
+            balloons.forEach(balloon => {
+                ctx.drawImage(balloonImg, balloon.x, balloon.y, balloon.size, balloon.size);
+            });
+        }
+
+        // 更新時間
+        function updateTime() {
+            if (timeLeft <= 0) {
+                endGame();
+                return;
+            }
+
+            timeLeft--;
+            timeDisplay.textContent = `時間：${timeLeft}秒`;
+        }
+
+        // 結束遊戲
+        function endGame() {
+            gameActive = false;
+            cancelAnimationFrame(animationId);
+            finalScoreDisplay.textContent = `你的得分：${score}`;
+            gameOverScreen.style.display = 'block';
+        }
+
+        // 點擊射擊
+        canvas.addEventListener('click', (e) => {
+            if (!gameActive) return;
+
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+
+            // 檢查是否點中氣球
+            for (let i = balloons.length - 1; i >= 0; i--) {
+                const balloon = balloons[i];
+                const distance = Math.sqrt(
+                    Math.pow(mouseX - (balloon.x + balloon.size / 2), 2) +
+                    Math.pow(mouseY - (balloon.y + balloon.size / 2), 2)
+                );
+
+                if (distance < balloon.size / 2) {
+                    balloons.splice(i, 1);
+                    score += 10;
+                    scoreDisplay.textContent = `得分：${score}`;
+                    break;
+                }
+            }
+        });
+
+        // 開始按鈕
+        startButton.addEventListener('click', init);
+
+        // 重新開始按鈕
+        restartButton.addEventListener('click', init);
+
+        // 顯示開始畫面
+        startScreen.style.display = 'block';
+    </script>
+</body>
+</html>
