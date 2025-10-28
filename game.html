@@ -3,19 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>🐈 Disaster Kitten v1.2</title>
+<title>🐈 Disaster Kitten v1.3</title>
 <style>
   html,body{margin:0;height:100%;background:#000;overflow:hidden;}
-  canvas {
+  canvas{
     display:block;
-    background:radial-gradient(circle at 50% 20%, #0c0d1a 0%, #050510 70%, #000 100%);
+    background:radial-gradient(circle at 50% 20%, #0e0f1a 0%, #080910 70%, #000 100%);
     margin:auto;
     aspect-ratio:2/3;
     max-height:100vh;
     max-width:100vw;
     image-rendering:pixelated;
   }
-  #backHome {
+  #backHome{
     position:fixed;top:10px;left:10px;
     background:rgba(0,255,255,0.1);
     border:1px solid #0ff;color:#0ff;
@@ -41,78 +41,80 @@ canvas.width=480*scale; canvas.height=720*scale;
 ctx.scale(scale,scale);
 
 let catImg=new Image(); catImg.src="assets/blackcat.png";
+let fishImg=new Image(); fishImg.src="assets/fish.png"; // 🐟 你可以用 cute fish 圖案
 
-let cat={x:220,y:600,vx:0,vy:0,w:60,h:60,onGround:false};
-let keys={}, score=0;
+// 遊戲物件
+let cat={x:210,y:580,vx:0,vy:0,w:60,h:60,onGround:false};
+let keys={},score=0;
 
-// 平台
+// 平台（高度降低、可連跳）
 let platforms=[
   {x:0,y:660,w:480,h:60},
-  {x:120,y:520,w:100,h:15},
-  {x:280,y:420,w:120,h:15},
-  {x:160,y:300,w:90,h:15}
+  {x:100,y:520,w:120,h:15},
+  {x:280,y:430,w:120,h:15},
+  {x:150,y:340,w:120,h:15},
+  {x:80,y:250,w:100,h:15}
 ];
 
-// 魚群
+// 魚陣列（控制少量但可愛）
 let fishes=[];
 function spawnFish(){
-  const f={
-    x:Math.random()*420+30,
-    y:Math.random()*300+100,
-    r:10+Math.random()*8,
-    vx:(Math.random()-0.5)*1.5,
-    vy:(Math.random()-0.5)*1.5,
-    life:400+Math.random()*400
-  };
-  fishes.push(f);
+  if(fishes.length>5)return;
+  fishes.push({
+    x:Math.random()*400+30,
+    y:Math.random()*250+120,
+    vx:(Math.random()-0.5)*1,
+    vy:(Math.random()-0.5)*1,
+    r:20,
+    life:600
+  });
 }
-for(let i=0;i<4;i++)spawnFish();
+for(let i=0;i<3;i++)spawnFish();
 
-// 粒子特效
+// 特效：吃到魚 +1
 let effects=[];
 function addEffect(x,y){
   effects.push({x,y,alpha:1});
 }
 
-// 事件監聽
+// 按鍵控制
 document.addEventListener("keydown",e=>keys[e.code]=true);
 document.addEventListener("keyup",e=>keys[e.code]=false);
 
 function update(){
-  // 移動
+  // 貓控制
   if(keys["ArrowLeft"]) cat.vx=-3;
   else if(keys["ArrowRight"]) cat.vx=3;
   else cat.vx=0;
-
-  // 跳
   if(keys["Space"]&&cat.onGround){
-    cat.vy=-9; cat.onGround=false;
+    cat.vy=-10; cat.onGround=false;
     document.getElementById("jumpSound").play();
   }
 
-  // 重力與物理
-  cat.vy+=0.45; cat.y+=cat.vy; cat.x+=cat.vx;
-  if(cat.x<0)cat.x=0; if(cat.x+cat.w>480)cat.x=480-cat.w;
+  // 物理
+  cat.vy+=0.5; cat.y+=cat.vy; cat.x+=cat.vx;
+  if(cat.x<0)cat.x=0;if(cat.x+cat.w>480)cat.x=480-cat.w;
   cat.onGround=false;
   for(let p of platforms){
     if(cat.x+cat.w>p.x && cat.x<p.x+p.w && cat.y+cat.h>=p.y && cat.y+cat.h<=p.y+20 && cat.vy>=0){
       cat.y=p.y-cat.h; cat.vy=0; cat.onGround=true;
     }
   }
-  if(cat.y>720){cat.y=600;cat.vy=0;score=Math.max(0,score-1);}
+  if(cat.y>720){cat.y=580;cat.vy=0;score=Math.max(0,score-1);}
 
-  // 魚移動
+  // 魚漂浮
   for(let f of fishes){
-    f.x+=f.vx; f.y+=f.vy; f.life--;
-    if(f.x<10||f.x>470)f.vx*=-1;
-    if(f.y<80||f.y>500)f.vy*=-1;
+    f.x+=f.vx; f.y+=f.vy;
+    if(f.x<20||f.x>460)f.vx*=-1;
+    if(f.y<100||f.y>500)f.vy*=-1;
+    f.life--;
   }
   fishes=fishes.filter(f=>f.life>0);
   if(Math.random()<0.02)spawnFish();
 
-  // 吃魚偵測
+  // 吃魚
   for(let f of fishes){
-    if(Math.abs(cat.x+cat.w/2-f.x)<30 && Math.abs(cat.y+cat.h/2-f.y)<30){
+    if(Math.abs(cat.x+cat.w/2-f.x)<40 && Math.abs(cat.y+cat.h/2-f.y)<40){
       score++;
       document.getElementById("eatSound").play();
       addEffect(f.x,f.y);
@@ -120,7 +122,7 @@ function update(){
     }
   }
 
-  // 特效更新
+  // 特效淡出
   for(let e of effects) e.alpha-=0.03;
   effects=effects.filter(e=>e.alpha>0);
 }
@@ -130,9 +132,9 @@ function draw(){
 
   // 背景星光
   ctx.fillStyle="#0ff2";
-  for(let i=0;i<30;i++){
-    let x=Math.sin(i*13+Date.now()/700)*200+240;
-    let y=(i*37+Date.now()/10)%720;
+  for(let i=0;i<25;i++){
+    let x=Math.sin(i*12+Date.now()/700)*200+240;
+    let y=(i*33+Date.now()/15)%720;
     ctx.fillRect(x,y,2,2);
   }
 
@@ -142,36 +144,35 @@ function draw(){
 
   // 魚
   for(let f of fishes){
-    ctx.beginPath();
-    ctx.fillStyle=`hsla(${(Date.now()/10+f.x)%360},80%,70%,0.8)`;
-    ctx.ellipse(f.x,f.y,f.r,f.r*0.6,0,0,Math.PI*2);
-    ctx.fill();
+    if(fishImg.complete)
+      ctx.drawImage(fishImg,f.x-15,f.y-10,30,20);
+    else{
+      ctx.fillStyle="rgba(255,122,182,0.8)";
+      ctx.beginPath();ctx.ellipse(f.x,f.y,15,10,0,0,Math.PI*2);ctx.fill();
+    }
   }
 
   // 貓
   if(catImg.complete) ctx.drawImage(catImg,cat.x,cat.y,cat.w,cat.h);
   else {ctx.fillStyle="#0ff";ctx.fillRect(cat.x,cat.y,cat.w,cat.h);}
 
-  // 特效
+  // +1 效果
   for(let e of effects){
     ctx.globalAlpha=e.alpha;
     ctx.fillStyle="#ffb6e9";
-    ctx.font="18px Orbitron, monospace";
+    ctx.font="20px Orbitron, monospace";
     ctx.fillText("+1",e.x,e.y);
     ctx.globalAlpha=1;
   }
 
-  // 分數文字
+  // 分數
   ctx.fillStyle="#0ff";
   ctx.font="20px Orbitron, monospace";
   ctx.fillText("Score: "+score,20,30);
   ctx.fillText("← → 移動，空白鍵跳",20,55);
 }
 
-function loop(){
-  update(); draw();
-  requestAnimationFrame(loop);
-}
+function loop(){update();draw();requestAnimationFrame(loop);}
 loop();
 </script>
 </body>
