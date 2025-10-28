@@ -260,6 +260,16 @@ h2{color:#ff3eff;margin-bottom:16px;}
   background: rgba(255, 62, 255, 0.4);
 }
 
+  @keyframes floatButton {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+#gameMenuBtn, #fortuneBtn {
+  animation: floatButton 3s ease-in-out infinite;
+}
+
+
 /* 遊戲按鈕 */
 #gameBtn {
   position: fixed;
@@ -554,6 +564,29 @@ h2{color:#ff3eff;margin-bottom:16px;}
    box-shadow: 0 0 20px rgba(255, 62, 255, 0.5);
 ">
 🎮 遊戲選單
+</a>
+<!-- 🔮 AI 命理實驗室入口 -->
+<a href="fortune_lab.html" id="fortuneBtn" title="前往 AI 命理實驗室"
+   style="
+   position: fixed;
+   top: 150px;
+   right: 20px;
+   z-index: 1000;
+   padding: 12px 20px;
+   background: linear-gradient(135deg, #8a2be2, #ff3eff);
+   border: 2px solid #ff3eff;
+   border-radius: 25px;
+   color: #fff;
+   font-weight: bold;
+   cursor: pointer;
+   transition: all 0.3s;
+   text-decoration: none;
+   display: flex;
+   align-items: center;
+   gap: 8px;
+   box-shadow: 0 0 20px rgba(255, 62, 255, 0.6);
+">
+🔮 命理實驗室
 </a>
 
  
