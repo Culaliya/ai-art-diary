@@ -2,53 +2,76 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎮 遊戲選單 | Culaliya</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>🎮 Culaliya’s Neon Game Hub</title>
 <style>
 body {
   margin:0;
   font-family:'Orbitron',sans-serif;
-  background:radial-gradient(circle at 50% 20%, #0e0f1a 0%, #080910 70%, #000 100%);
+  background:radial-gradient(circle at 50% 20%, #05070f 0%, #090a15 70%, #000 100%);
   color:#0ff;
-  text-align:center;
   overflow:hidden;
+  text-align:center;
 }
 h1 {
   margin-top:50px;
   font-size:2em;
   color:#0ff;
-  text-shadow:0 0 20px #0ff;
+  text-shadow:0 0 25px #0ff, 0 0 40px #ff3eff;
+  animation:glowPulse 3s infinite alternate;
+}
+@keyframes glowPulse {
+  from { text-shadow:0 0 15px #0ff; }
+  to { text-shadow:0 0 35px #ff3eff, 0 0 60px #0ff; }
 }
 
-/* 霓虹流動動畫 */
+/* 背景光圈 */
+.neon-orb {
+  position:absolute;
+  border-radius:50%;
+  filter:blur(80px);
+  opacity:0.4;
+  animation:float 10s infinite ease-in-out alternate;
+}
+@keyframes float {
+  0% { transform:translateY(0); }
+  100% { transform:translateY(-50px) translateX(30px); }
+}
+.orb1 { width:300px;height:300px;background:#0ff;top:15%;left:10%;animation-delay:0s;}
+.orb2 { width:400px;height:400px;background:#ff3eff;bottom:10%;right:10%;animation-delay:3s;}
+.orb3 { width:250px;height:250px;background:#00aaff;top:60%;left:30%;animation-delay:1.5s;}
+
+/* 貓咪粒子 */
+#catParticles {
+  position:fixed;
+  top:0;left:0;width:100%;height:100%;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* 霓虹牌組 */
 @keyframes glowFlow {
-  0% { box-shadow:0 0 10px #0ff, inset 0 0 5px #0ff; border-color:#0ff; }
-  50% { box-shadow:0 0 20px #ff3eff, inset 0 0 10px #ff3eff; border-color:#ff3eff; }
-  100% { box-shadow:0 0 10px #0ff, inset 0 0 5px #0ff; border-color:#0ff; }
+  0% { box-shadow:0 0 10px #0ff,inset 0 0 5px #0ff;border-color:#0ff; }
+  50% { box-shadow:0 0 25px #ff3eff,inset 0 0 10px #ff3eff;border-color:#ff3eff; }
+  100% { box-shadow:0 0 10px #0ff,inset 0 0 5px #0ff;border-color:#0ff; }
 }
-
 .game-table {
   display:flex;
   justify-content:center;
   align-items:center;
   flex-wrap:wrap;
   gap:40px;
-  margin-top:50px;
+  margin-top:80px;
   perspective:1000px;
+  z-index:5;
 }
-
 .game-card {
-  width:220px;
-  height:280px;
-  background:rgba(255,255,255,0.05);
-  border:3px solid #0ff;
-  border-radius:18px;
+  width:220px;height:280px;
+  background:rgba(255,255,255,0.06);
+  border:3px solid #0ff;border-radius:18px;
   color:#0ff;
   box-shadow:0 0 15px rgba(0,255,255,0.3);
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
   cursor:pointer;
   transition:transform .5s, box-shadow .5s, opacity .4s;
   transform:rotateY(var(--angle,0deg)) translateZ(0);
@@ -72,21 +95,24 @@ h3 {margin:5px 0 8px 0;}
 p {font-size:0.9em;margin:0;color:#aaf;}
 a {color:#0ff;text-decoration:none;}
 .back-home {
-  position:fixed;
-  bottom:20px;left:20px;
+  position:fixed;bottom:20px;left:20px;
   padding:10px 20px;
-  border:2px solid #0ff;
-  border-radius:20px;
-  color:#0ff;
-  text-decoration:none;
+  border:2px solid #0ff;border-radius:20px;
+  color:#0ff;text-decoration:none;
   background:rgba(0,255,255,0.1);
-  transition:.3s;
+  transition:.3s;z-index:10;
 }
 .back-home:hover {background:rgba(0,255,255,0.3);}
 </style>
 </head>
 <body>
+<!-- 背景霓虹光圈 -->
+<div class="neon-orb orb1"></div>
+<div class="neon-orb orb2"></div>
+<div class="neon-orb orb3"></div>
+
 <h1>🎮 Culaliya’s Mini Game Lab</h1>
+<canvas id="catParticles"></canvas>
 
 <div class="game-table" id="gameTable">
   <div class="game-card" data-link="https://pixel-jumper-c0acae97.base44.app?is_new_user=true" style="--angle:-10deg;">
@@ -94,25 +120,21 @@ a {color:#0ff;text-decoration:none;}
     <h3>青蛙跳躍</h3>
     <p>像素風平台跳躍遊戲</p>
   </div>
-
   <div class="game-card" data-link="game.html" style="--angle:-5deg;">
     <div class="game-icon">🐈‍⬛</div>
     <h3>貓咪冒險</h3>
     <p>收集魚魚的夜空挑戰</p>
   </div>
-
   <div class="game-card" data-link="tictactoe.html" style="--angle:0deg;">
     <div class="game-icon">⭕❌</div>
     <h3>井字遊戲</h3>
     <p>經典 AI 對戰模式</p>
   </div>
-
   <div class="game-card" data-link="cat_shooting_game.html" style="--angle:5deg;">
     <div class="game-icon">🔫🐱</div>
     <h3>貓咪射擊</h3>
     <p>射擊外星敵人的反應小遊戲</p>
   </div>
-
   <div class="game-card" data-link="cattetris.html" style="--angle:10deg;">
     <div class="game-icon">🐾🧱</div>
     <h3>貓咪俄羅斯方塊</h3>
@@ -123,25 +145,63 @@ a {color:#0ff;text-decoration:none;}
 <a href="index.html" class="back-home">🏠 回首頁</a>
 
 <script>
+// === 撲克牌互動 ===
 const cards=document.querySelectorAll('.game-card');
 cards.forEach(card=>{
   card.addEventListener('click',()=>{
-    // 若點到已是 active → 跳轉
     if(card.classList.contains('active')){
       window.location.href=card.dataset.link;
       return;
     }
-    // 清除舊的 active
     cards.forEach(c=>{
       c.classList.remove('active');
       c.style.opacity=0.5;
     });
-    // 設為 active 並聚焦
     card.classList.add('active');
     card.style.opacity=1;
   });
 });
-</script>
 
+// === 流動貓咪粒子 ===
+const canvas=document.getElementById("catParticles");
+const ctx=canvas.getContext("2d");
+let width,height,particles=[];
+function resize(){
+  width=canvas.width=window.innerWidth;
+  height=canvas.height=window.innerHeight;
+}
+window.addEventListener("resize",resize);
+resize();
+
+class Particle{
+  constructor(){
+    this.reset();
+  }
+  reset(){
+    this.x=Math.random()*width;
+    this.y=Math.random()*height;
+    this.size=Math.random()*2+1;
+    this.speedY=Math.random()*0.6+0.2;
+    this.alpha=Math.random()*0.6+0.3;
+    this.emoji=Math.random()<0.3?'🐾':'🐱';
+  }
+  update(){
+    this.y+=this.speedY;
+    if(this.y>height+20)this.reset();
+  }
+  draw(){
+    ctx.globalAlpha=this.alpha;
+    ctx.font=`${this.size*10}px "Segoe UI Emoji"`;
+    ctx.fillText(this.emoji,this.x,this.y);
+  }
+}
+for(let i=0;i<50;i++)particles.push(new Particle());
+function animate(){
+  ctx.clearRect(0,0,width,height);
+  for(const p of particles){p.update();p.draw();}
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
 </body>
 </html>
