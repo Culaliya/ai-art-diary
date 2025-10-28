@@ -160,4 +160,22 @@ drawStars();
 // 命理分析
 function analyze(){
   const date=document.getElementById('birthDate').value;
-  const time=document.getElementById('birthTim
+  const time=document.getElementById('birthTime').value;
+  const res=document.getElementById('result');
+  if(!date||!time){res.innerHTML="<p>請完整輸入生日與時辰 🕰️</p>";return;}
+  // 模擬生成結果
+  const elements=['金','木','水','火','土'];
+  const random=()=>elements[Math.floor(Math.random()*elements.length)];
+  res.innerHTML=`
+    <h2>✨ AI 命理分析結果 ✨</h2>
+    <p>生日：${date}</p>
+    <p>時辰：${time}</p>
+    <p>五行主勢：<strong>${random()}</strong></p>
+    <p>命格傾向：<strong>${['貴氣星','財帛宮','桃花運','事業宮','智慧星'][Math.floor(Math.random()*5)]}</strong></p>
+    <p>吉運期：${2025+Math.floor(Math.random()*5)} - ${2025+Math.floor(Math.random()*10)}</p>
+    <p style="color:#ff7bff;">💫 小提示：保持正念、順勢而行，命運永遠由你掌控。</p>
+  `;
+}
+</script>
+</body>
+</html>
