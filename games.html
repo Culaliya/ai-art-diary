@@ -19,34 +19,57 @@ h1 {
   color:#0ff;
   text-shadow:0 0 20px #0ff;
 }
-.carousel {
-  display:flex;
-  gap:40px;
-  overflow-x:auto;
-  scroll-behavior:smooth;
-  padding:40px;
-  scrollbar-width:none;
+
+/* 霓虹流動動畫 */
+@keyframes glowFlow {
+  0% { box-shadow:0 0 10px #0ff, inset 0 0 5px #0ff; border-color:#0ff; }
+  50% { box-shadow:0 0 20px #ff3eff, inset 0 0 10px #ff3eff; border-color:#ff3eff; }
+  100% { box-shadow:0 0 10px #0ff, inset 0 0 5px #0ff; border-color:#0ff; }
 }
-.carousel::-webkit-scrollbar {display:none;}
+
+.game-table {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:40px;
+  margin-top:50px;
+  perspective:1000px;
+}
+
 .game-card {
-  flex:0 0 250px;
-  height:260px;
+  width:220px;
+  height:280px;
   background:rgba(255,255,255,0.05);
-  border:2px solid #0ff;
-  border-radius:16px;
+  border:3px solid #0ff;
+  border-radius:18px;
+  color:#0ff;
+  box-shadow:0 0 15px rgba(0,255,255,0.3);
   display:flex;
   flex-direction:column;
   justify-content:center;
   align-items:center;
   cursor:pointer;
-  transition:transform .4s, box-shadow .4s;
-  box-shadow:0 0 15px rgba(0,255,255,0.3);
+  transition:transform .5s, box-shadow .5s, opacity .4s;
+  transform:rotateY(var(--angle,0deg)) translateZ(0);
+  animation:glowFlow 3s infinite;
 }
 .game-card:hover {
-  transform:translateY(-10px) scale(1.05);
-  box-shadow:0 0 25px #0ff;
+  transform:translateY(-15px) scale(1.05);
 }
-.game-icon {font-size:50px;margin-bottom:10px;}
+.game-card.active {
+  transform:translateY(-60px) scale(1.15);
+  z-index:10;
+  animation:none;
+  box-shadow:0 0 30px #fff, 0 0 50px #0ff;
+}
+.game-icon {
+  font-size:60px;
+  margin-bottom:15px;
+  text-shadow:0 0 15px #0ff;
+}
+h3 {margin:5px 0 8px 0;}
+p {font-size:0.9em;margin:0;color:#aaf;}
 a {color:#0ff;text-decoration:none;}
 .back-home {
   position:fixed;
@@ -65,50 +88,59 @@ a {color:#0ff;text-decoration:none;}
 <body>
 <h1>🎮 Culaliya’s Mini Game Lab</h1>
 
-<div class="carousel" id="carousel">
-  <a href="https://pixel-jumper-c0acae97.base44.app?is_new_user=true" class="game-card">
+<div class="game-table" id="gameTable">
+  <div class="game-card" data-link="https://pixel-jumper-c0acae97.base44.app?is_new_user=true" style="--angle:-10deg;">
     <div class="game-icon">🐸</div>
     <h3>青蛙跳躍</h3>
     <p>像素風平台跳躍遊戲</p>
-  </a>
+  </div>
 
-  <a href="game.html" class="game-card">
+  <div class="game-card" data-link="game.html" style="--angle:-5deg;">
     <div class="game-icon">🐈‍⬛</div>
     <h3>貓咪冒險</h3>
     <p>收集魚魚的夜空挑戰</p>
-  </a>
+  </div>
 
-  <a href="tictactoe.html" class="game-card">
+  <div class="game-card" data-link="tictactoe.html" style="--angle:0deg;">
     <div class="game-icon">⭕❌</div>
     <h3>井字遊戲</h3>
     <p>經典 AI 對戰模式</p>
-  </a>
+  </div>
 
-  <a href="cat_shooting_game.html" class="game-card">
+  <div class="game-card" data-link="cat_shooting_game.html" style="--angle:5deg;">
     <div class="game-icon">🔫🐱</div>
     <h3>貓咪射擊</h3>
     <p>射擊外星敵人的反應小遊戲</p>
-  </a>
+  </div>
 
-  <a href="cattetris.html" class="game-card">
+  <div class="game-card" data-link="cattetris.html" style="--angle:10deg;">
     <div class="game-icon">🐾🧱</div>
     <h3>貓咪俄羅斯方塊</h3>
     <p>經典方塊挑戰的貓咪版</p>
-  </a>
+  </div>
 </div>
 
 <a href="index.html" class="back-home">🏠 回首頁</a>
 
 <script>
-// 自動滾動輪播
-const carousel=document.getElementById('carousel');
-let scrollAmount=0;
-function autoScroll(){
-  scrollAmount+=2;
-  if(scrollAmount>carousel.scrollWidth-carousel.clientWidth) scrollAmount=0;
-  carousel.scrollTo({left:scrollAmount,behavior:'smooth'});
-}
-setInterval(autoScroll,50);
+const cards=document.querySelectorAll('.game-card');
+cards.forEach(card=>{
+  card.addEventListener('click',()=>{
+    // 若點到已是 active → 跳轉
+    if(card.classList.contains('active')){
+      window.location.href=card.dataset.link;
+      return;
+    }
+    // 清除舊的 active
+    cards.forEach(c=>{
+      c.classList.remove('active');
+      c.style.opacity=0.5;
+    });
+    // 設為 active 並聚焦
+    card.classList.add('active');
+    card.style.opacity=1;
+  });
+});
 </script>
 
 </body>
