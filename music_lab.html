@@ -42,7 +42,7 @@ h1 {
 }
 iframe {
   width:100%;
-  height:380px;
+  height:352px;
   border:none;
   border-radius:16px;
   box-shadow:0 0 25px rgba(0,255,255,0.3);
@@ -72,17 +72,11 @@ canvas#stars {
 <h1>🎧 AI 音樂實驗室</h1>
 
 <div class="neon-box">
-  <p>✨ 精選播放清單 ✨</p>
-  <iframe style="border-radius:12px"
-    src="https://open.spotify.com/embed/playlist/37i9dQZF1DX4dyzvuaRJ0n?utm_source=generator"
-    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
-</div>
-
-<div class="neon-box">
-  <p>💫 Culaliya 精選作品 💫</p>
-  <iframe style="border-radius:12px"
-    src="https://open.spotify.com/embed/artist/5zO1nPz5xVnbQPh7BqJ0ch?utm_source=generator"
-    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+  <p>💫 Culaliya 精選 AI 音樂播放清單 💫</p>
+  <iframe data-testid="embed-iframe" style="border-radius:12px"
+    src="https://open.spotify.com/embed/playlist/7zqopQeAzw0nrvD1cebjdG?utm_source=generator&theme=0"
+    width="100%" height="352" frameBorder="0" allowfullscreen=""
+    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
 </div>
 
 <a href="index.html" class="back-home">🏠 回首頁</a>
