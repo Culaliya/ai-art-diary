@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>🐈 Disaster Kitten v1.3</title>
+<title>🐈 Disaster Kitten v1.4</title>
 <style>
   html,body{margin:0;height:100%;background:#000;overflow:hidden;}
   canvas{
@@ -24,11 +24,31 @@
     cursor:pointer;z-index:10;transition:.3s;
   }
   #backHome:hover{background:rgba(0,255,255,0.3);}
+  #overlay{
+    position:absolute;inset:0;
+    display:flex;align-items:center;justify-content:center;
+    flex-direction:column;gap:20px;
+    background:rgba(0,0,0,0.8);
+    color:#0ff;font-family:'Orbitron',sans-serif;
+    z-index:9;
+  }
+  button.start-btn{
+    padding:10px 20px;
+    border:2px solid #0ff;border-radius:12px;
+    background:rgba(0,255,255,0.2);color:#0ff;
+    font-size:18px;cursor:pointer;transition:.3s;
+  }
+  button.start-btn:hover{background:rgba(0,255,255,0.5);color:#000;}
 </style>
 </head>
 <body>
 <canvas id="game"></canvas>
 <a id="backHome" href="index.html">🏠 回首頁</a>
+<div id="overlay">
+  <h1>🐈 Disaster Kitten</h1>
+  <p>← → 移動，空白鍵跳</p>
+  <button class="start-btn" onclick="startGame()">開始遊戲</button>
+</div>
 
 <audio id="jumpSound" src="music/jump.mp3"></audio>
 <audio id="eatSound" src="music/eat.mp3"></audio>
@@ -37,131 +57,176 @@
 const canvas=document.getElementById("game");
 const ctx=canvas.getContext("2d");
 const scale=window.devicePixelRatio||1;
-canvas.width=480*scale; canvas.height=720*scale;
-ctx.scale(scale,scale);
+canvas.width=480*scale;canvas.height=720*scale;ctx.scale(scale,scale);
 
-let catImg=new Image(); catImg.src="assets/blackcat.png";
-let fishImg=new Image(); fishImg.src="assets/fish.png"; // 🐟 你可以用 cute fish 圖案
+// === 圖像資源 ===
+let catImg=new Image();catImg.src="assets/blackcat.png";
+let fishImg=new Image();fishImg.src="assets/fish.png";
+let sparkle=new Image();sparkle.src="assets/sparkle.png";
 
-// 遊戲物件
-let cat={x:210,y:580,vx:0,vy:0,w:60,h:60,onGround:false};
+// === 遊戲狀態 ===
+let gameRunning=false,gameOver=false;
+let countdown=3;
+
+// === 角色 ===
+let cat={x:210,y:580,vx:0,vy:0,w:60,h:60,onGround:false,glow:0};
 let keys={},score=0;
 
-// 平台（高度降低、可連跳）
+// === 平台 ===
 let platforms=[
   {x:0,y:660,w:480,h:60},
-  {x:100,y:520,w:120,h:15},
+  {x:120,y:520,w:120,h:15},
   {x:280,y:430,w:120,h:15},
   {x:150,y:340,w:120,h:15},
   {x:80,y:250,w:100,h:15}
 ];
 
-// 魚陣列（控制少量但可愛）
+// === 魚 ===
 let fishes=[];
 function spawnFish(){
-  if(fishes.length>5)return;
+  if(fishes.length>=5)return;
   fishes.push({
-    x:Math.random()*400+30,
+    x:Math.random()*420+30,
     y:Math.random()*250+120,
     vx:(Math.random()-0.5)*1,
     vy:(Math.random()-0.5)*1,
-    r:20,
     life:600
   });
 }
 for(let i=0;i<3;i++)spawnFish();
 
-// 特效：吃到魚 +1
+// === 特效 ===
 let effects=[];
 function addEffect(x,y){
   effects.push({x,y,alpha:1});
 }
 
-// 按鍵控制
+// === 控制 ===
 document.addEventListener("keydown",e=>keys[e.code]=true);
 document.addEventListener("keyup",e=>keys[e.code]=false);
 
+function startGame(){
+  document.getElementById("overlay").style.display="none";
+  countdownStart();
+}
+
+function countdownStart(){
+  const overlay=document.getElementById("overlay");
+  overlay.style.display="flex";
+  overlay.innerHTML=`<h1>${countdown}</h1>`;
+  const timer=setInterval(()=>{
+    countdown--;
+    overlay.innerHTML=`<h1>${countdown>0?countdown:'開始！'}</h1>`;
+    if(countdown<0){
+      clearInterval(timer);
+      overlay.style.display="none";
+      gameRunning=true;
+      loop();
+    }
+  },1000);
+}
+
+function endGame(){
+  gameOver=true;
+  const overlay=document.getElementById("overlay");
+  overlay.style.display="flex";
+  overlay.innerHTML=`<h1>遊戲結束</h1><p>得分：${score}</p><button class="start-btn" onclick="restart()">再玩一次</button>`;
+}
+
+function restart(){
+  score=0;gameOver=false;cat.y=580;cat.vy=0;cat.vx=0;cat.glow=0;
+  fishes=[];for(let i=0;i<3;i++)spawnFish();
+  document.getElementById("overlay").style.display="none";
+  gameRunning=true;
+  loop();
+}
+
+// === 遊戲邏輯 ===
 function update(){
-  // 貓控制
+  if(!gameRunning)return;
+
+  // 移動控制
   if(keys["ArrowLeft"]) cat.vx=-3;
   else if(keys["ArrowRight"]) cat.vx=3;
   else cat.vx=0;
   if(keys["Space"]&&cat.onGround){
-    cat.vy=-10; cat.onGround=false;
+    cat.vy=-10;cat.onGround=false;
     document.getElementById("jumpSound").play();
   }
 
   // 物理
-  cat.vy+=0.5; cat.y+=cat.vy; cat.x+=cat.vx;
+  cat.vy+=0.5;cat.y+=cat.vy;cat.x+=cat.vx;
   if(cat.x<0)cat.x=0;if(cat.x+cat.w>480)cat.x=480-cat.w;
   cat.onGround=false;
   for(let p of platforms){
-    if(cat.x+cat.w>p.x && cat.x<p.x+p.w && cat.y+cat.h>=p.y && cat.y+cat.h<=p.y+20 && cat.vy>=0){
-      cat.y=p.y-cat.h; cat.vy=0; cat.onGround=true;
+    if(cat.x+cat.w>p.x&&cat.x<p.x+p.w&&cat.y+cat.h>=p.y&&cat.y+cat.h<=p.y+20&&cat.vy>=0){
+      cat.y=p.y-cat.h;cat.vy=0;cat.onGround=true;
     }
   }
-  if(cat.y>720){cat.y=580;cat.vy=0;score=Math.max(0,score-1);}
+  if(cat.y>720){endGame();}
 
   // 魚漂浮
   for(let f of fishes){
-    f.x+=f.vx; f.y+=f.vy;
+    f.x+=f.vx;f.y+=f.vy;f.life--;
     if(f.x<20||f.x>460)f.vx*=-1;
     if(f.y<100||f.y>500)f.vy*=-1;
-    f.life--;
   }
   fishes=fishes.filter(f=>f.life>0);
   if(Math.random()<0.02)spawnFish();
 
   // 吃魚
   for(let f of fishes){
-    if(Math.abs(cat.x+cat.w/2-f.x)<40 && Math.abs(cat.y+cat.h/2-f.y)<40){
+    if(Math.abs(cat.x+cat.w/2-f.x)<35&&Math.abs(cat.y+cat.h/2-f.y)<35){
       score++;
       document.getElementById("eatSound").play();
       addEffect(f.x,f.y);
+      cat.glow=40; // 發光動畫
       f.life=0;
     }
   }
 
-  // 特效淡出
-  for(let e of effects) e.alpha-=0.03;
+  // 特效衰退
+  for(let e of effects)e.alpha-=0.03;
   effects=effects.filter(e=>e.alpha>0);
+  if(cat.glow>0)cat.glow--;
 }
 
 function draw(){
   ctx.clearRect(0,0,480,720);
 
-  // 背景星光
-  ctx.fillStyle="#0ff2";
+  // 星星
+  ctx.fillStyle="#0ff3";
   for(let i=0;i<25;i++){
-    let x=Math.sin(i*12+Date.now()/700)*200+240;
-    let y=(i*33+Date.now()/15)%720;
+    let x=Math.sin(i*13+Date.now()/600)*200+240;
+    let y=(i*37+Date.now()/15)%720;
     ctx.fillRect(x,y,2,2);
   }
 
   // 平台
   ctx.fillStyle="#222";
-  for(let p of platforms) ctx.fillRect(p.x,p.y,p.w,p.h);
+  for(let p of platforms)ctx.fillRect(p.x,p.y,p.w,p.h);
 
   // 魚
   for(let f of fishes){
-    if(fishImg.complete)
-      ctx.drawImage(fishImg,f.x-15,f.y-10,30,20);
-    else{
-      ctx.fillStyle="rgba(255,122,182,0.8)";
-      ctx.beginPath();ctx.ellipse(f.x,f.y,15,10,0,0,Math.PI*2);ctx.fill();
-    }
+    if(fishImg.complete)ctx.drawImage(fishImg,f.x-15,f.y-10,30,20);
+    else{ctx.fillStyle="#ff7ab6";ctx.beginPath();ctx.ellipse(f.x,f.y,15,10,0,0,Math.PI*2);ctx.fill();}
   }
 
-  // 貓
-  if(catImg.complete) ctx.drawImage(catImg,cat.x,cat.y,cat.w,cat.h);
-  else {ctx.fillStyle="#0ff";ctx.fillRect(cat.x,cat.y,cat.w,cat.h);}
-
-  // +1 效果
+  // 特效
   for(let e of effects){
     ctx.globalAlpha=e.alpha;
     ctx.fillStyle="#ffb6e9";
     ctx.font="20px Orbitron, monospace";
     ctx.fillText("+1",e.x,e.y);
+    ctx.globalAlpha=1;
+  }
+
+  // 貓
+  if(catImg.complete)ctx.drawImage(catImg,cat.x,cat.y,cat.w,cat.h);
+  else{ctx.fillStyle="#0ff";ctx.fillRect(cat.x,cat.y,cat.w,cat.h);}
+  if(cat.glow>0){
+    ctx.globalAlpha=cat.glow/40;
+    ctx.drawImage(sparkle,cat.x-10,cat.y-10,cat.w+20,cat.h+20);
     ctx.globalAlpha=1;
   }
 
@@ -172,8 +237,11 @@ function draw(){
   ctx.fillText("← → 移動，空白鍵跳",20,55);
 }
 
-function loop(){update();draw();requestAnimationFrame(loop);}
-loop();
+function loop(){
+  if(gameOver)return;
+  update();draw();
+  requestAnimationFrame(loop);
+}
 </script>
 </body>
 </html>
