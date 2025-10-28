@@ -243,10 +243,27 @@ function draw(){
 }
 
 function loop(){
-  if(gameOver)return;
-  update();draw();
+  if (gameOver) return;
+  update();
+  draw();
   requestAnimationFrame(loop);
 }
+
+// ✅ 等圖片載入完再開始遊戲（避免黑屏）
+Promise.all([
+  new Promise(r => {
+    if (catImg.complete) r();
+    else catImg.onload = r;
+  }),
+  new Promise(r => {
+    if (fishImg.complete) r();
+    else fishImg.onload = r;
+  })
+]).then(() => {
+  console.log("🐈 圖片載入完成，開始遊戲！");
+  loop();
+});
 </script>
 </body>
 </html>
+
