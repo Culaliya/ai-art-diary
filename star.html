@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌌 星空夢想工坊</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive;
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            overflow: hidden;
+            height: 100vh;
+            cursor: none;
+        }
+
+        #gameContainer {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #canvas {
+            display: block;
+            background: 
+                radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+                radial-gradient(2px 2px at 40px 70px, #fff, transparent),
+                radial-gradient(1px 1px at 90px 40px, #ddd, transparent),
+                radial-gradient(1px 1px at 130px 80px, #fff, transparent),
+                linear-gradient(90deg, transparent 98%, rgba(255,255,255,.2) 100%),
+                linear-gradient(0deg, transparent 98%, rgba(255,255,255,.2) 100%);
+            background-size: 160px 120px, 120px 80px, 200px 60px, 300px 120px, 40px 100%, 60px 120px;
+            animation: twinkle 20s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 90%, 100% { background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
+            50% { background-position: 30px 20px, 20px 10px, 60px 30px, 90px 50px, 10px 30px, 20px 40px; }
+        }
+
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #fff;
+            font-size: 24px;
+            text-shadow: 0 0 10px #fff;
+            z-index: 100;
+        }
+
+        #score {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        #combo {
+            font-size: 20px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        #starCursor {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23FFD700"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>') no-repeat center;
+            background-size: contain;
+            pointer-events: none;
+            z-index: 200;
+            transition: transform 0.1s ease;
+        }
+
+        #gameOver {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #fff;
+            font-size: 32px;
+            z-index: 300;
+            display: none;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #FF6B6B, #FFD93D);
+            border: none;
+            padding: 15px 30px;
+            font-size: 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(255,107,107,0.4);
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(255,107,107,0.6);
+        }
+
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <canvas id="canvas"></canvas>
+        
+        <div id="ui">
+            <div id="score">⭐ 分數: 0</div>
+            <div id="combo">✨ 連擊 x0 !</div>
+        </div>
+
+        <div id="starCursor"></div>
+
+        <div id="gameOver">
+            <div>🌟 遊戲結束！🌟</div>
+            <div style="font-size: 48px; margin: 20px 0;">最終分數: <span id="finalScore">0</span></div>
+            <button class="btn" onclick="restartGame()">重新開始冒險 ✨</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const starCursor = document.getElementById('starCursor');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let score = 0;
+        let combo = 0;
+        let gameRunning = true;
+        let particles = [];
+        let meteors = [];
+        let planets = [];
+        let trail = [];
+        let isDrawing = false;
+
+        // 星球模板
+        const planetTypes = [
+            { color: '#FF6B9D', size: 60, pos: { x: 150, y: 200 }, constellation: [[10,10],[50,20],[30,40]] },
+            { color: '#4ECDC4', size: 80, pos: { x: 300, y: 400 }, constellation: [[20,15],[60,25],[40,50],[70,30]] },
+            { color: '#45B7D1', size: 70, pos: { x: 500, y: 250 }, constellation: [[15,20],[45,30],[25,55]] },
+            { color: '#96CEB4', size: 50, pos: { x: 700, y: 350 }, constellation: [[12,12],[35,18],[22,38],[48,25]] }
+        ];
+
+        class Planet {
+            constructor(type) {
+                this.x = type.pos.x + (Math.random() - 0.5) * 100;
+                this.y = type.pos.y + (Math.random() - 0.5) * 100;
+                this.size = type.size;
+                this.color = type.color;
+                this.maxHealth = 5;
+                this.health = 5;
+                this.constellation = type.constellation.map(p => ({
+                    x: this.x + p[0] - this.size/2,
+                    y: this.y + p[1] - this.size/2
+                }));
+                this.fixed = false;
+            }
+
+            draw() {
+                // 星球
+                const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
+                gradient.addColorStop(0, this.color);
+                gradient.addColorStop(0.7, this.color + '88');
+                gradient.addColorStop(1, 'transparent');
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+
+                // 星座線
+                if (!this.fixed) {
+                    ctx.strokeStyle = '#FFD700';
+                    ctx.lineWidth = 3;
+                    ctx.lineCap = 'round';
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = '#FFD700';
+                    ctx.beginPath();
+                    for (let i = 0; i < this.constellation.length - 1; i++) {
+                        ctx.moveTo(this.constellation[i].x, this.constellation[i].y);
+                        ctx.lineTo(this.constellation[i+1].x, this.constellation[i+1].y);
+                    }
+                    ctx.stroke();
+                    ctx.shadowBlur = 0;
+                }
+
+                // 星座點
+                this.constellation.forEach(point => {
+                    ctx.fillStyle = this.fixed ? '#FFD700' : '#FF6B6B';
+                    ctx.beginPath();
+                    ctx.arc(point.x, point.y, 8, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                // 傷害數
+                if (this.health < this.maxHealth) {
+                    ctx.fillStyle = `rgba(255, 107, 107, ${0.2 + this.health/this.maxHealth})`;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size * 0.8, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            checkComplete() {
+                return this.constellation.every(point => point.filled);
+            }
+        }
+
+        class Meteor {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = -50;
+                this.vx = (Math.random() - 0.5) * 4;
+                this.vy = 2 + Math.random() * 3;
+                this.size = 8 + Math.random() * 6;
+                this.angle = Math.random() * Math.PI * 2;
+                this.spin = (Math.random() - 0.5) * 0.2;
+                this.targetPlanet = null;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.angle += this.spin;
+                this.vy += 0.02; // 重力
+
+                if (this.y > canvas.height + 50) {
+                    return false;
+                }
+                return true;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+                const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, this.size);
+                gradient.addColorStop(0, '#FFD700');
+                gradient.addColorStop(0.7, '#FFA500');
+                gradient.addColorStop(1, '#FF4500');
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.ellipse(0, 0, this.size, this.size * 0.6, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.vx = (Math.random() - 0.5) * 8;
+                this.vy = (Math.random() - 0.5) * 8;
+                this.life = 1;
+                this.color = color;
+                this.size = Math.random() * 4 + 2;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vy += 0.1;
+                this.life -= 0.03;
+                return this.life > 0;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.life;
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size * this.life, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        // 初始化遊戲
+        function init() {
+            planets = planetTypes.map(type => new Planet(type));
+            spawnMeteor();
+            gameLoop();
+        }
+
+        function spawnMeteor() {
+            if (Math.random() < 0.02 && gameRunning) {
+                meteors.push(new Meteor());
+            }
+            if (gameRunning) {
+                requestAnimationFrame(spawnMeteor);
+            }
+        }
+
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 繪製軌跡
+            if (trail.length > 1) {
+                ctx.strokeStyle = '#FFD700';
+                ctx.lineWidth = 4;
+                ctx.lineCap = 'round';
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = '#FFD700';
+                ctx.beginPath();
+                trail.forEach((point, i) => {
+                    if (i === 0) ctx.moveTo(point.x, point.y);
+                    else ctx.lineTo(point.x, point.y);
+                });
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+            }
+
+            // 更新並繪製流星
+            meteors = meteors.filter(meteor => {
+                if (meteor.update()) {
+                    meteor.draw();
+                    return true;
+                }
+                return false;
+            });
+
+            // 更新並繪製星球
+            planets.forEach(planet => {
+                planet.draw();
+
+                // 檢查流星是否進入星座點
+                meteorLoop: for (let i = meteors.length - 1; i >= 0; i--) {
+                    const meteor = meteors[i];
+                    for (let point of planet.constellation) {
+                        const dist = Math.hypot(meteor.x - point.x, meteor.y - point.y);
+                        if (dist < 15 && !point.filled) {
+                            point.filled = true;
+                            meteors.splice(i, 1);
+                            
+                            // 特效
+                            for (let j = 0; j < 12; j++) {
+                                particles.push(new Particle(point.x, point.y, '#FFD700'));
+                            }
+                            
+                            // 檢查完成
+                            if (planet.checkComplete()) {
+                                planet.fixed = true;
+                                combo++;
+                                score += 100 * combo;
+                                updateUI();
+                                
+                                // 完成特效
+                                for (let j = 0; j < 30; j++) {
+                                    particles.push(new Particle(planet.x, planet.y, planet.color));
+                                }
+                            }
+                            break meteorLoop;
+                        }
+                    }
+                }
+            });
+
+            // 更新粒子
+            particles = particles.filter(particle => {
+                if (particle.update()) {
+                    particle.draw();
+                    return true;
+                }
+                return false;
+            });
+
+            // 檢查遊戲結束
+            if (planets.every(p => p.fixed) && gameRunning) {
+                setTimeout(() => {
+                    gameOver();
+                }, 2000);
+            }
+
+            if (gameRunning) {
+                requestAnimationFrame(gameLoop);
+            }
+        }
+
+        function updateUI() {
+            document.getElementById('score').textContent = `⭐ 分數: ${score}`;
+            const comboEl = document.getElementById('combo');
+            if (combo > 0) {
+                comboEl.textContent = `✨ 連擊 x${combo} !`;
+                comboEl.style.opacity = '1';
+            } else {
+                comboEl.style.opacity = '0';
+            }
+        }
+
+        function gameOver() {
+            gameRunning = false;
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('gameOver').style.display = 'block';
+        }
+
+        function restartGame() {
+            score = 0;
+            combo = 0;
+            gameRunning = true;
+            particles = [];
+            meteors = [];
+            trail = [];
+            planets.forEach(planet => {
+                planet.health = planet.maxHealth;
+                planet.fixed = false;
+                planet.constellation.forEach(point => {
+                    delete point.filled;
+                });
+            });
+            document.getElementById('gameOver').style.display = 'none';
+            updateUI();
+            init();
+        }
+
+        // 滑鼠/觸控控制
+        let lastPos = { x: 0, y: 0 };
+
+        function getPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            return {
+                x: (e.clientX || e.touches[0].clientX) - rect.left,
+                y: (e.clientY || e.touches[0].clientY) - rect.top
+            };
+        }
+
+        ['mousedown', 'touchstart'].forEach(event => {
+            canvas.addEventListener(event, (e) => {
+                isDrawing = true;
+                const pos = getPos(e);
+                trail = [pos];
+            });
+        });
+
+        ['mousemove', 'touchmove'].forEach(event => {
+            canvas.addEventListener(event, (e) => {
+                e.preventDefault();
+                const pos = getPos(e);
+                starCursor.style.left = pos.x - 15 + 'px';
+                starCursor.style.top = pos.y - 15 + 'px';
+                
+                if (isDrawing) {
+                    trail.push(pos);
+                    if (trail.length > 50) trail.shift();
+                }
+            });
+        });
+
+        ['mouseup', 'touchend'].forEach(event => {
+            document.addEventListener(event, () => {
+                isDrawing = false;
+                trail = [];
+            });
+        });
+
+        // 自適應
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // 啟動遊戲
+        init();
+        updateUI();
+    </script>
+</body>
+</html>
