@@ -1,27 +1,85 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Cat Mini Game</title>
-  <style>
-    body { margin: 0; background: #0e0f14; color: #e6e7eb; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: Arial; }
-    canvas { background: #171923; border: 1px solid #333; border-radius: 12px; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🐈 Disaster Kitten</title>
+<style>
+  html,body{margin:0;height:100%;background:#000;overflow:hidden;}
+  canvas{display:block;width:100%;height:100%;background:#111;}
+  #backHome{
+    position:fixed;top:10px;left:10px;
+    background:rgba(0,255,255,0.1);
+    border:1px solid #0ff;color:#0ff;
+    padding:8px 14px;border-radius:8px;
+    font-family:sans-serif;font-weight:600;
+    cursor:pointer;z-index:10;
+  }
+</style>
 </head>
 <body>
-  <a href="index.html" style="position:absolute; top:10px; left:10px; color:#0ff; text-decoration:none; background:rgba(0,0,0,0.4); padding:6px 12px; border-radius:8px; font-weight:600;">🏠 回首頁</a>
-  <canvas id="gameCanvas" width="480" height="720"></canvas>
-  <script>
-    window.addEventListener('load', () => {
-      const canvas = document.getElementById('gameCanvas');
-      const ctx = canvas.getContext('2d');
-      const cat = new Image();
-      cat.src = 'assets/blackcat.png';
-      cat.onload = () => {
-        ctx.drawImage(cat, canvas.width / 2 - 60, canvas.height / 2 - 60, 120, 120);
-      };
-    });
-  </script>
+<canvas id="game"></canvas>
+<a id="backHome" href="index.html">🏠 回首頁</a>
+<script>
+const canvas=document.getElementById("game");
+const ctx=canvas.getContext("2d");
+canvas.width=480;canvas.height=720;
+
+// 遊戲元素
+let cat={x:220,y:600,vx:0,vy:0,w:40,h:40,onGround:false};
+let keys={};
+let fish={x:Math.random()*400+20,y:Math.random()*400+100,w:30,h:20,got:false};
+let floorY=660;
+let score=0;
+
+document.addEventListener("keydown",e=>keys[e.code]=true);
+document.addEventListener("keyup",e=>keys[e.code]=false);
+
+function update(){
+  // 控制
+  if(keys["ArrowLeft"]) cat.vx=-3;
+  else if(keys["ArrowRight"]) cat.vx=3;
+  else cat.vx=0;
+
+  if(keys["Space"]&&cat.onGround){cat.vy=-8;cat.onGround=false;}
+
+  // 物理
+  cat.vy+=0.4;cat.y+=cat.vy;cat.x+=cat.vx;
+  if(cat.y+cat.h>=floorY){cat.y=floorY-cat.h;cat.vy=0;cat.onGround=true;}
+  if(cat.x<0)cat.x=0;if(cat.x+cat.w>canvas.width)cat.x=canvas.width-cat.w;
+
+  // 撞魚
+  if(!fish.got && cat.x<fish.x+fish.w && cat.x+cat.w>fish.x &&
+     cat.y<fish.y+fish.h && cat.y+cat.h>fish.y){
+    fish.got=true;score++;
+    setTimeout(()=>{fish={x:Math.random()*400+20,y:Math.random()*400+100,w:30,h:20,got:false};},800);
+  }
+}
+
+function draw(){
+  ctx.fillStyle="#111";ctx.fillRect(0,0,canvas.width,canvas.height);
+  // 地面
+  ctx.fillStyle="#222";ctx.fillRect(0,floorY,canvas.width,60);
+  // 貓
+  ctx.fillStyle="#0ff";ctx.fillRect(cat.x,cat.y,cat.w,cat.h);
+  // 魚
+  if(!fish.got){
+    ctx.fillStyle="#ff7ab6";
+    ctx.beginPath();
+    ctx.ellipse(fish.x+fish.w/2,fish.y+fish.h/2,fish.w/2,fish.h/2,0,0,Math.PI*2);
+    ctx.fill();
+  }
+  // 分數
+  ctx.fillStyle="#0ff";
+  ctx.font="20px Orbitron, monospace";
+  ctx.fillText("Score: "+score,20,30);
+}
+
+function loop(){
+  update();draw();
+  requestAnimationFrame(loop);
+}
+loop();
+</script>
 </body>
 </html>
