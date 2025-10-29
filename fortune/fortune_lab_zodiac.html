@@ -1,272 +1,485 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>🌌 星座命盤排盤工具｜Culaliya Mystic Lab</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星座命盤排盤工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<!-- 顏色主題 -->
-<style>
-:root{
-  --bg1:#090a1a; --bg2:#060615;
-  --cyan:#00ffff; --pink:#ff3eff; --gold:#ffd86b; --ink:#e0e0ff;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{
-  font-family:'Orbitron','Noto Sans TC','Microsoft JhengHei',system-ui,sans-serif;
-  background:radial-gradient(circle at 50% 20%, var(--bg1) 0%, var(--bg2) 70%, #000 100%);
-  color:var(--ink); min-height:100vh; overflow-x:hidden;
-}
-canvas#stars{position:fixed;inset:0;z-index:0;pointer-events:none;mix-blend-mode:screen}
-.container{
-  position:relative;z-index:1;max-width:900px;margin:32px auto;padding:0 16px;
-}
-.header{
-  background:linear-gradient(45deg,#15153a,#2a1761);
-  border:1px solid rgba(255,216,107,.35);
-  border-radius:18px; padding:28px 20px; text-align:center;
-  box-shadow:0 20px 40px rgba(0,0,0,.45);
-}
-.header h1{color:var(--gold);font-size:2.2rem;letter-spacing:.05em;
-  text-shadow:0 0 14px var(--gold),0 0 28px var(--pink); animation:glow 3s ease-in-out infinite alternate}
-.header p{opacity:.9;color:#cfd0ff;margin-top:.5rem}
+        body {
+            font-family: 'Microsoft JhengHei', 'Noto Sans TC', sans-serif;
+            background: #0a0a1a;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+            color: #e0e0ff;
+        }
 
-@keyframes glow{from{ text-shadow:0 0 8px var(--gold)} to{ text-shadow:0 0 16px var(--pink),0 0 32px var(--cyan)}}
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(2px 2px at 20px 30px, #e0e0ff, transparent),
+                radial-gradient(2px 2px at 40px 70px, #fff, transparent),
+                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+                radial-gradient(1px 1px at 130px 80px, #e0e0ff, transparent),
+                radial-gradient(2px 2px at 160px 30px, #fff, transparent);
+            background-repeat: repeat;
+            background-size: 200px 100px;
+            animation: twinkle 4s linear infinite;
+            z-index: -2;
+        }
 
-.panel{
-  margin-top:18px;background:rgba(10,12,30,.75);backdrop-filter:blur(10px);
-  border:1px solid rgba(0,255,255,.25);border-radius:16px;padding:22px;
-  box-shadow:0 12px 30px rgba(0,0,0,.35);
-}
-.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;align-items:end}
-@media (max-width:840px){ .grid{grid-template-columns:1fr 1fr} }
-@media (max-width:580px){ .grid{grid-template-columns:1fr} }
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(70, 70, 150, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(100, 50, 180, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(60, 120, 200, 0.2) 0%, transparent 50%);
+            z-index: -1;
+            animation: nebula 10s ease-in-out infinite alternate;
+        }
 
-label{display:block;margin-bottom:6px;color:var(--gold);font-weight:700}
-input{
-  width:100%;padding:12px;border-radius:12px;border:1px solid rgba(0,255,255,.35);
-  background:rgba(12,16,38,.9);color:#eaf3ff;outline:none;
-}
-input:focus{border-color:var(--gold);box-shadow:0 0 12px rgba(255,216,107,.45)}
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
 
-.btn{
-  padding:12px 18px;border-radius:14px;font-weight:800;cursor:pointer;border:1px solid var(--gold);
-  background:linear-gradient(135deg,#4a1a8d,#6a2ad8);color:var(--gold);text-shadow:0 0 8px rgba(255,216,107,.5);
-  box-shadow:0 6px 18px rgba(106,42,216,.5);transition:.25s;
-}
-.btn:hover{transform:translateY(-2px) scale(1.02); box-shadow:0 12px 28px rgba(106,42,216,.65)}
+        @keyframes nebula {
+            0% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
 
-.results{display:none;margin-top:18px;opacity:0;transition:opacity .6s ease}
-.loading{color:var(--gold);font-weight:800;text-align:center;padding:18px}
-.error{color:#ff6b6b;background:rgba(255,107,107,.08);border:1px solid rgba(255,107,107,.35);
-  padding:14px;border-radius:12px;text-align:center}
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(10, 10, 30, 0.85);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            overflow: hidden;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(100, 100, 255, 0.3);
+        }
 
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:14px}
-@media (max-width:840px){ .cards{grid-template-columns:1fr 1fr} }
-@media (max-width:580px){ .cards{grid-template-columns:1fr} }
+        .header {
+            background: linear-gradient(45deg, #1a1a3d, #2a1a5d);
+            color: #ffd700;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+        }
 
-.card{
-  background:linear-gradient(135deg,rgba(18,20,46,.92),rgba(12,16,40,.92));
-  border:2px solid rgba(0,255,255,.35);border-radius:16px;padding:18px;text-align:center;
-  box-shadow:0 0 16px rgba(0,255,255,.25); transition:.28s; position:relative; overflow:hidden;
-}
-.card:hover{transform:translateY(-6px); box-shadow:0 0 36px var(--pink),0 0 52px var(--cyan)}
-.card h3{color:var(--gold);margin-bottom:6px;font-size:1.1rem}
-.sign{font-size:1.35rem;font-weight:800;color:#fff;text-shadow:0 0 10px var(--pink)}
-.deg{opacity:.9;margin-top:4px}
-.desc{margin-top:10px;color:#cfe2ff;line-height:1.6}
+        .header::before {
+            content: '[Star]';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2em;
+            animation: sparkle 2s infinite;
+            color: #ffd700;
+            text-shadow: 0 0 10px #ffd700;
+        }
 
-.back{
-  display:inline-flex;align-items:center;gap:8px;margin:18px auto 0;padding:10px 16px;border-radius:999px;
-  border:2px solid var(--cyan); color:var(--cyan); text-decoration:none; font-weight:800;
-  background:rgba(0,255,255,.1); box-shadow:0 0 14px rgba(0,255,255,.4); transition:.25s;
-}
-.back:hover{transform:translateY(-2px); box-shadow:0 0 26px rgba(0,255,255,.75); color:#fff}
-.back span{display:inline-block; transform:translateX(0); transition:.25s}
-.back:hover span{ transform:translateX(-2px)}
-hr.sep{border:none;height:1px;background:linear-gradient(90deg,transparent,rgba(0,255,255,.3),transparent);margin:14px 0}
-</style>
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1) rotate(180deg); }
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+            color: #e0e0ff;
+        }
+
+        .input-section {
+            padding: 40px;
+            background: rgba(15, 15, 40, 0.7);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #ffd700;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid rgba(100, 100, 255, 0.5);
+            border-radius: 12px;
+            font-size: 16px;
+            background: rgba(20, 20, 50, 0.8);
+            color: #e0e0ff;
+            transition: all 0.3s;
+        }
+
+        input::placeholder {
+            color: rgba(200, 200, 255, 0.6);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+            background: rgba(30, 30, 70, 0.9);
+        }
+
+        .btn-generate {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(45deg, #4a1a8d, #6a2ad8);
+            color: #ffd700;
+            border: 2px solid #ffd700;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            box-shadow: 0 5px 15px rgba(106, 42, 216, 0.4);
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(106, 42, 216, 0.6);
+            background: linear-gradient(45deg, #5a2ad8, #8a4af8);
+        }
+
+        .btn-generate:active {
+            transform: translateY(-1px);
+        }
+
+        .results {
+            padding: 40px;
+            display: none;
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .planet-card {
+            background: linear-gradient(135deg, rgba(70, 26, 141, 0.9) 0%, rgba(106, 42, 216, 0.9) 100%);
+            color: #ffd700;
+            padding: 22px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            transition: all 0.3s;
+        }
+
+        .planet-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(106, 42, 216, 0.6);
+        }
+
+        .planet-card.earth {
+            background: linear-gradient(135deg, rgba(30, 70, 150, 0.9) 0%, rgba(60, 120, 200, 0.9) 100%);
+            border-color: #87CEEB;
+        }
+
+        .planet-card.moon {
+            background: linear-gradient(135deg, rgba(100, 50, 180, 0.9) 0%, rgba(150, 100, 220, 0.9) 100%);
+            border-color: #DDA0DD;
+        }
+
+        .planet-card.sun {
+            background: linear-gradient(135deg, rgba(180, 80, 50, 0.9) 0%, rgba(255, 140, 0, 0.9) 100%);
+            border-color: #FFD700;
+        }
+
+        .planet-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+        }
+
+        .zodiac-sign {
+            font-size: 1.6em;
+            margin: 12px 0;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+            font-weight: bold;
+        }
+
+        .degree {
+            font-size: 1em;
+            opacity: 0.9;
+            color: #e0e0ff;
+        }
+
+        .interpretation {
+            background: rgba(15, 15, 40, 0.7);
+            padding: 30px;
+            border-radius: 16px;
+            margin-top: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(100, 100, 255, 0.3);
+        }
+
+        .interpretation h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+        }
+
+        .interpretation p {
+            line-height: 1.8;
+            color: #e0e0ff;
+            margin-bottom: 12px;
+            font-size: 1.05em;
+        }
+
+        .zodiac-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .zodiac-card {
+            background: rgba(20, 20, 50, 0.7);
+            padding: 22px;
+            border-radius: 14px;
+            border-left: 4px solid #ffd700;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            transition: all 0.3s;
+        }
+
+        .zodiac-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.2);
+        }
+
+        .zodiac-card h4 {
+            color: #ffd700;
+            margin-bottom: 12px;
+            font-size: 1.2em;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+        }
+
+        .zodiac-card p {
+            color: #e0e0ff;
+            line-height: 1.6;
+        }
+
+        .privacy {
+            background: rgba(10, 10, 30, 0.8);
+            color: #b0b0ff;
+            padding: 20px;
+            text-align: center;
+            font-size: 0.9em;
+            border-top: 1px solid rgba(100, 100, 255, 0.3);
+        }
+
+        .privacy a {
+            color: #ffd700;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .privacy a:hover {
+            text-decoration: underline;
+        }
+
+        .back-btn {
+            display: block;
+            width: 160px;
+            margin: 20px auto;
+            padding: 12px 20px;
+            background: linear-gradient(45deg, #1a1a3d, #2a2a6d);
+            color: #00ffff;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            text-decoration: none;
+            border-radius: 50px;
+            border: 2px solid #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .back-btn::before {
+            content: '[Home]';
+            margin-right: 8px;
+            font-size: 1.2em;
+        }
+
+        .back-btn:hover {
+            background: linear-gradient(45deg, #2a2a6d, #3a3a9d);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.8);
+            transform: translateY(-2px);
+            color: #fff;
+        }
+
+        .back-btn:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .input-section, .results {
+                padding: 20px;
+            }
+
+            .back-btn {
+                width: 140px;
+                font-size: 1em;
+                padding: 10px 16px;
+            }
+        }
+
+        .loading {
+            text-align: center;
+            color: #ffd700;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .error {
+            color: #ff6b6b;
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 12px;
+            margin: 10px 0;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+    </style>
 </head>
 <body>
-<canvas id="stars"></canvas>
+    <div class="container">
+        <div class="header">
+            <h1>星座命盤排盤工具</h1>
+            <p>探索宇宙的奧秘，解鎖你的星辰故事</p>
+        </div>
 
-<div class="container" id="top">
-  <div class="header">
-    <h1>星座命盤排盤工具</h1>
-    <p>探索宇宙的奧秘，解鎖你的星辰故事</p>
-  </div>
+        <div class="input-section">
+            <div class="input-group">
+                <label for="birthDate">出生日期</label>
+                <input type="date" id="birthDate" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="birthTime">出生時間</label>
+                <input type="time" id="birthTime" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="birthPlace">出生地點 (城市)</label>
+                <input type="text" id="birthPlace" placeholder="例如：台北市" required>
+            </div>
+            
+            <button class="btn-generate" onclick="generateChart()">生成命盤</button>
+        </div>
 
-  <div class="panel">
-    <div class="grid">
-      <div>
-        <label>出生日期</label>
-        <input type="date" id="birthDate"/>
-      </div>
-      <div>
-        <label>出生時間</label>
-        <input type="time" id="birthTime"/>
-      </div>
-      <div>
-        <label>出生地點（城市）</label>
-        <input type="text" id="birthPlace" placeholder="例如：台北、台中、台南、Kaohsiung"/>
-      </div>
-      <div style="grid-column:1/-1;display:flex;gap:12px;flex-wrap:wrap">
-        <button class="btn" id="btnGen">✨ 生成命盤</button>
-        <a class="back" href="../fortune_lab.html">🏠 <span>回命理實驗室</span></a>
-      </div>
+        <div class="results" id="results">
+            <div class="chart-grid" id="chartGrid"></div>
+            
+            <div class="interpretation" id="interpretation"></div>
+            
+            <div class="zodiac-info" id="zodiacInfo"></div>
+        </div>
+
+        <a href="fortune_lab.html" class="back-btn">回首頁</a>
+
+        <div class="privacy">
+            <p>本工具使用 AstrologyAPI 提供精準天文計算。您的出生資料僅用於生成個人命盤，不會儲存或分享給第三方。<br>
+            如有疑慮，請參閱我們的 <a href="#privacy">隱私政策</a>。</p>
+        </div>
     </div>
-  </div>
 
-  <div class="panel results" id="results">
-    <div id="status" class="loading">✨ 正在召喚星辰...</div>
-    <hr class="sep"/>
-    <div class="cards" id="cards"></div>
-  </div>
-</div>
+    <script>
+/* ========== 你要填這裡 ========== */
+/* AstrologyAPI 多半需要 userId + apiKey 做 Basic Auth
+   若你確定是「Bearer」方案，就把 USE_BASIC=false，並留 API_BEARER 就好。 */
+const USE_BASIC   = true;                          // ← 有 userId + apiKey 就設 true
+const ASTRO_USER  = 'YOUR_USER_ID';                // ← 這個要換成你的 userId
+const ASTRO_KEY   = 'QHh4C2NS8q2GfaVyMe065AEYgBxpeBIaHTzUz5S6';  // ← 你的 api_key
+const API_BEARER  = 'QHh4C2NS8q2GfaVyMe065AEYgBxpeBIaHTzUz5S6';  // 若你的方案是 Bearer，留這個
+const API_BASE    = 'https://json.astrologyapi.com/v1';
+const TZ_OFFSET   = 8; // 台灣 +8
 
-<script>
-/* ========== 星空動畫（主題色） ========== */
-const cvs=document.getElementById('stars'),ctx=cvs.getContext('2d');
-let W,H,S=[];
-function resize(){W=cvs.width=innerWidth;H=cvs.height=innerHeight;S=[...Array(140)].map(()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.6+.4,s:Math.random()*.35+.05,a:Math.random()*.6+.25}))}
-addEventListener('resize',resize);resize();
-(function raf(t=0){ctx.clearRect(0,0,W,H);
-  for(const p of S){ctx.beginPath();const f=.6+.4*Math.sin((t+Math.random()*400)/800);
-    ctx.fillStyle=`rgba(0,255,255,${p.a*f})`;ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle=`rgba(255,62,255,${p.a*(1-f)*.65})`;ctx.fillRect(p.x+1,p.y+1,.8,.8);
-    p.y+=p.s; if(p.y>H){p.y=0;p.x=Math.random()*W}
-  }
-  requestAnimationFrame(raf)
-})();
-
-/* ========== API 與常量 ========== */
-const API_KEY = 'QHh4C2NS8q2GfaVyMe065AEYgBxpeBIaHTzUz5S6';  // 你提供的金鑰
-const API_BASE = 'https://json.astrologyapi.com/v1';    // v1 JSON 端點（支援 Bearer）
-const TZ_OFFSET = 8;                                     // 台灣時區 +8
-
-// 常用城市快速表（避免地理 API 宕機時卡住）
-const cityTable = {
-  '台北':{lat:25.0375,lon:121.5637}, '臺北':{lat:25.0375,lon:121.5637}, 'taipei':{lat:25.0375,lon:121.5637},
-  '新北':{lat:25.0139,lon:121.4637}, '基隆':{lat:25.1314,lon:121.7392}, '桃園':{lat:24.9937,lon:121.2969},
-  '新竹':{lat:24.8066,lon:120.9686}, '台中':{lat:24.1477,lon:120.6736}, '臺中':{lat:24.1477,lon:120.6736},
-  '嘉義':{lat:23.4850,lon:120.4491}, '台南':{lat:22.9997,lon:120.2270}, '臺南':{lat:22.9997,lon:120.2270},
-  '高雄':{lat:22.6273,lon:120.3014}, 'kaohsiung':{lat:22.6273,lon:120.3014}, '屏東':{lat:22.6813,lon:120.4813}
-};
-
-/* ========== UI 綁定 ========== */
+/* ====== UI 元件 ====== */
 const birthDateEl = document.getElementById('birthDate');
 const birthTimeEl = document.getElementById('birthTime');
-const birthPlaceEl = document.getElementById('birthPlace');
-const btnGen = document.getElementById('btnGen');
-const resultsEl = document.getElementById('results');
-const statusEl = document.getElementById('status');
-const cardsEl = document.getElementById('cards');
+const birthPlaceEl= document.getElementById('birthPlace');
+const btnGen      = document.getElementById('btnGen') || document.querySelector('.btn-generate') || document.querySelector('button');
+const resultsEl   = document.getElementById('results');
+const statusEl    = document.getElementById('status')  || document.querySelector('.loading');
+const cardsEl     = document.getElementById('cards')   || document.getElementById('chartGrid');
 
-btnGen.addEventListener('click', generate);
-
-/* 預設當日時間 */
+/* ====== 初始化日期時間 ====== */
 (function initNow(){
   const now=new Date();
-  const y=now.getFullYear(), m=String(now.getMonth()+1).padStart(2,'0'), d=String(now.getDate()).padStart(2,'0');
-  const hh=String(now.getHours()).padStart(2,'0'), mm=String(now.getMinutes()).padStart(2,'0');
-  birthDateEl.value = `${y}-${m}-${d}`;
-  birthTimeEl.value = `${hh}:${mm}`;
+  birthDateEl.value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  birthTimeEl.value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
 })();
+btnGen.addEventListener('click', generate);
 
-/* ========== 主要流程 ========== */
-async function generate(){
-  const dateStr = birthDateEl.value, timeStr = birthTimeEl.value, city = birthPlaceEl.value.trim();
-  if(!dateStr || !timeStr || !city){
-    alert('請完整填寫：出生日期 / 時間 / 地點'); return;
-  }
-  resultsEl.style.display = 'block'; resultsEl.style.opacity = 0;
-  statusEl.className='loading'; statusEl.textContent='✨ 正在召喚星辰...';
-  cardsEl.innerHTML='';
+/* ====== 城市快取表（避免 OSM 偶發 403） ====== */
+const cityTable = {
+  '台北':{lat:25.0375,lon:121.5637}, '臺北':{lat:25.0375,lon:121.5637}, 'taipei':{lat:25.0375,lon:121.5637},
+  '新北':{lat:25.0139,lon:121.4637}, '新竹':{lat:24.8066,lon:120.9686}, '桃園':{lat:24.9937,lon:121.2969},
+  '台中':{lat:24.1477,lon:120.6736}, '臺中':{lat:24.1477,lon:120.6736}, '台南':{lat:22.9997,lon:120.2270},
+  '臺南':{lat:22.9997,lon:120.2270}, '高雄':{lat:22.6273,lon:120.3014}, 'kaohsiung':{lat:22.6273,lon:120.3014}
+};
 
-  // 定位
-  let latlon = cityTable[city.toLowerCase()] || cityTable[city] || null;
-  if(!latlon){
-    try{
-      const g = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city)}&limit=1`, {headers:{'Accept':'application/json'}});
-      const gj = await g.json();
-      if(gj && gj.length){ latlon = {lat:parseFloat(gj[0].lat), lon:parseFloat(gj[0].lon)}; }
-    }catch(e){ /* 忽略，留給 fallback */ }
-  }
-  if(!latlon){ latlon = cityTable['台北']; } // 最終保底
+/* ====== 簡體轉換（API 回傳英文字） ====== */
+const en2zh = { Aries:'牡羊座', Taurus:'金牛座', Gemini:'雙子座', Cancer:'巨蟹座', Leo:'獅子座',
+  Virgo:'處女座', Libra:'天秤座', Scorpio:'天蠍座', Sagittarius:'射手座', Capricorn:'摩羯座', Aquarius:'水瓶座', Pisces:'雙魚座' };
 
-  // 組 payload
-  const dt = new Date(`${dateStr}T${timeStr}:00`);
-  const payload = {
-    day: dt.getDate(),
-    month: dt.getMonth()+1,
-    year: dt.getFullYear(),
-    hour: dt.getHours(),
-    min: dt.getMinutes(),
-    lat: latlon.lat,
-    lon: latlon.lon,
-    tzone: TZ_OFFSET
-  };
-
-  try{
-    const res = await fetch(`${API_BASE}/planets/position`,{
-      method:'POST',
-      headers:{
-        'Authorization': `Bearer ${API_KEY}`,         // 你的 key 以 Bearer 送出
-        'Content-Type':'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
-
-    if(!res.ok) throw new Error(`AstrologyAPI ${res.status}`);
-    const data = await res.json();
-
-    const sun = mapSign(data.sun?.sign) || '牡羊座';
-    const moon = mapSign(data.moon?.sign) || '金牛座';
-    const asc  = mapSign(data.ascendant?.sign) || roughAscendant(dt.getHours());
-
-    const sDeg = Math.round(data.sun?.degree || 0);
-    const mDeg = Math.round(data.moon?.degree || 0);
-    const aDeg = Math.round(data.ascendant?.degree || 0);
-
-    drawCards({sun,moon,asc,sDeg,mDeg,aDeg});
-    reveal();
-
-  }catch(err){
-    console.error('[API] error:', err);
-    statusEl.className='error';
-    statusEl.textContent='💫 無法連上天文 API，已切換離線模式（近似推算）。';
-    // 離線近似
-    const {sun} = fallbackSun(dateStr);
-    const moon = roughMoon(dt);
-    const asc = roughAscendant(dt.getHours());
-    drawCards({sun,moon,asc,sDeg:rand30(),mDeg:rand30(),aDeg:rand30()});
-    reveal();
-  }
-}
-
-/* ========== 畫面生成 ========== */
-function drawCards({sun,moon,asc,sDeg,mDeg,aDeg}){
-  statusEl.textContent='命盤已生成 ✨';
-  const blocks = [
-    {title:'太陽', sign:sun, deg:sDeg, cls:'sun', desc: textSun[sun]},
-    {title:'月亮', sign:moon, deg:mDeg, cls:'moon', desc: textMoon[moon]},
-    {title:'上升', sign:asc, deg:aDeg, cls:'earth', desc: textAsc[asc]}
-  ];
-  cardsEl.innerHTML = blocks.map(b=>`
-    <div class="card ${b.cls}">
-      <h3>${b.title}</h3>
-      <div class="sign">${b.sign}</div>
-      <div class="deg">${b.deg}°</div>
-      <div class="desc">${b.desc||''}</div>
-    </div>
-  `).join('');
-}
-
-function reveal(){
-  setTimeout(()=>{ resultsEl.style.opacity=1; resultsEl.scrollIntoView({behavior:'smooth',block:'start'}); }, 50);
-}
-
-/* ========== 文案庫（簡潔版） ========== */
+/* ====== 文案 ====== */
 const textSun = {
  '牡羊座':'熱情直接、行動派，適合主動出擊的舞台。','金牛座':'穩定務實、感官敏銳，重視安全與品質。',
  '雙子座':'靈活好奇、資訊雷達，擅長連結人與想法。','巨蟹座':'情感豐富、守護能量強，重視家與歸屬。',
@@ -290,40 +503,160 @@ const textAsc = {
  '射手座':'爽朗直率，樂觀外放。','摩羯座':'成熟穩重，責任感滿點。','水瓶座':'特立獨行，觀點新鮮。','雙魚座':'溫柔夢幻，有藝術氣息。'
 };
 
-/* ========== 小工具 & Fallback ========== */
-function rand30(){ return Math.floor(Math.random()*30); }
-function mapSign(en){
-  const m = {Aries:'牡羊座',Taurus:'金牛座',Gemini:'雙子座',Cancer:'巨蟹座',Leo:'獅子座',
-             Virgo:'處女座',Libra:'天秤座',Scorpio:'天蠍座',Sagittarius:'射手座',
-             Capricorn:'摩羯座',Aquarius:'水瓶座',Pisces:'雙魚座'};
-  return m[en];
+/* ====== 主要流程 ====== */
+async function generate(){
+  const dateStr = birthDateEl.value.trim();
+  const timeStr = birthTimeEl.value.trim();
+  const city    = birthPlaceEl.value.trim();
+  if(!dateStr || !timeStr || !city){ alert('請完整填寫：出生日期 / 時間 / 地點'); return; }
+
+  // 顯示結果容器
+  if(resultsEl){ resultsEl.style.display='block'; resultsEl.style.opacity=0; }
+  if(statusEl){  statusEl.className='loading'; statusEl.textContent='✨ 正在召喚星辰...'; }
+  if(cardsEl){   cardsEl.innerHTML=''; }
+
+  // 取座標：表內 -> OSM -> 台北
+  let latlon = cityTable[city.toLowerCase()] || cityTable[city];
+  if(!latlon){
+    try{
+      const g = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city)}&limit=1`, {headers:{'Accept':'application/json'}});
+      const gj = await g.json();
+      if(gj && gj.length) latlon = {lat:parseFloat(gj[0].lat), lon:parseFloat(gj[0].lon)};
+    }catch(_){} // 忽略
+  }
+  if(!latlon) latlon = cityTable['台北'];
+
+  const dt = new Date(`${dateStr}T${timeStr}:00`);
+  const payload = {
+    day: dt.getDate(),
+    month: dt.getMonth()+1,
+    year: dt.getFullYear(),
+    hour: dt.getHours(),
+    min: dt.getMinutes(),
+    lat: latlon.lat,
+    lon: latlon.lon,
+    tzone: TZ_OFFSET
+  };
+
+  try{
+    // 1) 太陽/月亮
+    const planets = await astroPost('/planets/positions', payload);
+    // 有些方案 endpoint 是 /planets/position，也試一次
+    const planetsData = planets || await astroPost('/planets/position', payload);
+
+    // 2) 上升
+    const ascData = await astroPost('/ascendant', payload);
+
+    const sunEn  = planetsData?.sun?.sign  || 'Aries';
+    const moonEn = planetsData?.moon?.sign || 'Taurus';
+    const ascEn  = ascData?.ascendant?.sign || ascData?.ascendant || 'Gemini';
+
+    const sunDeg  = Math.round(planetsData?.sun?.degree || 0);
+    const moonDeg = Math.round(planetsData?.moon?.degree || 0);
+    const ascDeg  = Math.round(ascData?.ascendant?.degree || ascData?.ascendant_degree || 0);
+
+    const sun = en2zh[sunEn]  || '牡羊座';
+    const moon= en2zh[moonEn] || '金牛座';
+    const asc = en2zh[ascEn]  || roughAscendant(dt.getHours()); // API 沒回就近似
+
+    drawCards({sun,moon,asc,sDeg:sunDeg,mDeg:moonDeg,aDeg:ascDeg});
+    reveal();
+
+  }catch(err){
+    console.error('[AstrologyAPI] 連線失敗：', err);
+    if(statusEl){ statusEl.className='error'; statusEl.textContent='💫 API 無法使用，改為離線近似（準確度較低）。'; }
+    // 離線近似（太陽真實日期表；月亮/上升近似）
+    const {sun} = fallbackSun(dateStr);
+    const moon  = roughMoon(dt);
+    const asc   = roughAscendant(dt.getHours());
+    drawCards({sun,moon,asc,sDeg:rand30(),mDeg:rand30(),aDeg:rand30()});
+    reveal();
+  }
 }
+
+/* ====== 呼叫 AstrologyAPI：先 Basic 再 Bearer ====== */
+async function astroPost(path, payload){
+  const url = `${API_BASE}${path}`;
+  // 方案一：Basic (userId:apiKey)
+  if(USE_BASIC && ASTRO_USER && ASTRO_KEY){
+    const res = await fetch(url,{
+      method:'POST',
+      headers:{
+        'Authorization': 'Basic ' + btoa(`${ASTRO_USER}:${ASTRO_KEY}`),
+        'Content-Type':'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+    if(res.ok) return res.json();
+  }
+  // 方案二：Bearer (部分方案提供)
+  if(API_BEARER){
+    const res2 = await fetch(url,{
+      method:'POST',
+      headers:{
+        'Authorization': `Bearer ${API_BEARER}`,
+        'Content-Type':'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+    if(res2.ok) return res2.json();
+    throw new Error(`AstrologyAPI ${res2.status}`);
+  }
+  throw new Error('No valid credentials');
+}
+
+/* ====== 畫面生成 ====== */
+function drawCards({sun,moon,asc,sDeg,mDeg,aDeg}){
+  if(statusEl) statusEl.textContent='命盤已生成 ✨';
+  const blocks = [
+    {title:'太陽', cls:'sun',   sign:sun,  deg:sDeg, desc:textSun[sun]},
+    {title:'月亮', cls:'moon',  sign:moon, deg:mDeg, desc:textMoon[moon]},
+    {title:'上升', cls:'earth', sign:asc,  deg:aDeg, desc:textAsc[asc]}
+  ];
+  cardsEl.innerHTML = blocks.map(b=>`
+    <div class="card ${b.cls}">
+      <h3>${b.title}</h3>
+      <div class="sign">${b.sign}</div>
+      <div class="deg">${b.deg}°</div>
+      <div class="desc">${b.desc || ''}</div>
+    </div>`).join('');
+}
+function reveal(){
+  if(!resultsEl) return;
+  requestAnimationFrame(()=>{ resultsEl.style.opacity=1; resultsEl.scrollIntoView({behavior:'smooth',block:'start'}); });
+}
+
+/* ====== 近似 & 工具 ====== */
+function rand30(){ return Math.floor(Math.random()*30); }
 function fallbackSun(dateStr){
-  const md = dateStr.slice(5); // MM-DD
+  const md = dateStr.slice(5);
   const table = [
-   ['牡羊座','03-21','04-19'],['金牛座','04-20','05-20'],['雙子座','05-21','06-20'],
-   ['巨蟹座','06-21','07-22'],['獅子座','07-23','08-22'],['處女座','08-23','09-22'],
-   ['天秤座','09-23','10-22'],['天蠍座','10-23','11-21'],['射手座','11-22','12-21'],
-   ['摩羯座','12-22','01-19'],['水瓶座','01-20','02-18'],['雙魚座','02-19','03-20']
+    ['牡羊座','03-21','04-19'],['金牛座','04-20','05-20'],['雙子座','05-21','06-20'],
+    ['巨蟹座','06-21','07-22'],['獅子座','07-23','08-22'],['處女座','08-23','09-22'],
+    ['天秤座','09-23','10-22'],['天蠍座','10-23','11-21'],['射手座','11-22','12-21'],
+    ['摩羯座','12-22','01-19'],['水瓶座','01-20','02-18'],['雙魚座','02-19','03-20']
   ];
   for(const [sign,st,ed] of table){
     if(st<=ed){ if(md>=st&&md<=ed) return {sun:sign}; }
-    else { if(md>=st||md<=ed) return {sun:sign}; } // 跨年（摩羯）
+    else { if(md>=st||md<=ed) return {sun:sign}; }
   }
   return {sun:'牡羊座'};
 }
 function roughMoon(dt){
-  // 極簡近似：每 ~2.46 天換一宮
-  const start = new Date(Date.UTC(2000,0,6)); // 參考點
+  const start = new Date(Date.UTC(2000,0,6));
   const diffDays = (dt - start)/(1000*60*60*24);
   const idx = Math.floor((diffDays/2.46)%12);
   return ['牡羊座','金牛座','雙子座','巨蟹座','獅子座','處女座','天秤座','天蠍座','射手座','摩羯座','水瓶座','雙魚座'][ (idx+12)%12 ];
 }
 function roughAscendant(hour){
-  // 小時段近似（2小時一宮）
   const ascList=['牡羊座','金牛座','雙子座','巨蟹座','獅子座','處女座','天秤座','天蠍座','射手座','摩羯座','水瓶座','雙魚座'];
   return ascList[Math.floor((hour%24)/2)];
 }
+
+/* ====== 綁定按鈕（兼容你舊按鈕 class） ====== */
+document.getElementById('btnGen')?.addEventListener('click', generate);
+document.querySelector('.btn-generate')?.addEventListener('click', generate);
 </script>
+
 </body>
 </html>
