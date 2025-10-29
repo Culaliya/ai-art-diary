@@ -105,29 +105,64 @@ async function getCoords(place){
   return { lat:+d[0].lat, lon:+d[0].lon };
 }
 
-async function fetchPlanets(y,m,d,h,min,lat,lon){
-  const resp = await fetch("https://api.astrologyapi.com/v1/planets",{
-    method:"POST",
-    headers:{
-      "Authorization":"Basic "+AUTH,
-      "Content-Type":"application/json"
+// 取得行星位置
+async function fetchPlanets(y, m, d, h, min, lat, lon) {
+  const resp = await fetch("https://floral-term-b81d.culaliya.workers.dev/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
     },
-    body:JSON.stringify({day:d,month:m,year:y,hour:h,min:min,lat,lon,tzone:8})
+    body: JSON.stringify({
+      endpoint: "planets",        // 告訴 Worker 要轉發到 /v1/planets
+      day: d,
+      month: m,
+      year: y,
+      hour: h,
+      min: min,
+      lat: lat,
+      lon: lon,
+      tzone: 8
+    })
   });
-  if(!resp.ok) throw new Error("行星資料錯誤");
+  if (!resp.ok) throw new Error("行星資料錯誤");
   return resp.json();
 }
 
-async function fetchHouses(y,m,d,h,min,lat,lon){
-  const resp = await fetch("https://api.astrologyapi.com/v1/house_cusps",{
-    method:"POST",
-    headers:{
-      "Authorization":"Basic "+AUTH,
-      "Content-Type":"application/json"
+
+// 取得 12 宮起點
+async function fetchHouses(y, m, d, h, min, lat, lon) {
+  const resp = await fetch("https://floral-term-b81d.culaliya.workers.dev/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
     },
-    body:JSON.stringify({day:d,month:m,year:y,hour:h,min:min,lat,lon,tzone:8})
+    body: JSON.stringify({
+      endpoint: "house_cusps",    // 告訴 Worker 要轉發到 /v1/house_cusps
+      day: d,
+      month: m,
+      year: y,
+      hour: h,
+      min: min,
+      lat: lat,
+      lon: lon,
+      tzone: 8
+    })
   });
-  if(!resp.ok) throw new Error("宮位資料錯誤");
+  if (!resp.ok) throw new Error("宮位資料錯誤");
+  return resp.json();
+}
+  async function fetchDailyHoroscope(sunSign) {
+  const resp = await fetch("https://floral-term-b81d.culaliya.workers.dev/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      endpoint: `sun_sign_prediction/daily/${encodeURIComponent(sunSign)}`,
+      method: "POST"
+    })
+  });
+  if (!resp.ok) throw new Error("運勢資料錯誤");
   return resp.json();
 }
 
