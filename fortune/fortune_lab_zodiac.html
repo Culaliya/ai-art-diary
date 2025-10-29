@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>🌌 Culaliya Mystic Lab | 命盤全展開 v3.5</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>🌌 Culaliya Mystic Lab | 命盤全展開 v3.6</title>
 <style>
 body {
   margin: 0;
@@ -77,8 +77,9 @@ canvas {
 @keyframes spin {100%{transform:rotate(360deg)}}
 </style>
 </head>
+
 <body>
-<h1>🌌 Culaliya Mystic Lab 命盤全展開 v3.5</h1>
+<h1>🌌 Culaliya Mystic Lab 命盤全展開 v3.6</h1>
 <div class="container">
   <label>出生日期</label>
   <input type="date" id="birthDate">
@@ -93,74 +94,49 @@ canvas {
 </div>
 
 <script>
-// AstrologyAPI
-const USER = "qhxXdemo";
-const KEY = "QHh4C2NS8q2GfaVyMe065AEYgBxpeBIaHTzUz5S6";
-const AUTH = btoa(`${USER}:${KEY}`);
+// Worker proxy URL
+const PROXY = "https://floral-term-b81d.culaliya.workers.dev/";
 
+// 取得經緯度
 async function getCoords(place){
-  const r = await fetch(`https://nominatim.openstreetmap.org/search?city=${place}&format=json`);
-  const d = await r.json();
+  const res = await fetch(`https://nominatim.openstreetmap.org/search?city=${place}&format=json`);
+  const d = await res.json();
   if(!d.length) throw new Error("找不到地點");
   return { lat:+d[0].lat, lon:+d[0].lon };
 }
 
-async function callProxy(body) {
-  const r = await fetch("https://floral-term-b81d.culaliya.workers.dev/", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
+// 通用呼叫函式
+async function callProxy(body){
+  const res = await fetch(PROXY,{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify(body)
   });
-
-  // 永遠先用 text，再嘗試 JSON，避免 "Unexpected token"
-  const raw = await r.text();
+  const raw = await res.text();
   let data;
-
-try {
-  data = JSON.parse(raw);
-} catch (err) {
-  // 改成這樣：不直接 throw，而是包成結構化錯誤資訊
-  throw new Error(
-    "Proxy 返回非 JSON 格式，原始內容如下：\n\n" +
-    raw.slice(0, 300) + // 多抓一點字元方便看 Cloudflare 的錯誤頁
-    "\n\n（提示：若看到 error code: 1016，代表 Cloudflare Proxy 取不到上游 API，重整或稍後再試）"
-  );
-}
-
-
-  if (!data.ok) {
-    // 將上游錯誤清楚呈現
-    const hint = data.payload?.text?.slice(0, 160) || data.payload || "";
-    throw new Error(`上游錯誤 ${data.status} ${data.statusText}｜${hint}`);
+  try { data = JSON.parse(raw); }
+  catch {
+    throw new Error("Proxy 返回非 JSON，可能 Cloudflare 連不上上游。\n" + raw.slice(0,150));
   }
-  return data.payload; // 真正的 AstrologyAPI 回應在這裡
+  if(!data.ok){
+    const hint = data.payload?.text?.slice(0,120) || data.payload || "";
+    throw new Error(`上游錯誤 ${data.status}｜${hint}`);
+  }
+  return data.payload;
 }
 
-async function fetchPlanets(y, m, d, h, min, lat, lon) {
-  return callProxy({
-    endpoint: "planets",
-    day: d, month: m, year: y,
-    hour: h, min,
-    lat, lon, tzone: 8,
-  });
+// 呼叫 AstrologyAPI
+async function fetchPlanets(y,m,d,h,min,lat,lon){
+  return callProxy({ endpoint:"planets", day:d, month:m, year:y, hour:h, min, lat, lon, tzone:8 });
+}
+async function fetchHouses(y,m,d,h,min,lat,lon){
+  return callProxy({ endpoint:"house_cusps", day:d, month:m, year:y, hour:h, min, lat, lon, tzone:8 });
+}
+async function fetchDaily(sign){
+  return callProxy({ endpoint:`sun_sign_prediction/daily/${encodeURIComponent(sign)}`, method:"POST" });
 }
 
-async function fetchHouses(y, m, d, h, min, lat, lon) {
-  return callProxy({
-    endpoint: "house_cusps",
-    day: d, month: m, year: y,
-    hour: h, min,
-    lat, lon, tzone: 8,
-  });
-}
-
-async function fetchDailyHoroscope(sunSign) {
-  return callProxy({
-    endpoint: `sun_sign_prediction/daily/${encodeURIComponent(sunSign)}`,
-    method: "POST",
-  });
-}
-
+// 畫命盤
 function drawChart(planets,ctx){
   const cx=250,cy=250,r=200;
   ctx.clearRect(0,0,500,500);
@@ -169,7 +145,6 @@ function drawChart(planets,ctx){
   ctx.strokeStyle="#ffd700";
   ctx.lineWidth=2;
   ctx.stroke();
-  // 劃出12宮分線
   for(let i=0;i<12;i++){
     const angle = (i*30)*Math.PI/180;
     ctx.beginPath();
@@ -178,11 +153,10 @@ function drawChart(planets,ctx){
     ctx.strokeStyle="rgba(255,255,255,0.2)";
     ctx.stroke();
   }
-  // 行星點
-  planets.forEach((p,i)=>{
-    const deg = (p.longitude)*Math.PI/180;
-    const px = cx + (r-25)*Math.cos(deg);
-    const py = cy + (r-25)*Math.sin(deg);
+  planets.forEach(p=>{
+    const deg=(p.longitude)*Math.PI/180;
+    const px=cx+(r-25)*Math.cos(deg);
+    const py=cy+(r-25)*Math.sin(deg);
     ctx.beginPath();
     ctx.arc(px,py,6,0,2*Math.PI);
     ctx.fillStyle="#ffb347";
@@ -192,14 +166,14 @@ function drawChart(planets,ctx){
   });
 }
 
-document.getElementById("generateBtn").addEventListener("click",async()=>{
+// 事件：生成命盤
+document.getElementById("generateBtn").addEventListener("click", async ()=>{
   const date=document.getElementById("birthDate").value;
   const time=document.getElementById("birthTime").value;
   const place=document.getElementById("birthPlace").value;
   const loading=document.getElementById("loading");
   const result=document.getElementById("result");
-  const canvas=document.getElementById("chart");
-  const ctx=canvas.getContext("2d");
+  const ctx=document.getElementById("chart").getContext("2d");
 
   if(!date||!place){alert("請輸入出生日期與地點");return;}
   loading.innerHTML='<div class="loader"></div><p>⏳ 正在生成完整命盤...</p>';
@@ -209,30 +183,22 @@ document.getElementById("generateBtn").addEventListener("click",async()=>{
     const [y,m,d]=date.split("-").map(Number);
     const [h,min]=time?time.split(":").map(Number):[12,0];
     const {lat,lon}=await getCoords(place);
+
     const planets=await fetchPlanets(y,m,d,h,min,lat,lon);
     const houses=await fetchHouses(y,m,d,h,min,lat,lon);
     loading.innerHTML='';
 
-   // 命盤繪製前先檢查資料
-if (!planets || !planets.planets || !Array.isArray(planets.planets)) {
-  console.warn("⚠️ planets 資料異常：", planets);
-  result.innerHTML = `
-    <p style="color:#ffb347;">⚠️ 無法取得行星資料，請稍後再試。</p>
-    <pre style="white-space:pre-wrap;background:rgba(255,255,255,0.06);padding:12px;border-radius:8px;">
-${JSON.stringify(planets, null, 2)}
-    </pre>
-  `;
-  return;
-}
+    if(!planets || !planets.planets){
+      result.innerHTML=`<p style="color:#ffb347;">⚠️ 無法取得行星資料</p>`;
+      console.warn(planets);
+      return;
+    }
 
-// 命盤繪製
-drawChart(planets.planets, ctx);
-
-// 詳細資料列
-result.innerHTML = "<h3>🪐 行星與宮位分佈</h3>";
-planets.planets.forEach(p => {
-  result.innerHTML += `<p><b>${p.name}</b> → ${p.sign} ${p.norm_degree}°（宮位：${p.house_id || "?"}）</p>`;
-});
+    drawChart(planets.planets,ctx);
+    result.innerHTML="<h3>🪐 行星與宮位分佈</h3>";
+    planets.planets.forEach(p=>{
+      result.innerHTML += `<p><b>${p.name}</b> → ${p.sign} ${p.norm_degree}°（宮位：${p.house_id||"?"}）</p>`;
+    });
 
     result.innerHTML+="<h3>🏠 宮位起點</h3>";
     for(let i=1;i<=12;i++){
@@ -240,12 +206,18 @@ planets.planets.forEach(p => {
       result.innerHTML+=`<p>第${i}宮：${cusp.toFixed(2)}°</p>`;
     }
 
+    // 🔮 今日運勢
+    const sunSign=planets.sun_sign || planets.planets.find(p=>p.name==="Sun")?.sign || "未知";
+    const daily=await fetchDaily(sunSign);
+    if(daily && daily.prediction){
+      result.innerHTML+=`<h3>🔮 今日運勢 (${sunSign})</h3><p>${daily.prediction}</p>`;
+    }
+
   }catch(e){
     loading.innerHTML='';
-    result.innerHTML=`<p style='color:red'>⚠️ 錯誤：${e.message}</p>`;
+    result.innerHTML=`<p style="color:red;">⚠️ 錯誤：${e.message}</p>`;
   }
 });
 </script>
 </body>
 </html>
-
