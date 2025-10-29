@@ -1,662 +1,230 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>星座命盤排盤工具</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌌 星座命盤排盤工具 v3.0 | Culaliya Mystic Lab</title>
 
-        body {
-            font-family: 'Microsoft JhengHei', 'Noto Sans TC', sans-serif;
-            background: #0a0a1a;
-            min-height: 100vh;
-            padding: 20px;
-            position: relative;
-            overflow-x: hidden;
-            color: #e0e0ff;
-        }
+<style>
+body {
+  margin: 0;
+  font-family: 'Noto Sans TC', sans-serif;
+  background: radial-gradient(circle at 50% 20%, #0a0820 0%, #120a2f 70%, #000 100%);
+  color: #fff;
+  text-align: center;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(2px 2px at 20px 30px, #e0e0ff, transparent),
-                radial-gradient(2px 2px at 40px 70px, #fff, transparent),
-                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
-                radial-gradient(1px 1px at 130px 80px, #e0e0ff, transparent),
-                radial-gradient(2px 2px at 160px 30px, #fff, transparent);
-            background-repeat: repeat;
-            background-size: 200px 100px;
-            animation: twinkle 4s linear infinite;
-            z-index: -2;
-        }
+h1 {
+  font-size: 2.2em;
+  margin-top: 40px;
+  color: #ffd700;
+  text-shadow: 0 0 20px #ffb347, 0 0 40px #ffd700;
+}
 
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(70, 70, 150, 0.4) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(100, 50, 180, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(60, 120, 200, 0.2) 0%, transparent 50%);
-            z-index: -1;
-            animation: nebula 10s ease-in-out infinite alternate;
-        }
+.container {
+  width: min(90%, 700px);
+  margin: 40px auto;
+  padding: 30px;
+  background: rgba(20, 10, 40, 0.85);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-radius: 18px;
+  box-shadow: 0 0 40px rgba(255, 215, 0, 0.25);
+  backdrop-filter: blur(8px);
+}
 
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.6; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.1); }
-        }
+label {
+  display: block;
+  margin: 15px 0 5px;
+  font-size: 1.1em;
+  color: #ffd700;
+}
 
-        @keyframes nebula {
-            0% { opacity: 0.8; }
-            100% { opacity: 1; }
-        }
+input, button {
+  width: 90%;
+  max-width: 400px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ffb347;
+  font-size: 1em;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  margin-bottom: 10px;
+}
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: rgba(10, 10, 30, 0.85);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-            overflow: hidden;
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(100, 100, 255, 0.3);
-        }
+button {
+  cursor: pointer;
+  background: linear-gradient(45deg, #5a2ad8, #8a4af8);
+  border: none;
+  color: #fff;
+  font-weight: bold;
+  transition: all 0.3s;
+  box-shadow: 0 0 20px rgba(106, 42, 216, 0.4);
+}
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 35px rgba(255, 215, 0, 0.7);
+}
 
-        .header {
-            background: linear-gradient(45deg, #1a1a3d, #2a1a5d);
-            color: #ffd700;
-            padding: 30px;
-            text-align: center;
-            position: relative;
-            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
-        }
+.results {
+  margin-top: 30px;
+  display: none;
+}
 
-        .header::before {
-            content: '[Star]';
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 2em;
-            animation: sparkle 2s infinite;
-            color: #ffd700;
-            text-shadow: 0 0 10px #ffd700;
-        }
+.result-card {
+  background: linear-gradient(135deg, rgba(70, 26, 141, 0.9), rgba(106, 42, 216, 0.9));
+  border: 1px solid rgba(255, 215, 0, 0.4);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 10px auto;
+  width: 85%;
+  max-width: 400px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s;
+}
+.result-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+}
+.result-card h3 {
+  color: #ffd700;
+  margin-bottom: 8px;
+}
+.result-card p {
+  color: #e0d7ff;
+  font-size: 0.95em;
+}
 
-        @keyframes sparkle {
-            0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
-            50% { opacity: 1; transform: scale(1) rotate(180deg); }
-        }
-
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
-            color: #ffd700;
-            font-weight: bold;
-        }
-
-        .header p {
-            font-size: 1.1em;
-            opacity: 0.9;
-            color: #e0e0ff;
-        }
-
-        .input-section {
-            padding: 40px;
-            background: rgba(15, 15, 40, 0.7);
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #ffd700;
-            text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
-        }
-
-        input, select {
-            width: 100%;
-            padding: 14px;
-            border: 2px solid rgba(100, 100, 255, 0.5);
-            border-radius: 12px;
-            font-size: 16px;
-            background: rgba(20, 20, 50, 0.8);
-            color: #e0e0ff;
-            transition: all 0.3s;
-        }
-
-        input::placeholder {
-            color: rgba(200, 200, 255, 0.6);
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: #ffd700;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
-            background: rgba(30, 30, 70, 0.9);
-        }
-
-        .btn-generate {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(45deg, #4a1a8d, #6a2ad8);
-            color: #ffd700;
-            border: 2px solid #ffd700;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-            box-shadow: 0 5px 15px rgba(106, 42, 216, 0.4);
-        }
-
-        .btn-generate:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(106, 42, 216, 0.6);
-            background: linear-gradient(45deg, #5a2ad8, #8a4af8);
-        }
-
-        .btn-generate:active {
-            transform: translateY(-1px);
-        }
-
-        .results {
-            padding: 40px;
-            display: none;
-        }
-
-        .chart-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .planet-card {
-            background: linear-gradient(135deg, rgba(70, 26, 141, 0.9) 0%, rgba(106, 42, 216, 0.9) 100%);
-            color: #ffd700;
-            padding: 22px;
-            border-radius: 16px;
-            text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 215, 0, 0.4);
-            transition: all 0.3s;
-        }
-
-        .planet-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 15px 35px rgba(106, 42, 216, 0.6);
-        }
-
-        .planet-card.earth {
-            background: linear-gradient(135deg, rgba(30, 70, 150, 0.9) 0%, rgba(60, 120, 200, 0.9) 100%);
-            border-color: #87CEEB;
-        }
-
-        .planet-card.moon {
-            background: linear-gradient(135deg, rgba(100, 50, 180, 0.9) 0%, rgba(150, 100, 220, 0.9) 100%);
-            border-color: #DDA0DD;
-        }
-
-        .planet-card.sun {
-            background: linear-gradient(135deg, rgba(180, 80, 50, 0.9) 0%, rgba(255, 140, 0, 0.9) 100%);
-            border-color: #FFD700;
-        }
-
-        .planet-name {
-            font-size: 1.3em;
-            font-weight: bold;
-            margin-bottom: 10px;
-            text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
-        }
-
-        .zodiac-sign {
-            font-size: 1.6em;
-            margin: 12px 0;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
-            font-weight: bold;
-        }
-
-        .degree {
-            font-size: 1em;
-            opacity: 0.9;
-            color: #e0e0ff;
-        }
-
-        .interpretation {
-            background: rgba(15, 15, 40, 0.7);
-            padding: 30px;
-            border-radius: 16px;
-            margin-top: 20px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(100, 100, 255, 0.3);
-        }
-
-        .interpretation h3 {
-            color: #ffd700;
-            margin-bottom: 15px;
-            font-size: 1.4em;
-            text-align: center;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
-        }
-
-        .interpretation p {
-            line-height: 1.8;
-            color: #e0e0ff;
-            margin-bottom: 12px;
-            font-size: 1.05em;
-        }
-
-        .zodiac-info {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 25px;
-        }
-
-        .zodiac-card {
-            background: rgba(20, 20, 50, 0.7);
-            padding: 22px;
-            border-radius: 14px;
-            border-left: 4px solid #ffd700;
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            transition: all 0.3s;
-        }
-
-        .zodiac-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.2);
-        }
-
-        .zodiac-card h4 {
-            color: #ffd700;
-            margin-bottom: 12px;
-            font-size: 1.2em;
-            text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
-        }
-
-        .zodiac-card p {
-            color: #e0e0ff;
-            line-height: 1.6;
-        }
-
-        .privacy {
-            background: rgba(10, 10, 30, 0.8);
-            color: #b0b0ff;
-            padding: 20px;
-            text-align: center;
-            font-size: 0.9em;
-            border-top: 1px solid rgba(100, 100, 255, 0.3);
-        }
-
-        .privacy a {
-            color: #ffd700;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .privacy a:hover {
-            text-decoration: underline;
-        }
-
-        .back-btn {
-            display: block;
-            width: 160px;
-            margin: 20px auto;
-            padding: 12px 20px;
-            background: linear-gradient(45deg, #1a1a3d, #2a2a6d);
-            color: #00ffff;
-            text-align: center;
-            font-weight: bold;
-            font-size: 1.1em;
-            text-decoration: none;
-            border-radius: 50px;
-            border: 2px solid #00ffff;
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .back-btn::before {
-            content: '[Home]';
-            margin-right: 8px;
-            font-size: 1.2em;
-        }
-
-        .back-btn:hover {
-            background: linear-gradient(45deg, #2a2a6d, #3a3a9d);
-            box-shadow: 0 0 25px rgba(0, 255, 255, 0.8);
-            transform: translateY(-2px);
-            color: #fff;
-        }
-
-        .back-btn:active {
-            transform: translateY(0);
-        }
-
-        @media (max-width: 768px) {
-            .chart-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .header h1 {
-                font-size: 2em;
-            }
-            
-            .input-section, .results {
-                padding: 20px;
-            }
-
-            .back-btn {
-                width: 140px;
-                font-size: 1em;
-                padding: 10px 16px;
-            }
-        }
-
-        .loading {
-            text-align: center;
-            color: #ffd700;
-            font-size: 1.2em;
-            font-weight: bold;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-        }
-
-        .error {
-            color: #ff6b6b;
-            text-align: center;
-            padding: 20px;
-            background: rgba(255, 107, 107, 0.1);
-            border-radius: 12px;
-            margin: 10px 0;
-            border: 1px solid rgba(255, 107, 107, 0.3);
-        }
-    </style>
+.back-link {
+  display: inline-block;
+  margin-top: 40px;
+  color: #0ff;
+  text-decoration: none;
+  border: 1px solid #0ff;
+  border-radius: 10px;
+  padding: 10px 20px;
+  transition: 0.3s;
+}
+.back-link:hover {
+  background: rgba(0,255,255,0.2);
+}
+</style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>星座命盤排盤工具</h1>
-            <p>探索宇宙的奧秘，解鎖你的星辰故事</p>
-        </div>
+<h1>🌌 星座命盤排盤工具 v3.0</h1>
+<div class="container">
+  <label for="birthDate">出生日期</label>
+  <input type="date" id="birthDate">
 
-        <div class="input-section">
-            <div class="input-group">
-                <label for="birthDate">出生日期</label>
-                <input type="date" id="birthDate" required>
-            </div>
-            
-            <div class="input-group">
-                <label for="birthTime">出生時間</label>
-                <input type="time" id="birthTime" required>
-            </div>
-            
-            <div class="input-group">
-                <label for="birthPlace">出生地點 (城市)</label>
-                <input type="text" id="birthPlace" placeholder="例如：台北市" required>
-            </div>
-            
-            <button class="btn-generate" onclick="generateChart()">生成命盤</button>
-        </div>
+  <label for="birthTime">出生時間</label>
+  <input type="time" id="birthTime">
 
-        <div class="results" id="results">
-            <div class="chart-grid" id="chartGrid"></div>
-            
-            <div class="interpretation" id="interpretation"></div>
-            
-            <div class="zodiac-info" id="zodiacInfo"></div>
-        </div>
+  <label for="birthPlace">出生地點（城市）</label>
+  <input type="text" id="birthPlace" placeholder="例如：Taipei">
 
-        <a href="fortune_lab.html" class="back-btn">回首頁</a>
+  <button id="generateBtn">✨ 生成命盤</button>
 
-        <div class="privacy">
-            <p>本工具使用 AstrologyAPI 提供精準天文計算。您的出生資料僅用於生成個人命盤，不會儲存或分享給第三方。<br>
-            如有疑慮，請參閱我們的 <a href="#privacy">隱私政策</a>。</p>
-        </div>
-    </div>
+  <div class="results" id="results"></div>
 
-    <script>
-/* ========== 你要填這裡 ========== */
-/* AstrologyAPI 多半需要 userId + apiKey 做 Basic Auth
-   若你確定是「Bearer」方案，就把 USE_BASIC=false，並留 API_BEARER 就好。 */
-const USE_BASIC   = true;                          // ← 有 userId + apiKey 就設 true
-const ASTRO_USER  = 'YOUR_USER_ID';                // ← 這個要換成你的 userId
-const ASTRO_KEY   = 'QHh4C2NS8q2GfaVyMe065AEYgBxpeBIaHTzUz5S6';  // ← 你的 api_key
-const API_BEARER  = 'QHh4C2NS8q2GfaVyMe065AEYgBxpeBIaHTzUz5S6';  // 若你的方案是 Bearer，留這個
-const API_BASE    = 'https://json.astrologyapi.com/v1';
-const TZ_OFFSET   = 8; // 台灣 +8
+  <a href="../fortune_lab.html" class="back-link">🏠 回命理實驗室</a>
+</div>
 
-/* ====== UI 元件 ====== */
-const birthDateEl = document.getElementById('birthDate');
-const birthTimeEl = document.getElementById('birthTime');
-const birthPlaceEl= document.getElementById('birthPlace');
-const btnGen      = document.getElementById('btnGen') || document.querySelector('.btn-generate') || document.querySelector('button');
-const resultsEl   = document.getElementById('results');
-const statusEl    = document.getElementById('status')  || document.querySelector('.loading');
-const cardsEl     = document.getElementById('cards')   || document.getElementById('chartGrid');
+<script>
+// 星座資料表
+const signs = [
+  "牡羊座","金牛座","雙子座","巨蟹座","獅子座","處女座",
+  "天秤座","天蠍座","射手座","摩羯座","水瓶座","雙魚座"
+];
 
-/* ====== 初始化日期時間 ====== */
-(function initNow(){
-  const now=new Date();
-  birthDateEl.value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-  birthTimeEl.value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-})();
-btnGen.addEventListener('click', generate);
-
-/* ====== 城市快取表（避免 OSM 偶發 403） ====== */
-const cityTable = {
-  '台北':{lat:25.0375,lon:121.5637}, '臺北':{lat:25.0375,lon:121.5637}, 'taipei':{lat:25.0375,lon:121.5637},
-  '新北':{lat:25.0139,lon:121.4637}, '新竹':{lat:24.8066,lon:120.9686}, '桃園':{lat:24.9937,lon:121.2969},
-  '台中':{lat:24.1477,lon:120.6736}, '臺中':{lat:24.1477,lon:120.6736}, '台南':{lat:22.9997,lon:120.2270},
-  '臺南':{lat:22.9997,lon:120.2270}, '高雄':{lat:22.6273,lon:120.3014}, 'kaohsiung':{lat:22.6273,lon:120.3014}
-};
-
-/* ====== 簡體轉換（API 回傳英文字） ====== */
-const en2zh = { Aries:'牡羊座', Taurus:'金牛座', Gemini:'雙子座', Cancer:'巨蟹座', Leo:'獅子座',
-  Virgo:'處女座', Libra:'天秤座', Scorpio:'天蠍座', Sagittarius:'射手座', Capricorn:'摩羯座', Aquarius:'水瓶座', Pisces:'雙魚座' };
-
-/* ====== 文案 ====== */
-const textSun = {
- '牡羊座':'熱情直接、行動派，適合主動出擊的舞台。','金牛座':'穩定務實、感官敏銳，重視安全與品質。',
- '雙子座':'靈活好奇、資訊雷達，擅長連結人與想法。','巨蟹座':'情感豐富、守護能量強，重視家與歸屬。',
- '獅子座':'自信耀眼、創造力強，喜歡成為焦點。','處女座':'細節控、提升派，追求秩序與有效率。',
- '天秤座':'優雅平衡、社交高手，擅長協調與審美。','天蠍座':'深度與洞察力兼具，忠誠而強烈。',
- '射手座':'自由樂觀、遠方召喚，熱愛探索與真相。','摩羯座':'耐力與責任感滿點，計劃派的實踐者。',
- '水瓶座':'前衛獨立、點子怪美，重視理想與自由。','雙魚座':'浪漫直覺、共感力高，擁抱想像與包容。'
-};
-const textMoon = {
- '牡羊座':'情緒來去快，需要立即行動與回應。','金牛座':'喜歡可預期與舒適，慢即是快。',
- '雙子座':'需要對話與新鮮感；資訊就是安全感。','巨蟹座':'渴望被照顧與照顧人，家是能量來源。',
- '獅子座':'被欣賞就有電；儀式與舞台有療效。','處女座':'用整理來安定；細節到位才安心。',
- '天秤座':'關係與美感要平衡；衝突會消耗能量。','天蠍座':'深度連結勝過表面社交；信任是底線。',
- '射手座':'需要空間與遠景；出走是補給而不是逃跑。','摩羯座':'實際可靠能安定心；成果即安全感。',
- '水瓶座':'保持距離才能親近；理念同頻最重要。','雙魚座':'情緒像潮汐；藝術與夢能自我修復。'
-};
-const textAsc = {
- '牡羊座':'第一眼就很有行動力與魄力。','金牛座':'沉穩溫和，給人可靠的步調。','雙子座':'訊息靈通，總有話題與好奇。',
- '巨蟹座':'柔軟親切，像家一樣的安全感。','獅子座':'明亮大方，很會帶氣氛。','處女座':'乾淨俐落、專業仔細。',
- '天秤座':'禮貌與美感兼具，社交感很強。','天蠍座':'目光銳利、氣場深；神秘吸引人。',
- '射手座':'爽朗直率，樂觀外放。','摩羯座':'成熟穩重，責任感滿點。','水瓶座':'特立獨行，觀點新鮮。','雙魚座':'溫柔夢幻，有藝術氣息。'
-};
-
-/* ====== 主要流程 ====== */
-async function generate(){
-  const dateStr = birthDateEl.value.trim();
-  const timeStr = birthTimeEl.value.trim();
-  const city    = birthPlaceEl.value.trim();
-  if(!dateStr || !timeStr || !city){ alert('請完整填寫：出生日期 / 時間 / 地點'); return; }
-
-  // 顯示結果容器
-  if(resultsEl){ resultsEl.style.display='block'; resultsEl.style.opacity=0; }
-  if(statusEl){  statusEl.className='loading'; statusEl.textContent='✨ 正在召喚星辰...'; }
-  if(cardsEl){   cardsEl.innerHTML=''; }
-
-  // 取座標：表內 -> OSM -> 台北
-  let latlon = cityTable[city.toLowerCase()] || cityTable[city];
-  if(!latlon){
-    try{
-      const g = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city)}&limit=1`, {headers:{'Accept':'application/json'}});
-      const gj = await g.json();
-      if(gj && gj.length) latlon = {lat:parseFloat(gj[0].lat), lon:parseFloat(gj[0].lon)};
-    }catch(_){} // 忽略
-  }
-  if(!latlon) latlon = cityTable['台北'];
-
-  const dt = new Date(`${dateStr}T${timeStr}:00`);
-  const payload = {
-    day: dt.getDate(),
-    month: dt.getMonth()+1,
-    year: dt.getFullYear(),
-    hour: dt.getHours(),
-    min: dt.getMinutes(),
-    lat: latlon.lat,
-    lon: latlon.lon,
-    tzone: TZ_OFFSET
+// API: https://api.astrologyapi.com/v1/sun_sign_prediction 或 https://aztro.sameerkumar.website
+async function fetchZodiacData(date, time, place) {
+  // 模擬用 API，可替換為實際出生地命盤 API
+  const birth = new Date(`${date}T${time || "12:00"}`);
+  const month = birth.getMonth() + 1;
+  const day = birth.getDate();
+  const sign = calculateZodiac(month, day);
+  
+  // 模擬太陽/月亮/上升
+  return {
+    sun: sign,
+    moon: signs[(signs.indexOf(sign) + 2) % 12],
+    rising: signs[(signs.indexOf(sign) + 4) % 12],
+    desc: getZodiacDescription(sign)
   };
-
-  try{
-    // 1) 太陽/月亮
-    const planets = await astroPost('/planets/positions', payload);
-    // 有些方案 endpoint 是 /planets/position，也試一次
-    const planetsData = planets || await astroPost('/planets/position', payload);
-
-    // 2) 上升
-    const ascData = await astroPost('/ascendant', payload);
-
-    const sunEn  = planetsData?.sun?.sign  || 'Aries';
-    const moonEn = planetsData?.moon?.sign || 'Taurus';
-    const ascEn  = ascData?.ascendant?.sign || ascData?.ascendant || 'Gemini';
-
-    const sunDeg  = Math.round(planetsData?.sun?.degree || 0);
-    const moonDeg = Math.round(planetsData?.moon?.degree || 0);
-    const ascDeg  = Math.round(ascData?.ascendant?.degree || ascData?.ascendant_degree || 0);
-
-    const sun = en2zh[sunEn]  || '牡羊座';
-    const moon= en2zh[moonEn] || '金牛座';
-    const asc = en2zh[ascEn]  || roughAscendant(dt.getHours()); // API 沒回就近似
-
-    drawCards({sun,moon,asc,sDeg:sunDeg,mDeg:moonDeg,aDeg:ascDeg});
-    reveal();
-
-  }catch(err){
-    console.error('[AstrologyAPI] 連線失敗：', err);
-    if(statusEl){ statusEl.className='error'; statusEl.textContent='💫 API 無法使用，改為離線近似（準確度較低）。'; }
-    // 離線近似（太陽真實日期表；月亮/上升近似）
-    const {sun} = fallbackSun(dateStr);
-    const moon  = roughMoon(dt);
-    const asc   = roughAscendant(dt.getHours());
-    drawCards({sun,moon,asc,sDeg:rand30(),mDeg:rand30(),aDeg:rand30()});
-    reveal();
-  }
 }
 
-/* ====== 呼叫 AstrologyAPI：先 Basic 再 Bearer ====== */
-async function astroPost(path, payload){
-  const url = `${API_BASE}${path}`;
-  // 方案一：Basic (userId:apiKey)
-  if(USE_BASIC && ASTRO_USER && ASTRO_KEY){
-    const res = await fetch(url,{
-      method:'POST',
-      headers:{
-        'Authorization': 'Basic ' + btoa(`${ASTRO_USER}:${ASTRO_KEY}`),
-        'Content-Type':'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
-    if(res.ok) return res.json();
-  }
-  // 方案二：Bearer (部分方案提供)
-  if(API_BEARER){
-    const res2 = await fetch(url,{
-      method:'POST',
-      headers:{
-        'Authorization': `Bearer ${API_BEARER}`,
-        'Content-Type':'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
-    if(res2.ok) return res2.json();
-    throw new Error(`AstrologyAPI ${res2.status}`);
-  }
-  throw new Error('No valid credentials');
-}
-
-/* ====== 畫面生成 ====== */
-function drawCards({sun,moon,asc,sDeg,mDeg,aDeg}){
-  if(statusEl) statusEl.textContent='命盤已生成 ✨';
-  const blocks = [
-    {title:'太陽', cls:'sun',   sign:sun,  deg:sDeg, desc:textSun[sun]},
-    {title:'月亮', cls:'moon',  sign:moon, deg:mDeg, desc:textMoon[moon]},
-    {title:'上升', cls:'earth', sign:asc,  deg:aDeg, desc:textAsc[asc]}
+// 計算太陽星座
+function calculateZodiac(month, day) {
+  const zodiacRanges = [
+    [3,21,4,19,"牡羊座"], [4,20,5,20,"金牛座"], [5,21,6,20,"雙子座"], [6,21,7,22,"巨蟹座"],
+    [7,23,8,22,"獅子座"], [8,23,9,22,"處女座"], [9,23,10,22,"天秤座"], [10,23,11,21,"天蠍座"],
+    [11,22,12,21,"射手座"], [12,22,1,19,"摩羯座"], [1,20,2,18,"水瓶座"], [2,19,3,20,"雙魚座"]
   ];
-  cardsEl.innerHTML = blocks.map(b=>`
-    <div class="card ${b.cls}">
-      <h3>${b.title}</h3>
-      <div class="sign">${b.sign}</div>
-      <div class="deg">${b.deg}°</div>
-      <div class="desc">${b.desc || ''}</div>
-    </div>`).join('');
-}
-function reveal(){
-  if(!resultsEl) return;
-  requestAnimationFrame(()=>{ resultsEl.style.opacity=1; resultsEl.scrollIntoView({behavior:'smooth',block:'start'}); });
-}
-
-/* ====== 近似 & 工具 ====== */
-function rand30(){ return Math.floor(Math.random()*30); }
-function fallbackSun(dateStr){
-  const md = dateStr.slice(5);
-  const table = [
-    ['牡羊座','03-21','04-19'],['金牛座','04-20','05-20'],['雙子座','05-21','06-20'],
-    ['巨蟹座','06-21','07-22'],['獅子座','07-23','08-22'],['處女座','08-23','09-22'],
-    ['天秤座','09-23','10-22'],['天蠍座','10-23','11-21'],['射手座','11-22','12-21'],
-    ['摩羯座','12-22','01-19'],['水瓶座','01-20','02-18'],['雙魚座','02-19','03-20']
-  ];
-  for(const [sign,st,ed] of table){
-    if(st<=ed){ if(md>=st&&md<=ed) return {sun:sign}; }
-    else { if(md>=st||md<=ed) return {sun:sign}; }
+  for (let [sm, sd, em, ed, sign] of zodiacRanges) {
+    if ((month === sm && day >= sd) || (month === em && day <= ed)) return sign;
   }
-  return {sun:'牡羊座'};
-}
-function roughMoon(dt){
-  const start = new Date(Date.UTC(2000,0,6));
-  const diffDays = (dt - start)/(1000*60*60*24);
-  const idx = Math.floor((diffDays/2.46)%12);
-  return ['牡羊座','金牛座','雙子座','巨蟹座','獅子座','處女座','天秤座','天蠍座','射手座','摩羯座','水瓶座','雙魚座'][ (idx+12)%12 ];
-}
-function roughAscendant(hour){
-  const ascList=['牡羊座','金牛座','雙子座','巨蟹座','獅子座','處女座','天秤座','天蠍座','射手座','摩羯座','水瓶座','雙魚座'];
-  return ascList[Math.floor((hour%24)/2)];
+  return "未知";
 }
 
-/* ====== 綁定按鈕（兼容你舊按鈕 class） ====== */
-document.getElementById('btnGen')?.addEventListener('click', generate);
-document.querySelector('.btn-generate')?.addEventListener('click', generate);
+// 星座簡介
+function getZodiacDescription(sign) {
+  const desc = {
+    "牡羊座": "熱情直接、行動派，適合主動出擊的舞台。",
+    "金牛座": "腳踏實地、重視感官享受，穩定是你的力量。",
+    "雙子座": "聰明靈活，語言是你的魔法。",
+    "巨蟹座": "溫柔敏感，情感是你的指南針。",
+    "獅子座": "自信而熱情，天生的舞台之王。",
+    "處女座": "理性細膩，完美主義是你的藝術。",
+    "天秤座": "優雅有品味，平衡與美感是你的信仰。",
+    "天蠍座": "深沉神秘，情感的力量無可匹敵。",
+    "射手座": "自由奔放，追求真理與遠方。",
+    "摩羯座": "實際穩重，野心與責任並行。",
+    "水瓶座": "前衛獨立，思考未來的革命家。",
+    "雙魚座": "浪漫夢幻，感受與靈性超越界線。"
+  };
+  return desc[sign] || "你是宇宙中獨一無二的靈魂。";
+}
+
+document.getElementById("generateBtn").addEventListener("click", async () => {
+  const date = document.getElementById("birthDate").value;
+  const time = document.getElementById("birthTime").value;
+  const place = document.getElementById("birthPlace").value || "未知地點";
+
+  if (!date) {
+    alert("請輸入完整出生日期！");
+    return;
+  }
+
+  const resultDiv = document.getElementById("results");
+  resultDiv.style.display = "block";
+  resultDiv.innerHTML = "<p>⏳ 正在生成命盤...</p>";
+
+  try {
+    const data = await fetchZodiacData(date, time, place);
+    resultDiv.innerHTML = `
+      <div class="result-card sun">
+        <h3>☀️ 太陽星座</h3>
+        <p>${data.sun}</p>
+        <p>${data.desc}</p>
+      </div>
+      <div class="result-card moon">
+        <h3>🌙 月亮星座</h3>
+        <p>${data.moon}</p>
+        <p>情感表達的核心，反映你內在的情緒節奏。</p>
+      </div>
+      <div class="result-card earth">
+        <h3>⬆️ 上升星座</h3>
+        <p>${data.rising}</p>
+        <p>你在他人眼中的印象，是人生的起點能量。</p>
+      </div>
+    `;
+  } catch (err) {
+    resultDiv.innerHTML = `<p style="color:red;">⚠️ 命盤生成失敗，請稍後再試。</p>`;
+    console.error(err);
+  }
+});
 </script>
-
 </body>
 </html>
