@@ -213,14 +213,27 @@ document.getElementById("generateBtn").addEventListener("click",async()=>{
     const houses=await fetchHouses(y,m,d,h,min,lat,lon);
     loading.innerHTML='';
 
-    // 命盤繪製
-    drawChart(planets.planets,ctx);
+   // 命盤繪製前先檢查資料
+if (!planets || !planets.planets || !Array.isArray(planets.planets)) {
+  console.warn("⚠️ planets 資料異常：", planets);
+  result.innerHTML = `
+    <p style="color:#ffb347;">⚠️ 無法取得行星資料，請稍後再試。</p>
+    <pre style="white-space:pre-wrap;background:rgba(255,255,255,0.06);padding:12px;border-radius:8px;">
+${JSON.stringify(planets, null, 2)}
+    </pre>
+  `;
+  return;
+}
 
-    // 詳細資料列
-    result.innerHTML="<h3>🪐 行星與宮位分佈</h3>";
-    planets.planets.forEach(p=>{
-      result.innerHTML+=`<p><b>${p.name}</b> → ${p.sign} ${p.norm_degree}°（宮位：${p.house_id||"?"}）</p>`;
-    });
+// 命盤繪製
+drawChart(planets.planets, ctx);
+
+// 詳細資料列
+result.innerHTML = "<h3>🪐 行星與宮位分佈</h3>";
+planets.planets.forEach(p => {
+  result.innerHTML += `<p><b>${p.name}</b> → ${p.sign} ${p.norm_degree}°（宮位：${p.house_id || "?"}）</p>`;
+});
+
     result.innerHTML+="<h3>🏠 宮位起點</h3>";
     for(let i=1;i<=12;i++){
       const cusp=houses[`house${i}`];
