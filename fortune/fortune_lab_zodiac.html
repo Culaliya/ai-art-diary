@@ -115,7 +115,7 @@ async function callProxy(body) {
   // 永遠先用 text，再嘗試 JSON，避免 "Unexpected token"
   const raw = await r.text();
   let data;
-  let data;
+
 try {
   data = JSON.parse(raw);
 } catch (err) {
