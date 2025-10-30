@@ -1074,9 +1074,9 @@ fetch('https://api.ipify.org?format=json')
     fetch('https://ipapi.co/json')
       .then(res => res.json())
       .then(info => {
-        fetch('https://script.google.com/macros/s/AKfycbycTbW9GrLhJA60G0dvOCHH-HRqzhpPMJgQrVyDbOXlFFRSCkvD-FwEu3XUlHTTd7ng/exec', {
+        fetch('https://script.google.com/macros/s/AKfycbzcWdX5AQXpSC8_RKSfT7-MJHsmolFNsaDAguskVL-posSQwYb_0OFuMYAaO-zzhsmZ/exec', {
           method: 'POST',
-          mode: 'no-cors', // ✅ 防止 CORS 阻擋
+          mode: 'no-cors',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             ip: ip,
@@ -1086,7 +1086,7 @@ fetch('https://api.ipify.org?format=json')
             referrer: document.referrer
           })
         })
-        .then(() => console.log('✅ IP log sent (no-cors mode)'))
+        .then(() => console.log('✅ IP log sent (Plus版)'))
         .catch(err => console.error('⚠️ IP log failed:', err));
       });
   });
