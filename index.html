@@ -1063,17 +1063,9 @@ async function loadApod() {
   }
 }
 loadApod();
-
-<script>
-fetch('https://api.ipify.org?format=json')
-  .then(res => res.json())
-  .then(data => {
-    const ip = data.ip;
-
 </script>
 
-
-<!-- ✅ 這段是新的獨立 script，不要放在上面的主 <script> 裡面 -->
+<!-- ✅ IP 紀錄程式：獨立 script，放在主 script 結束後 -->
 <script>
 fetch('https://api.ipify.org?format=json')
   .then(res => res.json())
@@ -1099,3 +1091,4 @@ fetch('https://api.ipify.org?format=json')
 
 </body>
 </html>
+
