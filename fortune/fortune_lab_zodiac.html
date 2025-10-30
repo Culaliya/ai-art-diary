@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>🌌 Culaliya Mystic Lab | 命盤全展開 v5.2</title>
+<title>🌌 Culaliya Mystic Lab | 命盤全展開 v5.3</title>
 <style>
 body {
   margin: 0;
@@ -35,10 +35,11 @@ button:hover {transform:scale(1.03);
 canvas {margin-top:40px;background:#0a0720;border-radius:50%;
   box-shadow:0 0 20px rgba(255,215,0,0.3);}
 .msg {margin-top:10px;color:#ffb347;}
+.desc {margin-top:20px;line-height:1.6;color:#fff;font-size:15px;}
 </style>
 </head>
 <body>
-<h1>🌌 Culaliya Mystic Lab | 命盤全展開 v5.2</h1>
+<h1>🌌 Culaliya Mystic Lab | 命盤全展開 v5.3</h1>
 <div class="container">
   <label>出生日期</label><br>
   <input type="date" id="birthDate" value="2000-01-01"><br>
@@ -49,15 +50,13 @@ canvas {margin-top:40px;background:#0a0720;border-radius:50%;
   <button id="generate">✨ 生成命盤</button>
   <div id="msg" class="msg"></div>
   <canvas id="chart" width="500" height="500"></canvas>
+  <div id="desc" class="desc"></div>
 </div>
 
 <script>
-// —— 簡化天文演算法（非商用，誤差±1°以內）——
+// ---- 計算基礎 ----
 function degToRad(d){return d*Math.PI/180;}
-function radToDeg(r){return r*180/Math.PI;}
 function normalize(d){return (d%360+360)%360;}
-
-// 太陽平均黃經近似
 function calcSunLon(date){
   const Y=date.getUTCFullYear(),M=date.getUTCMonth()+1,D=date.getUTCDate();
   const JD=367*Y-Math.floor(7*(Y+Math.floor((M+9)/12))/4)+Math.floor(275*M/9)+D+1721013.5+date.getUTCHours()/24;
@@ -66,74 +65,102 @@ function calcSunLon(date){
   const g=357.528+0.9856003*n;
   return normalize(L+1.915*Math.sin(degToRad(g))+0.02*Math.sin(degToRad(2*g)));
 }
-// 月亮近似
 function calcMoonLon(date){
-  const JD= (date.getTime()/86400000)+2440587.5;
+  const JD=(date.getTime()/86400000)+2440587.5;
   const T=(JD-2451545.0)/36525;
   const L0=218.316+13.176396*T*36525;
   const M=134.963+13.064993*T*36525;
-  const F=93.272+13.229350*T*36525;
   return normalize(L0+6.289*Math.sin(degToRad(M)));
 }
-// 上升（簡易：太陽時角近似）
 function calcAscendant(date,lat,lon){
   const t=date.getUTCHours()+date.getUTCMinutes()/60;
   const LST=(100.46+0.985647*t*15+lon)%360;
-  return normalize(LST+90); // 粗略東方地平點
+  return normalize(LST+90);
 }
 
-// —— 繪圖 —— 
+// ---- 十二星座符號 ----
+const zodiacNames=["♈白羊","♉金牛","♊雙子","♋巨蟹","♌獅子","♍處女","♎天秤","♏天蠍","♐射手","♑摩羯","♒水瓶","♓雙魚"];
+function getZodiac(lon){return zodiacNames[Math.floor(lon/30)];}
+
+// ---- 繪圖 ----
 function drawChart(planets,asc){
   const c=document.getElementById("chart"),ctx=c.getContext("2d");
-  const r=c.width/2; ctx.clearRect(0,0,c.width,c.height);
+  const r=c.width/2;ctx.clearRect(0,0,c.width,c.height);
   ctx.translate(r,r);
-  ctx.beginPath(); ctx.arc(0,0,r-10,0,2*Math.PI);
+  ctx.beginPath();ctx.arc(0,0,r-10,0,2*Math.PI);
   ctx.strokeStyle="#FFD700";ctx.lineWidth=2;ctx.stroke();
 
-  for(let i=0;i<12;i++){ // 十二宮
+  // 十二宮線
+  for(let i=0;i<12;i++){
     const a=degToRad(i*30-asc);
     ctx.beginPath();ctx.moveTo(0,0);
     ctx.lineTo((r-10)*Math.cos(a),(r-10)*Math.sin(a));
     ctx.strokeStyle="rgba(255,215,0,0.3)";ctx.stroke();
   }
 
+  // 星座標籤
+  ctx.font="14px Noto Sans TC";ctx.fillStyle="#FFD700";
+  for(let i=0;i<12;i++){
+    const ang=degToRad((i*30+15)-asc);
+    const x=(r-40)*Math.cos(ang),y=(r-40)*Math.sin(ang);
+    ctx.fillText(zodiacNames[i],x-15,y+4);
+  }
+
+  // 四軸標籤 ASC/MC/DC/IC
+  const axes=[{name:"ASC",angle:0},{name:"MC",angle:90},{name:"DC",angle:180},{name:"IC",angle:270}];
+  ctx.fillStyle="#7b68ee";ctx.font="bold 14px Noto Sans TC";
+  axes.forEach(ax=>{
+    const a=degToRad(ax.angle-asc);
+    const x=(r-60)*Math.cos(a),y=(r-60)*Math.sin(a);
+    ctx.fillText(ax.name,x-15,y+4);
+  });
+
+  // 行星
+  ctx.fillStyle="#ffb347";ctx.font="14px Noto Sans TC";
   planets.forEach(p=>{
     const a=degToRad(p.lon-asc);
-    const x=(r-40)*Math.cos(a),y=(r-40)*Math.sin(a);
+    const x=(r-80)*Math.cos(a),y=(r-80)*Math.sin(a);
     ctx.beginPath();ctx.arc(x,y,6,0,2*Math.PI);
-    ctx.fillStyle="#ffb347";ctx.fill();
-    ctx.font="14px Noto Sans TC";
-    ctx.fillText(p.name,x+8,y+4);
+    ctx.fill();ctx.fillText(p.name,x+8,y+4);
   });
   ctx.setTransform(1,0,0,1,0,0);
 }
 
-// —— 主流程 —— 
+// ---- 主流程 ----
 document.getElementById("generate").addEventListener("click",async()=>{
-  const msg=document.getElementById("msg");msg.textContent="正在生成命盤...";
+  const msg=document.getElementById("msg"),desc=document.getElementById("desc");
+  msg.textContent="正在生成命盤...";
+  desc.textContent="";
   try{
     const date=document.getElementById("birthDate").value;
     const time=document.getElementById("birthTime").value;
     const city=document.getElementById("birthPlace").value||"Taipei";
     const dt=new Date(`${date}T${time}:00+08:00`);
 
-    // 臺北預設座標（或簡單查詢）
     let lat=25.033,lng=121.565;
     if(city.toLowerCase()!=="taipei"){
       try{
         const r=await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city)}`);
-        const j=await r.json(); if(j[0]){lat=parseFloat(j[0].lat);lng=parseFloat(j[0].lon);}
+        const j=await r.json();if(j[0]){lat=parseFloat(j[0].lat);lng=parseFloat(j[0].lon);}
       }catch{}
     }
 
     const sunLon=calcSunLon(dt);
     const moonLon=calcMoonLon(dt);
     const asc=calcAscendant(dt,lat,lng);
-    const planets=[{name:"太陽",lon:sunLon},{name:"月亮",lon:moonLon}];
+    const planets=[{name:"☉太陽",lon:sunLon},{name:"☾月亮",lon:moonLon}];
+
     drawChart(planets,asc);
-    msg.textContent=`太陽 ${sunLon.toFixed(1)}° 月亮 ${moonLon.toFixed(1)}° 上升 ${asc.toFixed(1)}°`;
+    const sunZ=getZodiac(sunLon),moonZ=getZodiac(moonLon),ascZ=getZodiac(asc);
+    msg.textContent=`太陽 ${sunLon.toFixed(1)}° (${sunZ})　月亮 ${moonLon.toFixed(1)}° (${moonZ})　上升 ${asc.toFixed(1)}° (${ascZ})`;
+
+    desc.innerHTML=`<b>命盤解讀：</b><br>
+    ☉ 太陽位於 <b>${sunZ}</b>，象徵你的核心與自我意識。<br>
+    ☾ 月亮位於 <b>${moonZ}</b>，代表你的情緒與內在反應。<br>
+    ↑ 上升位於 <b>${ascZ}</b>，呈現你在他人眼中的樣子與生命方向。<br>
+    <i>（本命盤採簡化天文模型，誤差±1°，供個人探索使用）</i>`;
   }catch(e){
-    console.error(e); msg.textContent="發生錯誤，請再試一次！";
+    console.error(e);msg.textContent="發生錯誤，請再試一次！";
   }
 });
 </script>
