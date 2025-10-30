@@ -1067,24 +1067,21 @@ loadApod();
 
 <!-- ✅ IP 紀錄程式：獨立 script，放在主 script 結束後 -->
 <script>
-fetch('https://api.ipify.org?format=json')
-  .then(res => res.json())
-  .then(data => {
-    const ip = data.ip;
-    fetch('https://ipapi.co/json')
-      .then(res => res.json())
-      .then(info => {
-        fetch('https://script.google.com/macros/s/AKfycbwuLHBG_MGZJsyf5u0HXdcxsbMg3h5WBVoCxAmRY_Qn705K_8zxK87qQD5o6P7zy9ev/exec', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            ip: ip,
-            country: info.country_name,
-            userAgent: navigator.userAgent,
-            page: location.pathname,
-            referrer: document.referrer
-          })
-        });
+fetch('https://script.google.com/macros/s/AKfycbwuLHBG_MGZJsyf5u0HXdcxsbMg3h5WBVoCxAmRY_Qn705K_8zxK87qQD5o6P7zy9ev/exec', {
+  method: 'POST',
+  mode: 'no-cors',   // ✅ 這行是關鍵
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    ip: ip,
+    country: info.country_name,
+    userAgent: navigator.userAgent,
+    page: location.pathname,
+    referrer: document.referrer
+  })
+})
+.then(() => console.log('✅ IP log sent (no-cors mode)'))
+.catch(err => console.error('⚠️ IP log failed:', err));
+
       });
   });
 </script>
