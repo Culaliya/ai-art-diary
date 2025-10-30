@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>🌌 Culaliya Mystic Lab | 命盤全展開 v5</title>
+<title>🌌 Culaliya Mystic Lab | 命盤全展開 v5.1</title>
 <style>
 body {
   margin: 0;
@@ -34,160 +34,113 @@ input, button {
   padding: 12px;
   border-radius: 10px;
   border: 1px solid #ffb347;
-  font-size: 1em;
-  background: rgba(255,255,255,0.05);
-  color: #fff;
-  margin-bottom: 10px;
+  margin: 8px 0;
+  font-size: 16px;
 }
 button {
-  cursor: pointer;
-  background: linear-gradient(45deg,#5a2ad8,#8a4af8);
-  border: none;
+  background: linear-gradient(90deg, #8a2be2, #7b68ee);
   color: #fff;
-  font-weight: bold;
-  transition: all 0.3s;
-  box-shadow: 0 0 20px rgba(106,42,216,0.4);
+  cursor: pointer;
+  transition: 0.3s;
 }
 button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 35px rgba(255,215,0,0.7);
+  transform: scale(1.03);
+  background: linear-gradient(90deg, #9b30ff, #8a2be2);
 }
 canvas {
-  margin-top: 30px;
-  background: rgba(255,255,255,0.05);
+  margin-top: 40px;
+  background: radial-gradient(circle at 50% 50%, #0a0720 0%, #000 100%);
   border-radius: 50%;
-  box-shadow: 0 0 30px rgba(255,215,0,0.25);
+  box-shadow: 0 0 20px rgba(255,215,0,0.3);
 }
-.result {
-  margin-top: 30px;
-  text-align: left;
-  background: rgba(255,255,255,0.05);
-  border-radius: 10px;
-  padding: 15px;
-}
-.loader {
-  margin: 20px auto;
-  border: 4px solid rgba(255,255,255,0.1);
-  border-top: 4px solid #ffd700;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  animation: spin 1s linear infinite;
-}
-@keyframes spin {100%{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
-<h1>🌌 Culaliya Mystic Lab 命盤全展開 v5</h1>
-<div class="container">
-  <label>出生日期</label>
-  <input type="date" id="birthDate">
-  <label>出生時間</label>
-  <input type="time" id="birthTime">
-  <label>出生地點（城市）</label>
-  <input type="text" id="birthPlace" placeholder="例如：Taipei">
-  <button id="generateBtn">✨ 生成命盤</button>
-  <div id="loading"></div>
-  <canvas id="chart" width="500" height="500"></canvas>
-  <div class="result" id="result"></div>
-</div>
+  <h1>🌌 Culaliya Mystic Lab | 命盤全展開 v5.1</h1>
+  <div class="container">
+    <label>出生日期</label><br>
+    <input type="date" id="birthDate" value="2000-01-01"><br>
+    <label>出生時間</label><br>
+    <input type="time" id="birthTime" value="13:01"><br>
+    <label>出生地點（城市）</label><br>
+    <input type="text" id="birthPlace" placeholder="Taipei"><br>
+    <button id="generate">✨ 生成命盤</button>
+    <canvas id="chart" width="500" height="500"></canvas>
+  </div>
 
-<script>
-// 🌍 離線星座邏輯
-const zodiac = [
-  ["摩羯座", [12,22,1,19]],
-  ["水瓶座", [1,20,2,18]],
-  ["雙魚座", [2,19,3,20]],
-  ["牡羊座", [3,21,4,19]],
-  ["金牛座", [4,20,5,20]],
-  ["雙子座", [5,21,6,20]],
-  ["巨蟹座", [6,21,7,22]],
-  ["獅子座", [7,23,8,22]],
-  ["處女座", [8,23,9,22]],
-  ["天秤座", [9,23,10,22]],
-  ["天蠍座", [10,23,11,21]],
-  ["射手座", [11,22,12,21]]
-];
+<script type="module">
+import * as AE from "https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.22/+esm";
 
-function getZodiac(month,day){
-  for(let [sign,[sm,sd,em,ed]] of zodiac){
-    if((month===sm && day>=sd)||(month===em && day<=ed)) return sign;
-  }
-  return "未知";
+// 🌏 取得城市經緯度
+async function getCoordinates(city) {
+  const resp = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city)}`);
+  const data = await resp.json();
+  if (data.length === 0) throw new Error("找不到地點");
+  return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
 }
 
-// 🌞 月亮與上升模擬
-function fakeMoon(sign){
-  const list = ["雙魚座","牡羊座","金牛座","雙子座","巨蟹座","獅子座","處女座","天秤座","天蠍座","射手座","摩羯座","水瓶座"];
-  return list[(list.indexOf(sign)+2)%12];
-}
-function fakeRising(sign){
-  const list = ["雙魚座","牡羊座","金牛座","雙子座","巨蟹座","獅子座","處女座","天秤座","天蠍座","射手座","摩羯座","水瓶座"];
-  return list[(list.indexOf(sign)+4)%12];
-}
+// 🎯 將行星資料繪製到命盤上
+function drawChart(planets, ascendant) {
+  const c = document.getElementById("chart");
+  const ctx = c.getContext("2d");
+  const r = c.width / 2;
+  ctx.clearRect(0, 0, c.width, c.height);
 
-// 🎴 畫星盤
-function drawChart(ctx){
-  const cx=250,cy=250,r=200;
-  ctx.clearRect(0,0,500,500);
+  // 外圈
   ctx.beginPath();
-  ctx.arc(cx,cy,r,0,2*Math.PI);
-  ctx.strokeStyle="#ffd700";
-  ctx.lineWidth=2;
+  ctx.arc(r, r, r - 10, 0, Math.PI * 2);
+  ctx.strokeStyle = "#FFD700";
+  ctx.lineWidth = 2;
   ctx.stroke();
-  for(let i=0;i<12;i++){
-    const angle=(i*30)*Math.PI/180;
+
+  // 十二宮分割
+  for (let i = 0; i < 12; i++) {
+    const angle = (i * 30 - ascendant) * Math.PI / 180;
     ctx.beginPath();
-    ctx.moveTo(cx,cy);
-    ctx.lineTo(cx+r*Math.cos(angle),cy+r*Math.sin(angle));
-    ctx.strokeStyle="rgba(255,255,255,0.2)";
+    ctx.moveTo(r, r);
+    ctx.lineTo(r + (r - 10) * Math.cos(angle), r + (r - 10) * Math.sin(angle));
+    ctx.strokeStyle = "rgba(255,215,0,0.3)";
     ctx.stroke();
   }
+
+  // 行星位置點
+  planets.forEach(p => {
+    const angle = (p.lon - ascendant) * Math.PI / 180;
+    const x = r + (r - 40) * Math.cos(angle);
+    const y = r + (r - 40) * Math.sin(angle);
+    ctx.beginPath();
+    ctx.arc(x, y, 6, 0, Math.PI * 2);
+    ctx.fillStyle = "#ffb347";
+    ctx.fill();
+    ctx.fillText(p.name, x + 8, y);
+  });
 }
 
-// 🧿 今日運勢（隨日期生成）
-function getDaily(sign){
-  const seed = new Date().getDate() + sign.length;
-  const mood = ["大吉✨","中吉🌙","平順☀️","小波動🌊","注意⚡"];
-  const msg = [
-    "今天適合專注於自己，讓心靈沉澱。",
-    "有新的靈感與創意閃現，勇敢展現自我。",
-    "注意情緒起伏，避免與人爭論。",
-    "貴人出現於意料之外的地方。",
-    "行動力提升，是突破瓶頸的好時機。"
-  ];
-  const index = seed % mood.length;
-  return `${mood[index]} ${msg[index]}`;
-}
+// 🪄 主函式
+document.getElementById("generate").onclick = async () => {
+  const date = document.getElementById("birthDate").value;
+  const time = document.getElementById("birthTime").value;
+  const city = document.getElementById("birthPlace").value || "Taipei";
+  const birthDateTime = new Date(`${date}T${time}:00+08:00`);
+  const { lat, lon } = await getCoordinates(city);
 
-// ✨ 主程式
-document.getElementById("generateBtn").addEventListener("click", async ()=>{
-  const date=document.getElementById("birthDate").value;
-  const time=document.getElementById("birthTime").value;
-  const place=document.getElementById("birthPlace").value||"未知地點";
-  const loading=document.getElementById("loading");
-  const result=document.getElementById("result");
-  const ctx=document.getElementById("chart").getContext("2d");
-  if(!date){alert("請輸入出生日期！");return;}
+  const observer = new AE.Observer(lat, lon, 0);
+  const bodies = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn"];
+  const planets = [];
 
-  loading.innerHTML='<div class="loader"></div><p>⏳ 正在生成命盤...</p>';
-  result.innerHTML='';
-  drawChart(ctx);
+  for (const b of bodies) {
+    const eq = AE.Equator(b, birthDateTime, observer, true, true);
+    const ecl = AE.Ecliptic(eq);
+    planets.push({ name: b, lon: ecl.elon });
+  }
 
-  const [y,m,d]=date.split("-").map(Number);
-  const sign = getZodiac(m,d);
-  const moon = fakeMoon(sign);
-  const rising = fakeRising(sign);
+  // 計算上升點 (Ascendant)
+  const lst = AE.SiderealTime(birthDateTime, lon);
+  const asc = AE.Horizon(lst, lat, 0).azimuth; // 近似上升角度
 
-  loading.innerHTML='';
-  result.innerHTML = `
-    <h3>☀️ 太陽星座</h3><p>${sign}</p>
-    <h3>🌙 月亮星座</h3><p>${moon}</p>
-    <h3>⬆️ 上升星座</h3><p>${rising}</p>
-    <h3>🔮 今日運勢</h3><p>${getDaily(sign)}</p>
-    <h3>📍 出生地點</h3><p>${place}</p>
-  `;
-});
+  drawChart(planets, asc);
+  console.log("上升角度", asc, "行星", planets);
+};
 </script>
 </body>
 </html>
