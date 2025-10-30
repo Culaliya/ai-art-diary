@@ -1063,6 +1063,33 @@ async function loadApod() {
   }
 }
 loadApod();
+
+<script>
+fetch('https://api.ipify.org?format=json')
+  .then(res => res.json())
+  .then(data => {
+    const ip = data.ip;
+
+    // 取得地區資訊（可略）
+    fetch('https://ipapi.co/json')
+      .then(res => res.json())
+      .then(info => {
+        fetch('https://script.google.com/macros/s/AKfycbycTbW9GrLhJA60G0dvOCHH-HRqzhpPMJgQrVyDbOXlFFRSCkvD-FwEu3XUlHTTd7ng/exec', { // ← 改成你的 Apps Script 網址
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ip: ip,
+            country: info.country_name,
+            userAgent: navigator.userAgent
+            page: location.pathname,
+            referrer: document.referrer
+
+          })
+        });
+      });
+  });
+</script>
+
 </script>
 </body>
 </html>
