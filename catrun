@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>貓咪追逐迷宮</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Comic Sans MS', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: white;
+            overflow: hidden;
+        }
+        
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+            background: rgba(0,0,0,0.3);
+            padding: 15px 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .score-info {
+            display: flex;
+            gap: 30px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .level-info {
+            font-size: 24px;
+            text-shadow: 0 0 10px #fff;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,107,107,0.4);
+        }
+        
+        .game-container {
+            position: relative;
+            background: rgba(0,0,0,0.4);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        .maze {
+            display: grid;
+            gap: 2px;
+            background: #333;
+            border: 3px solid #fff;
+            border-radius: 10px;
+            padding: 10px;
+            position: relative;
+        }
+        
+        .cell {
+            width: 25px;
+            height: 25px;
+            position: relative;
+            transition: all 0.2s;
+        }
+        
+        .wall {
+            background: linear-gradient(45deg, #2c3e50, #34495e);
+            border: 1px solid #4a6741;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+        }
+        
+        .path {
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border: 1px solid #dee2e6;
+        }
+        
+        .player {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+            z-index: 10;
+            text-shadow: 0 0 10px #000;
+            animation: playerBounce 0.6s ease-in-out infinite alternate;
+        }
+        
+        .cat {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 22px;
+            z-index: 9;
+            text-shadow: 0 0 10px #ff6b6b;
+            animation: catHunt 1s ease-in-out infinite alternate;
+        }
+        
+        .exit {
+            background: linear-gradient(45deg, #00b894, #00a085) !important;
+            border: 2px solid #00b894 !important;
+            box-shadow: 0 0 15px rgba(0, 184, 148, 0.6);
+            animation: exitGlow 2s ease-in-out infinite alternate;
+        }
+        
+        .exit::after {
+            content: '🏁';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 16px;
+        }
+        
+        @keyframes playerBounce {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            100% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+        
+        @keyframes catHunt {
+            0% { transform: translate(-50%, -50%) rotate(-5deg); }
+            100% { transform: translate(-50%, -50%) rotate(5deg); }
+        }
+        
+        @keyframes exitGlow {
+            0% { box-shadow: 0 0 15px rgba(0, 184, 148, 0.6); }
+            100% { box-shadow: 0 0 25px rgba(0, 184, 148, 1); }
+        }
+        
+        .instructions {
+            margin-top: 20px;
+            text-align: center;
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 10px;
+            max-width: 600px;
+        }
+        
+        .mobile-controls {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            border-radius: 20px;
+            padding: 20px;
+            z-index: 100;
+        }
+        
+        .control-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 60px);
+            grid-template-rows: repeat(3, 60px);
+            gap: 10px;
+            justify-items: center;
+            align-items: center;
+        }
+        
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        
+        .control-btn:active {
+            transform: scale(0.9);
+            background: linear-gradient(45deg, #ee5a24, #ff6b6b);
+        }
+        
+        .control-btn.center {
+            background: linear-gradient(45deg, #ffa726, #fb8c00);
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-controls {
+                display: block;
+            }
+            
+            .instructions {
+                margin-bottom: 140px;
+            }
+        }
+        
+        .game-over {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: none;
+        }
+        
+        .victory {
+            background: linear-gradient(45deg, #27ae60, #2ecc71) !important;
+        }
+        
+        .cat-trail {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 107, 107, 0.4);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: trailFade 1s ease-out forwards;
+        }
+        
+        @keyframes trailFade {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-header">
+        <div class="score-info">
+            <div>關卡: <span id="level">1</span></div>
+            <div>分數: <span id="score">0</span></div>
+            <div>時間: <span id="time">00:00</span></div>
+        </div>
+        <div class="level-info">🐱 貓咪大追逐</div>
+        <div class="controls">
+            <button class="btn" onclick="startNewGame()">新遊戲</button>
+            <button class="btn" onclick="pauseGame()">暫停</button>
+            <button class="btn" onclick="showHelp()">說明</button>
+        </div>
+    </div>
+    
+    <div class="game-container">
+        <div id="maze" class="maze"></div>
+    </div>
+    
+    <div class="instructions">
+        <p>🎯 <strong>遊戲目標:</strong> 到達綠色出口！避開胖橘貓的追捕！</p>
+        <p>⌨️ <strong>電腦操作:</strong> 使用方向鍵 ↑↓←→ 移動</p>
+        <p>📱 <strong>手機操作:</strong> 使用下方虛擬搖桿</p>
+        <p>🙀 <strong>注意:</strong> 貓咪會越來越聰明，小心被抓到！</p>
+    </div>
+    
+    <!-- 手機觸控控制 -->
+    <div class="mobile-controls">
+        <div class="control-pad">
+            <div></div>
+            <button class="control-btn" ontouchstart="handleTouch('up')" ontouchend="handleTouchEnd()">↑</button>
+            <div></div>
+            <button class="control-btn" ontouchstart="handleTouch('left')" ontouchend="handleTouchEnd()">←</button>
+            <button class="control-btn center" ontouchstart="handleTouch('pause')" ontouchend="handleTouchEnd()">⏸</button>
+            <button class="control-btn" ontouchstart="handleTouch('right')" ontouchend="handleTouchEnd()">→</button>
+            <div></div>
+            <button class="control-btn" ontouchstart="handleTouch('down')" ontouchend="handleTouchEnd()">↓</button>
+            <div></div>
+        </div>
+    </div>
+    
+    <div id="gameOverModal" class="game-over">
+        <h2 id="gameOverTitle">遊戲結束！</h2>
+        <p id="gameOverMessage">你被胖橘貓抓到了！</p>
+        <p>最終分數: <span id="finalScore">0</span></p>
+        <button class="btn" onclick="startNewGame(); hideGameOver();">再試一次</button>
+        <button class="btn" onclick="nextLevel(); hideGameOver();">下一關</button>
+    </div>
+
+    <script>
+        // 遊戲狀態
+        let gameState = {
+            level: 1,
+            score: 0,
+            gameRunning: false,
+            gamePaused: false,
+            startTime: Date.now(),
+            playerPos: {x: 1, y: 1},
+            catPos: {x: 0, y: 0},
+            exitPos: {x: 0, y: 0},
+            maze: [],
+            mazeSize: 15
+        };
+        
+        let gameInterval;
+        let catMoveInterval;
+        let timerInterval;
+        
+        // 音效系統
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const sounds = {};
+        
+        // 創建音效
+        function createBeep(frequency, duration, type = 'sine') {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = frequency;
+            oscillator.type = type;
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+        
+        // 音效函數
+        function playSound(type) {
+            try {
+                switch(type) {
+                    case 'move':
+                        createBeep(400, 0.1, 'square');
+                        break;
+                    case 'win':
+                        createBeep(523, 0.2);
+                        setTimeout(() => createBeep(659, 0.2), 200);
+                        setTimeout(() => createBeep(784, 0.3), 400);
+                        break;
+                    case 'lose':
+                        createBeep(200, 0.3, 'sawtooth');
+                        setTimeout(() => createBeep(150, 0.3, 'sawtooth'), 300);
+                        break;
+                    case 'cat':
+                        createBeep(300, 0.15, 'triangle');
+                        break;
+                }
+            } catch(e) {
+                console.log('Audio not supported');
+            }
+        }
+        
+        // 貓咪的AI路徑
+        let catPath = [];
+        let catMoveIndex = 0;
+        
+        // 初始化遊戲
+        function initGame() {
+            gameState.mazeSize = Math.min(15 + gameState.level * 2, 25);
+            generateMaze();
+            placePlayers();
+            renderMaze();
+            startGameLoop();
+            updateUI();
+        }
+        
+        // 生成迷宮
+        function generateMaze() {
+            const size = gameState.mazeSize;
+            gameState.maze = Array(size).fill().map(() => Array(size).fill(1));
+            
+            // 使用深度優先搜尋生成迷宮
+            function carvePath(x, y) {
+                gameState.maze[y][x] = 0;
+                
+                const directions = [[0, 2], [2, 0], [0, -2], [-2, 0]];
+                shuffleArray(directions);
+                
+                for (let [dx, dy] of directions) {
+                    const nx = x + dx;
+                    const ny = y + dy;
+                    
+                    if (nx > 0 && nx < size - 1 && ny > 0 && ny < size - 1 && gameState.maze[ny][nx] === 1) {
+                        gameState.maze[y + dy/2][x + dx/2] = 0;
+                        carvePath(nx, ny);
+                    }
+                }
+            }
+            
+            carvePath(1, 1);
+            
+            // 隨機打開一些額外的路徑，增加複雜度
+            for (let i = 0; i < gameState.level * 3; i++) {
+                const x = Math.floor(Math.random() * (size - 2)) + 1;
+                const y = Math.floor(Math.random() * (size - 2)) + 1;
+                gameState.maze[y][x] = 0;
+            }
+        }
+        
+        // 洗牌算法
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+        
+        // 放置玩家和貓咪
+        function placePlayers() {
+            const size = gameState.mazeSize;
+            
+            // 玩家從左上角開始
+            gameState.playerPos = {x: 1, y: 1};
+            
+            // 出口在右下角附近
+            for (let i = size - 2; i > 0; i--) {
+                for (let j = size - 2; j > 0; j--) {
+                    if (gameState.maze[i][j] === 0) {
+                        gameState.exitPos = {x: j, y: i};
+                        break;
+                    }
+                }
+                if (gameState.exitPos.x > 0) break;
+            }
+            
+            // 貓咪從右上角或左下角開始
+            const catStartPositions = [];
+            for (let y = 1; y < size - 1; y++) {
+                for (let x = 1; x < size - 1; x++) {
+                    if (gameState.maze[y][x] === 0) {
+                        const dist = Math.abs(x - gameState.playerPos.x) + Math.abs(y - gameState.playerPos.y);
+                        if (dist > size / 2) {
+                            catStartPositions.push({x, y});
+                        }
+                    }
+                }
+            }
+            
+            if (catStartPositions.length > 0) {
+                const randomStart = catStartPositions[Math.floor(Math.random() * catStartPositions.length)];
+                gameState.catPos = randomStart;
+            } else {
+                gameState.catPos = {x: size - 2, y: size - 2};
+            }
+        }
+        
+        // 渲染迷宮
+        function renderMaze() {
+            const mazeEl = document.getElementById('maze');
+            const size = gameState.mazeSize;
+            
+            mazeEl.style.gridTemplateColumns = `repeat(${size}, 25px)`;
+            mazeEl.innerHTML = '';
+            
+            for (let y = 0; y < size; y++) {
+                for (let x = 0; x < size; x++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.dataset.x = x;
+                    cell.dataset.y = y;
+                    
+                    if (gameState.maze[y][x] === 1) {
+                        cell.classList.add('wall');
+                    } else {
+                        cell.classList.add('path');
+                    }
+                    
+                    // 添加出口標記
+                    if (x === gameState.exitPos.x && y === gameState.exitPos.y) {
+                        cell.classList.add('exit');
+                    }
+                    
+                    // 添加玩家
+                    if (x === gameState.playerPos.x && y === gameState.playerPos.y) {
+                        const player = document.createElement('div');
+                        player.className = 'player';
+                        player.textContent = '🏃‍♂️';
+                        cell.appendChild(player);
+                    }
+                    
+                    // 添加貓咪
+                    if (x === gameState.catPos.x && y === gameState.catPos.y) {
+                        const cat = document.createElement('div');
+                        cat.className = 'cat';
+                        cat.textContent = '🙀';
+                        cell.appendChild(cat);
+                    }
+                    
+                    mazeEl.appendChild(cell);
+                }
+            }
+        }
+        
+        // A*尋路算法
+        function findPath(start, end) {
+            const openSet = [{...start, f: 0, g: 0, h: 0, parent: null}];
+            const closedSet = [];
+            
+            while (openSet.length > 0) {
+                openSet.sort((a, b) => a.f - b.f);
+                const current = openSet.shift();
+                closedSet.push(current);
+                
+                if (current.x === end.x && current.y === end.y) {
+                    const path = [];
+                    let node = current;
+                    while (node) {
+                        path.unshift({x: node.x, y: node.y});
+                        node = node.parent;
+                    }
+                    return path;
+                }
+                
+                const neighbors = [
+                    {x: current.x + 1, y: current.y},
+                    {x: current.x - 1, y: current.y},
+                    {x: current.x, y: current.y + 1},
+                    {x: current.x, y: current.y - 1}
+                ];
+                
+                for (let neighbor of neighbors) {
+                    if (neighbor.x < 0 || neighbor.x >= gameState.mazeSize || 
+                        neighbor.y < 0 || neighbor.y >= gameState.mazeSize ||
+                        gameState.maze[neighbor.y][neighbor.x] === 1) {
+                        continue;
+                    }
+                    
+                    if (closedSet.find(node => node.x === neighbor.x && node.y === neighbor.y)) {
+                        continue;
+                    }
+                    
+                    const g = current.g + 1;
+                    const h = Math.abs(neighbor.x - end.x) + Math.abs(neighbor.y - end.y);
+                    const f = g + h;
+                    
+                    const existing = openSet.find(node => node.x === neighbor.x && node.y === neighbor.y);
+                    if (!existing) {
+                        openSet.push({...neighbor, f, g, h, parent: current});
+                    } else if (g < existing.g) {
+                        existing.g = g;
+                        existing.f = f;
+                        existing.parent = current;
+                    }
+                }
+            }
+            
+            return [];
+        }
+        
+        // 移動貓咪
+        function moveCat() {
+            if (!gameState.gameRunning || gameState.gamePaused) return;
+            
+            // 每幾步重新計算路徑，初期更笨一點
+            if (catMoveIndex >= catPath.length || catMoveIndex % Math.max(10 - gameState.level, 3) === 0) {
+                catPath = findPath(gameState.catPos, gameState.playerPos);
+                catMoveIndex = 1; // 跳過當前位置
+            }
+            
+            if (catPath.length > catMoveIndex) {
+                // 添加貓咪軌跡效果
+                createCatTrail(gameState.catPos.x, gameState.catPos.y);
+                
+                gameState.catPos = catPath[catMoveIndex];
+                catMoveIndex++;
+                
+                playSound('cat');
+                renderMaze();
+                checkCollision();
+            }
+        }
+        
+        // 創建貓咪軌跡
+        function createCatTrail(x, y) {
+            const mazeEl = document.getElementById('maze');
+            const trail = document.createElement('div');
+            trail.className = 'cat-trail';
+            trail.style.position = 'absolute';
+            trail.style.left = `${x * 27 + 15}px`;
+            trail.style.top = `${y * 27 + 15}px`;
+            mazeEl.appendChild(trail);
+            
+            setTimeout(() => {
+                if (trail.parentNode) {
+                    trail.parentNode.removeChild(trail);
+                }
+            }, 1000);
+        }
+        
+        // 移動玩家
+        function movePlayer(dx, dy) {
+            if (!gameState.gameRunning || gameState.gamePaused) return;
+            
+            const newX = gameState.playerPos.x + dx;
+            const newY = gameState.playerPos.y + dy;
+            
+            if (newX >= 0 && newX < gameState.mazeSize && 
+                newY >= 0 && newY < gameState.mazeSize && 
+                gameState.maze[newY][newX] === 0) {
+                
+                gameState.playerPos.x = newX;
+                gameState.playerPos.y = newY;
+                
+                playSound('move');
+                renderMaze();
+                checkWin();
+                checkCollision();
+            }
+        }
+        
+        // 檢查碰撞
+        function checkCollision() {
+            if (gameState.playerPos.x === gameState.catPos.x && 
+                gameState.playerPos.y === gameState.catPos.y) {
+                gameOver(false);
+            }
+        }
+        
+        // 檢查勝利
+        function checkWin() {
+            if (gameState.playerPos.x === gameState.exitPos.x && 
+                gameState.playerPos.y === gameState.exitPos.y) {
+                gameOver(true);
+            }
+        }
+        
+        // 遊戲結束
+        function gameOver(isWin) {
+            gameState.gameRunning = false;
+            clearInterval(catMoveInterval);
+            clearInterval(timerInterval);
+            
+            const modal = document.getElementById('gameOverModal');
+            const title = document.getElementById('gameOverTitle');
+            const message = document.getElementById('gameOverMessage');
+            const finalScore = document.getElementById('finalScore');
+            
+            if (isWin) {
+                modal.classList.add('victory');
+                title.textContent = '🎉 恭喜過關！';
+                message.textContent = '你成功逃脫了胖橘貓的追捕！';
+                gameState.score += gameState.level * 100;
+                gameState.level++;
+                playSound('win');
+            } else {
+                modal.classList.remove('victory');
+                title.textContent = '😿 被抓到了！';
+                message.textContent = '胖橘貓抓到你了！下次要更小心喔！';
+                playSound('lose');
+            }
+            
+            finalScore.textContent = gameState.score;
+            modal.style.display = 'block';
+        }
+        
+        // 隱藏遊戲結束畫面
+        function hideGameOver() {
+            document.getElementById('gameOverModal').style.display = 'none';
+        }
+        
+        // 下一關
+        function nextLevel() {
+            if (gameState.level > 1) {
+                initGame();
+            }
+        }
+        
+        // 開始新遊戲
+        function startNewGame() {
+            gameState.level = 1;
+            gameState.score = 0;
+            gameState.startTime = Date.now();
+            initGame();
+        }
+        
+        // 暫停遊戲
+        function pauseGame() {
+            gameState.gamePaused = !gameState.gamePaused;
+            const btn = event.target;
+            btn.textContent = gameState.gamePaused ? '繼續' : '暫停';
+            
+            if (!gameState.gamePaused && gameState.gameRunning) {
+                startGameLoop();
+            }
+        }
+        
+        // 顯示說明
+        function showHelp() {
+            alert('🎯 遊戲目標：到達綠色出口，避開貓咪追捕！\n\n⌨️ 操作：使用方向鍵移動\n\n🐱 貓咪會越來越聰明，小心！\n\n🏆 每關成功都會增加難度和分數！');
+        }
+        
+        // 開始遊戲循環
+        function startGameLoop() {
+            gameState.gameRunning = true;
+            
+            // 貓咪移動間隔隨等級調整，初期更慢
+            const catSpeed = Math.max(600 - gameState.level * 30, 200);
+            catMoveInterval = setInterval(moveCat, catSpeed);
+            
+            // 計時器
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+        
+        // 更新計時器
+        function updateTimer() {
+            if (!gameState.gameRunning || gameState.gamePaused) return;
+            
+            const elapsed = Math.floor((Date.now() - gameState.startTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            document.getElementById('time').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        // 更新UI
+        function updateUI() {
+            document.getElementById('level').textContent = gameState.level;
+            document.getElementById('score').textContent = gameState.score;
+        }
+        
+        // 手機觸控處理
+        function handleTouch(direction) {
+            switch(direction) {
+                case 'up':
+                    movePlayer(0, -1);
+                    break;
+                case 'down':
+                    movePlayer(0, 1);
+                    break;
+                case 'left':
+                    movePlayer(-1, 0);
+                    break;
+                case 'right':
+                    movePlayer(1, 0);
+                    break;
+                case 'pause':
+                    pauseGame();
+                    break;
+            }
+        }
+        
+        function handleTouchEnd() {
+            // 觸控結束處理
+        }
+        
+        // 鍵盤控制
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowUp':
+                    e.preventDefault();
+                    movePlayer(0, -1);
+                    break;
+                case 'ArrowDown':
+                    e.preventDefault();
+                    movePlayer(0, 1);
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    movePlayer(-1, 0);
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    movePlayer(1, 0);
+                    break;
+                case ' ':
+                    e.preventDefault();
+                    pauseGame();
+                    break;
+            }
+        });
+        
+        // 初始化遊戲
+        startNewGame();
+    </script>
+</body>
+</html>
