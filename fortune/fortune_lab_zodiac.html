@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>🌌 Culaliya Mystic Lab | 命盤全展開 v5.3</title>
+<title>🌌 Culaliya Mystic Lab | 命盤全展開 v5.4</title>
 <style>
 body {
   margin: 0;
@@ -32,14 +32,23 @@ button {
 }
 button:hover {transform:scale(1.03);
   background:linear-gradient(90deg,#9b30ff,#8a2be2);}
-canvas {margin-top:40px;background:#0a0720;border-radius:50%;
-  box-shadow:0 0 20px rgba(255,215,0,0.3);}
+canvas {
+  margin-top:40px;background:#0a0720;border-radius:50%;
+  box-shadow:0 0 20px rgba(255,215,0,0.3);cursor:pointer;
+}
+.tooltip {
+  position:absolute;display:none;padding:10px 14px;
+  background:rgba(40,20,70,0.9);border:1px solid #ffb347;
+  border-radius:8px;color:#fff;font-size:14px;pointer-events:none;
+  text-align:left;line-height:1.4;max-width:220px;
+  box-shadow:0 0 10px rgba(255,215,0,0.3);
+}
 .msg {margin-top:10px;color:#ffb347;}
 .desc {margin-top:20px;line-height:1.6;color:#fff;font-size:15px;}
 </style>
 </head>
 <body>
-<h1>🌌 Culaliya Mystic Lab | 命盤全展開 v5.3</h1>
+<h1>🌌 Culaliya Mystic Lab | 命盤全展開 v5.4</h1>
 <div class="container">
   <label>出生日期</label><br>
   <input type="date" id="birthDate" value="2000-01-01"><br>
@@ -49,7 +58,10 @@ canvas {margin-top:40px;background:#0a0720;border-radius:50%;
   <input type="text" id="birthPlace" placeholder="Taipei"><br>
   <button id="generate">✨ 生成命盤</button>
   <div id="msg" class="msg"></div>
-  <canvas id="chart" width="500" height="500"></canvas>
+  <div style="position:relative;display:inline-block;">
+    <canvas id="chart" width="500" height="500"></canvas>
+    <div id="tooltip" class="tooltip"></div>
+  </div>
   <div id="desc" class="desc"></div>
 </div>
 
@@ -78,9 +90,15 @@ function calcAscendant(date,lat,lon){
   return normalize(LST+90);
 }
 
-// ---- 十二星座符號 ----
 const zodiacNames=["♈白羊","♉金牛","♊雙子","♋巨蟹","♌獅子","♍處女","♎天秤","♏天蠍","♐射手","♑摩羯","♒水瓶","♓雙魚"];
 function getZodiac(lon){return zodiacNames[Math.floor(lon/30)];}
+
+// ---- 行星說明庫 ----
+const planetInfo={
+  "☉太陽":"代表你的自我意識、目標與意志。",
+  "☾月亮":"象徵情緒、反應與潛意識。",
+  "↑上升":"展現你在人前的樣貌與行動風格。"
+};
 
 // ---- 繪圖 ----
 function drawChart(planets,asc){
@@ -90,7 +108,6 @@ function drawChart(planets,asc){
   ctx.beginPath();ctx.arc(0,0,r-10,0,2*Math.PI);
   ctx.strokeStyle="#FFD700";ctx.lineWidth=2;ctx.stroke();
 
-  // 十二宮線
   for(let i=0;i<12;i++){
     const a=degToRad(i*30-asc);
     ctx.beginPath();ctx.moveTo(0,0);
@@ -98,7 +115,6 @@ function drawChart(planets,asc){
     ctx.strokeStyle="rgba(255,215,0,0.3)";ctx.stroke();
   }
 
-  // 星座標籤
   ctx.font="14px Noto Sans TC";ctx.fillStyle="#FFD700";
   for(let i=0;i<12;i++){
     const ang=degToRad((i*30+15)-asc);
@@ -106,7 +122,6 @@ function drawChart(planets,asc){
     ctx.fillText(zodiacNames[i],x-15,y+4);
   }
 
-  // 四軸標籤 ASC/MC/DC/IC
   const axes=[{name:"ASC",angle:0},{name:"MC",angle:90},{name:"DC",angle:180},{name:"IC",angle:270}];
   ctx.fillStyle="#7b68ee";ctx.font="bold 14px Noto Sans TC";
   axes.forEach(ax=>{
@@ -115,28 +130,40 @@ function drawChart(planets,asc){
     ctx.fillText(ax.name,x-15,y+4);
   });
 
-  // 行星
   ctx.fillStyle="#ffb347";ctx.font="14px Noto Sans TC";
   planets.forEach(p=>{
     const a=degToRad(p.lon-asc);
     const x=(r-80)*Math.cos(a),y=(r-80)*Math.sin(a);
     ctx.beginPath();ctx.arc(x,y,6,0,2*Math.PI);
     ctx.fill();ctx.fillText(p.name,x+8,y+4);
+    p._x=x+r;p._y=y+r;p._r=8; // 儲存座標給 hover
   });
   ctx.setTransform(1,0,0,1,0,0);
 }
 
+// ---- Tooltip互動 ----
+const tooltip=document.getElementById("tooltip");
+function showTooltip(p,x,y){
+  tooltip.style.display="block";
+  tooltip.style.left=(x+20)+"px";
+  tooltip.style.top=(y-10)+"px";
+  tooltip.innerHTML=`
+  <b>${p.name}</b><br>
+  度數：${p.lon.toFixed(1)}° (${getZodiac(p.lon)})<br>
+  ${planetInfo[p.name]||"這顆星仍待補充解說。"}
+  `;
+}
+function hideTooltip(){tooltip.style.display="none";}
+
 // ---- 主流程 ----
 document.getElementById("generate").addEventListener("click",async()=>{
   const msg=document.getElementById("msg"),desc=document.getElementById("desc");
-  msg.textContent="正在生成命盤...";
-  desc.textContent="";
+  msg.textContent="正在生成命盤...";desc.textContent="";
   try{
     const date=document.getElementById("birthDate").value;
     const time=document.getElementById("birthTime").value;
     const city=document.getElementById("birthPlace").value||"Taipei";
     const dt=new Date(`${date}T${time}:00+08:00`);
-
     let lat=25.033,lng=121.565;
     if(city.toLowerCase()!=="taipei"){
       try{
@@ -148,17 +175,26 @@ document.getElementById("generate").addEventListener("click",async()=>{
     const sunLon=calcSunLon(dt);
     const moonLon=calcMoonLon(dt);
     const asc=calcAscendant(dt,lat,lng);
-    const planets=[{name:"☉太陽",lon:sunLon},{name:"☾月亮",lon:moonLon}];
-
+    const planets=[{name:"☉太陽",lon:sunLon},{name:"☾月亮",lon:moonLon},{name:"↑上升",lon:asc}];
     drawChart(planets,asc);
+
+    const c=document.getElementById("chart");
+    c.onmousemove=e=>{
+      const rect=c.getBoundingClientRect();
+      const x=e.clientX-rect.left,y=e.clientY-rect.top;
+      const found=planets.find(p=>Math.hypot(x-p._x,y-p._y)<p._r+5);
+      if(found){showTooltip(found,e.pageX,e.pageY);}
+      else hideTooltip();
+    };
+    c.onmouseleave=hideTooltip;
+
     const sunZ=getZodiac(sunLon),moonZ=getZodiac(moonLon),ascZ=getZodiac(asc);
     msg.textContent=`太陽 ${sunLon.toFixed(1)}° (${sunZ})　月亮 ${moonLon.toFixed(1)}° (${moonZ})　上升 ${asc.toFixed(1)}° (${ascZ})`;
-
     desc.innerHTML=`<b>命盤解讀：</b><br>
     ☉ 太陽位於 <b>${sunZ}</b>，象徵你的核心與自我意識。<br>
     ☾ 月亮位於 <b>${moonZ}</b>，代表你的情緒與內在反應。<br>
     ↑ 上升位於 <b>${ascZ}</b>，呈現你在他人眼中的樣子與生命方向。<br>
-    <i>（本命盤採簡化天文模型，誤差±1°，供個人探索使用）</i>`;
+    <i>（v5.4：滑鼠懸停行星可查看詳細說明）</i>`;
   }catch(e){
     console.error(e);msg.textContent="發生錯誤，請再試一次！";
   }
