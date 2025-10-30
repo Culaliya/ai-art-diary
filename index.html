@@ -1090,6 +1090,74 @@ fetch('https://api.ipify.org?format=json')
         .catch(err => console.error('⚠️ IP log failed:', err));
       });
   });
+
+  <!-- 🌌 全球訪客星圖 -->
+<canvas id="visitorMap" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;"></canvas>
+
+<script>
+// 🌍 星圖設定
+const canvasMap = document.getElementById('visitorMap');
+const ctxMap = canvasMap.getContext('2d');
+canvasMap.width = window.innerWidth;
+canvasMap.height = window.innerHeight;
+
+function drawStar(x, y, color="#0ff") {
+  ctxMap.beginPath();
+  ctxMap.arc(x, y, Math.random()*2+1, 0, Math.PI*2);
+  ctxMap.fillStyle = color;
+  ctxMap.fill();
+}
+
+// 🌎 簡易國家座標表（可再擴充）
+const countryCoords = {
+  "Taiwan": [121, 23],
+  "Japan": [138, 36],
+  "South Korea": [128, 36],
+  "Singapore": [103, 1.3],
+  "Hong Kong": [114, 22],
+  "Thailand": [100, 15],
+  "Malaysia": [102, 4],
+  "United States": [-100, 40],
+  "Canada": [-106, 56],
+  "United Kingdom": [-2, 54],
+  "France": [2, 46],
+  "Germany": [10, 51],
+  "Netherlands": [5, 52],
+  "Italy": [12, 42],
+  "Australia": [133, -25],
+  "New Zealand": [174, -41]
+};
+
+
+// 🌠 將經緯度轉為畫布座標
+function project(lon, lat) {
+  const x = ((lon + 180) / 360) * canvasMap.width;
+  const y = ((90 - lat) / 180) * canvasMap.height;
+  return [x, y];
+}
+
+// ✨ 從 Google Apps Script 取得資料
+fetch('https://script.google.com/macros/s/【改成你的WebApp網址】/exec')
+  .then(res => res.json())
+  .then(data => {
+    ctxMap.clearRect(0, 0, canvasMap.width, canvasMap.height);
+    data.forEach(v => {
+      const coords = countryCoords[v.country];
+      if (coords) {
+        const [x, y] = project(coords[0], coords[1]);
+        drawStar(x, y, '#00ffff');
+      }
+    });
+    console.log('🌟 Visitor stars rendered:', data.length);
+  })
+  .catch(err => console.error('⚠️ Failed to load visitor data:', err));
+
+window.addEventListener('resize', () => {
+  canvasMap.width = window.innerWidth;
+  canvasMap.height = window.innerHeight;
+});
+</script>
+
 </script>
 </body>
 </html>
