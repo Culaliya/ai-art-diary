@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1.0" />
-<title>🌌 Culaliya Mystic Lab | 命盤全展開 v3.6</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>🌌 Culaliya Mystic Lab | 命盤全展開 v5</title>
 <style>
 body {
   margin: 0;
@@ -77,9 +77,8 @@ canvas {
 @keyframes spin {100%{transform:rotate(360deg)}}
 </style>
 </head>
-
 <body>
-<h1>🌌 Culaliya Mystic Lab 命盤全展開 v3.6</h1>
+<h1>🌌 Culaliya Mystic Lab 命盤全展開 v5</h1>
 <div class="container">
   <label>出生日期</label>
   <input type="date" id="birthDate">
@@ -87,57 +86,48 @@ canvas {
   <input type="time" id="birthTime">
   <label>出生地點（城市）</label>
   <input type="text" id="birthPlace" placeholder="例如：Taipei">
-  <button id="generateBtn">✨ 生成完整命盤</button>
+  <button id="generateBtn">✨ 生成命盤</button>
   <div id="loading"></div>
   <canvas id="chart" width="500" height="500"></canvas>
   <div class="result" id="result"></div>
 </div>
 
 <script>
-// Worker proxy URL
-const PROXY = "https://floral-term-b81d.culaliya.workers.dev/";
+// 🌍 離線星座邏輯
+const zodiac = [
+  ["摩羯座", [12,22,1,19]],
+  ["水瓶座", [1,20,2,18]],
+  ["雙魚座", [2,19,3,20]],
+  ["牡羊座", [3,21,4,19]],
+  ["金牛座", [4,20,5,20]],
+  ["雙子座", [5,21,6,20]],
+  ["巨蟹座", [6,21,7,22]],
+  ["獅子座", [7,23,8,22]],
+  ["處女座", [8,23,9,22]],
+  ["天秤座", [9,23,10,22]],
+  ["天蠍座", [10,23,11,21]],
+  ["射手座", [11,22,12,21]]
+];
 
-// 取得經緯度
-async function getCoords(place){
-  const res = await fetch(`https://nominatim.openstreetmap.org/search?city=${place}&format=json`);
-  const d = await res.json();
-  if(!d.length) throw new Error("找不到地點");
-  return { lat:+d[0].lat, lon:+d[0].lon };
-}
-
-// 通用呼叫函式
-async function callProxy(body){
-  const res = await fetch(PROXY,{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify(body)
-  });
-  const raw = await res.text();
-  let data;
-  try { data = JSON.parse(raw); }
-  catch {
-    throw new Error("Proxy 返回非 JSON，可能 Cloudflare 連不上上游。\n" + raw.slice(0,150));
+function getZodiac(month,day){
+  for(let [sign,[sm,sd,em,ed]] of zodiac){
+    if((month===sm && day>=sd)||(month===em && day<=ed)) return sign;
   }
-  if(!data.ok){
-    const hint = data.payload?.text?.slice(0,120) || data.payload || "";
-    throw new Error(`上游錯誤 ${data.status}｜${hint}`);
-  }
-  return data.payload;
+  return "未知";
 }
 
-// 呼叫 AstrologyAPI
-async function fetchPlanets(y,m,d,h,min,lat,lon){
-  return callProxy({ endpoint:"planets", day:d, month:m, year:y, hour:h, min, lat, lon, tzone:8 });
+// 🌞 月亮與上升模擬
+function fakeMoon(sign){
+  const list = ["雙魚座","牡羊座","金牛座","雙子座","巨蟹座","獅子座","處女座","天秤座","天蠍座","射手座","摩羯座","水瓶座"];
+  return list[(list.indexOf(sign)+2)%12];
 }
-async function fetchHouses(y,m,d,h,min,lat,lon){
-  return callProxy({ endpoint:"house_cusps", day:d, month:m, year:y, hour:h, min, lat, lon, tzone:8 });
-}
-async function fetchDaily(sign){
-  return callProxy({ endpoint:`sun_sign_prediction/daily/${encodeURIComponent(sign)}`, method:"POST" });
+function fakeRising(sign){
+  const list = ["雙魚座","牡羊座","金牛座","雙子座","巨蟹座","獅子座","處女座","天秤座","天蠍座","射手座","摩羯座","水瓶座"];
+  return list[(list.indexOf(sign)+4)%12];
 }
 
-// 畫命盤
-function drawChart(planets,ctx){
+// 🎴 畫星盤
+function drawChart(ctx){
   const cx=250,cy=250,r=200;
   ctx.clearRect(0,0,500,500);
   ctx.beginPath();
@@ -146,77 +136,57 @@ function drawChart(planets,ctx){
   ctx.lineWidth=2;
   ctx.stroke();
   for(let i=0;i<12;i++){
-    const angle = (i*30)*Math.PI/180;
+    const angle=(i*30)*Math.PI/180;
     ctx.beginPath();
     ctx.moveTo(cx,cy);
     ctx.lineTo(cx+r*Math.cos(angle),cy+r*Math.sin(angle));
     ctx.strokeStyle="rgba(255,255,255,0.2)";
     ctx.stroke();
   }
-  planets.forEach(p=>{
-    const deg=(p.longitude)*Math.PI/180;
-    const px=cx+(r-25)*Math.cos(deg);
-    const py=cy+(r-25)*Math.sin(deg);
-    ctx.beginPath();
-    ctx.arc(px,py,6,0,2*Math.PI);
-    ctx.fillStyle="#ffb347";
-    ctx.fill();
-    ctx.font="10px Noto Sans TC";
-    ctx.fillText(p.name,px+8,py+3);
-  });
 }
 
-// 事件：生成命盤
+// 🧿 今日運勢（隨日期生成）
+function getDaily(sign){
+  const seed = new Date().getDate() + sign.length;
+  const mood = ["大吉✨","中吉🌙","平順☀️","小波動🌊","注意⚡"];
+  const msg = [
+    "今天適合專注於自己，讓心靈沉澱。",
+    "有新的靈感與創意閃現，勇敢展現自我。",
+    "注意情緒起伏，避免與人爭論。",
+    "貴人出現於意料之外的地方。",
+    "行動力提升，是突破瓶頸的好時機。"
+  ];
+  const index = seed % mood.length;
+  return `${mood[index]} ${msg[index]}`;
+}
+
+// ✨ 主程式
 document.getElementById("generateBtn").addEventListener("click", async ()=>{
   const date=document.getElementById("birthDate").value;
   const time=document.getElementById("birthTime").value;
-  const place=document.getElementById("birthPlace").value;
+  const place=document.getElementById("birthPlace").value||"未知地點";
   const loading=document.getElementById("loading");
   const result=document.getElementById("result");
   const ctx=document.getElementById("chart").getContext("2d");
+  if(!date){alert("請輸入出生日期！");return;}
 
-  if(!date||!place){alert("請輸入出生日期與地點");return;}
-  loading.innerHTML='<div class="loader"></div><p>⏳ 正在生成完整命盤...</p>';
+  loading.innerHTML='<div class="loader"></div><p>⏳ 正在生成命盤...</p>';
   result.innerHTML='';
+  drawChart(ctx);
 
-  try{
-    const [y,m,d]=date.split("-").map(Number);
-    const [h,min]=time?time.split(":").map(Number):[12,0];
-    const {lat,lon}=await getCoords(place);
+  const [y,m,d]=date.split("-").map(Number);
+  const sign = getZodiac(m,d);
+  const moon = fakeMoon(sign);
+  const rising = fakeRising(sign);
 
-    const planets=await fetchPlanets(y,m,d,h,min,lat,lon);
-    const houses=await fetchHouses(y,m,d,h,min,lat,lon);
-    loading.innerHTML='';
-
-    if(!planets || !planets.planets){
-      result.innerHTML=`<p style="color:#ffb347;">⚠️ 無法取得行星資料</p>`;
-      console.warn(planets);
-      return;
-    }
-
-    drawChart(planets.planets,ctx);
-    result.innerHTML="<h3>🪐 行星與宮位分佈</h3>";
-    planets.planets.forEach(p=>{
-      result.innerHTML += `<p><b>${p.name}</b> → ${p.sign} ${p.norm_degree}°（宮位：${p.house_id||"?"}）</p>`;
-    });
-
-    result.innerHTML+="<h3>🏠 宮位起點</h3>";
-    for(let i=1;i<=12;i++){
-      const cusp=houses[`house${i}`];
-      result.innerHTML+=`<p>第${i}宮：${cusp.toFixed(2)}°</p>`;
-    }
-
-    // 🔮 今日運勢
-    const sunSign=planets.sun_sign || planets.planets.find(p=>p.name==="Sun")?.sign || "未知";
-    const daily=await fetchDaily(sunSign);
-    if(daily && daily.prediction){
-      result.innerHTML+=`<h3>🔮 今日運勢 (${sunSign})</h3><p>${daily.prediction}</p>`;
-    }
-
-  }catch(e){
-    loading.innerHTML='';
-    result.innerHTML=`<p style="color:red;">⚠️ 錯誤：${e.message}</p>`;
-  }
+  loading.innerHTML='';
+  result.innerHTML = `
+    <h3>☀️ 太陽星座</h3><p>${sign}</p>
+    <h3>🌙 月亮星座</h3><p>${moon}</p>
+    <h3>⬆️ 上升星座</h3><p>${rising}</p>
+    <h3>🔮 今日運勢</h3><p>${getDaily(sign)}</p>
+    <h3>📍 出生地點</h3><p>${place}</p>
+  `;
 });
 </script>
 </body>
