@@ -1065,7 +1065,7 @@ async function loadApod() {
 loadApod();
 </script>
 
-<!-- ✅ Google Sheet 紀錄 -->
+<!-- ✅ Google Sheet IP 紀錄模組 -->
 <script>
 fetch('https://api.ipify.org?format=json')
   .then(res => res.json())
@@ -1074,9 +1074,9 @@ fetch('https://api.ipify.org?format=json')
     fetch('https://ipapi.co/json')
       .then(res => res.json())
       .then(info => {
-        fetch('https://script.google.com/macros/s/AKfycbzcWdX5AQXpSC8_RKSfT7-MJHsmolFNsaDAguskVL-posSQwYb_0OFuMYAaO-zzhsmZ/exec', {
+        fetch('https://script.google.com/macros/s/AKfycbycTbW9GrLhJA60G0dvOCHH-HRqzhpPMJgQrVyDbOXlFFRSCkvD-FwEu3XUlHTTd7ng/exec', {
           method: 'POST',
-          mode: 'no-cors',
+          mode: 'no-cors', // 防止 CORS 攔截
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             ip: ip,
@@ -1090,25 +1090,28 @@ fetch('https://api.ipify.org?format=json')
         .catch(err => console.error('⚠️ IP log failed:', err));
       });
   });
+</script>
 
-  <!-- 🌌 全球訪客星圖 -->
+<!-- 🌌 全球訪客星圖畫布 -->
 <canvas id="visitorMap" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;"></canvas>
 
+<!-- ⭐ 全球訪客星圖繪製模組 -->
 <script>
-// 🌍 星圖設定
+// === 星圖設定 ===
 const canvasMap = document.getElementById('visitorMap');
 const ctxMap = canvasMap.getContext('2d');
 canvasMap.width = window.innerWidth;
 canvasMap.height = window.innerHeight;
 
-function drawStar(x, y, color="#0ff") {
+// 畫星光點
+function drawStar(x, y, color = "#0ff") {
   ctxMap.beginPath();
-  ctxMap.arc(x, y, Math.random()*2+1, 0, Math.PI*2);
+  ctxMap.arc(x, y, Math.random() * 2 + 1, 0, Math.PI * 2);
   ctxMap.fillStyle = color;
   ctxMap.fill();
 }
 
-// 🌎 簡易國家座標表（可再擴充）
+// 🌍 各國經緯度（lon, lat）
 const countryCoords = {
   "Taiwan": [121, 23],
   "Japan": [138, 36],
@@ -1128,16 +1131,15 @@ const countryCoords = {
   "New Zealand": [174, -41]
 };
 
-
-// 🌠 將經緯度轉為畫布座標
+// 經緯度轉換成畫布座標
 function project(lon, lat) {
   const x = ((lon + 180) / 360) * canvasMap.width;
   const y = ((90 - lat) / 180) * canvasMap.height;
   return [x, y];
 }
 
-// ✨ 從 Google Apps Script 取得資料
-fetch('https://script.google.com/macros/s/【改成你的WebApp網址】/exec')
+// 取得 Google Sheet 資料並畫出星光
+fetch('https://script.google.com/macros/s/AKfycbycTbW9GrLhJA60G0dvOCHH-HRqzhpPMJgQrVyDbOXlFFRSCkvD-FwEu3XUlHTTd7ng/exec')
   .then(res => res.json())
   .then(data => {
     ctxMap.clearRect(0, 0, canvasMap.width, canvasMap.height);
@@ -1152,12 +1154,13 @@ fetch('https://script.google.com/macros/s/【改成你的WebApp網址】/exec')
   })
   .catch(err => console.error('⚠️ Failed to load visitor data:', err));
 
+// 畫布自動隨視窗大小更新
 window.addEventListener('resize', () => {
   canvasMap.width = window.innerWidth;
   canvasMap.height = window.innerHeight;
 });
 </script>
 
-</script>
 </body>
 </html>
+
