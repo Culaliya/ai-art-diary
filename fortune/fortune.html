@@ -152,6 +152,11 @@
             transition: all 0.3s ease;
         }
 
+        select option {
+            background: #fff;
+            color: #000;
+        }
+
         input:focus, select:focus {
             outline: none;
             border-color: #8a2be2;
@@ -438,6 +443,17 @@
         const earthlyBranches = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
         const elements = ['木', '木', '火', '火', '土', '土', '金', '金', '水', '水'];
         const branchElements = ['水', '土', '木', '木', '土', '火', '火', '土', '金', '金', '土', '水'];
+        
+        // 時辰對應表（23-1點為子時）
+        const hourBranches = ['子', '丑', '丑', '寅', '寅', '卯', '卯', '辰', '辰', '巳', '巳', '午', 
+                             '午', '未', '未', '申', '申', '酉', '酉', '戌', '戌', '亥', '亥', '子'];
+
+        // 計算從基準日期到目標日期的天數
+        function getDaysSinceEpoch(date) {
+            const baseDate = new Date(1900, 0, 31); // 1900年1月31日為庚子日
+            const diff = date - baseDate;
+            return Math.floor(diff / (1000 * 60 * 60 * 24));
+        }
 
         // 計算八字
         function calculateBazi(birthDate) {
@@ -446,18 +462,49 @@
             const day = birthDate.getDate();
             const hour = birthDate.getHours();
 
-            // 簡化的八字計算（實際八字計算需要使用萬年曆和複雜的天文算法）
-            const yearStem = heavenlyStems[(year - 4) % 10];
-            const yearBranch = earthlyBranches[(year - 4) % 12];
+            // 年柱計算（以立春為界）
+            let yearOffset = year - 4; // 甲子年開始於公元4年
+            const yearStemIndex = yearOffset % 10;
+            const yearBranchIndex = yearOffset % 12;
+            const yearStem = heavenlyStems[yearStemIndex];
+            const yearBranch = earthlyBranches[yearBranchIndex];
             
-            const monthStem = heavenlyStems[(year * 12 + month) % 10];
-            const monthBranch = earthlyBranches[(month + 1) % 12];
+            // 月柱計算（根據年干推算月干）
+            // 月支固定：寅月(立春-驚蟄)、卯月(驚蟄-清明)等
+            // 簡化處理：1月=寅，2月=卯...12月=丑
+            let monthBranchIndex = (month + 1) % 12; // 1月對應寅(2)
+            if (monthBranchIndex === 0) monthBranchIndex = 1; // 12月對應丑(1)
             
-            const dayStem = heavenlyStems[(year * 365 + month * 30 + day) % 10];
-            const dayBranch = earthlyBranches[(year * 365 + month * 30 + day) % 12];
+            // 月干根據年干推算（五虎遁月口訣）
+            // 甲己之年丙作首，乙庚之年戊為頭
+            // 丙辛必定尋庚起，丁壬壬位順行流
+            // 若問戊癸何方發，甲寅之上好追求
+            const monthStemStart = [2, 4, 6, 8, 0]; // 丙、戊、庚、壬、甲
+            const yearStemMod = yearStemIndex % 5;
+            const monthStemIndex = (monthStemStart[yearStemMod] + month - 1) % 10;
             
-            const hourStem = heavenlyStems[(day * 24 + hour) % 10];
-            const hourBranch = earthlyBranches[Math.floor(hour / 2) % 12];
+            const monthStem = heavenlyStems[monthStemIndex];
+            const monthBranch = earthlyBranches[monthBranchIndex];
+            
+            // 日柱計算（使用萬年曆推算）
+            const daysSinceEpoch = getDaysSinceEpoch(birthDate);
+            const dayStemIndex = (daysSinceEpoch + 6) % 10; // 基準日1900/1/31是庚(6)子日
+            const dayBranchIndex = (daysSinceEpoch + 0) % 12; // 基準日是子(0)
+            const dayStem = heavenlyStems[dayStemIndex];
+            const dayBranch = earthlyBranches[dayBranchIndex];
+            
+            // 時柱計算
+            const hourBranchIndex = Math.floor((hour + 1) % 24 / 2); // 23-1點為子時(0)
+            const hourBranch = earthlyBranches[hourBranchIndex];
+            
+            // 時干根據日干推算（五鼠遁時口訣）
+            // 甲己還加甲，乙庚丙作初
+            // 丙辛從戊起，丁壬庚子居
+            // 戊癸何方發，壬子是真途
+            const hourStemStart = [0, 2, 4, 6, 8]; // 甲、丙、戊、庚、壬
+            const dayStemMod = dayStemIndex % 5;
+            const hourStemIndex = (hourStemStart[dayStemMod] + hourBranchIndex) % 10;
+            const hourStem = heavenlyStems[hourStemIndex];
 
             return {
                 year: { stem: yearStem, branch: yearBranch },
