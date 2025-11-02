@@ -571,15 +571,7 @@ h2{color:#ff3eff;margin-bottom:16px;}
   <div id="apod" style="text-align:center;">載入星圖中…</div>
 </section>
 
-<!-- 八字命盤 -->
-<section>
-  <h2>🔮 八字命盤分析 (API 模式)</h2>
-  <p>輸入生日時間，網站會從 API 取得命盤資料：</p>
-  <input type="date" id="birthDate">
-  <input type="time" id="birthTime">
-  <button class="button" onclick="getFortune()">開始分析</button>
-  <div id="result">等待輸入...</div>
-</section>
+
 
 
 
@@ -967,25 +959,7 @@ async function loadApps() {
 loadApps();
 
 
-// ===== Fortune API =====
-async function getFortune() {
-  const date = document.getElementById('birthDate').value;
-  if (!date) {
-    alert('請輸入生日');
-    return;
-  }
-  const r = document.getElementById('result');
-  try {
-    const res = await fetch('https://raw.githubusercontent.com/Culaliya/ai-art-diary/main/data/fortune.json');
-    const f = await res.json();
-    r.innerHTML = `<h3>命理結果報告（來自 API）</h3>
-      <p>天干地支：<strong>${f.stem}${f.branch}</strong></p>
-      <p>主五行：<strong>${f.element}</strong></p>
-      <p>${f.msg}</p>`;
-  } catch {
-    r.textContent = '⚠️ 無法讀取 API 資料';
-  }
-}
+
 
 // ===== Hover sounds =====
 function addHoverSounds() {
