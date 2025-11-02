@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>🪞 Culaliya’s AI Image Lab</title>
+<title>🪞 膽小勿入！AI 圖像實驗室</title>
 <style>
 body {
   margin:0;
@@ -15,14 +15,25 @@ body {
 }
 h1 {
   margin-top:50px;
-  font-size:2em;
-  color:#0ff;
-  text-shadow:0 0 25px #0ff, 0 0 40px #ff3eff;
+  font-size:2.4em;
+  color:#ff3eff;
+  text-shadow:0 0 25px #ff3eff, 0 0 50px #0ff;
   animation:glowPulse 3s infinite alternate;
 }
+h2.subtitle {
+  font-size:1.2em;
+  margin-top:8px;
+  color:#aaa;
+  letter-spacing:2px;
+  animation:flicker 2.5s infinite;
+}
+@keyframes flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+  20%, 24%, 55% { opacity: 0; }
+}
 @keyframes glowPulse {
-  from { text-shadow:0 0 15px #0ff; }
-  to { text-shadow:0 0 35px #ff3eff, 0 0 60px #0ff; }
+  from { text-shadow:0 0 15px #ff3eff; }
+  to { text-shadow:0 0 35px #0ff, 0 0 60px #ff3eff; }
 }
 
 /* 背景光圈 */
@@ -105,7 +116,8 @@ a {color:#0ff;text-decoration:none;}
 <div class="neon-orb orb2"></div>
 <div class="neon-orb orb3"></div>
 
-<h1>🪞 Culaliya’s AI Image Lab</h1>
+<h1>🪞 AI 圖像實驗室</h1>
+<h2 class="subtitle">⚠️ 膽小勿入 · 科技與靈異的邊界 ⚡</h2>
 <canvas id="bgParticles"></canvas>
 
 <!-- 撲克牌卡片 -->
@@ -117,31 +129,10 @@ a {color:#0ff;text-decoration:none;}
 async function loadLabs(){
   const table=document.getElementById("labTable");
   const labs=[
-    {
-      icon:"🍔",
-      name:"毒舌卡路里計算機",
-      desc:"上傳食物照片，讓 AI 嘴爆你的晚餐。",
-      link:"toxic_calorie.html",
-      updated:"2025/11/02"
-    },
-    {
-      icon:"👻",
-      name:"靈異顯像儀",
-      desc:"自拍？AI 幫你召喚靈體殘影。",
-      link:"ghost_vision.html"
-    },
-    {
-      icon:"🌐",
-      name:"科技全息轉換",
-      desc:"將任何照片轉成未來感全息投影風。",
-      link:"hologram_lab.html"
-    },
-    {
-      icon:"💫",
-      name:"賽博重組工坊",
-      desc:"混合霓虹與電子皮膚的數位變身。",
-      link:"cyber_mix.html"
-    }
+    {icon:"🍔",name:"毒舌卡路里計算機",desc:"上傳食物照片，讓 AI 嘴爆你的晚餐。",link:"toxic_calorie.html",updated:"2025/11/02"},
+    {icon:"👻",name:"靈異顯像儀",desc:"自拍？AI 幫你召喚靈體殘影。",link:"ghost_vision.html"},
+    {icon:"🌐",name:"科技全息轉換",desc:"將任何照片轉成未來感全息投影風。",link:"hologram_lab.html"},
+    {icon:"💫",name:"賽博重組工坊",desc:"混合霓虹與電子皮膚的數位變身。",link:"cyber_mix.html"}
   ];
   const today=new Date();
   labs.forEach((g,i)=>{
@@ -150,14 +141,12 @@ async function loadLabs(){
     const angle=-10+i*5;
     card.style.setProperty("--angle",`${angle}deg`);
     card.dataset.link=g.link;
-
     let isNew=false;
     if(g.updated){
       const updatedDate=new Date(g.updated.replace(/\//g,"-"));
       const diffDays=(today-updatedDate)/(1000*60*60*24);
       if(diffDays<=7) isNew=true;
     }
-
     card.innerHTML=`
       <div class="lab-icon">${g.icon}</div>
       <h3>${g.name}${isNew?'<span class="new-badge">NEW</span>':''}</h3>
@@ -190,10 +179,7 @@ function initCardEvents(){
 const canvas=document.getElementById("bgParticles");
 const ctx=canvas.getContext("2d");
 let width,height,particles=[];
-function resize(){
-  width=canvas.width=window.innerWidth;
-  height=canvas.height=window.innerHeight;
-}
+function resize(){width=canvas.width=window.innerWidth;height=canvas.height=window.innerHeight;}
 window.addEventListener("resize",resize);
 resize();
 
@@ -205,12 +191,12 @@ class Particle{
     this.size=Math.random()*2+1;
     this.speedY=Math.random()*0.5+0.2;
     this.alpha=Math.random()*0.6+0.3;
-    this.emoji=Math.random()<0.3?"✨":"🪞";
+    this.emoji=Math.random()<0.3?"✨":"👁️";
   }
   update(){this.y+=this.speedY;if(this.y>height+20)this.reset();}
   draw(){
     ctx.globalAlpha=this.alpha;
-    ctx.font=`${this.size*10}px "Segoe UI Emoji"`;
+    ctx.font=\`${this.size*10}px "Segoe UI Emoji"\`;
     ctx.fillText(this.emoji,this.x,this.y);
   }
 }
