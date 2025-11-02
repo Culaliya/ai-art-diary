@@ -1,97 +1,73 @@
 /**
- * 💖 AI Beauty Studio v8.3 — Firestore Rate Limit Edition
- *
- * 💥 修正 1: 移除 payload 中錯誤的 "responseMimeType"，這是 500 錯誤的根源。
- * 💥 修正 2: 換回 Firestore 進行速率限制 (Rate Limiting)，解決 Vercel 無狀態問題。
+ * 💖 AI Beauty Studio v8.3 — Firestore Rate Limit Edition (Admin SDK)
  */
 
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import admin from "firebase-admin";
+
+// --- 初始化 Firestore（使用 Admin SDK）---
+let db;
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.applicationDefault(),
+  });
+}
+db = admin.firestore();
 
 // --- 你的規則 ---
 const COOLDOWN_MS = 30000; // 30 秒冷卻
 const DAILY_LIMIT = 5; // 每 IP 每日上限
 
-// --- Firebase 初始化 ---
-let app;
-let db;
-let appId;
-const firebaseConfigStr = process.env.FIREBASE_CONFIG;
-appId = process.env.APP_ID || 'default-app-id'; // 確保 APP_ID 也在 Vercel 環境變數中
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    res.setHeader("Allow", ["POST"]);
+    return res.status(405).json({ error: `Method ${req.method} Not Allowed` });
+  }
 
-if (firebaseConfigStr) {
-    try {
-        const firebaseConfig = JSON.parse(firebaseConfigStr);
-        if (getApps().length === 0) {
-            app = initializeApp(firebaseConfig);
-        } else {
-            app = getApp();
-        }
-        db = getFirestore(app);
-    } catch (e) {
-        console.error("Firebase config 解析失敗:", e);
-    }
-} else {
-    console.error("缺少 FIREBASE_CONFIG 環境變數！");
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey)
+    return res.status(500).json({ error: "伺服器未設定 GEMINI_API_KEY" });
+
+  // Firestore 初始化成功
+  if (!db)
+    return res.status(500).json({ error: "Firestore 初始化失敗" });
+
+  // --- 💥 使用 Firestore 進行速率限制 ---
+  const ip = (req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || "unknown_ip");
+  const safeIp = ip.replace(/[:.]/g, "_");
+  const date = new Date().toISOString().split("T")[0];
+
+  const dailyDocRef = db.doc(`artifacts/${process.env.APP_ID}/public/data/beauty_studio_daily/ip_${safeIp}_date_${date}`);
+  const userDocRef = db.doc(`artifacts/${process.env.APP_ID}/public/data/beauty_studio_users/ip_${safeIp}`);
+
+  let dailyCount = 0;
+  let lastUsed = 0;
+  try {
+    const [dailySnap, userSnap] = await Promise.all([
+      dailyDocRef.get(),
+      userDocRef.get(),
+    ]);
+    if (dailySnap.exists) dailyCount = dailySnap.data().count || 0;
+    if (userSnap.exists) lastUsed = userSnap.data().last || 0;
+  } catch (e) {
+    console.error("Firestore 讀取錯誤:", e);
+    return res.status(500).json({ error: "Firestore 讀取錯誤" });
+  }
+
+  const now = Date.now();
+  if (dailyCount >= DAILY_LIMIT)
+    return res.status(429).json({ error: "💫 今日能量已耗盡", energy: 0 });
+  if (now - lastUsed < COOLDOWN_MS) {
+    const wait = Math.ceil((COOLDOWN_MS - (now - lastUsed)) / 1000);
+    return res.status(429).json({
+      error: `💤 請稍候 ${wait} 秒再試`,
+      cooldown: wait,
+      energy: DAILY_LIMIT - dailyCount,
+    });
+  }
+
+
 }
 
-export default async function handler(req, res) {
-    if (req.method !== "POST") {
-        res.setHeader("Allow", ["POST"]);
-        return res.status(405).json({ error: `Method ${req.method} Not Allowed` });
-    }
-
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey)
-        return res.status(500).json({ error: "伺服器未設定 GEMINI_API_KEY" });
-        
-    if (!db)
-        return res.status(500).json({ error: "伺服器資料庫連線失敗 (檢查 FIREBASE_CONFIG)" });
-
-    // --- 💥 修正 2: 使用 Firestore 進行速率限制 ---
-    const ip = (req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || "unknown_ip");
-    const safeIp = ip.replace(/[:.]/g, '_');
-    const date = new Date().toISOString().split('T')[0];
-
-    // 我們需要兩個文件：一個管「每日總量」，一個管「最後使用時間」（冷卻）
-    const dailyDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'beauty_studio_daily', `ip_${safeIp}_date_${date}`);
-    const userDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'beauty_studio_users', `ip_${safeIp}`);
-
-    let dailyCount = 0;
-    let lastUsed = 0;
-
-    try {
-        const [dailySnap, userSnap] = await Promise.all([
-            getDoc(dailyDocRef),
-            getDoc(userDocRef)
-        ]);
-
-        if (dailySnap.exists()) {
-            dailyCount = dailySnap.data().count || 0;
-        }
-        if (userSnap.exists()) {
-            lastUsed = userSnap.data().last || 0;
-        }
-    } catch (dbError) {
-        console.error("Firestore 讀取錯誤:", dbError);
-        return res.status(500).json({ error: "檢查使用次數時發生錯誤。" });
-    }
-
-    const now = Date.now();
-
-    // 檢查每日上限
-    if (dailyCount >= DAILY_LIMIT)
-        return res.status(429).json({ error: "💫 今日能量已耗盡", energy: 0 });
-
-    // 檢查冷卻時間
-    if (now - lastUsed < COOLDOWN_MS) {
-        const wait = Math.ceil((COOLDOWN_MS - (now - lastUsed)) / 1000);
-        return res.status(429).json({
-            error: `💤 請稍候 ${wait} 秒再試`,
-            cooldown: wait,
-            energy: DAILY_LIMIT - dailyCount,
-        });
-    }
     // --- 速率限制檢查結束 ---
 
 
