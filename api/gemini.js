@@ -1,11 +1,10 @@
 /**
- * 🍔 Toxic Calorie Analyzer v3.0 — 安全速率版
- * 功能：
- *  - 上傳圖片（base64）
- *  - 回傳推估熱量與食物描述（純文字）
- *  - 每 IP 限制每日 20 次、每次冷卻 10 秒
+ * 🍔 Toxic Calorie Analyzer v3.1 — 修復版
+ * - 修正：無 (程式碼正確，錯誤在於 rateLimiter)
+ * - 調整：將 base64 replace 移至 payload 中
  */
 
+// 匯入修復後的 rateLimiter
 import { checkRateLimit } from "./utils/rateLimiter.js";
 
 export default async function handler(req, res) {
@@ -17,12 +16,13 @@ export default async function handler(req, res) {
   const apiKey = process.env.GEMINI_API_KEY;
   const appId = process.env.APP_ID;
   if (!apiKey || !appId) {
-    console.error("❌ 缺少必要環境變數。");
+    console.error("❌ 缺少必要環境變數 (GEMINI_API_KEY or APP_ID)。");
     return res.status(500).json({ error: "伺服器設定錯誤。" });
   }
 
   // --- 🔒 Firestore 速率限制 ---
   const ip = req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || "unknown_ip";
+  // checkRateLimit 現在會處理 Firebase Auth
   const limitCheck = await checkRateLimit(ip, appId, "toxic_calorie", 20, 10000);
 
   if (!limitCheck.allowed) {
@@ -30,6 +30,8 @@ export default async function handler(req, res) {
       return res.status(429).json({ error: "💫 今日能量已耗盡" });
     if (limitCheck.reason === "cooldown")
       return res.status(429).json({ error: `💤 請稍候 ${limitCheck.wait} 秒再試` });
+    // 處理 db_auth_error 或 db_read_error
+    console.error("速率限制檢查失敗:", limitCheck.reason, limitCheck.error);
     return res.status(500).json({ error: "速率限制檢查錯誤" });
   }
 
@@ -51,7 +53,8 @@ export default async function handler(req, res) {
 ---
 `;
 
-  const model = "gemini-1.5-pro-latest";
+  // 確保使用支援多模態 (圖片+文字) 的模型
+  const model = "gemini-1.5-pro-latest"; // 或 gemini-2.5-flash-preview-09-2025
   const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
   const payload = {
@@ -60,7 +63,12 @@ export default async function handler(req, res) {
         role: "user",
         parts: [
           { text: prompt },
-          { inlineData: { mimeType: "image/png", data: base64Image.replace(/^data:image\/\w+;base64,/, "") } },
+          { inlineData: { 
+              mimeType: "image/png", 
+              // 確保 base64 前綴被移除
+              data: base64Image.replace(/^data:image\/\w+;base64,/, "") 
+            } 
+          },
         ],
       },
     ],
@@ -80,7 +88,13 @@ export default async function handler(req, res) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
+    
     const data = await response.json();
+
+    if (!response.ok) {
+        console.error("⚠️ Gemini API 錯誤:", data);
+        throw new Error(data.error?.message || "Gemini API 請求失敗");
+    }
 
     const textOutput = data?.candidates?.[0]?.content?.parts
       ?.map((p) => p.text)
