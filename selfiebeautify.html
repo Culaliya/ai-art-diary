@@ -2,39 +2,40 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>💜 AI 網美濾鏡實驗室 v2</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>💖 AI 網美濾鏡實驗室</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 body {
   margin: 0;
-  font-family: 'Orbitron', 'Noto Sans TC', sans-serif;
-  background: radial-gradient(circle at 50% 20%, #1a0033 0%, #2a0055 60%, #000 100%);
-  background-attachment: fixed;
+  font-family: 'Poppins','Noto Sans TC',sans-serif;
+  background: radial-gradient(circle at 50% 20%, #2a0038 0%, #12001c 60%, #000 100%);
   color: #fff;
   overflow-x: hidden;
   min-height: 100vh;
 }
 
-/* 背景霓虹光暈 */
-#glow-bg {
+/* ✨ 背景柔光 */
+#bg-glow {
   position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: radial-gradient(circle at 50% 50%, rgba(255,0,255,0.2), transparent 70%);
-  filter: blur(100px);
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: radial-gradient(circle at 60% 40%, rgba(255,100,255,0.2), transparent 60%),
+              radial-gradient(circle at 30% 80%, rgba(255,180,255,0.15), transparent 70%);
+  filter: blur(120px);
+  animation: float 10s ease-in-out infinite alternate;
   z-index: 0;
-  animation: pulse 8s ease-in-out infinite alternate;
 }
-@keyframes pulse {
-  0% {opacity:0.3; transform:scale(1);}
-  100% {opacity:0.6; transform:scale(1.2);}
+@keyframes float {
+  from { transform: translateY(0); opacity: 0.6; }
+  to { transform: translateY(-30px); opacity: 0.9; }
 }
 
 /* 主容器 */
 .container {
   position: relative;
   z-index: 1;
-  max-width: 900px;
+  max-width: 760px;
   margin: 0 auto;
   padding: 60px 20px;
   text-align: center;
@@ -42,278 +43,266 @@ body {
 
 /* 標題 */
 h1 {
-  font-size: 3.5rem;
-  font-weight: 900;
-  color: #ffbdfc;
-  text-shadow: 0 0 40px #ff3eff, 0 0 80px #b000ff;
+  font-size: 2.8rem;
+  font-weight: 800;
+  background: linear-gradient(90deg,#ffbdfc,#ff9df9,#ffffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 40px rgba(255,150,255,0.6);
   margin-bottom: 10px;
 }
 p.subtitle {
-  font-size: 1.3rem;
-  color: #ffccff;
-  margin-bottom: 40px;
-  text-shadow: 0 0 25px #b065ff;
+  font-size: 1.1rem;
+  color: #ffd6ff;
+  margin-bottom: 35px;
+  letter-spacing: 1px;
+  text-shadow: 0 0 20px rgba(255,150,255,0.5);
 }
 
 /* 卡片 */
 .card {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,150,255,0.4);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,150,255,0.25);
   border-radius: 20px;
-  box-shadow: 0 0 25px rgba(255,100,255,0.2);
-  backdrop-filter: blur(10px);
-  padding: 30px;
-  margin-bottom: 30px;
+  box-shadow: inset 0 0 30px rgba(255,255,255,0.06),0 0 20px rgba(255,150,255,0.15);
+  backdrop-filter: blur(15px);
+  padding: 25px 30px;
+  margin-bottom: 25px;
 }
 
 /* 上傳區 */
 .upload-zone {
-  border: 2px dashed #d28fff;
-  border-radius: 16px;
+  border: 2px dashed rgba(255,200,255,0.4);
+  border-radius: 14px;
   padding: 40px;
   text-align: center;
-  cursor: pointer;
+  background: rgba(255,255,255,0.05);
   transition: 0.3s;
 }
 .upload-zone:hover {
-  border-color: #ff9df5;
-  background: rgba(255,255,255,0.05);
-  box-shadow: 0 0 20px rgba(255,150,255,0.4);
+  background: rgba(255,255,255,0.08);
+  border-color: #ffbdfc;
+  box-shadow: 0 0 20px rgba(255,160,255,0.3);
 }
 .preview-img {
   max-width: 100%;
-  max-height: 400px;
+  max-height: 360px;
   margin-top: 20px;
-  border-radius: 12px;
-  box-shadow: 0 0 30px rgba(255,120,255,0.3);
+  border-radius: 14px;
+  box-shadow: 0 0 30px rgba(255,160,255,0.25);
 }
 
-/* 風格選擇 */
+/* 按鈕 */
 .style-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit,minmax(140px,1fr));
-  gap: 12px;
-  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 15px;
 }
 .style-btn {
-  padding: 12px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #7b2ff7, #f107a3);
+  padding: 12px 18px;
+  min-width: 140px;
+  border-radius: 30px;
   border: none;
-  color: white;
-  font-weight: bold;
-  transition: 0.3s;
+  font-weight: 700;
+  background: linear-gradient(135deg,#ffbdfc,#ff79e3);
+  color: #fff;
+  box-shadow: 0 0 12px rgba(255,120,255,0.4);
+  transition: all 0.3s;
+}
+.style-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 18px rgba(255,160,255,0.6);
 }
 .style-btn.active {
+  background: linear-gradient(135deg,#ff9df9,#ffe6ff);
+  color: #8000aa;
+  box-shadow: 0 0 25px rgba(255,180,255,0.7);
   transform: scale(1.05);
-  box-shadow: 0 0 20px #ff6fff;
 }
 
 /* 生成按鈕 */
 .generate-btn {
-  background: linear-gradient(135deg, #d76dff, #ff2a6d);
+  background: linear-gradient(90deg,#ff9df9,#ff6ef5);
   color: #fff;
   border: none;
-  border-radius: 25px;
-  font-size: 1.2rem;
+  border-radius: 40px;
+  font-size: 1.1rem;
   font-weight: bold;
-  padding: 15px 40px;
+  padding: 14px 32px;
   margin-top: 25px;
+  box-shadow: 0 0 20px rgba(255,120,255,0.4);
   transition: all 0.3s;
-  box-shadow: 0 0 25px rgba(255,100,255,0.4);
 }
-.generate-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 40px rgba(255,120,255,0.6);
-}
-.generate-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+.generate-btn:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(255,160,255,0.7);}
+.generate-btn:disabled {opacity: 0.5; cursor: not-allowed;}
 
-/* 結果圖 */
+/* 結果 */
 .result-img {
   max-width: 100%;
   border-radius: 16px;
-  box-shadow: 0 0 30px rgba(255,150,255,0.3);
+  box-shadow: 0 0 30px rgba(255,180,255,0.3);
   margin-top: 20px;
 }
 
 /* Loading */
-#loading {
-  display: none;
-  text-align: center;
-  margin: 40px auto;
-}
 .spinner {
-  width: 60px;
-  height: 60px;
-  border: 6px solid rgba(255,255,255,0.2);
-  border-top: 6px solid #ff4df5;
+  border: 4px solid rgba(255,255,255,0.2);
+  border-top: 4px solid #ffbdfc;
   border-radius: 50%;
+  width: 50px; height: 50px;
+  margin: 0 auto 15px;
   animation: spin 1s linear infinite;
-  margin: 0 auto 20px;
 }
 @keyframes spin {to{transform:rotate(360deg)}}
+
+/* 能量條 */
+#energy-bar {
+  position: fixed;
+  bottom: 18px; right: 18px;
+  width: 150px; height: 10px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,180,255,0.4);
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(255,120,255,0.3);
+}
+#energy-fill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg,#ff9df9,#ffbdfc);
+  transition: width 0.3s;
+}
 </style>
 </head>
-
 <body>
-<div id="glow-bg"></div>
+<div id="bg-glow"></div>
 <div class="container">
-  <h1>💜 AI 網美濾鏡實驗室</h1>
+  <h1>💖 AI 網美濾鏡實驗室</h1>
   <p class="subtitle">上傳自拍，一鍵變身網美 ✨</p>
 
   <div class="card">
-    <label class="block text-pink-200 text-lg mb-2">📸 上傳自拍照</label>
+    <label class="block text-pink-200 mb-2 font-bold">📸 上傳自拍照</label>
     <div id="upload-zone" class="upload-zone">
-      <p>點擊或拖曳圖片到這裡</p>
+      點擊或拖曳圖片到這裡
       <input type="file" id="file-input" accept="image/jpeg,image/png" class="hidden" />
     </div>
     <img id="preview" class="preview-img hidden" />
   </div>
 
   <div class="card">
-    <label class="block text-pink-200 text-lg mb-2">🎨 選擇風格</label>
+    <label class="block text-pink-200 mb-2 font-bold">🎨 選擇風格</label>
     <div class="style-grid">
       <button class="style-btn active" data-style="dreamy">☁️ 夢幻仙境</button>
       <button class="style-btn" data-style="neon">💜 霓虹都市</button>
-      <button class="style-btn" data-style="sunset">🌅 日落光暈</button>
+      <button class="style-btn" data-style="sunset">🌇 日落光暈</button>
       <button class="style-btn" data-style="vintage">📷 復古膠片</button>
     </div>
     <button id="generate-btn" class="generate-btn" disabled>✨ 開始轉換</button>
   </div>
 
-  <div id="loading">
+  <div id="loading" class="hidden">
     <div class="spinner"></div>
-    <p class="text-pink-200 text-lg">AI 魔法轉換中...</p>
+    <p class="text-pink-200 font-bold">AI 魔法轉換中...</p>
   </div>
 
   <div id="result" class="hidden">
-    <h2 class="text-center text-pink-200 text-xl font-bold mb-3">✨ 完成！</h2>
+    <h2 class="text-pink-200 text-xl font-bold mb-3">✨ 完成！</h2>
     <img id="result-img" class="result-img" />
-    <button id="download-btn" class="generate-btn mt-4">💾 下載圖片</button>
+    <button id="download-btn" class="generate-btn mt-3">💾 下載圖片</button>
   </div>
 </div>
 
-<script>
-// === 上傳預覽 ===
-const uploadZone = document.getElementById('upload-zone');
-const fileInput = document.getElementById('file-input');
-const preview = document.getElementById('preview');
-const generateBtn = document.getElementById('generate-btn');
-let base64Image = null;
+<!-- 能量條 -->
+<div id="energy-bar"><div id="energy-fill"></div></div>
 
-uploadZone.onclick = () => fileInput.click();
-uploadZone.ondragover = e => { e.preventDefault(); uploadZone.style.borderColor='#ff88ff'; };
-uploadZone.ondragleave = () => uploadZone.style.borderColor='#d28fff';
-uploadZone.ondrop = e => {
-  e.preventDefault();
-  handleFile(e.dataTransfer.files[0]);
-};
-fileInput.onchange = e => handleFile(e.target.files[0]);
+<script>
+const uploadZone=document.getElementById('upload-zone');
+const fileInput=document.getElementById('file-input');
+const preview=document.getElementById('preview');
+const generateBtn=document.getElementById('generate-btn');
+let base64Image=null;
+
+uploadZone.onclick=()=>fileInput.click();
+uploadZone.ondragover=e=>{e.preventDefault();uploadZone.style.borderColor='#ffbdfc';};
+uploadZone.ondrop=e=>{e.preventDefault();handleFile(e.dataTransfer.files[0]);};
+fileInput.onchange=e=>handleFile(e.target.files[0]);
 
 function handleFile(file){
   if(!file) return;
-  if(!file.type.match(/image.*/)) return alert("請上傳圖片！");
-  const reader = new FileReader();
-  reader.onload = e => {
-    base64Image = e.target.result.split(',')[1];
-    preview.src = e.target.result;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    base64Image=e.target.result.split(',')[1];
+    preview.src=e.target.result;
     preview.classList.remove('hidden');
-    generateBtn.disabled = false;
+    generateBtn.disabled=false;
   };
   reader.readAsDataURL(file);
 }
 
 // === 風格選擇 ===
-let style = 'dreamy';
+let style='dreamy';
 document.querySelectorAll('.style-btn').forEach(btn=>{
-  btn.onclick = ()=>{
+  btn.onclick=()=>{
     document.querySelectorAll('.style-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    style = btn.dataset.style;
+    btn.classList.add('active'); style=btn.dataset.style;
   };
 });
 
-// === prompt 設定 ===
-const stylePrompts = {
-  dreamy: "Transform this selfie into a dreamy aesthetic with pastel clouds, pink glow, soft bokeh, maintain face realism.",
-  neon: "Transform this selfie into a cyberpunk neon city aesthetic with glowing purple lights, modern portrait, keep face unchanged.",
-  sunset: "Transform this selfie with golden hour warm sunlight and sunset gradient sky, cinematic mood.",
-  vintage: "Transform this selfie into a nostalgic film look with soft grain and faded tones, keep face realistic."
+const stylePrompts={
+  dreamy:"Transform selfie into dreamy pastel aesthetic, soft pink clouds, glowing bokeh lights, maintain realistic face.",
+  neon:"Transform selfie into neon cyber aesthetic, glowing purple light, futuristic background.",
+  sunset:"Transform selfie with sunset glow, warm light gradient, cinematic tone.",
+  vintage:"Transform selfie into nostalgic film tone, warm grain, faded pastel atmosphere."
 };
 
 // === 生成 ===
-document.getElementById('generate-btn').onclick = async () => {
-  if (!base64Image) return alert("請先上傳圖片！");
-  const loading = document.getElementById('loading');
-  const resultDiv = document.getElementById('result');
-  loading.style.display = 'block';
-  resultDiv.classList.add('hidden');
+document.getElementById('generate-btn').onclick=async()=>{
+  if(!base64Image)return alert("請先上傳圖片！");
+  document.getElementById('loading').classList.remove('hidden');
+  document.getElementById('result').classList.add('hidden');
 
-  try {
-    const res = await fetch('/api/gemini_beauty', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt: stylePrompts[style], base64Image })
+  try{
+    const res=await fetch('/api/gemini_beauty',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({prompt:stylePrompts[style],base64Image})
     });
-    const data = await res.json();
+    const data=await res.json();
+    document.getElementById('loading').classList.add('hidden');
 
-    loading.style.display = 'none';
-
-    if (res.status === 429) {
-      // 被限制（冷卻或次數用盡）
-      if (data.cooldown) {
-        alert(`💫 請稍候 ${data.cooldown} 秒再試`);
-      } else if (data.energy === 0) {
-        alert("⚠️ 今日免費次數已用完，請明日再試！");
-      }
-      updateEnergyBar(data.energy || 0);
+    if(res.status===429){
+      if(data.cooldown)alert(`💫 請稍候 ${data.cooldown} 秒再試`);
+      else if(data.energy===0)alert("⚠️ 今日能量已耗盡，明天再試～");
+      updateEnergyBar(data.energy||0);
       return;
     }
 
-    if (data.image_base64) {
-      document.getElementById('result-img').src = 'data:image/png;base64,' + data.image_base64;
-      resultDiv.classList.remove('hidden');
+    if(data.image_base64){
+      document.getElementById('result-img').src='data:image/png;base64,'+data.image_base64;
+      document.getElementById('result').classList.remove('hidden');
       updateEnergyBar(data.energy);
-    } else {
-      alert("❌ 沒有生成圖片：" + (data.error || "請稍後再試"));
-    }
-  } catch (err) {
-    loading.style.display = 'none';
-    alert("⚠️ 轉換失敗：" + err.message);
+    }else alert("❌ 沒有生成圖片：" + (data.error||"請稍後再試"));
+  }catch(err){
+    document.getElementById('loading').classList.add('hidden');
+    alert("⚠️ 發生錯誤：" + err.message);
   }
 };
 
-// === 能量條 UI ===
-const energyBar = document.createElement('div');
-energyBar.id = 'energy-bar';
-energyBar.style.position = 'fixed';
-energyBar.style.bottom = '15px';
-energyBar.style.right = '15px';
-energyBar.style.width = '180px';
-energyBar.style.height = '14px';
-energyBar.style.border = '1px solid #ffbdfc';
-energyBar.style.borderRadius = '10px';
-energyBar.style.boxShadow = '0 0 12px rgba(255,100,255,0.4)';
-energyBar.style.overflow = 'hidden';
-energyBar.innerHTML = `<div id="energy-fill" style="height:100%;width:100%;background:linear-gradient(90deg,#ff8dfc,#d76dff);transition:width .4s ease"></div>`;
-document.body.appendChild(energyBar);
-
-function updateEnergyBar(energy) {
-  const fill = document.getElementById('energy-fill');
-  const percent = Math.max(0, Math.min(100, (energy / 5) * 100));
-  fill.style.width = percent + '%';
-  fill.style.background = percent > 40 ? 'linear-gradient(90deg,#ff8dfc,#d76dff)' : 'linear-gradient(90deg,#ff3d7f,#ff9d9d)';
+// === 能量條 ===
+function updateEnergyBar(energy){
+  const fill=document.getElementById('energy-fill');
+  const percent=Math.max(0,Math.min(100,(energy/5)*100));
+  fill.style.width=percent+'%';
+  fill.style.background=percent>40?'linear-gradient(90deg,#ff9df9,#ffbdfc)':'linear-gradient(90deg,#ff6b9d,#ffc0c0)';
 }
 
-
 // === 下載 ===
-document.getElementById('download-btn').onclick = ()=>{
+document.getElementById('download-btn').onclick=()=>{
   const link=document.createElement('a');
   link.href=document.getElementById('result-img').src;
-  link.download='beautified_'+Date.now()+'.png';
+  link.download='beauty_'+Date.now()+'.png';
   link.click();
 };
 </script>
