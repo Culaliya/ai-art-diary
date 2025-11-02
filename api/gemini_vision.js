@@ -1,7 +1,5 @@
 /**
- * 👻 靈異顯像儀專用 Gemini API 後端
- * 生成紫霧靈體疊影影像（Base64 輸出）
- * by Culaliya x GPT-5
+ * 👻 Gemini 靈異顯像儀 Vision 影像生成 API（支援 base64）
  */
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -10,51 +8,39 @@ export default async function handler(req, res) {
   }
 
   const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
+  if (!apiKey)
     return res.status(500).json({ error: "伺服器缺少 GEMINI_API_KEY" });
-  }
 
-  const modelName = "gemini-2.0-pro-vision"; // ✅ 支援影像生成
+  const modelName = "gemini-2.5-flash-image"; // ✅ 改成影像生成模型
   const googleApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
 
   try {
     const { prompt, base64Logo } = req.body;
+    if (!base64Logo)
+      return res.status(400).json({ error: "缺少 base64Logo（上傳圖片）" });
 
-    if (!base64Logo) {
-      return res.status(400).json({ error: "缺少 base64Logo (上傳圖片)" });
-    }
-
-    // ✨ 自動強化 prompt（根據氣氛模式）
     const enhancedPrompt =
       prompt ||
-      `Create a haunted paranormal overlay with transparent spectral mist, glowing purple aura, 
-       faint human silhouette, cinematic ghost lighting, soft diffusion, double exposure style, 
-       eerie horror tone but artistic — use ethereal purple fog as visual base.`;
+      `Generate a haunted spectral overlay with eerie mist, glowing purple aura, faint faces, 
+      cinematic ghost lighting, and horror double-exposure film grain.`;
 
-    // ✅ 構建請求
     const payload = {
       contents: [
         {
           parts: [
             { text: enhancedPrompt },
-            {
-              inlineData: {
-                mimeType: "image/png",
-                data: base64Logo,
-              },
-            },
+            { inlineData: { mimeType: "image/png", data: base64Logo } },
           ],
         },
       ],
       generationConfig: {
-        temperature: 0.8,
+        temperature: 0.7,
         topP: 0.9,
-        topK: 32,
-        candidateCount: 1,
+        topK: 40,
+        responseMimeType: "image/png",
       },
     };
 
-    // 🚀 呼叫 Gemini Vision API
     const r = await fetch(googleApiUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -62,21 +48,17 @@ export default async function handler(req, res) {
     });
 
     const data = await r.json();
-    console.log("Gemini raw response summary:", data.candidates?.[0]?.finishReason);
-
-    // 🔍 抓回圖片 base64
-    const image =
-      data?.candidates?.[0]?.content?.parts?.find((p) => p.inlineData)?.inlineData?.data;
+    const image = data?.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
 
     if (image) {
-      console.log("✅ 靈異影像生成成功");
+      console.log("✅ 靈體影像生成成功");
       return res.status(200).json({ image_base64: image });
     } else {
-      console.error("⚠️ 消失訊號", data);
-      return res.status(500).json({ error: "消失靈界訊號", raw: data });
+      console.error("⚠️ Gemini 未回傳影像", data);
+      return res.status(500).json({ error: "Gemini 沒有回傳影像", raw: data });
     }
   } catch (err) {
-    console.error("🔥 錯誤警報：", err);
-    return res.status(500).json({ error: "錯誤警報", detail: err.message });
+    console.error("🔥 靈異顯像錯誤:", err);
+    return res.status(500).json({ error: "AI 顯像失敗", detail: err.message });
   }
 }
