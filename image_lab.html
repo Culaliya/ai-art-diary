@@ -204,7 +204,7 @@ class Particle{
   update(){this.y+=this.speedY;if(this.y>height+20)this.reset();}
   draw(){
     ctx.globalAlpha=this.alpha;
-    ctx.font=\`${this.size*10}px "Segoe UI Emoji"\`;
+    ctx.font=\`${this.size*10}px "Segoe UI Emoji"`;
     ctx.fillText(this.emoji,this.x,this.y);
   }
 }
