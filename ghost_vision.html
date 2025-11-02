@@ -3,48 +3,53 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-<title>👁️ 靈異顯像儀 v6：靈波共鳴 × 靈壓強度版</title>
+<title>👁️ 靈異顯像儀 v6.6：靈壓共鳴升級版</title>
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
 body {
-  margin:0;
-  background:radial-gradient(circle at 50% 20%, #0a0015 0%, #220044 60%, #000 100%);
-  font-family:'Noto Sans TC',sans-serif;
-  color:#e6d4ff;
-  overflow-y:auto;
-  min-height:100vh;
+  margin: 0;
+  background: radial-gradient(circle at 50% 20%, #0a0015 0%, #220044 60%, #000 100%);
+  font-family: 'Noto Sans TC', sans-serif;
+  color: #e6d4ff;
+  overflow-y: auto;
+  min-height: 100vh;
 }
 
 /* 🌫️ 霧層 */
 #fogLayer {
-  position:fixed;top:0;left:0;width:100%;height:100%;
-  background:radial-gradient(circle at 50% 80%, rgba(180,0,255,0.15) 0%, transparent 60%),
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: radial-gradient(circle at 50% 80%, rgba(180,0,255,0.15) 0%, transparent 60%),
               radial-gradient(circle at 20% 30%, rgba(120,60,255,0.12) 0%, transparent 50%),
               radial-gradient(circle at 80% 40%, rgba(255,0,255,0.15) 0%, transparent 60%);
-  animation:fogMove 30s ease-in-out infinite alternate;
-  filter:blur(80px);
-  z-index:0;
+  animation: fogMove 30s ease-in-out infinite alternate;
+  filter: blur(80px);
+  z-index: 0;
 }
 @keyframes fogMove {
-  0% {transform:translate(0,0) scale(1);}
-  100% {transform:translate(-20px,10px) scale(1.2);}
+  0% {transform: translate(0,0) scale(1);}
+  100% {transform: translate(-20px,10px) scale(1.2);}
 }
 
 /* 👻 幽靈雨 */
 #ghostRain {
-  position:fixed;top:0;left:0;width:100%;height:100%;
-  z-index:1;pointer-events:none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 1; pointer-events: none;
 }
 
 /* 💜 靈波閃光 */
 #pulse {
-  position:fixed;top:0;left:0;width:100%;height:100%;
-  background:radial-gradient(circle at 50% 50%, rgba(255,0,255,0.15), transparent 70%);
-  mix-blend-mode:screen;
-  opacity:0;
-  animation:pulseWave 4s ease-in-out infinite;
-  z-index:2;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: radial-gradient(circle at 50% 50%, rgba(255,0,255,0.15), transparent 70%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  animation: pulseWave 4s ease-in-out infinite;
+  z-index: 2;
 }
 @keyframes pulseWave {
   0%,100% {opacity:0;}
@@ -61,85 +66,70 @@ body {
   55% {opacity:0;}
 }
 #glitch {
-  position:fixed;top:0;left:0;width:100%;height:100%;
-  background:repeating-linear-gradient(0deg, rgba(255,0,255,0.08) 0 2px, transparent 2px 4px);
-  mix-blend-mode:screen;
-  opacity:0;
-  animation:glitchFlash 6s infinite;
-  z-index:3;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: repeating-linear-gradient(0deg, rgba(255,0,255,0.08) 0 2px, transparent 2px 4px);
+  mix-blend-mode: screen;
+  opacity: 0;
+  animation: glitchFlash 6s infinite;
+  z-index: 3;
 }
 
 /* 🧊 卡片 */
 .card {
-  background:rgba(255,255,255,0.07);
-  border:1px solid rgba(200,140,255,0.4);
-  border-radius:16px;
-  box-shadow:0 0 25px rgba(170,100,255,0.3);
-  backdrop-filter:blur(12px);
-  transition:all .3s;
-  z-index:5;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(200,140,255,0.4);
+  border-radius: 16px;
+  box-shadow: 0 0 25px rgba(170,100,255,0.3);
+  backdrop-filter: blur(12px);
+  transition: all .3s;
+  z-index: 5;
 }
 .card:hover {box-shadow:0 0 40px rgba(220,160,255,0.7);transform:translateY(-3px);}
 
-/* 標題 - 超大超恐怖 + 響應式 */
+/* 標題 - 加大＋下移＋柔化 */
 h1 {
-  text-align:center;
-  font-size:8rem;
-  margin-top:180px;
-  padding:0 20px;
-  color:#ff4dff;
-  text-shadow:0 0 40px #ff0080, 0 0 80px #b000ff, 0 0 120px #8000ff, 0 0 160px #ff0080;
-  font-weight:900;
-  animation:titleGlow 3s ease-in-out infinite;
-  letter-spacing:8px;
-  line-height:1.2;
+  text-align: center;
+  font-size: 9rem;
+  margin-top: 220px;
+  padding: 0 20px;
+  color: #ff4dff;
+  text-shadow: 0 0 40px #ff0080, 0 0 80px #b000ff, 0 0 120px #8000ff, 0 0 160px #ff0080;
+  font-weight: 900;
+  animation: titleGlow 3s ease-in-out infinite;
+  letter-spacing: 8px;
+  line-height: 1.1;
 }
 @keyframes titleGlow {
   0%,100% {
-    text-shadow:0 0 40px #ff0080, 0 0 80px #b000ff, 0 0 120px #8000ff;
-    transform:scale(1);
+    text-shadow: 0 0 40px #ff0080, 0 0 80px #b000ff, 0 0 120px #8000ff;
+    transform: scale(1);
   }
   50% {
-    text-shadow:0 0 60px #ff3eff, 0 0 120px #ff0080, 0 0 180px #b000ff;
-    transform:scale(1.02);
+    text-shadow: 0 0 60px #ff3eff, 0 0 120px #ff0080, 0 0 180px #b000ff;
+    transform: scale(1.03);
   }
 }
 p.sub {
-  text-align:center;
-  color:#ff99ff;
-  font-size:2rem;
-  margin-top:30px;
-  margin-bottom:80px;
-  padding:0 20px;
-  text-shadow:0 0 20px #ff3eff, 0 0 40px #b000ff;
-  font-weight:600;
-  letter-spacing:3px;
+  text-align: center;
+  color: #ff99ff;
+  font-size: 2.2rem;
+  margin-top: 40px;
+  margin-bottom: 100px;
+  padding: 0 20px;
+  text-shadow: 0 0 20px #ff3eff, 0 0 40px #b000ff;
+  font-weight: 600;
+  letter-spacing: 3px;
 }
 
-/* 📱 手機響應式 */
-@media (max-width: 768px) {
-  h1 {
-    font-size:4rem;
-    margin-top:100px;
-    letter-spacing:4px;
-  }
-  p.sub {
-    font-size:1.3rem;
-    letter-spacing:2px;
-    margin-bottom:50px;
-  }
+/* 靈壓耗盡閃爍效果 */
+#energy-bar.depleted {
+  animation: flicker 1.2s infinite alternate;
 }
-
-@media (max-width: 480px) {
-  h1 {
-    font-size:3rem;
-    margin-top:80px;
-    letter-spacing:2px;
-  }
-  p.sub {
-    font-size:1.1rem;
-    letter-spacing:1px;
-  }
+@keyframes flicker {
+  0%,100% { background: rgba(255, 80, 80, 0.5); }
+  50% { background: rgba(255, 0, 0, 0.9); box-shadow: 0 0 15px #ff0000; }
 }
 </style>
 </head>
@@ -149,6 +139,14 @@ p.sub {
 <div id="fogLayer"></div>
 <div id="pulse"></div>
 <div id="glitch"></div>
+
+<!-- ⚡ 靈壓能量條 -->
+<div class="fixed top-6 left-1/2 transform -translate-x-1/2 w-80 text-center z-50">
+  <p id="energy-text" class="text-purple-300 text-sm mb-1">👁️ 靈壓能量 3/3</p>
+  <div class="w-full h-3 bg-purple-950/40 rounded-full overflow-hidden border border-purple-600/50">
+    <div id="energy-bar" class="h-full bg-gradient-to-r from-purple-400 to-pink-500 transition-all duration-700"></div>
+  </div>
+</div>
 
 <h1>👁️ 靈異顯像儀</h1>
 <p class="sub">上傳自拍，看 AI 是否能捕捉到「祂」的殘影……</p>
@@ -174,13 +172,6 @@ p.sub {
       <option value="dream">🌫 夢境之影</option>
     </select>
 
-    <label class="block text-lg font-semibold text-purple-300 mb-2">靈壓強度</label>
-    <select id="intensity" class="p-3 rounded-md bg-purple-950/40 border border-purple-500/40 text-purple-100 focus:ring-2 focus:ring-purple-500">
-      <option value="low">🪶 弱（穩定顯像）</option>
-      <option value="medium" selected>⚡ 中（平衡）</option>
-      <option value="high">🌪 強（高混亂靈波）</option>
-    </select>
-
     <button id="generate-button" class="mt-6 px-6 py-3 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-bold shadow-lg transition">開始顯像</button>
   </div>
 
@@ -196,9 +187,44 @@ p.sub {
 <audio id="humSound" src="https://cdn.pixabay.com/download/audio/2023/02/27/audio_76f9d86c8e.mp3?filename=ghost-hum-139482.mp3"></audio>
 
 <script>
+// === ⚡ 靈壓能量系統 ===
+const MAX_USES_PER_DAY = 3;
+const usageKey = "ghostVisionUsage";
+const today = new Date().toISOString().split("T")[0];
+let usageData = JSON.parse(localStorage.getItem(usageKey)) || {};
+if (usageData.date !== today) usageData = { date: today, count: 0 };
+updateEnergyBar();
+
+function updateEnergyBar() {
+  const energyLeft = MAX_USES_PER_DAY - usageData.count;
+  const bar = document.getElementById("energy-bar");
+  const label = document.getElementById("energy-text");
+  const ratio = Math.max(energyLeft / MAX_USES_PER_DAY, 0);
+  bar.style.width = `${ratio * 100}%`;
+  if (ratio > 0.6) bar.style.background = "#9f5bff";
+  else if (ratio > 0.3) bar.style.background = "#ff69b4";
+  else bar.style.background = "#ff3b3b";
+  label.textContent = `👁️ 靈壓能量 ${energyLeft}/${MAX_USES_PER_DAY}`;
+  if (energyLeft === 0) {
+    bar.classList.add("depleted");
+    label.textContent = "👁️ 靈壓為零 · 儀器冷卻中";
+  } else bar.classList.remove("depleted");
+}
+
+function checkUsageLimit() {
+  if (usageData.count >= MAX_USES_PER_DAY) {
+    alert("👁️ 今日靈壓已耗盡，請明天再試！");
+    return false;
+  }
+  usageData.count++;
+  localStorage.setItem(usageKey, JSON.stringify(usageData));
+  updateEnergyBar();
+  return true;
+}
+
 // === 上傳 + 預覽 ===
-const upload = document.getElementById('file-upload');
-const dropZone = document.getElementById('drop-zone');
+const upload = document.getElementById("file-upload");
+const dropZone = document.getElementById("drop-zone");
 let base64Logo = null;
 dropZone.onclick = () => upload.click();
 upload.onchange = e => handleFile(e.target.files[0]);
@@ -210,86 +236,69 @@ function handleFile(file){
   const reader = new FileReader();
   reader.onload = e => {
     base64Logo = e.target.result.split(',')[1];
-    const previewContainer = document.getElementById('preview-container');
-    const previewImage = document.getElementById('preview-image');
-    previewImage.src = e.target.result;
-    previewContainer.classList.remove('hidden');
+    document.getElementById('preview-image').src = e.target.result;
+    document.getElementById('preview-container').classList.remove('hidden');
   };
   reader.readAsDataURL(file);
 }
 
 // === 顯像 ===
-document.getElementById('generate-button').onclick = async ()=>{
-  if(!base64Logo) return alert('請先上傳照片！');
-  const hum = document.getElementById('humSound');
+document.getElementById("generate-button").onclick = async () => {
+  if (!checkUsageLimit()) return;
+  if (!base64Logo) return alert("請先上傳照片！");
+  const hum = document.getElementById("humSound");
   hum.currentTime = 0; hum.play();
+  const resultImg = document.getElementById("result-image");
+  const text = document.getElementById("result-text");
+  document.getElementById("result-container").classList.remove("hidden");
+  text.textContent = "👁️ 顯像中…靈波干擾開始。";
 
-  document.getElementById('result-container').classList.remove('hidden');
-  const resultImg = document.getElementById('result-image');
-  const text = document.getElementById('result-text');
-  text.textContent = "👁 顯像中…靈波正在干擾。";
-
-  const mode = document.getElementById('mode').value;
-  const intensity = document.getElementById('intensity').value;
-
-  let prompt = '';
-  if (mode === 'spirit') {
-    prompt = `Generate a mystical ethereal overlay — faint translucent spirits emerging from mist,
-    glowing violet aura, cinematic ghost film style, soft surreal lighting, detailed spectral haze.`;
-  } else if (mode === 'phantom') {
-    prompt = `Generate a dark horror haunted overlay — cursed phantoms screaming from shadows,
-    glowing red-purple energy, smoky corruption tendrils, eerie cinematic lighting, cursed ritual atmosphere.`;
-  } else if (mode === 'dream') {
-    prompt = `Generate a surreal dreamlike aura — ghostly shapes dissolving into glowing fog,
-    pastel purple and blue light, lucid dream atmosphere, lens bloom, abstract spectral shimmer.`;
-  }
-
-  // 靈壓影響溫度設定
-  let temperature = 0.8;
-  if (intensity === 'low') temperature = 0.4;
-  else if (intensity === 'high') temperature = 1.1;
+  const mode = document.getElementById("mode").value;
+  let prompt = "";
+  if (mode === "spirit") prompt = "Generate a mystical spectral overlay with translucent spirits, glowing violet aura, cinematic ghost film style.";
+  else if (mode === "phantom") prompt = "Generate a horror ghost overlay with cursed red-purple mist, screaming phantoms, cinematic eerie lighting.";
+  else prompt = "Generate a surreal dreamlike spectral aura with pastel fog, lucid glow, ethereal shapes fading in mist.";
 
   try {
-    const res = await fetch('/api/gemini_vision', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt, base64Logo, temperature })
+    const res = await fetch("/api/gemini_vision", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({ prompt, base64Logo })
     });
     const data = await res.json();
     if (data.image_base64) {
       resultImg.src = "data:image/png;base64," + data.image_base64;
-      text.textContent = "結果：靈體殘影已捕捉成功。👁";
+      text.textContent = "👁️ 顯像完成，靈波共振穩定。";
       hum.pause();
-    } else {
-      throw new Error(data.error || "AI 沒有回傳影像");
-    }
+    } else throw new Error(data.error || "AI 沒回傳影像");
   } catch (err) {
+    console.error(err);
     text.textContent = "⚠️ 顯像失敗：" + err.message;
     hum.pause();
   }
 };
 
-// === 幽靈雨動畫 ===
+// === 幽靈雨 ===
 const canvas = document.getElementById('ghostRain');
 const ctx = canvas.getContext('2d');
 let width, height, ghosts = [];
-function resize(){
-  width = canvas.width = window.innerWidth;
-  height = canvas.height = window.innerHeight;
-}
+function resize(){ width=canvas.width=window.innerWidth; height=canvas.height=window.innerHeight; }
 window.addEventListener('resize', resize);
 resize();
 
 class Ghost{
   constructor(){this.reset();}
   reset(){
-    this.x=Math.random()*width;this.y=Math.random()*-height;
-    this.size=Math.random()*50+25;this.speed=Math.random()*1.8+0.6;
-    this.alpha=Math.random()*0.7+0.4;this.emoji=Math.random()<0.5?"👻":"💀";
+    this.x=Math.random()*width;
+    this.y=Math.random()*-height;
+    this.size=Math.random()*50+25;
+    this.speed=Math.random()*1.8+0.6;
+    this.alpha=Math.random()*0.7+0.4;
+    this.emoji=Math.random()<0.5?"👻":"💀";
   }
   update(){this.y+=this.speed;if(this.y>height+50)this.reset();}
   draw(){
-    ctx.globalAlpha=this.alpha;
+    ctx.globalAlpha=this.alpha*1.3; // 提亮
     ctx.font=`${this.size}px 'Segoe UI Emoji'`;
     ctx.fillText(this.emoji,this.x,this.y);
   }
