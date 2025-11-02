@@ -245,33 +245,69 @@ const stylePrompts = {
 };
 
 // === 生成 ===
-document.getElementById('generate-btn').onclick = async ()=>{
-  if(!base64Image) return alert("請先上傳圖片！");
+document.getElementById('generate-btn').onclick = async () => {
+  if (!base64Image) return alert("請先上傳圖片！");
   const loading = document.getElementById('loading');
   const resultDiv = document.getElementById('result');
-  loading.style.display='block';
+  loading.style.display = 'block';
   resultDiv.classList.add('hidden');
 
   try {
     const res = await fetch('/api/gemini_beauty', {
       method: 'POST',
-      headers:{'Content-Type':'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt: stylePrompts[style], base64Image })
     });
     const data = await res.json();
-    loading.style.display='none';
-    if(data.image_base64){
-      document.getElementById('result-img').src='data:image/png;base64,'+data.image_base64;
-      resultDiv.classList.remove('hidden');
-    }else{
-      alert("❌ 沒有生成圖片：" + (data.error || "請稍後再試"));
-      console.log(data);
+
+    loading.style.display = 'none';
+
+    if (res.status === 429) {
+      // 被限制（冷卻或次數用盡）
+      if (data.cooldown) {
+        alert(`💫 請稍候 ${data.cooldown} 秒再試`);
+      } else if (data.energy === 0) {
+        alert("⚠️ 今日免費次數已用完，請明日再試！");
+      }
+      updateEnergyBar(data.energy || 0);
+      return;
     }
-  }catch(err){
-    loading.style.display='none';
+
+    if (data.image_base64) {
+      document.getElementById('result-img').src = 'data:image/png;base64,' + data.image_base64;
+      resultDiv.classList.remove('hidden');
+      updateEnergyBar(data.energy);
+    } else {
+      alert("❌ 沒有生成圖片：" + (data.error || "請稍後再試"));
+    }
+  } catch (err) {
+    loading.style.display = 'none';
     alert("⚠️ 轉換失敗：" + err.message);
   }
 };
+
+// === 能量條 UI ===
+const energyBar = document.createElement('div');
+energyBar.id = 'energy-bar';
+energyBar.style.position = 'fixed';
+energyBar.style.bottom = '15px';
+energyBar.style.right = '15px';
+energyBar.style.width = '180px';
+energyBar.style.height = '14px';
+energyBar.style.border = '1px solid #ffbdfc';
+energyBar.style.borderRadius = '10px';
+energyBar.style.boxShadow = '0 0 12px rgba(255,100,255,0.4)';
+energyBar.style.overflow = 'hidden';
+energyBar.innerHTML = `<div id="energy-fill" style="height:100%;width:100%;background:linear-gradient(90deg,#ff8dfc,#d76dff);transition:width .4s ease"></div>`;
+document.body.appendChild(energyBar);
+
+function updateEnergyBar(energy) {
+  const fill = document.getElementById('energy-fill');
+  const percent = Math.max(0, Math.min(100, (energy / 5) * 100));
+  fill.style.width = percent + '%';
+  fill.style.background = percent > 40 ? 'linear-gradient(90deg,#ff8dfc,#d76dff)' : 'linear-gradient(90deg,#ff3d7f,#ff9d9d)';
+}
+
 
 // === 下載 ===
 document.getElementById('download-btn').onclick = ()=>{
