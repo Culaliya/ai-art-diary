@@ -3,184 +3,283 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>💄 AI 網美濾鏡實驗 · 美化重構實驗室</title>
+<title>💜 AI 網美濾鏡實驗室 v2</title>
 <script src="https://cdn.tailwindcss.com"></script>
-
 <style>
 body {
   margin: 0;
-  font-family: 'Noto Sans TC', sans-serif;
-  background: radial-gradient(circle at 50% 20%, #1a0028 0%, #220044 50%, #000 100%);
+  font-family: 'Orbitron', 'Noto Sans TC', sans-serif;
+  background: radial-gradient(circle at 50% 20%, #1a0033 0%, #2a0055 60%, #000 100%);
+  background-attachment: fixed;
+  color: #fff;
   overflow-x: hidden;
   min-height: 100vh;
-  color: #fff;
 }
 
-/* ✨ 背景泡泡 */
-#bubbles {
+/* 背景霓虹光暈 */
+#glow-bg {
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
-  overflow: hidden;
+  background: radial-gradient(circle at 50% 50%, rgba(255,0,255,0.2), transparent 70%);
+  filter: blur(100px);
   z-index: 0;
+  animation: pulse 8s ease-in-out infinite alternate;
 }
-.bubble {
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,192,255,0.5), transparent);
-  animation: float 15s infinite ease-in-out;
+@keyframes pulse {
+  0% {opacity:0.3; transform:scale(1);}
+  100% {opacity:0.6; transform:scale(1.2);}
 }
-@keyframes float {
-  0% { transform: translateY(0) scale(1); opacity: 0.7; }
-  50% { transform: translateY(-80px) scale(1.1); opacity: 1; }
-  100% { transform: translateY(0) scale(1); opacity: 0.6; }
+
+/* 主容器 */
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  text-align: center;
 }
 
 /* 標題 */
 h1 {
-  text-align: center;
-  font-size: 3.2rem;
-  color: #ffb0ff;
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: #ffbdfc;
   text-shadow: 0 0 40px #ff3eff, 0 0 80px #b000ff;
-  margin-top: 120px;
-  letter-spacing: 3px;
-  font-weight: 800;
-  animation: pulseGlow 3s ease-in-out infinite alternate;
+  margin-bottom: 10px;
 }
-@keyframes pulseGlow {
-  from { text-shadow: 0 0 30px #ff6eff; }
-  to { text-shadow: 0 0 60px #ff00ff; }
-}
-
-.subtitle {
-  text-align: center;
+p.subtitle {
   font-size: 1.3rem;
-  color: #e0c6ff;
+  color: #ffccff;
   margin-bottom: 40px;
-  text-shadow: 0 0 20px #ff3eff;
+  text-shadow: 0 0 25px #b065ff;
 }
 
 /* 卡片 */
 .card {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,100,255,0.4);
-  border-radius: 18px;
-  box-shadow: 0 0 30px rgba(255,0,255,0.2);
-  backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,150,255,0.4);
+  border-radius: 20px;
+  box-shadow: 0 0 25px rgba(255,100,255,0.2);
+  backdrop-filter: blur(10px);
   padding: 30px;
   margin-bottom: 30px;
-  transition: all .3s;
-  position: relative;
-  z-index: 2;
-}
-.card:hover {
-  box-shadow: 0 0 50px rgba(255,0,255,0.5);
 }
 
 /* 上傳區 */
 .upload-zone {
-  border: 2px dashed #ff66ff;
+  border: 2px dashed #d28fff;
   border-radius: 16px;
-  padding: 50px;
+  padding: 40px;
   text-align: center;
   cursor: pointer;
-  transition: all .3s;
+  transition: 0.3s;
 }
 .upload-zone:hover {
-  border-color: #ff99ff;
+  border-color: #ff9df5;
   background: rgba(255,255,255,0.05);
-  transform: translateY(-3px);
+  box-shadow: 0 0 20px rgba(255,150,255,0.4);
+}
+.preview-img {
+  max-width: 100%;
+  max-height: 400px;
+  margin-top: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 30px rgba(255,120,255,0.3);
 }
 
-/* 按鈕 */
-.btn {
-  display: inline-block;
-  padding: 15px 30px;
-  border-radius: 30px;
-  background: linear-gradient(135deg, #ff66ff, #b065ff);
-  color: #fff;
-  font-weight: bold;
-  font-size: 1.2rem;
-  border: none;
-  box-shadow: 0 0 25px rgba(255,100,255,0.5);
-  transition: all 0.3s ease;
+/* 風格選擇 */
+.style-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(140px,1fr));
+  gap: 12px;
+  margin-top: 20px;
 }
-.btn:hover {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 0 40px rgba(255,0,255,0.8);
+.style-btn {
+  padding: 12px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #7b2ff7, #f107a3);
+  border: none;
+  color: white;
+  font-weight: bold;
+  transition: 0.3s;
+}
+.style-btn.active {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #ff6fff;
+}
+
+/* 生成按鈕 */
+.generate-btn {
+  background: linear-gradient(135deg, #d76dff, #ff2a6d);
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 15px 40px;
+  margin-top: 25px;
+  transition: all 0.3s;
+  box-shadow: 0 0 25px rgba(255,100,255,0.4);
+}
+.generate-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 40px rgba(255,120,255,0.6);
+}
+.generate-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* 結果圖 */
-.result-images img {
-  border-radius: 14px;
-  box-shadow: 0 0 25px rgba(255,150,255,0.4);
+.result-img {
+  max-width: 100%;
+  border-radius: 16px;
+  box-shadow: 0 0 30px rgba(255,150,255,0.3);
+  margin-top: 20px;
 }
 
-/* 手機 */
-@media (max-width: 768px) {
-  h1 { font-size: 2rem; margin-top: 90px; }
+/* Loading */
+#loading {
+  display: none;
+  text-align: center;
+  margin: 40px auto;
 }
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 6px solid rgba(255,255,255,0.2);
+  border-top: 6px solid #ff4df5;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+@keyframes spin {to{transform:rotate(360deg)}}
 </style>
 </head>
 
 <body>
-<div id="bubbles"></div>
-
-<div class="container mx-auto max-w-3xl p-6">
-  <h1>💄 AI 網美濾鏡實驗室</h1>
-  <p class="subtitle">自拍 × AI 濾鏡 × 風格重塑 💫<br>保持容貌，只改氛圍與光線</p>
+<div id="glow-bg"></div>
+<div class="container">
+  <h1>💜 AI 網美濾鏡實驗室</h1>
+  <p class="subtitle">上傳自拍，一鍵變身網美 ✨</p>
 
   <div class="card">
-    <label class="block text-lg font-semibold text-pink-300 mb-3">📸 上傳你的自拍照</label>
+    <label class="block text-pink-200 text-lg mb-2">📸 上傳自拍照</label>
     <div id="upload-zone" class="upload-zone">
-      <p class="text-pink-200 text-lg">點擊或拖曳圖片上傳</p>
+      <p>點擊或拖曳圖片到這裡</p>
       <input type="file" id="file-input" accept="image/jpeg,image/png" class="hidden" />
     </div>
-    <div id="preview-container" class="hidden mt-4 text-center">
-      <p class="text-sm text-pink-400 mb-2">預覽：</p>
-      <img id="preview-image" class="max-h-80 mx-auto rounded-lg border border-pink-400 shadow-md">
-    </div>
+    <img id="preview" class="preview-img hidden" />
   </div>
 
-  <div class="card text-center">
-    <label class="block text-lg font-semibold text-pink-300 mb-2">🎨 選擇風格</label>
-    <select id="style" class="p-3 rounded-md bg-pink-950/30 border border-pink-500/40 text-pink-100 mb-4">
-      <option value="dreamy">☁️ 夢幻仙境</option>
-      <option value="kawaii">🌸 日系甜美</option>
-      <option value="vintage">📷 復古膠片</option>
-      <option value="neon">💜 霓虹都市</option>
-      <option value="nature">🌿 清新自然</option>
-    </select>
-    <button id="generate-btn" class="btn">✨ 生成美化影像</button>
+  <div class="card">
+    <label class="block text-pink-200 text-lg mb-2">🎨 選擇風格</label>
+    <div class="style-grid">
+      <button class="style-btn active" data-style="dreamy">☁️ 夢幻仙境</button>
+      <button class="style-btn" data-style="neon">💜 霓虹都市</button>
+      <button class="style-btn" data-style="sunset">🌅 日落光暈</button>
+      <button class="style-btn" data-style="vintage">📷 復古膠片</button>
+    </div>
+    <button id="generate-btn" class="generate-btn" disabled>✨ 開始轉換</button>
   </div>
 
-  <div id="result-container" class="card hidden text-center">
-    <h2 class="text-pink-300 text-xl mb-3">✨ 生成結果</h2>
-    <div class="result-images grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div>
-        <p class="text-sm text-pink-400 mb-2">原始照片</p>
-        <img id="original-image">
-      </div>
-      <div>
-        <p class="text-sm text-pink-400 mb-2">AI 美化版本</p>
-        <img id="result-image">
-      </div>
-    </div>
+  <div id="loading">
+    <div class="spinner"></div>
+    <p class="text-pink-200 text-lg">AI 魔法轉換中...</p>
+  </div>
+
+  <div id="result" class="hidden">
+    <h2 class="text-center text-pink-200 text-xl font-bold mb-3">✨ 完成！</h2>
+    <img id="result-img" class="result-img" />
+    <button id="download-btn" class="generate-btn mt-4">💾 下載圖片</button>
   </div>
 </div>
 
 <script>
-// --- 背景泡泡 ---
-const bubbles = document.getElementById('bubbles');
-for (let i = 0; i < 25; i++) {
-  const b = document.createElement('div');
-  b.className = 'bubble';
-  b.style.width = `${Math.random() * 60 + 30}px`;
-  b.style.height = b.style.width;
-  b.style.left = `${Math.random() * 100}%`;
-  b.style.top = `${Math.random() * 100}%`;
-  b.style.animationDuration = `${10 + Math.random() * 10}s`;
-  bubbles.appendChild(b);
+// === 上傳預覽 ===
+const uploadZone = document.getElementById('upload-zone');
+const fileInput = document.getElementById('file-input');
+const preview = document.getElementById('preview');
+const generateBtn = document.getElementById('generate-btn');
+let base64Image = null;
+
+uploadZone.onclick = () => fileInput.click();
+uploadZone.ondragover = e => { e.preventDefault(); uploadZone.style.borderColor='#ff88ff'; };
+uploadZone.ondragleave = () => uploadZone.style.borderColor='#d28fff';
+uploadZone.ondrop = e => {
+  e.preventDefault();
+  handleFile(e.dataTransfer.files[0]);
+};
+fileInput.onchange = e => handleFile(e.target.files[0]);
+
+function handleFile(file){
+  if(!file) return;
+  if(!file.type.match(/image.*/)) return alert("請上傳圖片！");
+  const reader = new FileReader();
+  reader.onload = e => {
+    base64Image = e.target.result.split(',')[1];
+    preview.src = e.target.result;
+    preview.classList.remove('hidden');
+    generateBtn.disabled = false;
+  };
+  reader.readAsDataURL(file);
 }
+
+// === 風格選擇 ===
+let style = 'dreamy';
+document.querySelectorAll('.style-btn').forEach(btn=>{
+  btn.onclick = ()=>{
+    document.querySelectorAll('.style-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    style = btn.dataset.style;
+  };
+});
+
+// === prompt 設定 ===
+const stylePrompts = {
+  dreamy: "Transform this selfie into a dreamy aesthetic with pastel clouds, pink glow, soft bokeh, maintain face realism.",
+  neon: "Transform this selfie into a cyberpunk neon city aesthetic with glowing purple lights, modern portrait, keep face unchanged.",
+  sunset: "Transform this selfie with golden hour warm sunlight and sunset gradient sky, cinematic mood.",
+  vintage: "Transform this selfie into a nostalgic film look with soft grain and faded tones, keep face realistic."
+};
+
+// === 生成 ===
+document.getElementById('generate-btn').onclick = async ()=>{
+  if(!base64Image) return alert("請先上傳圖片！");
+  const loading = document.getElementById('loading');
+  const resultDiv = document.getElementById('result');
+  loading.style.display='block';
+  resultDiv.classList.add('hidden');
+
+  try {
+    const res = await fetch('/api/gemini_beauty', {
+      method: 'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ prompt: stylePrompts[style], base64Image })
+    });
+    const data = await res.json();
+    loading.style.display='none';
+    if(data.image_base64){
+      document.getElementById('result-img').src='data:image/png;base64,'+data.image_base64;
+      resultDiv.classList.remove('hidden');
+    }else{
+      alert("❌ 沒有生成圖片：" + (data.error || "請稍後再試"));
+      console.log(data);
+    }
+  }catch(err){
+    loading.style.display='none';
+    alert("⚠️ 轉換失敗：" + err.message);
+  }
+};
+
+// === 下載 ===
+document.getElementById('download-btn').onclick = ()=>{
+  const link=document.createElement('a');
+  link.href=document.getElementById('result-img').src;
+  link.download='beautified_'+Date.now()+'.png';
+  link.click();
+};
 </script>
 </body>
 </html>
