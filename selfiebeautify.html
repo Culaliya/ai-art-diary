@@ -14,7 +14,6 @@ body {
   overflow-x: hidden;
   min-height: 100vh;
 }
-
 /* ✨ 背景柔光 */
 #bg-glow {
   position: fixed;
@@ -30,7 +29,6 @@ body {
   from { transform: translateY(0); opacity: 0.6; }
   to { transform: translateY(-30px); opacity: 0.9; }
 }
-
 /* 主容器 */
 .container {
   position: relative;
@@ -40,7 +38,6 @@ body {
   padding: 60px 20px;
   text-align: center;
 }
-
 /* 標題 */
 h1 {
   font-size: 2.8rem;
@@ -58,7 +55,6 @@ p.subtitle {
   letter-spacing: 1px;
   text-shadow: 0 0 20px rgba(255,150,255,0.5);
 }
-
 /* 卡片 */
 .card {
   background: rgba(255,255,255,0.08);
@@ -69,7 +65,6 @@ p.subtitle {
   padding: 25px 30px;
   margin-bottom: 25px;
 }
-
 /* 上傳區 */
 .upload-zone {
   border: 2px dashed rgba(255,200,255,0.4);
@@ -91,18 +86,17 @@ p.subtitle {
   border-radius: 14px;
   box-shadow: 0 0 30px rgba(255,160,255,0.25);
 }
-
-/* 按鈕 */
+/* 按鈕群組 */
 .style-grid {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 15px;
+  gap: 12px;
   margin-top: 15px;
 }
 .style-btn {
-  padding: 12px 18px;
-  min-width: 140px;
+  padding: 10px 16px;
+  min-width: 130px;
   border-radius: 30px;
   border: none;
   font-weight: 700;
@@ -111,17 +105,13 @@ p.subtitle {
   box-shadow: 0 0 12px rgba(255,120,255,0.4);
   transition: all 0.3s;
 }
-.style-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 18px rgba(255,160,255,0.6);
-}
+.style-btn:hover {transform: translateY(-2px);box-shadow: 0 0 18px rgba(255,160,255,0.6);}
 .style-btn.active {
   background: linear-gradient(135deg,#ff9df9,#ffe6ff);
   color: #8000aa;
   box-shadow: 0 0 25px rgba(255,180,255,0.7);
   transform: scale(1.05);
 }
-
 /* 生成按鈕 */
 .generate-btn {
   background: linear-gradient(90deg,#ff9df9,#ff6ef5);
@@ -137,7 +127,6 @@ p.subtitle {
 }
 .generate-btn:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(255,160,255,0.7);}
 .generate-btn:disabled {opacity: 0.5; cursor: not-allowed;}
-
 /* 結果 */
 .result-img {
   max-width: 100%;
@@ -145,7 +134,6 @@ p.subtitle {
   box-shadow: 0 0 30px rgba(255,180,255,0.3);
   margin-top: 20px;
 }
-
 /* Loading */
 .spinner {
   border: 4px solid rgba(255,255,255,0.2);
@@ -156,7 +144,6 @@ p.subtitle {
   animation: spin 1s linear infinite;
 }
 @keyframes spin {to{transform:rotate(360deg)}}
-
 /* 能量條 */
 #energy-bar {
   position: fixed;
@@ -180,7 +167,7 @@ p.subtitle {
 <div id="bg-glow"></div>
 <div class="container">
   <h1>💖 AI 網美濾鏡實驗室</h1>
-  <p class="subtitle">上傳自拍，一鍵變身網美 ✨</p>
+  <p class="subtitle">上傳自拍，一鍵變身雜誌級時尚照 ✨</p>
 
   <div class="card">
     <label class="block text-pink-200 mb-2 font-bold">📸 上傳自拍照</label>
@@ -194,17 +181,23 @@ p.subtitle {
   <div class="card">
     <label class="block text-pink-200 mb-2 font-bold">🎨 選擇風格</label>
     <div class="style-grid">
-      <button class="style-btn active" data-style="dreamy">☁️ 夢幻仙境</button>
-      <button class="style-btn" data-style="neon">💜 霓虹都市</button>
-      <button class="style-btn" data-style="sunset">🌇 日落光暈</button>
+      <button class="style-btn active" data-style="paris">🥐 法式咖啡廳</button>
+      <button class="style-btn" data-style="nyc">🏙️ 紐約街頭</button>
+      <button class="style-btn" data-style="beach">🏖️ 海島假期</button>
+      <button class="style-btn" data-style="neon">💜 霓虹夜拍</button>
       <button class="style-btn" data-style="vintage">📷 復古膠片</button>
+      <button class="style-btn" data-style="nature">🌿 山林秘境</button>
+      <button class="style-btn" data-style="studio">💎 棚拍時尚</button>
+      <button class="style-btn" data-style="pastel">☁️ 夢幻雜誌</button>
+      <button class="style-btn" data-style="snow">❄️ 冬季街拍</button>
+      <button class="style-btn" data-style="glam">🎉 派對女王</button>
     </div>
-    <button id="generate-btn" class="generate-btn" disabled>✨ 開始轉換</button>
+    <button id="generate-btn" class="generate-btn" disabled>✨ 開始生成</button>
   </div>
 
   <div id="loading" class="hidden">
     <div class="spinner"></div>
-    <p class="text-pink-200 font-bold">AI 魔法轉換中...</p>
+    <p class="text-pink-200 font-bold">AI 魔法變身中...</p>
   </div>
 
   <div id="result" class="hidden">
@@ -242,20 +235,14 @@ function handleFile(file){
 }
 
 // === 風格選擇 ===
-let style='dreamy';
+let style='paris';
 document.querySelectorAll('.style-btn').forEach(btn=>{
   btn.onclick=()=>{
     document.querySelectorAll('.style-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active'); style=btn.dataset.style;
+    btn.classList.add('active');
+    style=btn.dataset.style;
   };
 });
-
-const stylePrompts={
-  dreamy:"Transform selfie into dreamy pastel aesthetic, soft pink clouds, glowing bokeh lights, maintain realistic face.",
-  neon:"Transform selfie into neon cyber aesthetic, glowing purple light, futuristic background.",
-  sunset:"Transform selfie with sunset glow, warm light gradient, cinematic tone.",
-  vintage:"Transform selfie into nostalgic film tone, warm grain, faded pastel atmosphere."
-};
 
 // === 生成 ===
 document.getElementById('generate-btn').onclick=async()=>{
@@ -267,7 +254,7 @@ document.getElementById('generate-btn').onclick=async()=>{
     const res=await fetch('/api/gemini_beauty',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({prompt:stylePrompts[style],base64Image})
+      body:JSON.stringify({style:style,base64Image})
     });
     const data=await res.json();
     document.getElementById('loading').classList.add('hidden');
