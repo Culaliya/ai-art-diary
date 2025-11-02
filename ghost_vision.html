@@ -191,18 +191,30 @@ document.getElementById('generate-button').onclick = async ()=>{
   text.textContent = "👁 顯像中…靈波正在干擾。";
 
   try {
+    // ✅ 改這裡：多傳 type 參數
     const res = await fetch('/api/gemini_vision', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({ prompt:'Generate haunted spectral overlay', base64Logo })
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'ghost-visualizer', // 👁 這是新重點
+        prompt: 'Generate a spectral haunted overlay with purple aura and faint faces',
+        base64Logo
+      })
     });
+
     const data = await res.json();
-    if(data.image_base64){
+
+    if (data.image_base64) {
       resultImg.src = "data:image/png;base64," + data.image_base64;
       text.textContent = "結果：靈體殘影已捕捉成功。👁";
       hum.pause();
-    } else throw new Error(data.error || "AI 沒有回傳影像");
-  } catch(err){
+    } else {
+      console.error(data);
+      throw new Error(data.error || "AI 沒有回傳影像");
+    }
+
+  } catch (err) {
+    console.error(err);
     text.textContent = "⚠️ 顯像失敗：" + err.message;
     hum.pause();
   }
