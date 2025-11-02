@@ -1,7 +1,6 @@
 /**
- * 💖 Gemini 網美濾鏡生成 API (v4)
- * 模型：gemini-2.5-flash-image-preview — 可輸出圖片
- * 限制：每日 5 次 + 30 秒冷卻
+ * 💖 Gemini 網美濾鏡生成 API (v5)
+ * 模型：gemini-2.5-flash-image-preview — 支援輸出圖片
  */
 
 const COOLDOWN_MS = 30 * 1000;
@@ -54,12 +53,44 @@ export default async function handler(req, res) {
   usageMap.set(userIP, record);
 
   try {
-    const { prompt, base64Image } = req.body;
+    const { style, base64Image } = req.body;
     if (!base64Image) {
       return res.status(400).json({ error: "缺少 base64Image（上傳圖片）" });
     }
 
-    // 🪞 這裡改成與靈異顯像儀相同的模型
+    // 🎨 各濾鏡 Prompt 設計（更自然柔光）
+    const stylePrompts = {
+      dreamy: `
+Make this selfie look like a soft dreamy fantasy portrait.
+Use pastel pink and lavender tones, airy light leaks, glowing mist,
+add gentle sparkles and warm highlights on the face,
+preserve original facial features perfectly, smooth skin, clear eyes,
+magazine beauty photo style, IG influencer aesthetic.`,
+      
+      neon: `
+Enhance this selfie with a modern neon-night city style.
+Make it cinematic but beautiful, not scary.
+Use soft pink, lilac, and cyan tones with elegant light reflection,
+K-beauty makeup glow, luminous skin, bright background bokeh,
+keep face natural, add neon reflections subtly like a fashion editorial night photo.`,
+      
+      sunset: `
+Transform this selfie into a sunset golden-hour portrait.
+Use warm pink and gold light, soft shadows, glowing edges on hair,
+dreamy atmosphere, warm skin tone, natural golden filter.
+Preserve face shape perfectly with realistic detail and smooth gradient sky.`,
+      
+      vintage: `
+Make this selfie look like a French retro film portrait.
+Use creamy tones, vintage lens blur, and soft pastel color grading.
+Add warm analog light, subtle film grain, and soft focus background.
+Preserve facial features perfectly, elegant and nostalgic atmosphere.`,
+    };
+
+    const prompt =
+      stylePrompts[style] ||
+      "Apply soft pink-lavender lighting, smooth skin, pastel dreamy aesthetic, keep realistic face.";
+
     const modelName = "gemini-2.5-flash-image-preview";
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
 
@@ -67,7 +98,7 @@ export default async function handler(req, res) {
       contents: [
         {
           parts: [
-            { text: prompt || "Make this selfie glow with pink dreamy beauty filter" },
+            { text: prompt },
             { inlineData: { mimeType: "image/png", data: base64Image } },
           ],
         },
@@ -86,7 +117,7 @@ export default async function handler(req, res) {
       data?.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData?.data;
 
     if (image) {
-      console.log("✅ 生成成功", userIP);
+      console.log("✅ 生成成功:", userIP);
       return res.status(200).json({
         success: true,
         image_base64: image,
@@ -97,7 +128,7 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "Gemini 沒有回傳圖片", raw: data });
     }
   } catch (err) {
-    console.error("🔥 生成錯誤:", err);
+    console.error("🔥 錯誤:", err);
     return res.status(500).json({ error: err.message || "AI 錯誤" });
   }
 }
