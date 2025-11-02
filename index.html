@@ -113,6 +113,15 @@ h2{color:#ff3eff;margin-bottom:16px;}
   background: linear-gradient(135deg, #00e0ff, #008cff);
 }
 
+.lab-btn.green {
+  background: linear-gradient(135deg, #00ff88, #00cc99);
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+}
+
+.lab-btn.green:hover {
+  box-shadow: 0 0 30px rgba(0, 255, 136, 0.6);
+}
+
   
 /* ===== 超級對話框樣式 ===== */
 #chatContainer {
@@ -297,39 +306,13 @@ h2{color:#ff3eff;margin-bottom:16px;}
   background: rgba(255, 62, 255, 0.4);
 }
 
-  @keyframes floatButton {
+@keyframes floatButton {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-6px); }
 }
 
 #gameMenuBtn, #fortuneBtn {
   animation: floatButton 3s ease-in-out infinite;
-}
-
-
-/* 遊戲按鈕 */
-#gameBtn {
-  position: fixed;
-  top: 80px;
-  right: 20px;
-  z-index: 1000;
-  padding: 12px 20px;
-  background: linear-gradient(135deg, #ff3eff, #ff00aa);
-  border: 2px solid #ff3eff;
-  border-radius: 25px;
-  color: #fff;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 0 20px rgba(255, 62, 255, 0.5);
-}
-#gameBtn:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 30px rgba(255, 62, 255, 0.8);
 }
 
 /* 貓咪動畫效果 */
@@ -386,6 +369,200 @@ h2{color:#ff3eff;margin-bottom:16px;}
   0%, 100% { box-shadow: 0 0 10px #0ff; }
   50% { box-shadow: 0 0 25px #0ff, 0 0 40px #0ff; }
 }
+
+/* ===== 📱 手機響應式設計 ===== */
+@media (max-width: 768px) {
+  /* 標題區 */
+  h1 {
+    font-size: 2.5em;
+    padding: 0 15px;
+  }
+  
+  header {
+    padding: 40px 15px;
+  }
+  
+  header p {
+    font-size: 0.9em;
+    padding: 0 10px;
+  }
+  
+  #weather-quote {
+    font-size: 0.85em;
+  }
+  
+  #inspiration-bar {
+    font-size: 0.9em;
+    padding: 0 10px;
+  }
+  
+  /* 實驗室按鈕改為垂直排列 */
+  .lab-buttons {
+    flex-direction: column;
+    gap: 12px;
+    padding: 0 20px;
+    margin-top: 30px;
+  }
+  
+  .lab-btn {
+    width: 100%;
+    text-align: center;
+    padding: 14px 20px;
+    font-size: 0.95em;
+  }
+  
+  /* Section 調整 */
+  section {
+    padding: 30px 15px;
+  }
+  
+  h2 {
+    font-size: 1.5em;
+    text-align: center;
+  }
+  
+  /* 聊天容器 */
+  #chatContainer {
+    padding: 15px;
+    margin: 20px 10px;
+  }
+  
+  #chatHistory {
+    height: 250px;
+    padding: 10px;
+  }
+  
+  .message-bubble {
+    max-width: 85%;
+    font-size: 0.9em;
+  }
+  
+  .message-avatar {
+    width: 30px;
+    height: 30px;
+  }
+  
+  #chatInputArea {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  #catInput {
+    width: 100%;
+    font-size: 14px;
+  }
+  
+  #sendBtn {
+    width: 100%;
+    padding: 12px;
+  }
+  
+  #quickQuestions {
+    gap: 6px;
+  }
+  
+  .quick-btn {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
+  
+  /* 貓咪圖片 */
+  #memeCat {
+    width: 100px;
+  }
+  
+  /* App 卡片 */
+  .app-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 15px;
+  }
+  
+  .app-image {
+    width: 80px;
+    height: 80px;
+  }
+  
+  /* 輪播控制 */
+  .slide-btn {
+    padding: 8px 12px;
+    font-size: 18px;
+  }
+  
+  .slideshow-container {
+    max-width: 100%;
+    padding: 0 10px;
+  }
+  
+  /* 媒體區域改為垂直排列 */
+  .media-flex {
+    flex-direction: column;
+  }
+  
+  .video-container,
+  .spotify-container {
+    min-width: 100%;
+  }
+  
+  /* 背景音樂按鈕 */
+  #bgm-control {
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+    top: 15px;
+    right: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 2em;
+  }
+  
+  header p {
+    font-size: 0.8em;
+  }
+  
+  #weather-quote {
+    font-size: 0.75em;
+  }
+  
+  #inspiration-bar {
+    font-size: 0.8em;
+  }
+  
+  .lab-btn {
+    padding: 12px 16px;
+    font-size: 0.9em;
+  }
+  
+  h2 {
+    font-size: 1.3em;
+  }
+  
+  #chatHistory {
+    height: 200px;
+  }
+  
+  .message-bubble {
+    font-size: 0.85em;
+    padding: 10px 12px;
+  }
+  
+  #memeCat {
+    width: 80px;
+  }
+  
+  .app-image {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .slide-btn {
+    padding: 6px 10px;
+    font-size: 16px;
+  }
+}
 </style>
 </head>
 <body>
@@ -401,8 +578,6 @@ h2{color:#ff3eff;margin-bottom:16px;}
   <source src="music/background.mp3" type="audio/mpeg">
 </audio>
 
-
-
 <!-- 音效元素 -->
 <audio id="hover-sound" src="music/hover.mp3"></audio>
 <audio id="click-sound" src="music/click.mp3"></audio>
@@ -414,7 +589,7 @@ h2{color:#ff3eff;margin-bottom:16px;}
   <div id="weather-quote">
     <span id="weather">載入天氣中…</span>
     <div id="inspiration-bar" style="text-align:center;margin-top:12px;color:#0ff;font-size:1.1em;opacity:0;transition:opacity 1.2s ease-in-out;">
-      <span id="inspirationText">✨ 問題不是 AI 是否有靈魂，而是我們是否還保有想像 ✨</span>
+      <span id="inspirationText">✨ 問題不是 AI 是否有靈魂,而是我們是否還保有想像 ✨</span>
     </div>
   </div>
 </header>
@@ -424,7 +599,7 @@ h2{color:#ff3eff;margin-bottom:16px;}
   <a href="games.html" class="lab-btn pink">🎮 遊戲實驗室</a>
   <a href="fortune_lab.html" class="lab-btn purple">🔮 命理實驗室</a>
   <a href="music_lab.html" class="lab-btn blue">🎧 音樂實驗室</a>
-   <a href="image_lab.html" class="lab-btn green">🪞 圖像實驗室</a>
+  <a href="image_lab.html" class="lab-btn green">🪞 圖像實驗室</a>
 </div>
 
 <!-- ===== 超級 AI 對話框 ===== -->
@@ -483,7 +658,6 @@ h2{color:#ff3eff;margin-bottom:16px;}
     <div class="video-container">
       <iframe src="https://www.youtube.com/embed/videoseries?list=PLf1VNbciujbc-QSR2wNNCvYZCv1cZ88ef" title="YouTube playlist" allow="autoplay; clipboard-write; encrypted-media; fullscreen" allowfullscreen></iframe>
     </div>
-   
   </div>
 </section>
 
@@ -503,24 +677,24 @@ h2{color:#ff3eff;margin-bottom:16px;}
     <img class="slide" src="assets/midjourney/mid10.jpg">
     <img class="slide" src="assets/midjourney/mid11.jpg">
     <img class="slide" src="assets/midjourney/mid12.jpg">
-     <img class="slide" src="assets/midjourney/mid13.jpg">
-     <img class="slide" src="assets/midjourney/mid14.jpg">
-     <img class="slide" src="assets/midjourney/mid15.jpg">
-     <img class="slide" src="assets/midjourney/mid16.jpg">
-     <img class="slide" src="assets/midjourney/mid17.jpg">
-     <img class="slide" src="assets/midjourney/mid18.jpg">
-     <img class="slide" src="assets/midjourney/mid19.jpg">
-     <img class="slide" src="assets/midjourney/mid20.jpg">
-     <img class="slide" src="assets/midjourney/mid21.jpg">
-     <img class="slide" src="assets/midjourney/mid22.jpg">
-     <img class="slide" src="assets/midjourney/mid23.jpg">
-     <img class="slide" src="assets/midjourney/mid24.jpg">
-     <img class="slide" src="assets/midjourney/mid25.jpg">
-     <img class="slide" src="assets/midjourney/mid26.jpg">
-     <img class="slide" src="assets/midjourney/mid27.jpg">
-     <img class="slide" src="assets/midjourney/mid28.jpg">
-     <img class="slide" src="assets/midjourney/mid29.jpg">
-     <img class="slide" src="assets/midjourney/mid30.jpg">
+    <img class="slide" src="assets/midjourney/mid13.jpg">
+    <img class="slide" src="assets/midjourney/mid14.jpg">
+    <img class="slide" src="assets/midjourney/mid15.jpg">
+    <img class="slide" src="assets/midjourney/mid16.jpg">
+    <img class="slide" src="assets/midjourney/mid17.jpg">
+    <img class="slide" src="assets/midjourney/mid18.jpg">
+    <img class="slide" src="assets/midjourney/mid19.jpg">
+    <img class="slide" src="assets/midjourney/mid20.jpg">
+    <img class="slide" src="assets/midjourney/mid21.jpg">
+    <img class="slide" src="assets/midjourney/mid22.jpg">
+    <img class="slide" src="assets/midjourney/mid23.jpg">
+    <img class="slide" src="assets/midjourney/mid24.jpg">
+    <img class="slide" src="assets/midjourney/mid25.jpg">
+    <img class="slide" src="assets/midjourney/mid26.jpg">
+    <img class="slide" src="assets/midjourney/mid27.jpg">
+    <img class="slide" src="assets/midjourney/mid28.jpg">
+    <img class="slide" src="assets/midjourney/mid29.jpg">
+    <img class="slide" src="assets/midjourney/mid30.jpg">
     <button class="slide-btn prev" onclick="changeSlide(-1)">❮</button>
     <button class="slide-btn next" onclick="changeSlide(1)">❯</button>
   </div>
@@ -555,8 +729,6 @@ h2{color:#ff3eff;margin-bottom:16px;}
     <span class="dot" onclick="currentSlide(27)"></span>
     <span class="dot" onclick="currentSlide(28)"></span>
     <span class="dot" onclick="currentSlide(29)"></span>
-    <span class="dot" onclick="currentSlide(30)"></span>
-    
   </div>
 </section>
 
@@ -571,10 +743,6 @@ h2{color:#ff3eff;margin-bottom:16px;}
   <h2>🌌 NASA Astronomy Picture of the Day</h2>
   <div id="apod" style="text-align:center;">載入星圖中…</div>
 </section>
-
-
-
-
 
 <!-- Comments -->
 <section>
@@ -959,9 +1127,6 @@ async function loadApps() {
 }
 loadApps();
 
-
-
-
 // ===== Hover sounds =====
 function addHoverSounds() {
   const hoverSound = document.getElementById('hover-sound');
@@ -1051,7 +1216,7 @@ fetch('https://api.ipify.org?format=json')
       .then(info => {
         fetch('https://script.google.com/macros/s/AKfycbypamhGa0ZHNzhLeG-FxH0bfFe4RU-rDHoK4V4qYXF8H9-Ut6AUU1LG_gq6yAw1Rqa5/exec', {
           method: 'POST',
-          mode: 'no-cors', // 防止 CORS 攔截
+          mode: 'no-cors',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             ip: ip,
@@ -1061,7 +1226,7 @@ fetch('https://api.ipify.org?format=json')
             referrer: document.referrer
           })
         })
-        .then(() => console.log('✅ IP log sent (Plus版)'))
+        .then(() => console.log('✅ IP log sent'))
         .catch(err => console.error('⚠️ IP log failed:', err));
       });
   });
@@ -1072,13 +1237,11 @@ fetch('https://api.ipify.org?format=json')
 
 <!-- ⭐ 全球訪客星圖繪製模組 -->
 <script>
-// === 星圖設定 ===
 const canvasMap = document.getElementById('visitorMap');
 const ctxMap = canvasMap.getContext('2d');
 canvasMap.width = window.innerWidth;
 canvasMap.height = window.innerHeight;
 
-// 畫星光點
 function drawStar(x, y, color = "#0ff") {
   ctxMap.beginPath();
   ctxMap.arc(x, y, Math.random() * 2 + 1, 0, Math.PI * 2);
@@ -1086,7 +1249,6 @@ function drawStar(x, y, color = "#0ff") {
   ctxMap.fill();
 }
 
-// 🌍 各國經緯度（lon, lat）
 const countryCoords = {
   "Taiwan": [121, 23],
   "Japan": [138, 36],
@@ -1106,14 +1268,12 @@ const countryCoords = {
   "New Zealand": [174, -41]
 };
 
-// 經緯度轉換成畫布座標
 function project(lon, lat) {
   const x = ((lon + 180) / 360) * canvasMap.width;
   const y = ((90 - lat) / 180) * canvasMap.height;
   return [x, y];
 }
 
-// 取得 Google Sheet 資料並畫出星光
 fetch('https://script.google.com/macros/s/AKfycbycTbW9GrLhJA60G0dvOCHH-HRqzhpPMJgQrVyDbOXlFFRSCkvD-FwEu3XUlHTTd7ng/exec')
   .then(res => res.json())
   .then(data => {
@@ -1129,7 +1289,6 @@ fetch('https://script.google.com/macros/s/AKfycbycTbW9GrLhJA60G0dvOCHH-HRqzhpPMJ
   })
   .catch(err => console.error('⚠️ Failed to load visitor data:', err));
 
-// 畫布自動隨視窗大小更新
 window.addEventListener('resize', () => {
   canvasMap.width = window.innerWidth;
   canvasMap.height = window.innerHeight;
@@ -1138,4 +1297,3 @@ window.addEventListener('resize', () => {
 
 </body>
 </html>
-
