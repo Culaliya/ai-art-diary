@@ -66,6 +66,7 @@ h1 {
   flex-wrap:wrap;
   gap:40px;
   margin-top:60px;
+  padding:20px;
   z-index:5;
 }
 .lab-card {
@@ -125,6 +126,49 @@ h1 {
   position:fixed;top:0;left:0;width:100%;height:100%;
   pointer-events:none;z-index:0;
 }
+
+/* 手機響應式 */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2em;
+    margin-top: 40px;
+  }
+  
+  .subtitle {
+    font-size: 1em;
+    padding: 0 15px;
+  }
+  
+  .lab-table {
+    gap: 25px;
+    padding: 15px;
+  }
+  
+  .lab-card {
+    width: calc(50% - 20px);
+    min-width: 160px;
+    height: 220px;
+  }
+  
+  .lab-icon {
+    font-size: 45px;
+  }
+  
+  .lab-card h3 {
+    font-size: 0.9em;
+  }
+  
+  .lab-desc {
+    font-size: 0.8em;
+  }
+}
+
+@media (max-width: 480px) {
+  .lab-card {
+    width: calc(100% - 30px);
+    max-width: 300px;
+  }
+}
 </style>
 </head>
 <body>
@@ -144,7 +188,8 @@ async function loadLabs(){
   const table=document.getElementById("labTable");
   const labs=[
     {icon:"🍔",name:"毒舌卡路里計算機",desc:"上傳食物照片,讓 AI 嘴爆你的晚餐。",link:"toxic_calorie.html",updated:"2025/11/02"},
-    {icon:"👻",name:"靈異顯像儀",desc:"自拍？AI 幫你召喚靈體殘影。",link:"ghost_vision.html"},
+    {icon:"👻",name:"靈異顯像儀",desc:"自拍？AI 幫你召喚靈體殘影。",link:"ghost_vision.html",updated:"2025/11/02"},
+    {icon:"✨",name:"網美濾鏡實驗室",desc:"自拍秒變網美！保持容貌換背景。",link:"selfie_beautify.html",updated:"2025/11/02"},
     {icon:"🌐",name:"科技全息轉換",desc:"將照片轉為全息未來風格。",link:"hologram_lab.html"},
     {icon:"💫",name:"賽博重組工坊",desc:"融合電子與霓虹的數位幻身。",link:"cyber_mix.html"}
   ];
@@ -173,13 +218,16 @@ function initCardEvents(){
   const cards=document.querySelectorAll(".lab-card");
   cards.forEach(card=>{
     card.addEventListener("click",()=>{
-      if(card.classList.contains("active")){
-        window.location.href=card.dataset.link;
-        return;
-      }
-      cards.forEach(c=>{c.classList.remove("active");c.style.opacity=0.6;});
-      card.classList.add("active");
-      card.style.opacity=1;
+      // 直接跳轉，不需要二次點擊
+      window.location.href=card.dataset.link;
+    });
+    
+    // 加入 hover 預覽效果
+    card.addEventListener("mouseenter",()=>{
+      card.style.transform="translateY(-15px) scale(1.05)";
+    });
+    card.addEventListener("mouseleave",()=>{
+      card.style.transform="";
     });
   });
 }
