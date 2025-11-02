@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-<title>👁️ 靈異顯像儀 v5：靈波干擾 × 幽靈雨強化版</title>
+<title>👁️ 靈異顯像儀 v6：靈波共鳴 × 靈壓強度版</title>
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
@@ -84,18 +84,23 @@ body {
 /* 標題 */
 h1 {
   text-align:center;
-  font-size:3rem;
-  margin-top:110px;
+  font-size:4rem;
+  margin-top:160px;
   color:#e0c6ff;
-  text-shadow:0 0 40px #b065ff, 0 0 60px #b065ff;
+  text-shadow:0 0 25px #b065ff, 0 0 60px #b065ff, 0 0 100px #b065ff;
   font-weight:900;
+  animation:titleGlow 5s ease-in-out infinite;
+}
+@keyframes titleGlow {
+  0%,100% {text-shadow:0 0 30px #b065ff, 0 0 60px #ff3eff;}
+  50% {text-shadow:0 0 50px #ff3eff, 0 0 100px #b065ff;}
 }
 p.sub {
   text-align:center;
   color:#d3b8ff;
-  font-size:1.3rem;
-  margin-top:10px;
-  margin-bottom:50px;
+  font-size:1.4rem;
+  margin-top:20px;
+  margin-bottom:60px;
 }
 </style>
 </head>
@@ -107,7 +112,7 @@ p.sub {
 <div id="glitch"></div>
 
 <h1>👁️ 靈異顯像儀</h1>
-<p class="sub">上傳自拍，看看 AI 是否能捕捉到「祂」的殘影……</p>
+<p class="sub">上傳自拍，看 AI 是否能捕捉到「祂」的殘影……</p>
 
 <div class="container mx-auto max-w-2xl relative z-10 pb-20">
   <div class="card p-6 mb-6">
@@ -124,11 +129,19 @@ p.sub {
 
   <div class="card p-6 mb-6 text-center">
     <label class="block text-lg font-semibold text-purple-300 mb-2">想召喚什麼氣氛？</label>
-    <select id="mode" class="p-3 rounded-md bg-purple-950/40 border border-purple-500/40 text-purple-100 focus:ring-2 focus:ring-purple-500">
+    <select id="mode" class="p-3 rounded-md bg-purple-950/40 border border-purple-500/40 text-purple-100 focus:ring-2 focus:ring-purple-500 mb-4">
       <option value="spirit">👁 靈體顯像</option>
       <option value="phantom">💀 惡靈殘影</option>
       <option value="dream">🌫 夢境之影</option>
     </select>
+
+    <label class="block text-lg font-semibold text-purple-300 mb-2">靈壓強度</label>
+    <select id="intensity" class="p-3 rounded-md bg-purple-950/40 border border-purple-500/40 text-purple-100 focus:ring-2 focus:ring-purple-500">
+      <option value="low">🪶 弱（穩定顯像）</option>
+      <option value="medium" selected>⚡ 中（平衡）</option>
+      <option value="high">🌪 強（高混亂靈波）</option>
+    </select>
+
     <button id="generate-button" class="mt-6 px-6 py-3 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-bold shadow-lg transition">開始顯像</button>
   </div>
 
@@ -178,28 +191,30 @@ document.getElementById('generate-button').onclick = async ()=>{
   text.textContent = "👁 顯像中…靈波正在干擾。";
 
   const mode = document.getElementById('mode').value;
-  let prompt = '';
+  const intensity = document.getElementById('intensity').value;
 
-  // 🎭 三種風格 Prompt
+  let prompt = '';
   if (mode === 'spirit') {
-    prompt = `
-Generate a mystical ethereal overlay — faint translucent spirits emerging from mist,
-glowing violet aura, cinematic ghost film style, soft surreal lighting, detailed spectral haze.`;
+    prompt = `Generate a mystical ethereal overlay — faint translucent spirits emerging from mist,
+    glowing violet aura, cinematic ghost film style, soft surreal lighting, detailed spectral haze.`;
   } else if (mode === 'phantom') {
-    prompt = `
-Generate a dark horror-style haunted overlay — cursed phantoms screaming from shadows,
-glowing red-purple energy, smoky corruption tendrils, eerie cinematic lighting, cursed ritual atmosphere.`;
+    prompt = `Generate a dark horror haunted overlay — cursed phantoms screaming from shadows,
+    glowing red-purple energy, smoky corruption tendrils, eerie cinematic lighting, cursed ritual atmosphere.`;
   } else if (mode === 'dream') {
-    prompt = `
-Generate a surreal dreamlike aura overlay — ghostly shapes dissolving into glowing fog,
-pastel purple and blue light, lucid dream atmosphere, lens bloom, abstract spectral shimmer.`;
+    prompt = `Generate a surreal dreamlike aura — ghostly shapes dissolving into glowing fog,
+    pastel purple and blue light, lucid dream atmosphere, lens bloom, abstract spectral shimmer.`;
   }
+
+  // 靈壓影響溫度設定
+  let temperature = 0.8;
+  if (intensity === 'low') temperature = 0.4;
+  else if (intensity === 'high') temperature = 1.1;
 
   try {
     const res = await fetch('/api/gemini_vision', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'ghost-visualizer', prompt, base64Logo })
+      body: JSON.stringify({ prompt, base64Logo, temperature })
     });
     const data = await res.json();
     if (data.image_base64) {
@@ -207,11 +222,9 @@ pastel purple and blue light, lucid dream atmosphere, lens bloom, abstract spect
       text.textContent = "結果：靈體殘影已捕捉成功。👁";
       hum.pause();
     } else {
-      console.error(data);
       throw new Error(data.error || "AI 沒有回傳影像");
     }
   } catch (err) {
-    console.error(err);
     text.textContent = "⚠️ 顯像失敗：" + err.message;
     hum.pause();
   }
