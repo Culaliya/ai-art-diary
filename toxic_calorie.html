@@ -1,105 +1,219 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale-1.0">
-    <title>AI 毒舌卡路里計算機</title>
-    <!-- 載入 Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* 簡單的 loading spinner 動畫 */
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top-color: #fff;
-            border-radius: 50%;
-            width: 1rem;
-            height: 1rem;
-            animation: spin 1s linear infinite;
-        }
-        /* 用於拖放區域的樣式 */
-        .drag-over {
-            border-color: #2563eb;
-            background-color: #eff6ff;
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>🍔 AI 毒舌卡路里計算機 v2</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body {
+    margin:0;
+    overflow-x:hidden;
+    background:radial-gradient(circle at 50% 20%, #1a0000 0%, #200000 60%, #000 100%);
+    color:#fff;
+    font-family:'Noto Sans TC',sans-serif;
+  }
+
+  /* 🍔 背景漢堡雨 */
+  #burgerRain {
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    z-index:0;
+    pointer-events:none;
+  }
+  .burger {
+    position:absolute;
+    font-size:36px;
+    opacity:0.8;
+    animation:fall linear infinite;
+  }
+  @keyframes fall {
+    0% {transform:translateY(-10vh) rotate(0deg);}
+    100% {transform:translateY(110vh) rotate(360deg);}
+  }
+
+  /* 🧊 卡片風格 */
+  .card {
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,100,100,0.4);
+    border-radius:16px;
+    box-shadow:0 0 15px rgba(255,80,80,0.3);
+    backdrop-filter:blur(10px);
+    transition:all .3s ease;
+  }
+  .card:hover {
+    box-shadow:0 0 30px rgba(255,100,100,0.6);
+    transform:translateY(-4px) scale(1.02);
+  }
+
+  /* 🍔 銘牌 */
+  h1 {
+    text-align:center;
+    font-size:2.5rem;
+    margin-top:60px;
+    color:#ff4444;
+    text-shadow:0 0 20px #ff2222;
+    font-weight:900;
+    letter-spacing:2px;
+  }
+  h1 span {
+    color:#fff;
+    font-weight:400;
+    font-size:1rem;
+    display:block;
+    text-shadow:none;
+  }
+</style>
 </head>
-<body class="bg-gradient-to-b from-gray-950 via-gray-900 to-gray-800 text-cyan-100 font-['Orbitron'] antialiased">
-  <div class="container mx-auto max-w-2xl p-6">
-    <h1 class="text-center text-4xl font-bold mb-6 text-cyan-400 drop-shadow-lg">
-      AI 毒舌卡路里計算機 🍔
-    </h1>
-    <p class="text-center text-sm text-cyan-300 mb-8 opacity-70">上傳食物照片，接受 AI 的犀利審判 👀</p>
+<body class="text-red-100 antialiased">
+<canvas id="burgerRain"></canvas>
 
-    <!-- 主卡 -->
-    <div class="bg-gray-900/60 backdrop-blur-sm p-8 rounded-3xl border border-cyan-500/30 shadow-lg space-y-6">
-      <label class="block text-sm font-semibold mb-2 text-cyan-400">上傳食物照片</label>
-      <div id="drop-zone" class="border-2 border-dashed border-cyan-400/40 rounded-xl p-6 text-center cursor-pointer hover:border-cyan-300 transition">
-        <p class="text-cyan-200">拖曳圖片或點擊上傳</p>
-        <input id="file-upload" type="file" class="hidden" accept="image/png, image/jpeg" />
-      </div>
+<h1>🍔 AI 毒舌卡路里計算機 <span>讓 AI 嘴爆你的宵夜罪惡感 😈</span></h1>
 
-      <textarea id="prompt" class="w-full p-3 bg-gray-800 text-cyan-100 rounded-lg border border-cyan-600/30 focus:border-cyan-400" placeholder="想說點什麼？（例如：這是我午餐，幫我嘴一嘴）"></textarea>
+<div class="container mx-auto max-w-2xl mt-10 relative z-10">
 
-      <button id="generate-button" class="w-full py-3 bg-cyan-600 hover:bg-cyan-700 rounded-lg font-bold text-gray-900 transition">
-        開始分析
-      </button>
+  <!-- 上傳卡片 -->
+  <div class="card p-6 mb-6">
+    <label class="block text-lg font-semibold text-red-300 mb-3">上傳食物照片</label>
+    <div id="drop-zone" class="flex justify-center items-center border-2 border-dashed border-red-400 rounded-lg p-8 cursor-pointer hover:border-red-500 transition">
+      <p class="text-sm text-red-200">拖曳圖片或點擊上傳</p>
+      <input id="file-upload" type="file" accept="image/png,image/jpeg" class="hidden" />
+    </div>
 
-      <div id="result-container" class="hidden mt-6 space-y-4">
-        <div class="bg-cyan-900/30 p-4 rounded-lg">
-          <h2 class="font-semibold text-cyan-300 mb-2">AI 評論：</h2>
-          <p id="result-review" class="italic"></p>
-        </div>
-        <div class="bg-cyan-900/30 p-4 rounded-lg">
-          <h2 class="font-semibold text-cyan-300 mb-2">估算熱量：</h2>
-          <p id="result-calories" class="text-4xl font-bold text-cyan-100"></p>
-        </div>
-        <ul id="result-items" class="list-disc list-inside text-cyan-200"></ul>
-      </div>
+    <!-- 預覽 -->
+    <div id="preview-container" class="hidden mt-4 text-center">
+      <p class="text-sm text-gray-400 mb-2">預覽：</p>
+      <img id="preview-image" src="" class="max-h-64 mx-auto rounded-lg border border-red-500 shadow-md">
     </div>
   </div>
 
-  <script>
-  const upload = document.getElementById('file-upload');
-  const dropZone = document.getElementById('drop-zone');
-  const button = document.getElementById('generate-button');
-  const result = document.getElementById('result-container');
-  let base64Logo = null;
+  <!-- 提示 -->
+  <div class="card p-6 mb-6">
+    <label class="block text-lg font-semibold text-red-300 mb-2">想說點什麼？</label>
+    <textarea id="prompt" rows="2" class="w-full p-3 rounded-md bg-red-950/40 border border-red-500/40 text-red-100 focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="例如：這是我早餐，請嘴一嘴..."></textarea>
+  </div>
 
-  dropZone.onclick = () => upload.click();
-  upload.onchange = e => toBase64(e.target.files[0]);
-  dropZone.ondrop = e => {
-    e.preventDefault();
-    toBase64(e.dataTransfer.files[0]);
+  <!-- 按鈕 -->
+  <div class="flex justify-center mb-6">
+    <button id="generate-button" class="px-6 py-3 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold shadow-lg transition">開始分析</button>
+  </div>
+
+  <!-- 結果 -->
+  <div id="result-container" class="hidden space-y-6">
+    <div class="card p-4">
+      <h2 class="text-lg font-semibold text-red-300 mb-2">AI 評論：</h2>
+      <p id="result-review" class="italic text-red-100"></p>
+    </div>
+    <div class="card p-4">
+      <h2 class="text-lg font-semibold text-red-300 mb-2">估算熱量：</h2>
+      <p id="result-calories" class="text-4xl font-bold text-white"></p>
+    </div>
+    <div class="card p-4">
+      <h2 class="text-lg font-semibold text-red-300 mb-2">偵測到的食物：</h2>
+      <ul id="result-items" class="list-disc list-inside text-red-200"></ul>
+    </div>
+  </div>
+</div>
+
+<script>
+// === 上傳 + 預覽 ===
+const upload = document.getElementById('file-upload');
+const dropZone = document.getElementById('drop-zone');
+const button = document.getElementById('generate-button');
+const result = document.getElementById('result-container');
+let base64Logo = null;
+
+dropZone.onclick = () => upload.click();
+upload.onchange = e => handleFile(e.target.files[0]);
+dropZone.ondrop = e => {
+  e.preventDefault();
+  handleFile(e.dataTransfer.files[0]);
+};
+dropZone.ondragover = e => e.preventDefault();
+
+function handleFile(file){
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    base64Logo = e.target.result.split(',')[1];
+    // 顯示預覽圖
+    const previewContainer = document.getElementById('preview-container');
+    const previewImage = document.getElementById('preview-image');
+    previewImage.src = e.target.result;
+    previewContainer.classList.remove('hidden');
   };
-  dropZone.ondragover = e => e.preventDefault();
+  reader.readAsDataURL(file);
+}
 
-  function toBase64(file){
-    const reader = new FileReader();
-    reader.onload = e => base64Logo = e.target.result.split(',')[1];
-    reader.readAsDataURL(file);
-  }
+// === 分析按鈕 ===
+button.onclick = async () => {
+  if(!base64Logo) return alert('請先上傳食物照片！');
+  button.textContent = "分析中...";
+  const res = await fetch('/api/gemini', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      base64Logo,
+      prompt: document.getElementById('prompt').value
+    })
+  });
+  const data = await res.json();
+  if(data.error){ alert(data.error); button.textContent="開始分析"; return; }
 
-  button.onclick = async () => {
-    if (!base64Logo) return alert('請上傳食物照片！');
-    button.textContent = "分析中...";
-    const res = await fetch('/api/gemini', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ base64Logo, prompt: document.getElementById('prompt').value })
-    });
-    const data = await res.json();
-    if (data.error) { alert(data.error); return; }
-    document.getElementById('result-review').textContent = data.review;
-    document.getElementById('result-calories').textContent = data.estimated_calories + ' kcal';
-    document.getElementById('result-items').innerHTML = data.items.map(i=>`<li>${i}</li>`).join('');
-    result.classList.remove('hidden');
-    button.textContent = "再分析一次";
+  document.getElementById('result-review').textContent = data.review;
+  document.getElementById('result-calories').textContent = data.estimated_calories + ' kcal';
+  document.getElementById('result-items').innerHTML = data.items.map(i=>`<li>${i}</li>`).join('');
+  result.classList.remove('hidden');
+  button.textContent = "再分析一次";
+};
+
+// === 背景漢堡雨 ===
+const canvas = document.getElementById('burgerRain');
+const ctx = canvas.getContext('2d');
+let width, height, burgers = [];
+
+function resize(){
+  width = canvas.width = window.innerWidth;
+  height = canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+class Burger {
+  constructor(){
+    this.x = Math.random() * width;
+    this.y = Math.random() * -height;
+    this.size = Math.random() * 40 + 30;
+    this.speed = Math.random() * 1 + 0.5;
+    this.emoji = "🍔";
   }
-  </script>
+  update(){
+    this.y += this.speed;
+    if(this.y > height + 50){
+      this.y = -50;
+      this.x = Math.random() * width;
+    }
+  }
+  draw(){
+    ctx.font = `${this.size}px 'Segoe UI Emoji'`;
+    ctx.fillText(this.emoji, this.x, this.y);
+  }
+}
+for(let i=0;i<25;i++) burgers.push(new Burger());
+
+function animate(){
+  ctx.clearRect(0,0,width,height);
+  for(const b of burgers){
+    b.update();
+    b.draw();
+  }
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
 </body>
-
 </html>
-
