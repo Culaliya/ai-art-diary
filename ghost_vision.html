@@ -131,6 +131,18 @@ p.sub {
   0%,100% { background: rgba(255, 80, 80, 0.5); }
   50% { background: rgba(255, 0, 0, 0.9); box-shadow: 0 0 15px #ff0000; }
 }
+/* 🔮 靈壓能量條調整：自動下移時防止遮蓋 */
+@media (max-width: 768px) {
+  #energy-text {
+    font-size: 1rem;
+  }
+  .fixed.top-20 {
+    top: 4.5rem !important;
+    width: 85% !important;
+  }
+}
+
+  
 </style>
 </head>
 
@@ -141,12 +153,15 @@ p.sub {
 <div id="glitch"></div>
 
 <!-- ⚡ 靈壓能量條 -->
-<div class="fixed top-6 left-1/2 transform -translate-x-1/2 w-80 text-center z-50">
-  <p id="energy-text" class="text-purple-300 text-sm mb-1">👁️ 靈壓能量 3/3</p>
-  <div class="w-full h-3 bg-purple-950/40 rounded-full overflow-hidden border border-purple-600/50">
+<div class="fixed top-20 left-1/2 transform -translate-x-1/2 w-96 text-center z-50">
+  <p id="energy-text" class="text-purple-300 text-lg mb-2 drop-shadow-[0_0_10px_#ff3eff]">
+    👁️ 靈壓能量 3/3
+  </p>
+  <div class="w-full h-4 bg-purple-950/40 rounded-full overflow-hidden border border-purple-600/50 shadow-[0_0_15px_#b065ff]">
     <div id="energy-bar" class="h-full bg-gradient-to-r from-purple-400 to-pink-500 transition-all duration-700"></div>
   </div>
 </div>
+
 
 <h1>👁️ 靈異顯像儀</h1>
 <p class="sub">上傳自拍，看 AI 是否能捕捉到「祂」的殘影……</p>
