@@ -1,317 +1,270 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1.0" />
-<title>💖 AI 網美濾鏡實驗室</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-body {
-  margin: 0;
-  font-family: 'Poppins','Noto Sans TC',sans-serif;
-  background: radial-gradient(circle at 50% 20%, #2a0038 0%, #12001c 60%, #000 100%);
-  color: #fff;
-  overflow-x: hidden;
-  min-height: 100vh;
-}
-/* ✨ 背景柔光 */
-#bg-glow {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: radial-gradient(circle at 60% 40%, rgba(255,100,255,0.2), transparent 60%),
-              radial-gradient(circle at 30% 80%, rgba(255,180,255,0.15), transparent 70%);
-  filter: blur(120px);
-  animation: float 10s ease-in-out infinite alternate;
-  z-index: 0;
-}
-@keyframes float {
-  from { transform: translateY(0); opacity: 0.6; }
-  to { transform: translateY(-30px); opacity: 0.9; }
-}
-/* 主容器 */
-.container {
-  position: relative;
-  z-index: 1;
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 60px 20px;
-  text-align: center;
-}
-/* 標題 */
-h1 {
-  font-size: 2.8rem;
-  font-weight: 800;
-  background: linear-gradient(90deg,#ffbdfc,#ff9df9,#ffffff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 40px rgba(255,150,255,0.6);
-  margin-bottom: 10px;
-}
-p.subtitle {
-  font-size: 1.1rem;
-  color: #ffd6ff;
-  margin-bottom: 35px;
-  letter-spacing: 1px;
-  text-shadow: 0 0 20px rgba(255,150,255,0.5);
-}
-/* 卡片 */
-.card {
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,150,255,0.25);
-  border-radius: 20px;
-  box-shadow: inset 0 0 30px rgba(255,255,255,0.06),0 0 20px rgba(255,150,255,0.15);
-  backdrop-filter: blur(15px);
-  padding: 25px 30px;
-  margin-bottom: 25px;
-}
-/* 上傳區 */
-.upload-zone {
-  border: 2px dashed rgba(255,200,255,0.4);
-  border-radius: 14px;
-  padding: 40px;
-  text-align: center;
-  background: rgba(255,255,255,0.05);
-  transition: 0.3s;
-}
-.upload-zone:hover {
-  background: rgba(255,255,255,0.08);
-  border-color: #ffbdfc;
-  box-shadow: 0 0 20px rgba(255,160,255,0.3);
-}
-.preview-img {
-  max-width: 100%;
-  max-height: 360px;
-  margin-top: 20px;
-  border-radius: 14px;
-  box-shadow: 0 0 30px rgba(255,160,255,0.25);
-}
-/* 按鈕群組 */
-.style-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 15px;
-}
-.style-btn {
-  padding: 10px 16px;
-  min-width: 130px;
-  border-radius: 30px;
-  border: none;
-  font-weight: 700;
-  background: linear-gradient(135deg,#ffbdfc,#ff79e3);
-  color: #fff;
-  box-shadow: 0 0 12px rgba(255,120,255,0.4);
-  transition: all 0.3s;
-}
-.style-btn:hover {transform: translateY(-2px);box-shadow: 0 0 18px rgba(255,160,255,0.6);}
-.style-btn.active {
-  background: linear-gradient(135deg,#ff9df9,#ffe6ff);
-  color: #8000aa;
-  box-shadow: 0 0 25px rgba(255,180,255,0.7);
-  transform: scale(1.05);
-}
-/* 生成按鈕 */
-.generate-btn {
-  background: linear-gradient(90deg,#ff9df9,#ff6ef5);
-  color: #fff;
-  border: none;
-  border-radius: 40px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  padding: 14px 32px;
-  margin-top: 25px;
-  box-shadow: 0 0 20px rgba(255,120,255,0.4);
-  transition: all 0.3s;
-}
-.generate-btn:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(255,160,255,0.7);}
-.generate-btn:disabled {opacity: 0.5; cursor: not-allowed;}
-/* 結果 */
-.result-img {
-  max-width: 100%;
-  border-radius: 16px;
-  box-shadow: 0 0 30px rgba(255,180,255,0.3);
-  margin-top: 20px;
-}
-/* Loading */
-.spinner {
-  border: 4px solid rgba(255,255,255,0.2);
-  border-top: 4px solid #ffbdfc;
-  border-radius: 50%;
-  width: 50px; height: 50px;
-  margin: 0 auto 15px;
-  animation: spin 1s linear infinite;
-}
-@keyframes spin {to{transform:rotate(360deg)}}
-/* 能量條 */
-#energy-bar {
-  position: fixed;
-  bottom: 18px; right: 18px;
-  width: 150px; height: 10px;
-  border-radius: 6px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,180,255,0.4);
-  overflow: hidden;
-  box-shadow: 0 0 10px rgba(255,120,255,0.3);
-}
-#energy-fill {
-  height: 100%;
-  width: 100%;
-  background: linear-gradient(90deg,#ff9df9,#ffbdfc);
-  transition: width 0.3s;
-}
-</style>
-</head>
-<body>
-<div id="bg-glow"></div>
-<div class="container">
-  <h1>💖 AI 網美濾鏡實驗室</h1>
-  <p class="subtitle">上傳自拍，一鍵變身雜誌級時尚照 ✨</p>
-
-  <div class="card">
-    <label class="block text-pink-200 mb-2 font-bold">📸 上傳自拍照</label>
-    <div id="upload-zone" class="upload-zone">
-      點擊或拖曳圖片到這裡
-      <input type="file" id="file-input" accept="image/jpeg,image/png" class="hidden" />
-    </div>
-    <img id="preview" class="preview-img hidden" />
-  </div>
-
-  <div class="card">
-    <label class="block text-pink-200 mb-2 font-bold">🎨 選擇風格</label>
-    <div class="style-grid">
-      <button class="style-btn active" data-style="paris">🥐 法式咖啡廳</button>
-      <button class="style-btn" data-style="nyc">🏙️ 紐約街頭</button>
-      <button class="style-btn" data-style="beach">🏖️ 海島假期</button>
-      <button class="style-btn" data-style="neon">💜 霓虹夜拍</button>
-      <button class="style-btn" data-style="vintage">📷 復古膠片</button>
-      <button class="style-btn" data-style="nature">🌿 山林秘境</button>
-      <button class="style-btn" data-style="studio">💎 棚拍時尚</button>
-      <button class="style-btn" data-style="pastel">☁️ 夢幻雜誌</button>
-      <button class="style-btn" data-style="snow">❄️ 冬季街拍</button>
-      <button class="style-btn" data-style="glam">🎉 派對女王</button>
-      <button class="style-btn" data-style="kfashion">🪞 韓系雜誌棚拍風</button>
-      <button class="style-btn" data-style="hotel">🏨 奢華旅拍風</button>
-      <!-- 新風格 -->
-      <button class="style-btn" data-style="pure">🌿 原生美光補強</button>
-      <button class="style-btn" data-style="k_id">🪞 韓系證件照</button>
-      <button class="style-btn" data-style="kimono">👘 日本和服照</button>
-      <button class="style-btn" data-style="plush">🧸 玩偶堆女孩</button>
-      <button class="style-btn" data-style="catlover">🐱 貓咪堆照</button>
-      <button class="style-btn" data-style="petgarden">🐰 寵物花園</button>
-      <button class="style-btn" data-style="bookcafe">☕ 書店咖啡風</button>
-
-      <button class="style-btn" data-style="mirror">💎 鏡面棚拍</button>
-      <button class="style-btn" data-style="angelic">☁️ 天使柔光</button>
-      <button class="style-btn" data-style="cyberlove">🌆 都市戀愛風</button>
-      <button class="style-btn" data-style="santorini">🇬🇷 希臘旅拍</button>
-      <button class="style-btn" data-style="vogue">🖤 雜誌封面</button>
-      <button class="style-btn" data-style="princess">👑 公主夢幻</button>
-      <button class="style-btn" data-style="aesthetic">🎨 藝術光棚</button>
-
-
-    </div>
-    <button id="generate-btn" class="generate-btn" disabled>✨ 開始生成</button>
-  </div>
-
-  <div id="loading" class="hidden">
-    <div class="spinner"></div>
-    <p class="text-pink-200 font-bold">AI 魔法變身中...</p>
-  </div>
-
-  <div id="result" class="hidden">
-    <h2 class="text-pink-200 text-xl font-bold mb-3">✨ 完成！</h2>
-    <img id="result-img" class="result-img" />
-    <button id="download-btn" class="generate-btn mt-3">💾 下載圖片</button>
-  </div>
-</div>
-
-<!-- 能量條 -->
-<div id="energy-bar"><div id="energy-fill"></div></div>
-
-<script>
-const uploadZone=document.getElementById('upload-zone');
-const fileInput=document.getElementById('file-input');
-const preview=document.getElementById('preview');
-const generateBtn=document.getElementById('generate-btn');
-let base64Image=null;
-
-uploadZone.onclick=()=>fileInput.click();
-uploadZone.ondragover=e=>{e.preventDefault();uploadZone.style.borderColor='#ffbdfc';};
-uploadZone.ondrop=e=>{e.preventDefault();handleFile(e.dataTransfer.files[0]);};
-fileInput.onchange=e=>handleFile(e.target.files[0]);
-
-function handleFile(file){
-  if(!file) return;
-  const reader=new FileReader();
-  reader.onload=e=>{
-    base64Image=e.target.result.split(',')[1];
-    preview.src=e.target.result;
-    preview.classList.remove('hidden');
-    generateBtn.disabled=false;
-  };
-  reader.readAsDataURL(file);
-}
-
-// === 風格選擇 ===
-let style='paris';
-document.querySelectorAll('.style-btn').forEach(btn=>{
-  btn.onclick=()=>{
-    document.querySelectorAll('.style-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    style=btn.dataset.style;
-  };
-});
-
-// === 生成 ===
-document.getElementById('generate-btn').onclick=async()=>{
-  if(!base64Image)return alert("請先上傳圖片！");
-  document.getElementById('loading').classList.remove('hidden');
-  document.getElementById('result').classList.add('hidden');
-
-  try{
-    const res=await fetch('/api/gemini_beauty',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({style:style,base64Image})
-    });
-    const data=await res.json();
-    document.getElementById('loading').classList.add('hidden');
-
-    if(res.status===429){
-      if(data.cooldown)alert(`💫 請稍候 ${data.cooldown} 秒再試`);
-      else if(data.energy===0)alert("⚠️ 今日能量已耗盡，明天再試～");
-      updateEnergyBar(data.energy||0);
-      return;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Beauty Studio 💄</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Noto Sans TC", "Poppins", sans-serif;
+      background: linear-gradient(135deg, #f8d3ff, #ffe6f8, #fff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #333;
     }
 
-    if(data.image_base64){
-      document.getElementById('result-img').src='data:image/png;base64,'+data.image_base64;
-      document.getElementById('result').classList.remove('hidden');
-      updateEnergyBar(data.energy);
-    }else alert("❌ 沒有生成圖片：" + (data.error||"請稍後再試"));
-  }catch(err){
-    document.getElementById('loading').classList.add('hidden');
-    alert("⚠️ 發生錯誤：" + err.message);
-  }
-};
+    .container {
+      width: 480px; /* ← 縮小為一半尺寸 */
+      max-width: 90%;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(255, 160, 200, 0.3);
+      border-radius: 18px;
+      padding: 24px 30px 30px 30px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
 
-// === 能量條 ===
-function updateEnergyBar(energy){
-  const fill=document.getElementById('energy-fill');
-  const percent=Math.max(0,Math.min(100,(energy/5)*100));
-  fill.style.width=percent+'%';
-  fill.style.background=percent>40?'linear-gradient(90deg,#ff9df9,#ffbdfc)':'linear-gradient(90deg,#ff6b9d,#ffc0c0)';
-}
+    h1 {
+      font-size: 22px;
+      letter-spacing: 1px;
+      background: linear-gradient(90deg, #ff6bc7, #ff8ad1, #ffb0dc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 18px;
+    }
 
-// === 下載 ===
-document.getElementById('download-btn').onclick=()=>{
-  const link=document.createElement('a');
-  link.href=document.getElementById('result-img').src;
-  link.download='beauty_'+Date.now()+'.png';
-  link.click();
-};
-</script>
+    input[type="file"] {
+      display: none;
+    }
+
+    label.upload-btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background: linear-gradient(90deg, #ff92c2, #ffa6d7);
+      color: white;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-bottom: 10px;
+      transition: all 0.2s ease;
+    }
+    label.upload-btn:hover {
+      transform: scale(1.05);
+      background: linear-gradient(90deg, #ff78a9, #ff94d5);
+    }
+
+    .preview {
+      display: none;
+      width: 100%;
+      border-radius: 12px;
+      margin: 12px 0;
+      box-shadow: 0 0 12px rgba(255, 175, 200, 0.3);
+    }
+
+    .styles {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 10px;
+      gap: 6px;
+    }
+
+    .style-btn {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 10px;
+      background: #ffeaf5;
+      cursor: pointer;
+      font-size: 13px;
+      color: #444;
+      transition: all 0.2s ease;
+    }
+    .style-btn.active,
+    .style-btn:hover {
+      background: linear-gradient(90deg, #ff8aca, #ffb6d9);
+      color: white;
+      transform: scale(1.05);
+    }
+
+    .btn {
+      padding: 12px 26px;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 14px;
+      border: none;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin: 10px 5px;
+      background: linear-gradient(90deg, #ff88ca, #ffafd5);
+      box-shadow: 0 5px 12px rgba(255, 160, 200, 0.3);
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(255, 160, 200, 0.45);
+    }
+
+    .hidden { display: none; }
+
+    #loading {
+      margin: 20px 0;
+      color: #ff6ba5;
+      font-weight: 500;
+    }
+
+    #result img {
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(255, 160, 200, 0.3);
+    }
+
+    /* 能量條 */
+    .energy-bar {
+      width: 100%;
+      height: 10px;
+      background: #ffe1f1;
+      border-radius: 8px;
+      margin-top: 14px;
+      overflow: hidden;
+    }
+    #energy-fill {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #ff9df9, #ffbdfc);
+      transition: width 0.5s ease;
+    }
+
+    footer {
+      margin-top: 12px;
+      font-size: 12px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>AI Beauty Studio 💄</h1>
+
+    <!-- 上傳 -->
+    <label class="upload-btn" for="file-input">📷 上傳圖片</label>
+    <input type="file" id="file-input" accept="image/*" />
+    <img id="preview" class="preview" />
+
+    <!-- 風格選擇 -->
+    <div class="styles">
+      <button class="style-btn active" data-style="pure">自然光</button>
+      <button class="style-btn" data-style="k_id">韓系證件</button>
+      <button class="style-btn" data-style="kimono">和服風</button>
+      <button class="style-btn" data-style="princess">公主風</button>
+      <button class="style-btn" data-style="vogue">時尚棚拍</button>
+    </div>
+
+    <!-- 生成 -->
+    <div style="margin-top:18px;">
+      <button id="generate-btn" class="btn">✨ 生成美化圖</button>
+      <button id="download-btn" class="btn">💾 下載圖片</button>
+    </div>
+
+    <div id="loading" class="hidden">⏳ AI 美化中，請稍候...</div>
+
+    <div id="result" class="hidden">
+      <img id="result-img" alt="結果圖" />
+    </div>
+
+    <!-- 能量條 -->
+    <div class="energy-bar"><div id="energy-fill"></div></div>
+
+    <footer>每日上限 5 次・冷卻 30 秒</footer>
+  </div>
+
+  <script>
+    let base64Image = "";
+    const preview = document.getElementById("preview");
+    const generateBtn = document.getElementById("generate-btn");
+
+    // === 上傳圖片 ===
+    document.getElementById("file-input").onchange = (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        base64Image = reader.result;
+        preview.src = base64Image;
+        preview.classList.remove("hidden");
+        generateBtn.disabled = false;
+      };
+      reader.readAsDataURL(file);
+    };
+
+    // === 風格選擇 ===
+    let style = "pure";
+    document.querySelectorAll(".style-btn").forEach((btn) => {
+      btn.onclick = () => {
+        document
+          .querySelectorAll(".style-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        style = btn.dataset.style;
+      };
+    });
+
+    // === 生成 ===
+    document.getElementById("generate-btn").onclick = async () => {
+      if (!base64Image) return alert("請先上傳圖片！");
+      document.getElementById("loading").classList.remove("hidden");
+      document.getElementById("result").classList.add("hidden");
+
+      try {
+        const res = await fetch("/api/gemini_beauty", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ style: style, base64Image }),
+        });
+        const data = await res.json();
+        document.getElementById("loading").classList.add("hidden");
+
+        if (res.status === 429) {
+          if (data.cooldown) alert(`💫 請稍候 ${data.cooldown} 秒再試`);
+          else if (data.energy === 0)
+            alert("⚠️ 今日能量已耗盡，明天再試～");
+          updateEnergyBar(data.energy || 0);
+          return;
+        }
+
+        if (data.image_base64) {
+          document.getElementById("result-img").src =
+            "data:image/png;base64," + data.image_base64;
+          document.getElementById("result").classList.remove("hidden");
+          updateEnergyBar(data.energy);
+        } else alert("❌ 沒有生成圖片：" + (data.error || "請稍後再試"));
+      } catch (err) {
+        document.getElementById("loading").classList.add("hidden");
+        alert("⚠️ 發生錯誤：" + err.message);
+      }
+    };
+
+    // === 能量條 ===
+    function updateEnergyBar(energy) {
+      const fill = document.getElementById("energy-fill");
+      const percent = Math.max(0, Math.min(100, (energy / 5) * 100));
+      fill.style.width = percent + "%";
+      fill.style.background =
+        percent > 40
+          ? "linear-gradient(90deg,#ff9df9,#ffbdfc)"
+          : "linear-gradient(90deg,#ff6b9d,#ffc0c0)";
+    }
+
+    // === 下載 ===
+    document.getElementById("download-btn").onclick = () => {
+      const link = document.createElement("a");
+      link.href = document.getElementById("result-img").src;
+      link.download = "beauty_" + Date.now() + ".png";
+      link.click();
+    };
+  </script>
 </body>
 </html>
