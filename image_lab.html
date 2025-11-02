@@ -8,102 +8,119 @@
 body {
   margin:0;
   font-family:'Orbitron',sans-serif;
-  background:radial-gradient(circle at 50% 20%, #03040a 0%, #070915 70%, #000 100%);
-  color:#0ff;
+  background:radial-gradient(circle at 40% 20%, #05070f 0%, #0a0b16 60%, #000 100%);
+  color:#cfcfcf;
   overflow-x:hidden;
   text-align:center;
 }
+
+/* 標題 */
 h1 {
   margin-top:50px;
   font-size:2.4em;
   color:#ff3eff;
   text-shadow:0 0 25px #ff3eff, 0 0 50px #0ff;
-  animation:glowPulse 3s infinite alternate;
-}
-h2.subtitle {
-  font-size:1.2em;
-  margin-top:8px;
-  color:#aaa;
-  letter-spacing:2px;
-  animation:flicker 2.5s infinite;
-}
-@keyframes flicker {
-  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
-  20%, 24%, 55% { opacity: 0; }
+  animation:glowPulse 4s infinite alternate;
 }
 @keyframes glowPulse {
   from { text-shadow:0 0 15px #ff3eff; }
-  to { text-shadow:0 0 35px #0ff, 0 0 60px #ff3eff; }
+  to { text-shadow:0 0 35px #ff0044, 0 0 60px #ff3eff; }
 }
 
-/* 背景光圈 */
+/* 副標：血紅緩閃 */
+.subtitle {
+  font-size:1.2em;
+  margin-top:8px;
+  letter-spacing:2px;
+  color:#ff3355;
+  text-shadow:0 0 15px #ff0033;
+  animation:softFlicker 6s infinite ease-in-out;
+}
+@keyframes softFlicker {
+  0%, 90%, 100% { opacity:1; text-shadow:0 0 10px #ff0033; }
+  45%, 50% { opacity:0.7; text-shadow:0 0 20px #ff6666; }
+}
+
+/* 霓虹背景球 */
 .neon-orb {
   position:absolute;
   border-radius:50%;
-  filter:blur(80px);
-  opacity:0.4;
+  filter:blur(100px);
+  opacity:0.35;
   animation:float 10s infinite ease-in-out alternate;
 }
 @keyframes float {
   0% { transform:translateY(0); }
-  100% { transform:translateY(-50px) translateX(30px); }
+  100% { transform:translateY(-60px) translateX(40px); }
 }
-.orb1 { width:280px;height:280px;background:#0ff;top:20%;left:12%;animation-delay:0s;}
-.orb2 { width:380px;height:380px;background:#ff3eff;bottom:10%;right:12%;animation-delay:3s;}
-.orb3 { width:250px;height:250px;background:#00aaff;top:60%;left:30%;animation-delay:1.5s;}
+.orb1 { width:320px;height:320px;background:#ff3eff;top:25%;left:15%;animation-delay:0s;}
+.orb2 { width:400px;height:400px;background:#ff3355;bottom:10%;right:10%;animation-delay:3s;}
+.orb3 { width:260px;height:260px;background:#7700ff;top:60%;left:40%;animation-delay:1.5s;}
 
-/* 卡片動畫 */
-@keyframes glowFlow {
-  0% { box-shadow:0 0 10px #0ff,inset 0 0 5px #0ff;border-color:#0ff; }
-  50% { box-shadow:0 0 25px #ff3eff,inset 0 0 10px #ff3eff;border-color:#ff3eff; }
-  100% { box-shadow:0 0 10px #0ff,inset 0 0 5px #0ff;border-color:#0ff; }
-}
+/* 卡片 */
 .lab-table {
-  min-height:100vh;
+  min-height:80vh;
   display:flex;
   justify-content:center;
   align-items:center;
   flex-wrap:wrap;
   gap:40px;
-  margin-top:80px;
-  perspective:1000px;
+  margin-top:60px;
   z-index:5;
 }
 .lab-card {
-  width:230px;height:280px;
-  background:rgba(255,255,255,0.06);
-  border:3px solid #0ff;border-radius:18px;
-  color:#0ff;
-  box-shadow:0 0 15px rgba(0,255,255,0.3);
+  width:240px;height:280px;
+  background:rgba(255,255,255,0.08);
+  border:2px solid #aaa;
+  border-radius:18px;
+  color:#eee;
+  box-shadow:0 0 25px rgba(255,255,255,0.2);
   display:flex;flex-direction:column;justify-content:center;align-items:center;
   cursor:pointer;
-  transition:transform .5s, box-shadow .5s, opacity .4s;
-  transform:rotateY(var(--angle,0deg)) translateZ(0);
-  animation:glowFlow 3s infinite;
+  transition:transform .4s, box-shadow .4s, border-color .4s;
 }
-.lab-card:hover {transform:translateY(-15px) scale(1.05);}
+.lab-card:hover {
+  transform:translateY(-15px) scale(1.05);
+  border-color:#fff;
+  box-shadow:0 0 40px #fff, 0 0 60px #ff3eff;
+}
 .lab-card.active {
   transform:translateY(-60px) scale(1.15);
-  z-index:10;
-  animation:none;
-  box-shadow:0 0 30px #fff, 0 0 50px #0ff;
+  box-shadow:0 0 35px #ff3eff, 0 0 80px #fff;
 }
 .lab-icon {
   font-size:60px;
   margin-bottom:15px;
-  text-shadow:0 0 15px #0ff;
+  text-shadow:0 0 15px #fff;
 }
-p {font-size:0.9em;margin:0;color:#aaf;}
-a {color:#0ff;text-decoration:none;}
+.lab-desc {font-size:0.9em;color:#ccc;margin-top:6px;}
+.new-badge {
+  margin-left:8px;
+  padding:2px 6px;
+  border-radius:6px;
+  background:linear-gradient(135deg,#ff0066,#ff3eff);
+  color:#000;
+  font-size:0.7em;
+  font-weight:bold;
+  box-shadow:0 0 10px #ff3355;
+}
+
+/* 按鈕：銀灰色 */
 .back-home {
   position:fixed;bottom:20px;left:20px;
   padding:10px 20px;
-  border:2px solid #0ff;border-radius:20px;
-  color:#0ff;text-decoration:none;
-  background:rgba(0,255,255,0.1);
-  transition:.3s;z-index:10;
+  border:2px solid #bbb;border-radius:25px;
+  color:#ddd;text-decoration:none;
+  background:rgba(255,255,255,0.1);
+  font-weight:bold;
+  transition:.3s;
+  box-shadow:0 0 8px rgba(255,255,255,0.3);
 }
-.back-home:hover {background:rgba(0,255,255,0.3);}
+.back-home:hover {
+  background:rgba(255,255,255,0.3);
+  color:#000;
+  box-shadow:0 0 20px #fff;
+}
 #bgParticles {
   position:fixed;top:0;left:0;width:100%;height:100%;
   pointer-events:none;z-index:0;
@@ -111,18 +128,15 @@ a {color:#0ff;text-decoration:none;}
 </style>
 </head>
 <body>
-<!-- 背景霓虹光圈 -->
 <div class="neon-orb orb1"></div>
 <div class="neon-orb orb2"></div>
 <div class="neon-orb orb3"></div>
 
 <h1>🪞 AI 圖像實驗室</h1>
-<h2 class="subtitle">⚠️ 膽小勿入 · 科技與靈異的邊界 ⚡</h2>
+<p class="subtitle">⚠️ 膽小勿入 · 科技與靈異的邊界 ⚡</p>
+
 <canvas id="bgParticles"></canvas>
-
-<!-- 撲克牌卡片 -->
 <div class="lab-table" id="labTable"></div>
-
 <a href="index.html" class="back-home">🏠 回首頁</a>
 
 <script>
@@ -131,15 +145,13 @@ async function loadLabs(){
   const labs=[
     {icon:"🍔",name:"毒舌卡路里計算機",desc:"上傳食物照片，讓 AI 嘴爆你的晚餐。",link:"toxic_calorie.html",updated:"2025/11/02"},
     {icon:"👻",name:"靈異顯像儀",desc:"自拍？AI 幫你召喚靈體殘影。",link:"ghost_vision.html"},
-    {icon:"🌐",name:"科技全息轉換",desc:"將任何照片轉成未來感全息投影風。",link:"hologram_lab.html"},
-    {icon:"💫",name:"賽博重組工坊",desc:"混合霓虹與電子皮膚的數位變身。",link:"cyber_mix.html"}
+    {icon:"🌐",name:"科技全息轉換",desc:"將照片轉為全息未來風格。",link:"hologram_lab.html"},
+    {icon:"💫",name:"賽博重組工坊",desc:"融合電子與霓虹的數位幻身。",link:"cyber_mix.html"}
   ];
   const today=new Date();
   labs.forEach((g,i)=>{
     const card=document.createElement("div");
     card.className="lab-card";
-    const angle=-10+i*5;
-    card.style.setProperty("--angle",`${angle}deg`);
     card.dataset.link=g.link;
     let isNew=false;
     if(g.updated){
@@ -150,7 +162,7 @@ async function loadLabs(){
     card.innerHTML=`
       <div class="lab-icon">${g.icon}</div>
       <h3>${g.name}${isNew?'<span class="new-badge">NEW</span>':''}</h3>
-      <p>${g.desc}</p>
+      <p class="lab-desc">${g.desc}</p>
     `;
     table.appendChild(card);
   });
@@ -165,23 +177,19 @@ function initCardEvents(){
         window.location.href=card.dataset.link;
         return;
       }
-      cards.forEach(c=>{
-        c.classList.remove("active");
-        c.style.opacity=0.5;
-      });
+      cards.forEach(c=>{c.classList.remove("active");c.style.opacity=0.6;});
       card.classList.add("active");
       card.style.opacity=1;
     });
   });
 }
 
-// === 背景粒子 ===
+/* 背景粒子 */
 const canvas=document.getElementById("bgParticles");
 const ctx=canvas.getContext("2d");
 let width,height,particles=[];
 function resize(){width=canvas.width=window.innerWidth;height=canvas.height=window.innerHeight;}
-window.addEventListener("resize",resize);
-resize();
+window.addEventListener("resize",resize);resize();
 
 class Particle{
   constructor(){this.reset();}
@@ -189,9 +197,9 @@ class Particle{
     this.x=Math.random()*width;
     this.y=Math.random()*height;
     this.size=Math.random()*2+1;
-    this.speedY=Math.random()*0.5+0.2;
+    this.speedY=Math.random()*0.4+0.2;
     this.alpha=Math.random()*0.6+0.3;
-    this.emoji=Math.random()<0.3?"✨":"👁️";
+    this.emoji=Math.random()<0.4?"👁️":"✨";
   }
   update(){this.y+=this.speedY;if(this.y>height+20)this.reset();}
   draw(){
@@ -200,14 +208,13 @@ class Particle{
     ctx.fillText(this.emoji,this.x,this.y);
   }
 }
-for(let i=0;i<50;i++)particles.push(new Particle());
+for(let i=0;i<40;i++)particles.push(new Particle());
 function animate(){
   ctx.clearRect(0,0,width,height);
   for(const p of particles){p.update();p.draw();}
   requestAnimationFrame(animate);
 }
 animate();
-
 loadLabs();
 </script>
 </body>
