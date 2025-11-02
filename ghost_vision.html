@@ -81,11 +81,12 @@ body {
 }
 .card:hover {box-shadow:0 0 40px rgba(220,160,255,0.7);transform:translateY(-3px);}
 
-/* 標題 - 更大更恐怖 */
+/* 標題 - 超大超恐怖 + 響應式 */
 h1 {
   text-align:center;
-  font-size:6.5rem;
-  margin-top:120px;
+  font-size:8rem;
+  margin-top:180px;
+  padding:0 20px;
   color:#ff4dff;
   text-shadow:0 0 40px #ff0080, 0 0 80px #b000ff, 0 0 120px #8000ff, 0 0 160px #ff0080;
   font-weight:900;
@@ -106,12 +107,39 @@ h1 {
 p.sub {
   text-align:center;
   color:#ff99ff;
-  font-size:1.8rem;
+  font-size:2rem;
   margin-top:30px;
   margin-bottom:80px;
+  padding:0 20px;
   text-shadow:0 0 20px #ff3eff, 0 0 40px #b000ff;
   font-weight:600;
   letter-spacing:3px;
+}
+
+/* 📱 手機響應式 */
+@media (max-width: 768px) {
+  h1 {
+    font-size:4rem;
+    margin-top:100px;
+    letter-spacing:4px;
+  }
+  p.sub {
+    font-size:1.3rem;
+    letter-spacing:2px;
+    margin-bottom:50px;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size:3rem;
+    margin-top:80px;
+    letter-spacing:2px;
+  }
+  p.sub {
+    font-size:1.1rem;
+    letter-spacing:1px;
+  }
 }
 </style>
 </head>
