@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-<title>🍔 AI 毒舌卡路里計算機 v2</title>
+<title>🍔 AI 毒舌卡路里計算機 v3</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
   body {
@@ -50,7 +50,6 @@
     transform:translateY(-4px) scale(1.02);
   }
 
-  /* 🍔 銘牌 */
   h1 {
     text-align:center;
     font-size:2.5rem;
@@ -107,11 +106,20 @@
     <div class="card p-4">
       <h2 class="text-lg font-semibold text-red-300 mb-2">AI 評論：</h2>
       <p id="result-review" class="italic text-red-100"></p>
+      <div class="mt-4 flex gap-3 items-center justify-center">
+        <button id="play-voice" class="hidden px-4 py-2 bg-red-500 rounded-lg hover:bg-red-600 text-white font-semibold">🔊 播放毒舌語音</button>
+        <select id="voice-style" class="bg-red-900 border border-red-500 rounded-lg p-1 text-sm text-white">
+          <option value="calm">冷淡語氣 😏</option>
+          <option value="angry">暴躁罵人 😡</option>
+        </select>
+      </div>
     </div>
+
     <div class="card p-4">
       <h2 class="text-lg font-semibold text-red-300 mb-2">估算熱量：</h2>
       <p id="result-calories" class="text-4xl font-bold text-white"></p>
     </div>
+
     <div class="card p-4">
       <h2 class="text-lg font-semibold text-red-300 mb-2">偵測到的食物：</h2>
       <ul id="result-items" class="list-disc list-inside text-red-200"></ul>
@@ -140,7 +148,6 @@ function handleFile(file){
   const reader = new FileReader();
   reader.onload = e => {
     base64Logo = e.target.result.split(',')[1];
-    // 顯示預覽圖
     const previewContainer = document.getElementById('preview-container');
     const previewImage = document.getElementById('preview-image');
     previewImage.src = e.target.result;
@@ -169,7 +176,25 @@ button.onclick = async () => {
   document.getElementById('result-items').innerHTML = data.items.map(i=>`<li>${i}</li>`).join('');
   result.classList.remove('hidden');
   button.textContent = "再分析一次";
+
+  document.getElementById('play-voice').classList.remove('hidden');
 };
+
+// === AI 毒舌語音播報 ===
+document.getElementById('play-voice').addEventListener('click', ()=>{
+  const text = document.getElementById('result-review').textContent.trim();
+  if(!text) return alert("還沒有評論可以播放喔！");
+  const style = document.getElementById('voice-style').value;
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = "zh-TW";
+  utter.rate = style === "angry" ? 1.4 : 1.0;
+  utter.pitch = style === "angry" ? 0.6 : 1.1;
+  utter.volume = 1;
+  utter.onstart = ()=>console.log("🎤 開始毒舌播報");
+  utter.onend = ()=>console.log("✅ 播報結束");
+  speechSynthesis.cancel();
+  speechSynthesis.speak(utter);
+});
 
 // === 背景漢堡雨 ===
 const canvas = document.getElementById('burgerRain');
