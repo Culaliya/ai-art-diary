@@ -1,21 +1,228 @@
-<section class="grid grid-cols-1 sm:grid-cols-2 gap-6 p-8">
-  <div class="bg-gradient-to-br from-fuchsia-600 to-purple-700 text-white rounded-2xl p-8 hover:scale-105 transition cursor-pointer" onclick="window.location='toxic_calorie.html'">
-    <h2 class="text-2xl font-bold">🍔 毒舌卡路里計算機</h2>
-    <p class="opacity-80 mt-2">上傳食物照片，讓 AI 嘴爆你的晚餐。</p>
-  </div>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>🪞 Culaliya’s AI Image Lab</title>
+<style>
+body {
+  margin:0;
+  font-family:'Orbitron',sans-serif;
+  background:radial-gradient(circle at 50% 20%, #03040a 0%, #070915 70%, #000 100%);
+  color:#0ff;
+  overflow-x:hidden;
+  text-align:center;
+}
+h1 {
+  margin-top:50px;
+  font-size:2em;
+  color:#0ff;
+  text-shadow:0 0 25px #0ff, 0 0 40px #ff3eff;
+  animation:glowPulse 3s infinite alternate;
+}
+@keyframes glowPulse {
+  from { text-shadow:0 0 15px #0ff; }
+  to { text-shadow:0 0 35px #ff3eff, 0 0 60px #0ff; }
+}
 
-  <div class="bg-gradient-to-br from-cyan-500 to-blue-700 text-white rounded-2xl p-8 hover:scale-105 transition cursor-pointer">
-    <h2 class="text-2xl font-bold">🧬 科技全息轉換</h2>
-    <p class="opacity-80 mt-2">全息投影 + 光線格網風格圖像轉化。</p>
-  </div>
+/* 背景光圈 */
+.neon-orb {
+  position:absolute;
+  border-radius:50%;
+  filter:blur(80px);
+  opacity:0.4;
+  animation:float 10s infinite ease-in-out alternate;
+}
+@keyframes float {
+  0% { transform:translateY(0); }
+  100% { transform:translateY(-50px) translateX(30px); }
+}
+.orb1 { width:280px;height:280px;background:#0ff;top:20%;left:12%;animation-delay:0s;}
+.orb2 { width:380px;height:380px;background:#ff3eff;bottom:10%;right:12%;animation-delay:3s;}
+.orb3 { width:250px;height:250px;background:#00aaff;top:60%;left:30%;animation-delay:1.5s;}
 
-  <div class="bg-gradient-to-br from-green-500 to-emerald-700 text-white rounded-2xl p-8 hover:scale-105 transition cursor-pointer">
-    <h2 class="text-2xl font-bold">👻 靈異顯像儀</h2>
-    <p class="opacity-80 mt-2">讓你的自拍長出靈異殘影。</p>
-  </div>
+/* 卡片動畫 */
+@keyframes glowFlow {
+  0% { box-shadow:0 0 10px #0ff,inset 0 0 5px #0ff;border-color:#0ff; }
+  50% { box-shadow:0 0 25px #ff3eff,inset 0 0 10px #ff3eff;border-color:#ff3eff; }
+  100% { box-shadow:0 0 10px #0ff,inset 0 0 5px #0ff;border-color:#0ff; }
+}
+.lab-table {
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:40px;
+  margin-top:80px;
+  perspective:1000px;
+  z-index:5;
+}
+.lab-card {
+  width:230px;height:280px;
+  background:rgba(255,255,255,0.06);
+  border:3px solid #0ff;border-radius:18px;
+  color:#0ff;
+  box-shadow:0 0 15px rgba(0,255,255,0.3);
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  cursor:pointer;
+  transition:transform .5s, box-shadow .5s, opacity .4s;
+  transform:rotateY(var(--angle,0deg)) translateZ(0);
+  animation:glowFlow 3s infinite;
+}
+.lab-card:hover {transform:translateY(-15px) scale(1.05);}
+.lab-card.active {
+  transform:translateY(-60px) scale(1.15);
+  z-index:10;
+  animation:none;
+  box-shadow:0 0 30px #fff, 0 0 50px #0ff;
+}
+.lab-icon {
+  font-size:60px;
+  margin-bottom:15px;
+  text-shadow:0 0 15px #0ff;
+}
+p {font-size:0.9em;margin:0;color:#aaf;}
+a {color:#0ff;text-decoration:none;}
+.back-home {
+  position:fixed;bottom:20px;left:20px;
+  padding:10px 20px;
+  border:2px solid #0ff;border-radius:20px;
+  color:#0ff;text-decoration:none;
+  background:rgba(0,255,255,0.1);
+  transition:.3s;z-index:10;
+}
+.back-home:hover {background:rgba(0,255,255,0.3);}
+#bgParticles {
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  pointer-events:none;z-index:0;
+}
+</style>
+</head>
+<body>
+<!-- 背景霓虹光圈 -->
+<div class="neon-orb orb1"></div>
+<div class="neon-orb orb2"></div>
+<div class="neon-orb orb3"></div>
 
-  <div class="bg-gradient-to-br from-pink-500 to-rose-700 text-white rounded-2xl p-8 hover:scale-105 transition cursor-pointer">
-    <h2 class="text-2xl font-bold">🌈 賽博重組工坊</h2>
-    <p class="opacity-80 mt-2">上傳影像，AI 轉化為霓虹電子風格。</p>
-  </div>
-</section>
+<h1>🪞 Culaliya’s AI Image Lab</h1>
+<canvas id="bgParticles"></canvas>
+
+<!-- 撲克牌卡片 -->
+<div class="lab-table" id="labTable"></div>
+
+<a href="index.html" class="back-home">🏠 回首頁</a>
+
+<script>
+async function loadLabs(){
+  const table=document.getElementById("labTable");
+  const labs=[
+    {
+      icon:"🍔",
+      name:"毒舌卡路里計算機",
+      desc:"上傳食物照片，讓 AI 嘴爆你的晚餐。",
+      link:"toxic_calorie.html",
+      updated:"2025/11/02"
+    },
+    {
+      icon:"👻",
+      name:"靈異顯像儀",
+      desc:"自拍？AI 幫你召喚靈體殘影。",
+      link:"ghost_vision.html"
+    },
+    {
+      icon:"🌐",
+      name:"科技全息轉換",
+      desc:"將任何照片轉成未來感全息投影風。",
+      link:"hologram_lab.html"
+    },
+    {
+      icon:"💫",
+      name:"賽博重組工坊",
+      desc:"混合霓虹與電子皮膚的數位變身。",
+      link:"cyber_mix.html"
+    }
+  ];
+  const today=new Date();
+  labs.forEach((g,i)=>{
+    const card=document.createElement("div");
+    card.className="lab-card";
+    const angle=-10+i*5;
+    card.style.setProperty("--angle",`${angle}deg`);
+    card.dataset.link=g.link;
+
+    let isNew=false;
+    if(g.updated){
+      const updatedDate=new Date(g.updated.replace(/\//g,"-"));
+      const diffDays=(today-updatedDate)/(1000*60*60*24);
+      if(diffDays<=7) isNew=true;
+    }
+
+    card.innerHTML=`
+      <div class="lab-icon">${g.icon}</div>
+      <h3>${g.name}${isNew?'<span class="new-badge">NEW</span>':''}</h3>
+      <p>${g.desc}</p>
+    `;
+    table.appendChild(card);
+  });
+  initCardEvents();
+}
+
+function initCardEvents(){
+  const cards=document.querySelectorAll(".lab-card");
+  cards.forEach(card=>{
+    card.addEventListener("click",()=>{
+      if(card.classList.contains("active")){
+        window.location.href=card.dataset.link;
+        return;
+      }
+      cards.forEach(c=>{
+        c.classList.remove("active");
+        c.style.opacity=0.5;
+      });
+      card.classList.add("active");
+      card.style.opacity=1;
+    });
+  });
+}
+
+// === 背景粒子 ===
+const canvas=document.getElementById("bgParticles");
+const ctx=canvas.getContext("2d");
+let width,height,particles=[];
+function resize(){
+  width=canvas.width=window.innerWidth;
+  height=canvas.height=window.innerHeight;
+}
+window.addEventListener("resize",resize);
+resize();
+
+class Particle{
+  constructor(){this.reset();}
+  reset(){
+    this.x=Math.random()*width;
+    this.y=Math.random()*height;
+    this.size=Math.random()*2+1;
+    this.speedY=Math.random()*0.5+0.2;
+    this.alpha=Math.random()*0.6+0.3;
+    this.emoji=Math.random()<0.3?"✨":"🪞";
+  }
+  update(){this.y+=this.speedY;if(this.y>height+20)this.reset();}
+  draw(){
+    ctx.globalAlpha=this.alpha;
+    ctx.font=`${this.size*10}px "Segoe UI Emoji"`;
+    ctx.fillText(this.emoji,this.x,this.y);
+  }
+}
+for(let i=0;i<50;i++)particles.push(new Particle());
+function animate(){
+  ctx.clearRect(0,0,width,height);
+  for(const p of particles){p.update();p.draw();}
+  requestAnimationFrame(animate);
+}
+animate();
+
+loadLabs();
+</script>
+</body>
+</html>
