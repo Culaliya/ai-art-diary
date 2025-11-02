@@ -81,26 +81,37 @@ body {
 }
 .card:hover {box-shadow:0 0 40px rgba(220,160,255,0.7);transform:translateY(-3px);}
 
-/* 標題 */
+/* 標題 - 更大更恐怖 */
 h1 {
   text-align:center;
-  font-size:4rem;
-  margin-top:160px;
-  color:#e0c6ff;
-  text-shadow:0 0 25px #b065ff, 0 0 60px #b065ff, 0 0 100px #b065ff;
+  font-size:6.5rem;
+  margin-top:120px;
+  color:#ff4dff;
+  text-shadow:0 0 40px #ff0080, 0 0 80px #b000ff, 0 0 120px #8000ff, 0 0 160px #ff0080;
   font-weight:900;
-  animation:titleGlow 5s ease-in-out infinite;
+  animation:titleGlow 3s ease-in-out infinite;
+  letter-spacing:8px;
+  line-height:1.2;
 }
 @keyframes titleGlow {
-  0%,100% {text-shadow:0 0 30px #b065ff, 0 0 60px #ff3eff;}
-  50% {text-shadow:0 0 50px #ff3eff, 0 0 100px #b065ff;}
+  0%,100% {
+    text-shadow:0 0 40px #ff0080, 0 0 80px #b000ff, 0 0 120px #8000ff;
+    transform:scale(1);
+  }
+  50% {
+    text-shadow:0 0 60px #ff3eff, 0 0 120px #ff0080, 0 0 180px #b000ff;
+    transform:scale(1.02);
+  }
 }
 p.sub {
   text-align:center;
-  color:#d3b8ff;
-  font-size:1.4rem;
-  margin-top:20px;
-  margin-bottom:60px;
+  color:#ff99ff;
+  font-size:1.8rem;
+  margin-top:30px;
+  margin-bottom:80px;
+  text-shadow:0 0 20px #ff3eff, 0 0 40px #b000ff;
+  font-weight:600;
+  letter-spacing:3px;
 }
 </style>
 </head>
