@@ -1,1 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🪞 圖像實驗室 | AI Art Diary</title>
+<style>
+body {
+  background: radial-gradient(circle at 50% 30%, #0a0f1f, #000);
+  color: #0ff;
+  font-family: 'Orbitron', sans-serif;
+  text-align: center;
+  overflow-x: hidden;
+}
+h1 {
+  font-size: 2.5em;
+  text-shadow: 0 0 20px #0ff;
+}
+#uploadZone {
+  margin: 40px auto;
+  padding: 40px;
+  border: 2px dashed #0ff;
+  border-radius: 20px;
+  width: 60%;
+  background: rgba(0,255,255,0.05);
+  transition: .3s;
+}
+#uploadZone:hover {
+  background: rgba(0,255,255,0.15);
+  box-shadow: 0 0 20px #0ff;
+}
+#preview {
+  margin-top: 30px;
+  border-radius: 16px;
+  max-width: 80%;
+  box-shadow: 0 0 20px #0ff;
+}
+button {
+  margin-top: 30px;
+  padding: 12px 24px;
+  border: 1px solid #0ff;
+  border-radius: 25px;
+  background: transparent;
+  color: #0ff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: .3s;
+}
+button:hover {
+  background: #0ff;
+  color: #000;
+  box-shadow: 0 0 20px #0ff;
+}
+#output {
+  margin-top: 40px;
+}
+#loading {
+  display: none;
+  font-size: 1.2em;
+  color: #aaf;
+  text-shadow: 0 0 10px #0ff;
+}
+</style>
+</head>
+<body>
+  <h1>🪞 圖像實驗室</h1>
+  <p>上傳一張照片，讓 AI 幫你進行全息轉化 ✨</p>
+
+  <div id="uploadZone">
+    <input type="file" id="imageInput" accept="image/*">
+    <br><br>
+    <img id="preview" />
+  </div>
+
+  <div>
+    <select id="mode">
+      <option value="hologram">🌐 全息投影人</option>
+      <option value="ghost">👻 鬼影照片</option>
+      <option value="cyberpunk">💫 賽博轉化</option>
+    </select>
+  </div>
+
+  <button onclick="generate()">開始轉化</button>
+  <div id="loading">🔮 AI 正在啟動中...</div>
+  <div id="output"></div>
+
+<script>
+const input = document.getElementById('imageInput');
+const preview = document.getElementById('preview');
+input.onchange = e => {
+  const file = e.target.files[0];
+  if (file) {
+    preview.src = URL.createObjectURL(file);
+  }
+};
+
+async function generate() {
+  const file = input.files[0];
+  if (!file) return alert("請先上傳圖片！");
+  document.getElementById('loading').style.display = 'block';
+  
+  // 將圖片轉為 base64
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = async () => {
+    const base64 = reader.result.split(',')[1];
+    const mode = document.getElementById('mode').value;
+    
+    // 呼叫 Gemini API（示範結構）
+    const res = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key=你的API_KEY", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [
+              { text: `請將這張照片轉化成${mode}風格的藝術圖像，呈現科技與靈異的融合。` },
+              { inline_data: { mime_type: "image/jpeg", data: base64 } }
+            ]
+          }
+        ]
+      })
+    });
+
+    const data = await res.json();
+    document.getElementById('loading').style.display = 'none';
+    const output = document.getElementById('output');
+    if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
+      output.innerHTML = `<p>✨ 轉化完成！</p><p>${data.candidates[0].content.parts[0].text}</p>`;
+    } else {
+      output.innerHTML = `<p>⚠️ 無法生成結果，請再試一次。</p>`;
+      console.error(data);
+    }
+  };
+}
+</script>
+</body>
+</html>
 
