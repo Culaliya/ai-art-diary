@@ -1,17 +1,12 @@
 /**
- * 💖 AI Beauty Studio v8.5 — 完整修復版
- *
- * 包含所有修復：
- * 1. ✅ Firebase Client SDK (非 Admin)
- * 2. ✅ Firebase 匿名登入 (signInAnonymously)
- * 3. ✅ Firestore IP 速率限制 (每日 + 冷卻)
- * 4. ✅ 移除錯誤的 "responseMimeType"
- * 5. ✅ 補上 "HARM_CATEGORY_SEXUALLY_EXPLICIT" 安全設定
+ * 💖 AI Beauty Studio v8.5 — 完整修復版 (已轉換為 CommonJS 格式)
+ * 修正了：SyntaxError: Cannot use import statement outside a module
  */
 
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
-import { getAuth, signInAnonymously } from "firebase/auth";
+// 將所有 import 轉換為 require
+const { initializeApp, getApps, getApp } = require("firebase/app");
+const { getFirestore, doc, getDoc, setDoc } = require("firebase/firestore");
+const { getAuth, signInAnonymously } = require("firebase/auth");
 
 // --- 你的規則 ---
 const COOLDOWN_MS = 30000; // 30 秒冷卻
@@ -54,7 +49,6 @@ async function initializeFirebase() {
 
     } catch (e) {
         console.error("Firebase 初始化或匿名登入失敗:", e);
-        // 拋出更具體的錯誤
         const errorMessage = e.code === 'auth/api-key-not-valid.-please-pass-a-valid-api-key.'
             ? "伺服器資料庫認證失敗 (請檢查 Vercel 上的 FIREBASE_CONFIG 是否正確)。"
             : `Firebase 初始化失敗: ${e.message}`;
@@ -63,7 +57,8 @@ async function initializeFirebase() {
 }
 
 // --- Vercel Handler ---
-export default async function handler(req, res) {
+// 將 export default 轉換為 module.exports
+module.exports = async function handler(req, res) {
     if (req.method !== "POST") {
         res.setHeader("Allow", ["POST"]);
         return res.status(405).json({ error: `Method ${req.method} Not Allowed` });
@@ -125,9 +120,9 @@ export default async function handler(req, res) {
         if (base64Image.length > 4_000_000) // 基礎的大小檢查
             return res.status(400).json({ error: "圖片過大，請上傳 4MB 以下檔案" });
 
-        // 💅 全風格 Prompt 清單 (已根據前端按鈕完整修正與最佳化)
+        // 💅 全風格 Prompt 清單 (已擴充至 10 個分鏡故事系列)
         const stylePrompts = {
-            // --- 單圖風格區 (根據你的前端按鈕補齊並精簡描述) ---
+            // --- 單圖風格區 ---
             paris: `使用上傳圖片中的人物，在法式咖啡廳，柔和光線，時尚妝容，8K高解析度。`,
             nyc: `使用上傳圖片中的人物，在紐約街頭，都市時尚感，動態構圖，電影級光影，8K高解析度。`,
             beach: `使用上傳圖片中的人物，在海島沙灘，陽光燦爛，穿著輕柔，清新度假風，8K高解析度。`,
@@ -155,13 +150,12 @@ export default async function handler(req, res) {
             princess: `使用上傳圖片中的人物，穿著公主禮服與皇冠，背景夢幻森林或水晶城堡，光線柔亮。`,
             aesthetic: `使用上傳圖片中的人物，藍粉光交錯的抽象彩霧背景，時尚雜誌藝術棚拍風格。`,
 
-            // --- 分鏡故事系列區 (改為橫幅分鏡) ---
+            // --- 分鏡故事系列區 (10 個橫幅分鏡) ---
             story_winter: `電影級藝術指導 (Cinematic art direction), 唯美冬季攝影風格, 具有透明雨傘道具, 一幅橫幅 (panoramic) 電影分鏡圖，內含三格連貫畫面，描繪上傳圖片中的人物在雪中的浪漫場景。1️⃣ 特寫，人物眼神望向遠方，表情寧靜，手持透明雨傘。2️⃣ 遠景，人物背對鏡頭，站在廣闊雪地中央，孤獨而渺小。3️⃣ 近景，人物側臉微抬，感受雪花，臉上帶著淺笑。整體畫面色彩冷調柔和，飄雪細膩夢幻，電影級光影，高解析度 (8K)。`,
             story_city: `電影級藝術指導 (Cinematic art direction), 都市夜景電影風格 (Urban Night Film Style), 一幅橫幅 (panoramic) 電影分鏡圖，內含三格連貫畫面，描繪上傳圖片中的人物在都市夜景中。1️⃣ 中景，人物站在高樓窗邊，俯瞰閃爍的城市燈火，表情沉思。2️⃣ 遠景，人物走在雨後街道，霓虹燈倒映在濕漉的路面，背影融入夜色。3️⃣ 特寫，人物眼神堅定，臉部被窗外反射的彩色光影照亮，富有故事感。整體畫面色彩飽和，運用藍紫粉色霓虹燈光，高對比度，電影級運鏡，8K專業攝影。`,
             story_beach: `電影級藝術指導 (Cinematic art direction), 黃金時刻海邊風格 (Golden Hour Beach Aesthetic), 一幅橫幅 (panoramic) 電影分鏡圖，內含三格連貫畫面，描繪上傳圖片中的人物在海邊日落時分。1️⃣ 中景，人物赤腳走在沙灘上，輕輕撥弄海浪，臉上洋溢著愉悅的笑容。2️⃣ 遠景，人物背對鏡頭，面向廣闊的海洋與日落，身形被夕陽拉長，氛圍宏大。3️⃣ 特寫，人物回眸微笑，金色的陽光灑在髮絲和臉龐，眼神溫柔。整體畫面色彩溫暖，金色與橘色調為主，光線柔和而夢幻，海浪細膩，8K專業攝影。`,
-            story_mirror: `電影級藝術指導 (Cinematic art direction), 現代藝術棚拍風格 (Modern Art Studio Style), 一幅橫幅 (panoramic) 電影分鏡圖，內含三格連貫畫面，描繪上傳圖片中的人物在鏡面棚拍場景。1️⃣ 中景，人物面對鏡頭，透過破碎的鏡面看向遠方，部分臉部被鏡面切割。2️⃣ 遠景，人物站在簡潔的白色空間中央，地面有鏡面倒影，營造出超現實感。3️⃣ 特寫，人物眼神透過鏡子反射，神秘而深邃，臉上被鏡子碎片的光影點綴。整體畫面色彩以黑白或冷灰為主，強烈的光影對比，清晰銳利，高質感藝術攝影，8K高解析度。`,
-            story_sakura: `電影級藝術指導 (Cinematic art direction), 日系櫻花浪漫風格 (Japanese Sakura Romance Style), 一幅橫幅 (panoramic) 電影分鏡圖，內含三格連貫畫面，描繪上傳圖片中的人物在春日櫻花下。1️⃣ 中景，人物輕輕閉眼，手舉向飄落的櫻花，臉上帶著幸福的微笑。2️⃣ 遠景，人物走在櫻花盛開的小徑上，背景是日式庭園，櫻花樹林延伸。3️⃣ 特寫，人物伸出的指尖，輕輕夾住一片櫻花花瓣，眼神溫柔，柔焦背景。整體畫面色彩以粉白、淺綠為主，光線柔和，櫻花紛飛效果真實，浪漫唯美，8K專業攝影。`
-            // (新增 5 個分鏡)
+            story_mirror: `電影級藝術指導 (Cinematic art direction), 現代藝術棚拍風格 (Modern Art Studio Style), 一幅橫幅 (panoramic) 電影分鏡圖，內含三格連貫畫面，描繪上傳圖片中的人物在鏡面棚拍場景。1️⃣ 中景，人物面對鏡頭，透過破碎的鏡面看向遠方，部分臉部被鏡面切割。2️⃣ 遠景，人物站在簡潔的白色空間中央，地面有鏡面倒影，營造出超現實感。3️⃣ 特寫，人物眼神透過鏡子反射，神秘而深邃，臉上被鏡子碎片的光影點綴。整體畫面色彩以黑白灰和藝術品的強烈色彩對比，光線均勻且具有設計感，高解析度，8K。`,
+            story_sakura: `電影級藝術指導 (Cinematic art direction), 日系櫻花浪漫風格 (Japanese Sakura Romance Style), 一幅橫幅 (panoramic) 電影分鏡圖，內含三格連貫畫面，描繪上傳圖片中的人物在春日櫻花下。1️⃣ 中景，人物輕輕閉眼，手舉向飄落的櫻花，臉上帶著幸福的微笑。2️⃣ 遠景，人物走在櫻花盛開的小徑上，背景是日式庭園，櫻花樹林延伸。3️⃣ 特寫，人物伸出的指尖，輕輕夾住一片櫻花花瓣，眼神溫柔，柔焦背景。整體畫面色彩以粉白、淺綠為主，光線柔和，櫻花紛飛效果真實，浪漫唯美，8K專業攝影。`,
             story_oriental: `電影級藝術指導 (Cinematic art direction), 東方水墨古韻風格 (Oriental Ink Wash Aesthetic), 一幅橫幅 (panoramic) 電影分鏡圖，內含三格連貫畫面，描繪上傳圖片中的人物在古典亭台樓閣中。1️⃣ 中景，人物著古典服飾，站在湖畔欄杆旁，手持一把油紙傘，回眸凝望。2️⃣ 遠景，人物站在古橋中央，背景是朦朧的山水和月光，水面倒影如水墨畫。3️⃣ 特寫，人物側臉特寫，臉部被柔和的燈籠光照亮，表情靜謐，髮飾精緻。整體畫面色彩柔和，以淡雅的青色、米白和黑色為主，光影充滿詩意，8K專業攝影。`,
             story_desert: `電影級藝術指導 (Cinematic art direction), 西部公路荒野風格 (Western Desert Road Trip Style), 一幅橫幅 (panoramic) 電影分鏡圖，內含三格連貫畫面，描繪上傳圖片中的人物在廣闊的沙漠公路上。1️⃣ 中景，人物戴著墨鏡，坐在敞篷車的引擎蓋上，長髮被風吹起，表情自信。2️⃣ 遠景，人物站在無盡的公路盡頭，背景是巨大的仙人掌和夕陽下的山脈，孤獨而堅毅。3️⃣ 特寫，人物手部特寫，手指輕觸車窗上的沙塵，光線被反射成金黃色，高對比度。整體畫面色彩以暖調的橘紅和土黃為主，陽光強烈，沙粒質感細膩，電影級運鏡，8K專業攝影。`,
             story_cyber: `電影級藝術指導 (Cinematic art direction), 賽博龐克未來風格 (Cyberpunk Future Aesthetic), 一幅橫幅 (panoramic) 電影分鏡圖，內含三格連貫畫面，描繪上傳圖片中的人物在充滿高科技感的未來都市。1️⃣ 中景，人物穿著發光材質服飾，站在全息投影的街道上，臉部被霓虹看板的藍色和粉色光影交錯。2️⃣ 遠景，人物站在高處俯瞰整個未來城市，雨水從屋簷滴落，背景是密集的摩天大樓和飛行汽車。3️⃣ 特寫，人物眼神特寫，瞳孔反射著螢幕光，下巴有一道細微的科技紋路，表情冷酷。整體畫面色彩高飽和，以藍、紫、綠色霓虹燈為主，光線銳利，充滿科技和未來感，8K高解析度。`,
@@ -183,10 +177,8 @@ export default async function handler(req, res) {
             }],
             generationConfig: {
                 temperature: 0.8,
-                // "responseMimeType" 已移除
                 responseModalities: ["IMAGE"],
             },
-            // 💥 修正 5: 補上 SEXUALLY_EXPLICIT
             safetySettings: [
                 { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
                 { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
@@ -204,14 +196,12 @@ export default async function handler(req, res) {
         const data = await r.json();
 
         if (!r.ok) {
-            // 如果 Google API 出錯 (例如 400 Bad Request, 429 Quota)
             console.error("⚠️ Google API 錯誤:", JSON.stringify(data, null, 2));
             throw new Error(data.error?.message || "Gemini API 請求失敗");
         }
         
         const parts = data?.candidates?.[0]?.content?.parts || [];
         
-        // 檢查是否有 "NO_IMAGE"
         if (data.candidates?.[0]?.finishReason === "NO_IMAGE") {
             console.error("⚠️ Gemini 拒絕生成圖片 (NO_IMAGE)", JSON.stringify(data, null, 2));
             return res.status(500).json({ error: "AI 拒絕生成圖片 (可能觸發安全機制)", raw: data });
@@ -223,7 +213,6 @@ export default async function handler(req, res) {
         if (image) {
             console.log(`✅ 出圖成功 [${style}] (${ip})`);
             
-            // 成功！更新 Firestore 計數器
             await Promise.all([
                 setDoc(dailyDocRef, { count: dailyCount + 1 }, { merge: true }),
                 setDoc(userDocRef, { last: now }, { merge: true })
@@ -235,7 +224,6 @@ export default async function handler(req, res) {
                 energy: DAILY_LIMIT - (dailyCount + 1), // 回傳更新後的剩餘次數
             });
         } else {
-            // 雖然 r.ok 是 true，但回傳的 JSON 裡沒有圖片
             console.error("⚠️ Gemini 無回傳圖片 (但 API 成功)", JSON.stringify(data, null, 2));
             return res.status(500).json({ error: "AI 沒有回傳圖片 (未知原因)", raw: data });
         }
@@ -243,4 +231,4 @@ export default async function handler(req, res) {
         console.error("🔥 伺服器錯誤 (Gemini API 或其他)：", err);
         return res.status(500).json({ error: err.message || "AI 錯誤" });
     }
-}
+};
