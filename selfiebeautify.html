@@ -10,369 +10,200 @@
 body {
     margin: 0;
     font-family: 'Poppins','Noto Sans TC',sans-serif;
-    background: linear-gradient(135deg, #ffd6f7 0%, #ffeef8 25%, #fff0f9 50%, #f8e5ff 75%, #ffe8f5 100%);
-    color: #5a1a4d;
+    background: radial-gradient(circle at 50% 20%, #2a0038 0%, #12001c 60%, #000 100%);
+    color: #fff;
     overflow-x: hidden;
     min-height: 100vh;
-    position: relative;
 }
-
-/* 背景光暈效果 */
 #bg-glow {
-    position: fixed; 
-    top: 0; 
-    left: 0;
-    width: 100%; 
-    height: 100%;
-    background: 
-        radial-gradient(circle at 20% 30%, rgba(255,180,230,0.3), transparent 40%),
-        radial-gradient(circle at 80% 70%, rgba(255,200,255,0.25), transparent 45%),
-        radial-gradient(circle at 50% 50%, rgba(255,220,255,0.2), transparent 60%);
-    filter: blur(80px);
-    animation: float 12s ease-in-out infinite alternate;
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(circle at 60% 40%, rgba(255,100,255,0.2), transparent 60%),
+                radial-gradient(circle at 30% 80%, rgba(255,180,255,0.15), transparent 70%);
+    filter: blur(120px);
+    animation: float 10s ease-in-out infinite alternate;
     z-index: 0;
-    pointer-events: none;
 }
-
 @keyframes float {
-    from { transform: translate(0, 0) scale(1); }
-    to { transform: translate(20px, -20px) scale(1.05); }
-}
-
-/* 裝飾氣泡 */
-.bubble {
-    position: fixed;
-    border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), rgba(255,200,255,0.3));
-    backdrop-filter: blur(10px);
-    pointer-events: none;
-    animation: rise 15s infinite ease-in-out;
-    z-index: 0;
-}
-
-.bubble:nth-child(1) { width: 60px; height: 60px; left: 10%; bottom: -100px; animation-delay: 0s; }
-.bubble:nth-child(2) { width: 40px; height: 40px; left: 70%; bottom: -100px; animation-delay: 3s; }
-.bubble:nth-child(3) { width: 80px; height: 80px; left: 40%; bottom: -100px; animation-delay: 6s; }
-.bubble:nth-child(4) { width: 50px; height: 50px; left: 85%; bottom: -100px; animation-delay: 9s; }
-
-@keyframes rise {
-    0% { transform: translateY(0) rotate(0deg); opacity: 0.7; }
-    50% { opacity: 0.4; }
-    100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
+    from { transform: translateY(0); opacity: 0.6; }
+    to { transform: translateY(-30px); opacity: 0.9; }
 }
 
 /* --- 主容器 RWD 調整 --- */
 .container {
     position: relative;
     z-index: 1;
-    max-width: 580px; 
+    /* 調整 max-width 讓卡片看起來更合適 */
+    max-width: 700px; 
     margin: 0 auto;
-    padding: 40px 16px; 
+    /* 增加左右 padding 確保手機邊緣有留白 */
+    padding: 30px 10px; 
     text-align: center;
 }
-
-/* 標題區塊 - 加入特色設計 */
-.header-wrapper {
-    position: relative;
-    margin-bottom: 32px;
-}
-
 h1 {
-    font-size: 2.4rem;
-    font-weight: 900;
-    background: linear-gradient(135deg, #ff88cc 0%, #ff6eb4 50%, #ff88cc 100%);
+    font-size: 2.2rem; /* 手機上略微縮小標題 */
+    font-weight: 800;
+    background: linear-gradient(90deg,#ffbdfc,#ff9df9,#ffffff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-shadow: 0 4px 20px rgba(255,100,180,0.3);
+    text-shadow: 0 0 35px rgba(255,150,255,0.6);
     margin-bottom: 8px;
-    letter-spacing: 2px;
-    position: relative;
-    display: inline-block;
 }
-
-h1::before {
-    content: '✨';
-    position: absolute;
-    left: -40px;
-    top: 50%;
-    transform: translateY(-50%);
-    animation: sparkle 2s ease-in-out infinite;
-}
-
-h1::after {
-    content: '✨';
-    position: absolute;
-    right: -40px;
-    top: 50%;
-    transform: translateY(-50%);
-    animation: sparkle 2s ease-in-out infinite 1s;
-}
-
-@keyframes sparkle {
-    0%, 100% { opacity: 1; transform: translateY(-50%) scale(1); }
-    50% { opacity: 0.5; transform: translateY(-50%) scale(1.2); }
-}
-
 p.subtitle {
-    font-size: 0.95rem;
-    color: #d946c7;
-    margin-bottom: 0;
-    letter-spacing: 1.5px;
-    font-weight: 600;
-    text-shadow: 0 2px 10px rgba(255,150,255,0.2);
+    font-size: 0.9rem;
+    color: #ffd6ff;
+    margin-bottom: 24px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 20px rgba(255,150,255,0.5);
 }
 
-/* --- 玻璃卡片優化 --- */
+/* --- 卡片調整：縮小框格寬度 --- */
 .card {
-    background: rgba(255, 255, 255, 0.4);
-    border: 1.5px solid rgba(255,255,255,0.6);
-    border-radius: 24px;
-    box-shadow: 
-        0 8px 32px rgba(255,180,230,0.2),
-        inset 0 0 20px rgba(255,255,255,0.4);
-    backdrop-filter: blur(20px) saturate(150%);
-    padding: 24px 20px; 
-    margin-bottom: 20px;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.card::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, 
-        transparent 30%, 
-        rgba(255,255,255,0.1) 50%, 
-        transparent 70%);
-    transform: rotate(45deg);
-    pointer-events: none;
-}
-
-.card:hover {
-    transform: translateY(-2px);
-    box-shadow: 
-        0 12px 40px rgba(255,180,230,0.3),
-        inset 0 0 25px rgba(255,255,255,0.5);
-}
-
-/* 卡片標籤 */
-.card-label {
-    display: inline-block;
-    color: #c026d3;
-    margin-bottom: 14px;
-    font-weight: 800;
-    font-size: 0.95rem;
-    padding: 6px 16px;
-    background: linear-gradient(135deg, rgba(255,255,255,0.6), rgba(255,240,255,0.5));
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,150,255,0.25);
     border-radius: 20px;
-    border: 1px solid rgba(255,200,255,0.4);
-    box-shadow: 0 2px 8px rgba(255,180,230,0.2);
+    box-shadow: inset 0 0 30px rgba(255,255,255,0.06),0 0 20px rgba(255,150,255,0.15);
+    backdrop-filter: blur(15px);
+    /* 縮小內邊距 */
+    padding: 18px 18px; 
+    margin-bottom: 18px;
 }
 
 /* --- 上傳區樣式 --- */
 .upload-zone {
-    border: 2px dashed rgba(255,150,220,0.5);
-    border-radius: 18px;
-    padding: 40px 20px; 
+    border: 2px dashed rgba(255,200,255,0.4);
+    border-radius: 14px;
+    padding: 30px; /* 略為縮小內邊距 */
     text-align: center;
-    background: rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.05);
     transition: 0.3s;
-    cursor: pointer;
-    color: #c026d3;
-    font-weight: 600;
-    font-size: 0.95rem;
 }
-
 .upload-zone:hover {
-    background: rgba(255,255,255,0.5);
-    border-color: #ff6eb4;
-    box-shadow: 0 0 24px rgba(255,160,255,0.3);
-    transform: scale(1.01);
+    background: rgba(255,255,255,0.08);
+    border-color: #ffbdfc;
+    box-shadow: 0 0 20px rgba(255,160,255,0.3);
 }
-
 .preview-img {
     max-width: 100%;
-    max-height: 300px; 
-    margin-top: 16px;
-    border-radius: 16px;
-    box-shadow: 0 8px 24px rgba(255,160,255,0.25);
-    border: 2px solid rgba(255,255,255,0.6);
+    max-height: 280px; /* 降低預覽圖高度 */
+    margin-top: 15px;
+    border-radius: 14px;
+    box-shadow: 0 0 25px rgba(255,160,255,0.25);
 }
 
-/* --- 按鈕群組優化 --- */
+/* --- 按鈕群組 (核心調整：對齊與RWD) --- */
 .style-grid {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 8px;
-    margin-top: 16px;
+    gap: 8px; /* 縮小按鈕間距 */
+    margin-top: 10px;
 }
-
 .style-btn {
-    padding: 10px 14px;
-    min-width: 100px;
-    max-width: 140px;
-    flex-grow: 1;
-    flex-basis: 110px;
-    border-radius: 20px;
-    border: 1.5px solid rgba(255,200,255,0.4);
+    padding: 8px 10px; /* 縮小按鈕內邊距 */
+    min-width: 90px; /* 縮小最小寬度，讓按鈕更靈活 */
+    max-width: 130px; /* 增加最大寬度限制，防止按鈕太寬 */
+    flex-grow: 1; /* 讓按鈕平均分配寬度 */
+    flex-basis: 120px; /* 設定基礎寬度 */
+    
+    border-radius: 30px;
+    border: none;
     font-weight: 700;
-    background: linear-gradient(135deg, rgba(255,255,255,0.7), rgba(255,240,255,0.6));
-    color: #c026d3;
-    box-shadow: 0 4px 12px rgba(255,180,230,0.2);
-    transition: all 0.25s ease;
-    font-size: 0.85rem;
-    text-align: center;
-    cursor: pointer;
-    backdrop-filter: blur(10px);
+    background: linear-gradient(135deg,#ffbdfc,#ff79e3);
+    color: #fff;
+    box-shadow: 0 0 10px rgba(255,120,255,0.4);
+    transition: all 0.25s;
+    font-size: 0.85rem; /* 縮小字體以適應按鈕 */
+    text-align: center; /* 確保文字置中 */
 }
 
+/* --- 在較寬螢幕上，讓按鈕排版更整齊 --- */
 @media (min-width: 480px) {
     .style-btn {
         min-width: 110px;
-        flex-basis: auto;
-        flex-grow: 0;
-        padding: 10px 16px;
+        flex-basis: auto; /* 移除基礎寬度，讓內容決定寬度 */
+        flex-grow: 0; /* 停止成長，讓按鈕寬度根據內容來 */
+        padding: 9px 14px;
     }
     .style-grid {
+        /* 在大螢幕下使用 Grid 確保完美對齊 */
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(115px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
         gap: 10px;
     }
 }
 
-.style-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(255,160,255,0.35);
-    background: linear-gradient(135deg, rgba(255,255,255,0.85), rgba(255,245,255,0.75));
-}
 
+.style-btn:hover {transform: translateY(-2px);box-shadow: 0 0 18px rgba(255,160,255,0.6);}
 .style-btn.active {
-    background: linear-gradient(135deg, #ff88cc, #ffa8d4);
-    color: #fff;
-    border-color: #ff6eb4;
-    box-shadow: 0 6px 24px rgba(255,100,180,0.4);
+    background: linear-gradient(135deg,#ff9df9,#ffe6ff);
+    color: #8000aa;
+    box-shadow: 0 0 22px rgba(255,180,255,0.7);
     transform: scale(1.05);
 }
-
 /* 生成按鈕 */
 .generate-btn {
-    background: linear-gradient(135deg, #ff6eb4, #ff88cc);
+    background: linear-gradient(90deg,#ff9df9,#ff6ef5);
     color: #fff;
     border: none;
-    border-radius: 30px;
-    font-size: 1.1rem;
-    font-weight: 800;
-    padding: 14px 32px;
-    margin-top: 24px;
-    box-shadow: 0 6px 24px rgba(255,100,180,0.4);
-    transition: all 0.3s ease;
-    cursor: pointer;
-    border: 2px solid rgba(255,255,255,0.5);
+    border-radius: 40px;
+    font-size: 1.05rem;
+    font-weight: bold;
+    padding: 12px 26px;
+    margin-top: 20px;
+    box-shadow: 0 0 18px rgba(255,120,255,0.4);
+    transition: all 0.3s;
 }
-
-.generate-btn:hover { 
-    transform: scale(1.05); 
-    box-shadow: 0 8px 32px rgba(255,100,180,0.6);
-}
-
-.generate-btn:disabled {
-    opacity: 0.5; 
-    cursor: not-allowed;
-    transform: none;
-}
-
+.generate-btn:hover { transform: scale(1.05); box-shadow: 0 0 28px rgba(255,160,255,0.7);}
+.generate-btn:disabled {opacity: 0.5; cursor: not-allowed;}
 /* 結果 */
 .result-img {
     max-width: 100%;
-    border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(255,180,230,0.4);
-    margin-top: 20px;
-    border: 2px solid rgba(255,255,255,0.6);
+    border-radius: 16px;
+    box-shadow: 0 0 28px rgba(255,180,255,0.3);
+    margin-top: 18px;
 }
-
 /* Loading */
 .spinner {
-    border: 4px solid rgba(255,200,255,0.3);
-    border-top: 4px solid #ff6eb4;
+    border: 4px solid rgba(255,255,255,0.2);
+    border-top: 4px solid #ffbdfc;
     border-radius: 50%;
-    width: 50px; 
-    height: 50px;
-    margin: 0 auto 16px;
+    width: 45px; height: 45px;
+    margin: 0 auto 12px;
     animation: spin 1s linear infinite;
 }
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
+@keyframes spin {to{transform:rotate(360deg)}}
 /* 能量條 */
 #energy-bar {
     position: fixed;
-    bottom: 20px; 
-    right: 20px;
-    width: 150px; 
-    height: 10px;
-    border-radius: 10px;
-    background: rgba(255,255,255,0.4);
-    border: 1.5px solid rgba(255,200,255,0.5);
+    bottom: 16px; right: 16px;
+    width: 140px; height: 8px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,180,255,0.4);
     overflow: hidden;
-    box-shadow: 0 4px 16px rgba(255,180,230,0.3);
-    backdrop-filter: blur(10px);
+    box-shadow: 0 0 10px rgba(255,120,255,0.3);
 }
-
 #energy-fill {
     height: 100%;
     width: 100%;
-    background: linear-gradient(90deg, #ff6eb4, #ffa8d4);
+    background: linear-gradient(90deg,#ff9df9,#ffbdfc);
     transition: width 0.3s;
-    box-shadow: 0 0 10px rgba(255,100,180,0.6);
 }
-
 .divider {
-    border-top: 1.5px dashed rgba(255,150,220,0.4);
-    margin: 24px 0;
-}
-
-/* 隱藏類 */
-.hidden {
-    display: none;
-}
-
-/* 結果標題特效 */
-#result h2 {
-    color: #c026d3;
-    text-shadow: 0 2px 12px rgba(255,100,180,0.3);
-    animation: slideDown 0.5s ease-out;
-}
-
-@keyframes slideDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
+    border-top: 1px dashed rgba(255,180,255,0.4);
+    margin: 18px 0;
 }
 </style>
 </head>
 <body>
-<!-- 背景效果 -->
 <div id="bg-glow"></div>
-<div class="bubble"></div>
-<div class="bubble"></div>
-<div class="bubble"></div>
-<div class="bubble"></div>
-
 <div class="container">
-    <div class="header-wrapper">
-        <h1>💖 AI 網美濾鏡實驗室</h1>
-        <p class="subtitle">上傳自拍，一鍵變身雜誌級時尚照 ✨</p>
-    </div>
+    <h1>💖 AI 網美濾鏡實驗室</h1>
+    <p class="subtitle">上傳自拍，一鍵變身雜誌級時尚照 ✨</p>
 
     <div class="card">
-        <label class="card-label">📸 上傳自拍照</label>
+        <label class="block text-pink-200 mb-2 font-bold">📸 上傳自拍照</label>
         <div id="upload-zone" class="upload-zone">
             點擊或拖曳圖片到這裡
             <input type="file" id="file-input" accept="image/jpeg,image/png" class="hidden" />
@@ -381,7 +212,7 @@ p.subtitle {
     </div>
 
     <div class="card">
-        <label class="card-label">🎨 選擇風格</label>
+        <label class="block text-pink-200 mb-2 font-bold">🎨 選擇風格</label>
         <div class="style-grid">
             <button class="style-btn active" data-style="paris">🥐 法式咖啡廳</button>
             <button class="style-btn" data-style="nyc">🏙️ 紐約街頭</button>
@@ -412,7 +243,7 @@ p.subtitle {
         </div>
 
         <div class="divider"></div>
-        <label class="card-label">📽️ 分鏡故事系列</label>
+        <label class="block text-pink-200 mb-2 font-bold">📽️ 分鏡故事系列 (10 個)</label>
         <div class="style-grid">
             <button class="style-btn" data-style="story_winter">❄️ 冬日雨傘分鏡</button>
             <button class="style-btn" data-style="story_city">🌃 都市戀人分鏡</button>
@@ -430,13 +261,13 @@ p.subtitle {
 
     <div id="loading" class="hidden">
         <div class="spinner"></div>
-        <p style="color: #c026d3; font-weight: bold; font-size: 1.05rem;">AI 魔法變身中...</p>
+        <p class="text-pink-200 font-bold">AI 魔法變身中...</p>
     </div>
 
     <div id="result" class="hidden">
-        <h2 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 16px;">✨ 完成！</h2>
+        <h2 class="text-pink-200 text-xl font-bold mb-3">✨ 完成！</h2>
         <img id="result-img" class="result-img" />
-        <button id="download-btn" class="generate-btn" style="margin-top: 16px;">💾 下載圖片</button>
+        <button id="download-btn" class="generate-btn mt-3">💾 下載圖片</button>
     </div>
 </div>
 
@@ -450,9 +281,8 @@ const generateBtn=document.getElementById('generate-btn');
 let base64Image=null;
 
 uploadZone.onclick=()=>fileInput.click();
-uploadZone.ondragover=e=>{e.preventDefault();uploadZone.style.borderColor='#ff6eb4';};
-uploadZone.ondragleave=e=>{uploadZone.style.borderColor='rgba(255,150,220,0.5)';};
-uploadZone.ondrop=e=>{e.preventDefault();handleFile(e.dataTransfer.files[0]);uploadZone.style.borderColor='rgba(255,150,220,0.5)';};
+uploadZone.ondragover=e=>{e.preventDefault();uploadZone.style.borderColor='#ffbdfc';};
+uploadZone.ondrop=e=>{e.preventDefault();handleFile(e.dataTransfer.files[0]);};
 fileInput.onchange=e=>handleFile(e.target.files[0]);
 
 function handleFile(file){
@@ -512,7 +342,7 @@ function updateEnergyBar(energy){
     const fill=document.getElementById('energy-fill');
     const percent=Math.max(0,Math.min(100,(energy/5)*100));
     fill.style.width=percent+'%';
-    fill.style.background=percent>40?'linear-gradient(90deg,#ff6eb4,#ffa8d4)':'linear-gradient(90deg,#ff6b9d,#ffc0c0)';
+    fill.style.background=percent>40?'linear-gradient(90deg,#ff9df9,#ffbdfc)':'linear-gradient(90deg,#ff6b9d,#ffc0c0)';
 }
 
 document.getElementById('download-btn').onclick=()=>{
