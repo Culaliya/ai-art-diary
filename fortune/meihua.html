@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>梅花易數 - 星空占卜</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'PingFang TC', sans-serif;
+            background: linear-gradient(to bottom, #0a0e27 0%, #1a1a3e 50%, #2d1b4e 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 星空背景 */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* 流星效果 */
+        .shooting-star {
+            position: fixed;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8);
+            animation: shoot 3s linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes shoot {
+            0% {
+                transform: translateX(0) translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-300px) translateY(300px);
+                opacity: 0;
+            }
+        }
+
+        /* 主容器 */
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* 頭部 */
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 3em;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(255, 105, 180, 0.8),
+                         0 0 40px rgba(255, 105, 180, 0.5);
+            margin-bottom: 10px;
+            letter-spacing: 5px;
+        }
+
+        .subtitle {
+            color: #b8b8d4;
+            font-size: 1.2em;
+            letter-spacing: 3px;
+        }
+
+        /* 卡片容器 */
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1s ease-out 0.3s both;
+            margin-bottom: 30px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .method-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .method-card {
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .method-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #ff69b4;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
+        }
+
+        .method-card.active {
+            background: rgba(255, 105, 180, 0.2);
+            border-color: #ff69b4;
+            box-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+        }
+
+        .method-card h3 {
+            color: #fff;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+
+        .method-card p {
+            color: #b8b8d4;
+            font-size: 0.9em;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            color: #e0e0ff;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        select option {
+            background: #fff;
+            color: #000;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #ff69b4;
+            box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* 起卦按鈕 */
+        .number-input-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        /* 按鈕 */
+        button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #ff69b4 0%, #ff1493 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 2px;
+            margin-top: 20px;
+            box-shadow: 0 5px 20px rgba(255, 105, 180, 0.4);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(255, 105, 180, 0.6);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        /* 結果顯示區域 */
+        .result-section {
+            margin-top: 40px;
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .hexagram-display {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .hexagram {
+            text-align: center;
+        }
+
+        .hexagram-title {
+            color: #ff69b4;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .hexagram-lines {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid rgba(255, 105, 180, 0.3);
+        }
+
+        .line {
+            height: 8px;
+            margin: 12px 0;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #ff69b4, #ff1493);
+            box-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+            position: relative;
+        }
+
+        .line.broken {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .line.broken::before,
+        .line.broken::after {
+            content: '';
+            flex: 1;
+            height: 8px;
+            background: linear-gradient(90deg, #ff69b4, #ff1493);
+            border-radius: 4px;
+        }
+
+        .hexagram-name {
+            margin-top: 20px;
+            font-size: 2em;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .hexagram-info {
+            margin-top: 10px;
+            color: #b8b8d4;
+            font-size: 0.9em;
+        }
+
+        .interpretation {
+            color: #e0e0ff;
+            line-height: 1.8;
+            margin-top: 30px;
+            padding: 30px;
+            background: rgba(255, 105, 180, 0.1);
+            border: 1px solid rgba(255, 105, 180, 0.3);
+            border-radius: 15px;
+        }
+
+        .interpretation h3 {
+            color: #ff69b4;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .interpretation h4 {
+            color: #ffd700;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .interpretation p {
+            margin-bottom: 15px;
+        }
+
+        .divination-info {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            color: #b8b8d4;
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .card {
+                padding: 25px;
+            }
+
+            .hexagram-display {
+                gap: 30px;
+            }
+
+            .number-input-group {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 返回首頁按鈕 */
+        .home-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            width: auto;
+            margin: 0;
+            display: inline-block;
+            font-size: 1em;
+        }
+
+        .home-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 星空背景 -->
+    <div class="stars" id="stars"></div>
+    
+    <!-- 返回首頁按鈕 -->
+    <a href="index.html" class="home-button">🏠 首頁</a>
+
+    <div class="container">
+        <header>
+            <h1>🌸 梅花易數 🌸</h1>
+            <p class="subtitle">觀萬物之象 測天地之數</p>
+        </header>
+
+        <div class="card">
+            <h2 style="color: #ff69b4; margin-bottom: 30px; text-align: center;">選擇起卦方式</h2>
+            
+            <div class="method-selector">
+                <div class="method-card active" data-method="time">
+                    <h3>⏰ 時間起卦</h3>
+                    <p>根據年月日時起卦</p>
+                </div>
+                <div class="method-card" data-method="number">
+                    <h3>🎲 數字起卦</h3>
+                    <p>報兩個數字起卦</p>
+                </div>
+                <div class="method-card" data-method="question">
+                    <h3>💭 問事起卦</h3>
+                    <p>根據問題字數起卦</p>
+                </div>
+            </div>
+
+            <!-- 時間起卦 -->
+            <div id="timeMethod" class="method-content">
+                <div class="form-group">
+                    <label for="question1">您想問的問題</label>
+                    <textarea id="question1" placeholder="請輸入您想占卜的問題..."></textarea>
+                </div>
+                <button onclick="divinateByTime()">🔮 時間起卦</button>
+            </div>
+
+            <!-- 數字起卦 -->
+            <div id="numberMethod" class="method-content hidden">
+                <div class="form-group">
+                    <label for="question2">您想問的問題</label>
+                    <textarea id="question2" placeholder="請輸入您想占卜的問題..."></textarea>
+                </div>
+                <div class="number-input-group">
+                    <div class="form-group">
+                        <label for="number1">第一個數字 (1-100)</label>
+                        <input type="number" id="number1" min="1" max="100" placeholder="請輸入數字">
+                    </div>
+                    <div class="form-group">
+                        <label for="number2">第二個數字 (1-100)</label>
+                        <input type="number" id="number2" min="1" max="100" placeholder="請輸入數字">
+                    </div>
+                </div>
+                <button onclick="divinateByNumber()">🔮 數字起卦</button>
+            </div>
+
+            <!-- 問事起卦 -->
+            <div id="questionMethod" class="method-content hidden">
+                <div class="form-group">
+                    <label for="question3">您想問的問題（字數用於起卦）</label>
+                    <textarea id="question3" placeholder="請輸入您想占卜的問題，問題的字數將用於起卦..."></textarea>
+                </div>
+                <button onclick="divinateByQuestion()">🔮 問事起卦</button>
+            </div>
+
+            <div class="result-section" id="resultSection">
+                <h2 style="color: #ff69b4; text-align: center; margin-bottom: 30px;">卦象解析</h2>
+                
+                <div class="divination-info" id="divinationInfo"></div>
+
+                <div class="hexagram-display">
+                    <div class="hexagram">
+                        <div class="hexagram-title">本卦</div>
+                        <div class="hexagram-lines" id="originalHexagram"></div>
+                        <div class="hexagram-name" id="originalName"></div>
+                        <div class="hexagram-info" id="originalInfo"></div>
+                    </div>
+                    <div class="hexagram" id="changedHexagramContainer" style="display: none;">
+                        <div class="hexagram-title">變卦</div>
+                        <div class="hexagram-lines" id="changedHexagram"></div>
+                        <div class="hexagram-name" id="changedName"></div>
+                        <div class="hexagram-info" id="changedInfo"></div>
+                    </div>
+                </div>
+
+                <div class="interpretation" id="interpretation"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 生成星空
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const numberOfStars = 200;
+
+            for (let i = 0; i < numberOfStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+
+            for (let i = 0; i < 3; i++) {
+                const shootingStar = document.createElement('div');
+                shootingStar.className = 'shooting-star';
+                shootingStar.style.left = Math.random() * 100 + '%';
+                shootingStar.style.top = Math.random() * 50 + '%';
+                shootingStar.style.animationDelay = Math.random() * 5 + 's';
+                starsContainer.appendChild(shootingStar);
+            }
+        }
+
+        // 切換起卦方式
+        document.querySelectorAll('.method-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.method-card').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                
+                document.querySelectorAll('.method-content').forEach(m => m.classList.add('hidden'));
+                
+                const method = this.dataset.method;
+                document.getElementById(method + 'Method').classList.remove('hidden');
+            });
+        });
+
+        // 八卦基本數據
+        const trigrams = {
+            1: { name: '乾', nature: '天', attribute: '金', symbol: '☰' },
+            2: { name: '兌', nature: '澤', attribute: '金', symbol: '☱' },
+            3: { name: '離', nature: '火', attribute: '火', symbol: '☲' },
+            4: { name: '震', nature: '雷', attribute: '木', symbol: '☳' },
+            5: { name: '巽', nature: '風', attribute: '木', symbol: '☴' },
+            6: { name: '坎', nature: '水', attribute: '水', symbol: '☵' },
+            7: { name: '艮', nature: '山', attribute: '土', symbol: '☶' },
+            8: { name: '坤', nature: '地', attribute: '土', symbol: '☷' }
+        };
+
+        // 六十四卦數據（簡化版）
+        const hexagrams = {
+            '11': { name: '乾為天', description: '元亨利貞', interpretation: '乾卦代表純陽之象，象徵剛健、進取。此卦大吉，宜積極進取，自強不息。事業方面會有大的發展，但需持之以恆。' },
+            '12': { name: '天澤履', description: '履虎尾', interpretation: '履卦象徵謹慎行事。雖處境微妙，但只要行為端正，小心謹慎，便能化險為夷。凡事宜低調行事，避免鋒芒太露。' },
+            '13': { name: '天火同人', description: '同人于野', interpretation: '同人卦象徵團結合作。此時宜與他人協力，以公正無私的態度處事。人際關係和諧，事業上適合合作發展。' },
+            '14': { name: '天雷無妄', description: '無妄之災', interpretation: '無妄卦警示要順應自然，不可妄動。此時不宜冒進，應保持純正之心，順其自然方能避免災禍。' },
+            '15': { name: '天風姤', description: '女壯勿用', interpretation: '姤卦象徵邂逅、相遇。提醒要警惕小人，防微杜漸。此時不宜輕信他人，需謹慎判斷。' },
+            '16': { name: '天水訟', description: '訟則終凶', interpretation: '訟卦代表爭訟、糾紛。建議退讓為上，避免爭執。即使有理也不宜過分爭辯，和解為佳。' },
+            '17': { name: '天山遯', description: '遯世無悶', interpretation: '遯卦象徵退隱、避讓。此時宜以退為進，暫時隱退以待時機。不是消極逃避，而是明哲保身。' },
+            '18': { name: '天地否', description: '否極泰來', interpretation: '否卦代表閉塞不通。目前運勢不佳，但不要氣餒。堅守正道，等待時機，終會否極泰來。' },
+            '21': { name: '澤天夬', description: '夬而勿疑', interpretation: '夬卦象徵決斷、突破。此時機會來臨，應果斷決策，但要注意方式方法，剛柔並濟。' },
+            '22': { name: '兌為澤', description: '麗澤兌', interpretation: '兌卦代表喜悅、和悅。運勢順暢，人際關係良好。但要保持真誠，不可流於輕浮。' },
+            '23': { name: '澤火革', description: '湯武革命', interpretation: '革卦象徵變革、改革。此時適合改變現狀，革故鼎新。但改革要順應民心，把握時機。' },
+            '24': { name: '澤雷隨', description: '隨時之義', interpretation: '隨卦代表隨和、跟隨。此時宜順應形勢，隨機應變。不必過分堅持己見，適當變通會更好。' },
+            '25': { name: '澤風大過', description: '大過之世', interpretation: '大過卦警示負荷過重。目前壓力較大，應量力而行，不可勉強。適當放下一些，以免不堪重負。' },
+            '26': { name: '澤水困', description: '困亨貞', interpretation: '困卦象徵困境。雖然目前處境艱難，但只要堅守正道，保持信念，終會走出困境。' },
+            '27': { name: '澤山咸', description: '二氣感應', interpretation: '咸卦代表感應、交流。此時人際關係和諧，適合溝通交流。感情方面尤其順利。' },
+            '28': { name: '澤地萃', description: '萃聚升騰', interpretation: '萃卦象徵聚集、會合。此時適合團隊合作，眾志成城。但要注意組織管理，防止混亂。' },
+            '31': { name: '火天大有', description: '火在天上', interpretation: '大有卦代表豐收、收穫。目前運勢極佳，事業財運皆旺。但需保持謙虛，不可驕傲自滿。' },
+            '32': { name: '火澤睽', description: '睽而不爭', interpretation: '睽卦象徵分離、背離。此時可能出現分歧，但不必強求一致。求同存異，各行其是也可。' },
+            '33': { name: '離為火', description: '重明麗正', interpretation: '離卦代表光明、依附。運勢光明，但需依附於正道。事業上適合合作，借助他人力量。' },
+            '34': { name: '火雷噬嗑', description: '噬嗑亨', interpretation: '噬嗑卦象徵咬合、解決。目前障礙可以排除，但需要果斷行動。訴訟、爭端可獲解決。' },
+            '35': { name: '火風鼎', description: '鼎新革故', interpretation: '鼎卦代表穩固、鼎新。此時基礎穩固，適合改革創新。事業將有新的發展機會。' },
+            '36': { name: '火水未濟', description: '未濟終凶', interpretation: '未濟卦象徵未完成、前景不明。目前事情尚未成功，需繼續努力。謹慎行事，不可大意。' },
+            '37': { name: '火山旅', description: '旅而無親', interpretation: '旅卦代表旅行、漂泊。目前處於過渡期，不宜安定。適合外出、變動，但要小心謹慎。' },
+            '38': { name: '火地晉', description: '晉如碩鼠', interpretation: '晉卦象徵晉升、前進。運勢上升，事業有晉升機會。但要腳踏實地，步步為營。' },
+            '41': { name: '雷天大壯', description: '大壯之德', interpretation: '大壯卦代表強盛、壯大。目前實力雄厚，可大展拳腳。但要注意不可逞強，過剛易折。' },
+            '42': { name: '雷澤歸妹', description: '歸妹以娣', interpretation: '歸妹卦象徵歸從、婚姻。感情方面有進展，但要理性對待。不可感情用事，需謹慎選擇。' },
+            '43': { name: '雷火豐', description: '豐其屋', interpretation: '豐卦代表豐盛、豐收。目前運勢極好，收穫豐碩。但盛極而衰，需居安思危。' },
+            '44': { name: '震為雷', description: '震驚百里', interpretation: '震卦象徵震動、驚恐。可能有突發事件，但不必驚慌。這是考驗，也是轉機。' },
+            '45': { name: '雷風恆', description: '恆久不變', interpretation: '恆卦代表恆久、持久。提醒要有恆心，堅持不懈。不可三心二意，持之以恆必有所成。' },
+            '46': { name: '雷水解', description: '解而後亨', interpretation: '解卦象徵解除、化解。困境將會解除，問題可以解決。此時宜寬宏大量，化解恩怨。' },
+            '47': { name: '雷山小過', description: '小過可也', interpretation: '小過卦提醒小心謹慎。目前不宜有大動作，應低調行事。小的過失可以原諒，大錯不可犯。' },
+            '48': { name: '雷地豫', description: '豫順以動', interpretation: '豫卦代表愉悅、順利。運勢順暢，心情愉快。適合娛樂放鬆，但不可過度沉溺。' },
+            '51': { name: '風天小畜', description: '小畜亨', interpretation: '小畜卦象徵小有積蓄。目前雖有收穫，但不足以大展。宜積累實力，等待時機。' },
+            '52': { name: '風澤中孚', description: '中孚化邦', interpretation: '中孚卦代表誠信、信任。此時誠信最重要，以誠待人方能成事。人際關係和諧順利。' },
+            '53': { name: '風火家人', description: '家人嗃嗃', interpretation: '家人卦象徵家庭、親人。提醒要重視家庭，處理好家庭關係。家和萬事興。' },
+            '54': { name: '風雷益', description: '益動而巽', interpretation: '益卦代表增益、利益。目前運勢上升，會有收益。適合投資發展，但要把握分寸。' },
+            '55': { name: '巽為風', description: '重巽申命', interpretation: '巽卦象徵順從、謙遜。此時宜謙虛謹慎，順應形勢。過分固執會帶來阻礙。' },
+            '56': { name: '風水渙', description: '渙散離析', interpretation: '渙卦代表渙散、離散。目前可能有分離之象，但不必強求。順其自然，各自發展。' },
+            '57': { name: '風山漸', description: '漸進有序', interpretation: '漸卦象徵漸進、循序。提醒要按部就班，不可急於求成。穩步前進，終能達成目標。' },
+            '58': { name: '風地觀', description: '觀國之光', interpretation: '觀卦代表觀察、觀看。此時不宜行動，應觀察形勢。以旁觀者的角度思考問題。' },
+            '61': { name: '水天需', description: '需于郊野', interpretation: '需卦象徵等待、需求。目前時機未到，需耐心等待。不可急躁冒進，等待時機成熟。' },
+            '62': { name: '水澤節', description: '節以制度', interpretation: '節卦代表節制、節約。提醒要有節制，適可而止。過度會帶來問題，中庸為佳。' },
+            '63': { name: '水火既濟', description: '既濟亨小', interpretation: '既濟卦象徵成功、完成。目前事情已成，但要防止盛極而衰。居安思危，保持警惕。' },
+            '64': { name: '水雷屯', description: '屯難之世', interpretation: '屯卦代表艱難、屯積。創業維艱，目前困難重重。但只要堅持，終會有所成就。' },
+            '65': { name: '水風井', description: '改邑不改井', interpretation: '井卦象徵井水、資源。提醒要善用資源，不要浪費。穩定的基礎很重要。' },
+            '66': { name: '坎為水', description: '習坎入坎', interpretation: '坎卦代表險阻、困難。目前面臨重重險阻，但不要退縮。保持信念，終能度過難關。' },
+            '67': { name: '水山蹇', description: '蹇難當前', interpretation: '蹇卦象徵艱難、阻礙。前路艱險，不宜前進。暫時停止，反省自身，等待時機。' },
+            '68': { name: '水地比', description: '比吉親輔', interpretation: '比卦代表親比、依附。此時宜與他人合作，尋求幫助。人際關係和諧，適合聯合。' },
+            '71': { name: '山天大畜', description: '大畜剛健', interpretation: '大畜卦象徵大量積蓄。目前實力雄厚，但要善用資源。積累是為了將來的發展。' },
+            '72': { name: '山澤損', description: '損己益人', interpretation: '損卦代表減損、犧牲。可能需要暫時的犧牲，但這是為了長遠利益。先損後益。' },
+            '73': { name: '山火賁', description: '賁飾文明', interpretation: '賁卦象徵裝飾、美化。外表固然重要，但不可只重外表。內在充實更為關鍵。' },
+            '74': { name: '山雷頤', description: '頤養正德', interpretation: '頤卦代表頤養、修養。此時宜修身養性，充實自己。注意飲食健康，保養身體。' },
+            '75': { name: '山風蠱', description: '蠱惑人心', interpretation: '蠱卦象徵蠱惑、腐敗。提醒要整頓、革新。清除腐敗，重新開始。' },
+            '76': { name: '山水蒙', description: '蒙以養正', interpretation: '蒙卦代表啟蒙、教育。目前處於學習階段，要虛心求教。不恥下問，終能成功。' },
+            '77': { name: '艮為山', description: '兼山艮止', interpretation: '艮卦象徵停止、靜止。此時宜靜不宜動，應該停下來思考。動不如靜，保持現狀。' },
+            '78': { name: '山地剝', description: '剝落消散', interpretation: '剝卦代表剝落、衰退。目前運勢下降，不宜有大動作。保存實力，等待時機。' },
+            '81': { name: '地天泰', description: '泰然處之', interpretation: '泰卦象徵通泰、順利。運勢極佳，萬事亨通。但要居安思危，不可驕傲自滿。' },
+            '82': { name: '地澤臨', description: '臨事而懼', interpretation: '臨卦代表臨近、來到。機會即將來臨，要把握時機。以謙虛謹慎的態度迎接。' },
+            '83': { name: '地火明夷', description: '明夷之難', interpretation: '明夷卦象徵光明受傷。目前處境艱難，要韜光養晦。保護自己，等待時機。' },
+            '84': { name: '地雷復', description: '復其見天地', interpretation: '復卦代表返回、復甦。事情將有轉機，運勢回升。把握機會，重新開始。' },
+            '85': { name: '地風升', description: '升而不已', interpretation: '升卦象徵上升、晉升。運勢上升，適合進取。但要循序漸進，不可操之過急。' },
+            '86': { name: '地水師', description: '師出以律', interpretation: '師卦代表軍隊、紀律。提醒要有組織有紀律。領導要得當，才能成功。' },
+            '87': { name: '地山謙', description: '謙謙君子', interpretation: '謙卦象徵謙虛、謙遜。此卦大吉，謙虛使人進步。保持謙遜態度，事事順利。' },
+            '88': { name: '坤為地', description: '地勢坤順', interpretation: '坤卦代表順從、包容。以柔順的態度處事，順應形勢。不爭而善勝，柔能克剛。' }
+        };
+
+        // 獲取卦象
+        function getHexagramData(upper, lower) {
+            const key = upper.toString() + lower.toString();
+            return hexagrams[key] || { name: '未知卦', description: '待解', interpretation: '此卦暫無解釋' };
+        }
+
+        // 繪製卦象
+        function drawHexagram(containerId, lines) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            // 從下往上畫（第一爻在最下面）
+            for (let i = lines.length - 1; i >= 0; i--) {
+                const line = document.createElement('div');
+                line.className = lines[i] === 1 ? 'line' : 'line broken';
+                container.appendChild(line);
+            }
+        }
+
+        // 根據數字獲取卦象線條
+        function getTrigramLines(num) {
+            const lines = [
+                [1, 1, 1], // 乾 1
+                [0, 1, 1], // 兌 2
+                [1, 0, 1], // 離 3
+                [0, 0, 1], // 震 4
+                [1, 1, 0], // 巽 5
+                [0, 1, 0], // 坎 6
+                [1, 0, 0], // 艮 7
+                [0, 0, 0]  // 坤 8
+            ];
+            return lines[num - 1];
+        }
+
+        // 時間起卦
+        function divinateByTime() {
+            const question = document.getElementById('question1').value;
+            if (!question.trim()) {
+                alert('請輸入您想問的問題！');
+                return;
+            }
+
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            const hour = now.getHours();
+            const minute = now.getMinutes();
+
+            // 計算上卦：(年 + 月 + 日) % 8
+            const upperNum = ((year + month + day) % 8) || 8;
+            
+            // 計算下卦：(年 + 月 + 日 + 時) % 8
+            const lowerNum = ((year + month + day + hour) % 8) || 8;
+            
+            // 計算動爻：(年 + 月 + 日 + 時) % 6
+            const changingLine = ((year + month + day + hour) % 6) || 6;
+
+            displayResult(upperNum, lowerNum, changingLine, question, 
+                `起卦時間：${year}年${month}月${day}日 ${hour}時${minute}分`);
+        }
+
+        // 數字起卦
+        function divinateByNumber() {
+            const question = document.getElementById('question2').value;
+            const num1 = parseInt(document.getElementById('number1').value);
+            const num2 = parseInt(document.getElementById('number2').value);
+
+            if (!question.trim()) {
+                alert('請輸入您想問的問題！');
+                return;
+            }
+
+            if (!num1 || !num2 || num1 < 1 || num1 > 100 || num2 < 1 || num2 > 100) {
+                alert('請輸入1-100之間的數字！');
+                return;
+            }
+
+            const upperNum = (num1 % 8) || 8;
+            const lowerNum = (num2 % 8) || 8;
+            const changingLine = ((num1 + num2) % 6) || 6;
+
+            displayResult(upperNum, lowerNum, changingLine, question, 
+                `報數起卦：${num1}、${num2}`);
+        }
+
+        // 問事起卦
+        function divinateByQuestion() {
+            const question = document.getElementById('question3').value;
+            
+            if (!question.trim()) {
+                alert('請輸入您想問的問題！');
+                return;
+            }
+
+            const charCount = question.length;
+            const upperNum = (charCount % 8) || 8;
+            const lowerNum = ((charCount + new Date().getHours()) % 8) || 8;
+            const changingLine = ((charCount + new Date().getMinutes()) % 6) || 6;
+
+            displayResult(upperNum, lowerNum, changingLine, question, 
+                `問事起卦：問題共${charCount}字`);
+        }
+
+        // 顯示結果
+        function displayResult(upperNum, lowerNum, changingLine, question, method) {
+            // 獲取卦象數據
+            const upperTrigram = trigrams[upperNum];
+            const lowerTrigram = trigrams[lowerNum];
+            const hexagram = getHexagramData(upperNum, lowerNum);
+
+            // 繪製本卦
+            const upperLines = getTrigramLines(upperNum);
+            const lowerLines = getTrigramLines(lowerNum);
+            const allLines = [...lowerLines, ...upperLines];
+            drawHexagram('originalHexagram', allLines);
+
+            // 設置本卦信息
+            document.getElementById('originalName').textContent = hexagram.name;
+            document.getElementById('originalInfo').textContent = 
+                `上卦：${upperTrigram.symbol}${upperTrigram.name}（${upperTrigram.nature}）\n下卦：${lowerTrigram.symbol}${lowerTrigram.name}（${lowerTrigram.nature}）`;
+
+            // 計算變卦
+            const changedLines = [...allLines];
+            changedLines[changingLine - 1] = changedLines[changingLine - 1] === 1 ? 0 : 1;
+            
+            // 重新計算變卦的上下卦
+            const changedLowerLines = changedLines.slice(0, 3);
+            const changedUpperLines = changedLines.slice(3, 6);
+            
+            let changedUpperNum = 0, changedLowerNum = 0;
+            
+            // 找出變卦對應的卦數
+            for (let i = 1; i <= 8; i++) {
+                const lines = getTrigramLines(i);
+                if (JSON.stringify(lines) === JSON.stringify(changedUpperLines)) {
+                    changedUpperNum = i;
+                }
+                if (JSON.stringify(lines) === JSON.stringify(changedLowerLines)) {
+                    changedLowerNum = i;
+                }
+            }
+
+            const changedHexagram = getHexagramData(changedUpperNum, changedLowerNum);
+            const changedUpperTrigram = trigrams[changedUpperNum];
+            const changedLowerTrigram = trigrams[changedLowerNum];
+
+            // 顯示變卦
+            document.getElementById('changedHexagramContainer').style.display = 'block';
+            drawHexagram('changedHexagram', changedLines);
+            document.getElementById('changedName').textContent = changedHexagram.name;
+            document.getElementById('changedInfo').textContent = 
+                `上卦：${changedUpperTrigram.symbol}${changedUpperTrigram.name}（${changedUpperTrigram.nature}）\n下卦：${changedLowerTrigram.symbol}${changedLowerTrigram.name}（${changedLowerTrigram.nature}）`;
+
+            // 顯示占卜信息
+            document.getElementById('divinationInfo').innerHTML = `
+                <strong>問題：</strong>${question}<br>
+                <strong>起卦方式：</strong>${method}<br>
+                <strong>動爻：</strong>第${changingLine}爻
+            `;
+
+            // 顯示解釋
+            const yaoNames = ['初', '二', '三', '四', '五', '上'];
+            document.getElementById('interpretation').innerHTML = `
+                <h3>🌸 卦象解析</h3>
+                
+                <h4>本卦：${hexagram.name}</h4>
+                <p><strong>卦辭：</strong>${hexagram.description}</p>
+                <p>${hexagram.interpretation}</p>
+
+                <h4>動爻：${yaoNames[changingLine - 1]}爻</h4>
+                <p>第${changingLine}爻發動，表示此處有變化之象。事情的發展將朝著變卦的方向演變。</p>
+
+                <h4>變卦：${changedHexagram.name}</h4>
+                <p><strong>卦辭：</strong>${changedHexagram.description}</p>
+                <p>${changedHexagram.interpretation}</p>
+
+                <h4>綜合判斷</h4>
+                <p>本卦${hexagram.name}代表當前的狀況，而變卦${changedHexagram.name}則預示未來的發展趨勢。</p>
+                <p>針對您的問題「${question}」，建議您結合本卦與變卦的含義來理解當前形勢與未來走向。</p>
+                <p style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.2); color: #ffd700;">
+                    ⭐ 占卜建議：易經之道在於變化，順應自然，方能趨吉避凶。建議您根據卦象指引，審時度勢，做出明智決策。
+                </p>
+            `;
+
+            // 顯示結果區域並滾動
+            document.getElementById('resultSection').classList.add('show');
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 頁面加載時初始化
+        window.addEventListener('load', function() {
+            createStars();
+        });
+    </script>
+</body>
+</html>
