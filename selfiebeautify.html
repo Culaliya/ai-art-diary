@@ -33,12 +33,11 @@ body {
 .container {
   position: relative;
   z-index: 1;
-  max-width: 600px; /* 🔹寬度縮小 */
+  max-width: 600px;
   margin: 0 auto;
   padding: 50px 18px;
   text-align: center;
 }
-/* 標題 */
 h1 {
   font-size: 2.4rem;
   font-weight: 800;
@@ -162,6 +161,10 @@ p.subtitle {
   background: linear-gradient(90deg,#ff9df9,#ffbdfc);
   transition: width 0.3s;
 }
+.divider {
+  border-top: 1px dashed rgba(255,180,255,0.4);
+  margin: 18px 0;
+}
 </style>
 </head>
 <body>
@@ -182,6 +185,7 @@ p.subtitle {
   <div class="card">
     <label class="block text-pink-200 mb-2 font-bold">🎨 選擇風格</label>
     <div class="style-grid">
+      <!-- 現有 -->
       <button class="style-btn active" data-style="paris">🥐 法式咖啡廳</button>
       <button class="style-btn" data-style="nyc">🏙️ 紐約街頭</button>
       <button class="style-btn" data-style="beach">🏖️ 海島假期</button>
@@ -194,7 +198,6 @@ p.subtitle {
       <button class="style-btn" data-style="glam">🎉 派對女王</button>
       <button class="style-btn" data-style="kfashion">🪞 韓系雜誌棚拍風</button>
       <button class="style-btn" data-style="hotel">🏨 奢華旅拍風</button>
-      <!-- 新風格 -->
       <button class="style-btn" data-style="pure">🌿 原生美光補強</button>
       <button class="style-btn" data-style="k_id">🪞 韓系證件照</button>
       <button class="style-btn" data-style="kimono">👘 日本和服照</button>
@@ -209,6 +212,16 @@ p.subtitle {
       <button class="style-btn" data-style="vogue">🖤 雜誌封面</button>
       <button class="style-btn" data-style="princess">👑 公主夢幻</button>
       <button class="style-btn" data-style="aesthetic">🎨 藝術光棚</button>
+    </div>
+
+    <div class="divider"></div>
+    <label class="block text-pink-200 mb-2 font-bold">📽️ 分鏡故事系列</label>
+    <div class="style-grid">
+      <button class="style-btn" data-style="story_winter">❄️ 冬日雨傘分鏡</button>
+      <button class="style-btn" data-style="story_city">🌃 都市戀人分鏡</button>
+      <button class="style-btn" data-style="story_beach">🌅 海邊日落分鏡</button>
+      <button class="style-btn" data-style="story_mirror">🪞 鏡面棚拍分鏡</button>
+      <button class="style-btn" data-style="story_sakura">🌸 春日櫻影分鏡</button>
     </div>
     <button id="generate-btn" class="generate-btn" disabled>✨ 開始生成</button>
   </div>
@@ -225,7 +238,6 @@ p.subtitle {
   </div>
 </div>
 
-<!-- 能量條 -->
 <div id="energy-bar"><div id="energy-fill"></div></div>
 
 <script>
@@ -252,7 +264,6 @@ function handleFile(file){
   reader.readAsDataURL(file);
 }
 
-// === 風格選擇 ===
 let style='paris';
 document.querySelectorAll('.style-btn').forEach(btn=>{
   btn.onclick=()=>{
@@ -262,7 +273,6 @@ document.querySelectorAll('.style-btn').forEach(btn=>{
   };
 });
 
-// === 生成 ===
 document.getElementById('generate-btn').onclick=async()=>{
   if(!base64Image)return alert("請先上傳圖片！");
   document.getElementById('loading').classList.remove('hidden');
@@ -295,7 +305,6 @@ document.getElementById('generate-btn').onclick=async()=>{
   }
 };
 
-// === 能量條 ===
 function updateEnergyBar(energy){
   const fill=document.getElementById('energy-fill');
   const percent=Math.max(0,Math.min(100,(energy/5)*100));
@@ -303,7 +312,6 @@ function updateEnergyBar(energy){
   fill.style.background=percent>40?'linear-gradient(90deg,#ff9df9,#ffbdfc)':'linear-gradient(90deg,#ff6b9d,#ffc0c0)';
 }
 
-// === 下載 ===
 document.getElementById('download-btn').onclick=()=>{
   const link=document.createElement('a');
   link.href=document.getElementById('result-img').src;
