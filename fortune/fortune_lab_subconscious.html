@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>🌀 潛意識鏡測驗 | AI 命理實驗室</title>
+<style>
+body {
+  margin:0;
+  font-family:'Orbitron',sans-serif;
+  background:radial-gradient(circle at 50% 20%, #070b15 0%, #0c0f25 80%, #000 100%);
+  color:#0ff;
+  text-align:center;
+  overflow-x:hidden;
+}
+h1 {
+  margin-top:60px;
+  font-size:2em;
+  color:#fff;
+  text-shadow:0 0 20px #00e0ff,0 0 40px #ff3eff;
+}
+#mirror {
+  margin:50px auto;
+  width:80%;
+  max-width:700px;
+  display:flex;
+  justify-content:space-around;
+  flex-wrap:wrap;
+  gap:25px;
+}
+.option {
+  width:180px;
+  height:180px;
+  background:rgba(255,255,255,0.05);
+  border:2px solid #0ff;
+  border-radius:20px;
+  box-shadow:0 0 20px rgba(0,255,255,0.3);
+  cursor:pointer;
+  transition:.4s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.5em;
+  color:#fff;
+}
+.option:hover {
+  transform:scale(1.1);
+  box-shadow:0 0 30px #ff3eff;
+}
+#result {
+  margin-top:50px;
+  font-size:1.2em;
+  color:#aaf;
+  opacity:0;
+  transition:opacity 1.5s;
+}
+button {
+  margin-top:30px;
+  padding:10px 20px;
+  border:2px solid #0ff;
+  background:rgba(0,255,255,0.1);
+  border-radius:20px;
+  color:#0ff;
+  font-family:'Orbitron',sans-serif;
+  cursor:pointer;
+  transition:.3s;
+}
+button:hover {
+  background:rgba(255,62,255,0.3);
+  color:#fff;
+  box-shadow:0 0 15px #ff3eff;
+}
+</style>
+</head>
+<body>
+<h1>🌀 潛意識鏡測驗</h1>
+<p>請直覺選出你最有感覺的影像。</p>
+
+<div id="mirror">
+  <div class="option" data-type="dream">🌙</div>
+  <div class="option" data-type="flame">🔥</div>
+  <div class="option" data-type="water">💧</div>
+  <div class="option" data-type="forest">🌲</div>
+  <div class="option" data-type="clock">⏳</div>
+  <div class="option" data-type="eye">👁️</div>
+</div>
+
+<div id="result"></div>
+
+<button onclick="resetMirror()">重新測驗</button>
+
+<script>
+const result = document.getElementById('result');
+const options = document.querySelectorAll('.option');
+
+const meanings = {
+  dream: '你在追尋內在理想與未知的自己，夢境是你真實的語言。',
+  flame: '你的潛意識燃燒著行動與創造力，也藏著未釋放的衝動。',
+  water: '你重視情感流動與感受，常在他人情緒中找到自己的倒影。',
+  forest: '你的內心渴望安全與自然連結，也代表你正穿越一段成長之路。',
+  clock: '你正在與時間的壓力對話，也在學習放下控制。',
+  eye: '你的直覺極強，潛意識早已看見未來，只是你尚未相信它。'
+};
+
+options.forEach(opt=>{
+  opt.addEventListener('click',()=>{
+    const type = opt.dataset.type;
+    result.innerText = meanings[type];
+    result.style.opacity = 1;
+  });
+});
+
+function resetMirror(){
+  result.style.opacity = 0;
+  result.innerText = '';
+}
+</script>
+
+<a href="fortune_lab.html" style="display:inline-block;margin-top:50px;color:#0ff;text-decoration:none;">⬅ 返回 AI 命理實驗室</a>
+</body>
+</html>
