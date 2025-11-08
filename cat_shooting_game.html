@@ -36,7 +36,7 @@
         .display-panel {
             display: flex;
             justify-content: space-between;
-            width: 800px; /* 與畫布寬度一致 */
+            max-width: 100%; width: 800px; /* 與畫布寬度一致 */
             margin: 10px auto;
             font-size: 24px;
             font-weight: bold;
@@ -65,7 +65,7 @@
             display: none; /* 預設隱藏 */
             z-index: 10;
             color: #333;
-            width: 400px;
+            max-width: 100%; width: 800px;
         }
         
         #startScreen p {
@@ -97,6 +97,7 @@
         }
     </style>
 <link rel="stylesheet" href="mobile-ui.css">
+<script src="mobile-game-helper.js"></script>
 </head>
 <body>
     <!-- 遊戲資訊面板 -->
@@ -133,6 +134,13 @@
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
+        
+        // 初始化手機遊戲輔助
+        const mobileHelper = new MobileGameHelper(canvas, {
+            maxWidth: 800,
+            maxHeight: 500,
+            maintainAspectRatio: true
+        });
         const infoPanel = document.getElementById('infoPanel');
         const scoreDisplay = document.getElementById('scoreDisplay');
         const timeDisplay = document.getElementById('timeDisplay');
@@ -173,8 +181,18 @@
         // --- 音效設定 ---
         let shootSound, hitSound, badHitSound;
         function setupAudio() {
+            // iOS 音效解鎖：必須在使用者互動後啟動
             if (Tone.context.state !== 'running') {
-                Tone.start();
+                Tone.start().then(() => {
+                    console.log('Audio context started for iOS');
+                }).catch(err => {
+                    console.warn('Failed to start audio:', err);
+                });
+            }
+            
+            // 使用 mobileHelper 的音效解鎖
+            if (mobileHelper && mobileHelper.audioContext) {
+                mobileHelper.audioContext.resume();
             }
             shootSound = new Tone.Synth({
                 oscillator: { type: 'triangle' },

@@ -158,13 +158,14 @@
   }
 </style>
 <link rel="stylesheet" href="mobile-ui.css">
+<script src="mobile-game-helper.js"></script>
 </head>
 <body>
 <!-- 背景雲朵 -->
-<div class="cloud" style="width:80px;height:40px;top:10%;left:-100px;animation-delay:0s;"></div>
-<div class="cloud" style="width:120px;height:50px;top:25%;left:-150px;animation-delay:5s;"></div>
-<div class="cloud" style="width:100px;height:45px;top:60%;left:-120px;animation-delay:10s;"></div>
-<div class="cloud" style="width:90px;height:42px;top:80%;left:-110px;animation-delay:15s;"></div>
+<div class="cloud" style="max-width: 100%; width: 800px;height:40px;top:10%;left:-100px;animation-delay:0s;"></div>
+<div class="cloud" style="max-width: 100%; width: 800px;height:50px;top:25%;left:-150px;animation-delay:5s;"></div>
+<div class="cloud" style="max-width: 100%; width: 800px;height:45px;top:60%;left:-120px;animation-delay:10s;"></div>
+<div class="cloud" style="max-width: 100%; width: 800px;height:42px;top:80%;left:-110px;animation-delay:15s;"></div>
 
 <div id="game-container">
   <canvas id="game"></canvas>
@@ -185,7 +186,16 @@
 
 <script>
 const canvas = document.getElementById('game');
-const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d');
+        
+        // 初始化手機遊戲輔助
+        const mobileHelper = new MobileGameHelper(canvas, {
+            maxWidth: 400,
+            maxHeight: 700,
+            maintainAspectRatio: true
+        });
+        
+
 canvas.width = 400;
 canvas.height = 700;
 

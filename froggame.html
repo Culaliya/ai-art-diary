@@ -27,7 +27,7 @@
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             overflow: hidden;
-            max-width: 820px;
+            max-max-width: 100%; width: 800px;
             width: 100%;
         }
 
@@ -139,7 +139,7 @@
         .menu-overlay p {
             font-size: 1.3em;
             margin: 10px 0;
-            max-width: 600px;
+            max-max-width: 100%; width: 800px;
             line-height: 1.6;
         }
 
@@ -194,7 +194,7 @@
         }
 
         .mobile-btn {
-            width: 60px;
+            max-width: 100%; width: 800px;
             height: 60px;
             background: rgba(255, 255, 255, 0.7);
             border: 3px solid rgba(76, 175, 80, 0.8);
@@ -218,7 +218,7 @@
 
         .jump-btn {
             pointer-events: all;
-            width: 70px;
+            max-width: 100%; width: 800px;
             height: 70px;
             background: rgba(255, 193, 7, 0.7);
             border: 3px solid rgba(255, 152, 0, 0.8);
@@ -258,13 +258,13 @@
 
         @media (max-width: 480px) {
             .mobile-btn {
-                width: 50px;
+                max-width: 100%; width: 800px;
                 height: 50px;
                 font-size: 20px;
             }
 
             .jump-btn {
-                width: 60px;
+                max-width: 100%; width: 800px;
                 height: 60px;
             }
 
@@ -276,12 +276,13 @@
 
         .canvas-wrapper {
             position: relative;
-            width: 800px;
+            max-width: 100%; width: 800px;
             height: 600px;
             margin: 0 auto;
         }
     </style>
 <link rel="stylesheet" href="mobile-ui.css">
+<script src="mobile-game-helper.js"></script>
 </head>
 <body>
     <div class="game-container">
@@ -373,6 +374,15 @@
 
     <script>
         const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // 初始化手機遊戲輔助
+        const mobileHelper = new MobileGameHelper(canvas, {
+            maxWidth: canvas.width,
+            maxHeight: canvas.height,
+            maintainAspectRatio: true
+        });
+        
         const ctx = canvas.getContext('2d');
 
         // UI Elements
