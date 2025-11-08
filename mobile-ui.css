@@ -1,0 +1,334 @@
+/* ===== 📱 手機介面優化樣式 ===== */
+/* 此檔案提供所有頁面的響應式設計優化 */
+
+/* 基礎響應式設定 */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* 確保圖片自動等比例縮放 */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 確保文字不會超出螢幕 */
+p, h1, h2, h3, h4, h5, h6, span, div {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* ===== 漢堡選單樣式 ===== */
+.mobile-nav-toggle {
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 10000;
+  background: rgba(0, 255, 255, 0.2);
+  border: 2px solid #0ff;
+  color: #0ff;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 24px;
+  transition: all 0.3s;
+  width: 50px;
+  height: 50px;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-nav-toggle:hover {
+  background: rgba(0, 255, 255, 0.4);
+  box-shadow: 0 0 20px #0ff;
+  transform: scale(1.1);
+}
+
+.mobile-nav-menu {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: -100%;
+  width: 80%;
+  max-width: 300px;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.95);
+  border-right: 2px solid #0ff;
+  z-index: 9999;
+  padding: 80px 20px 20px;
+  transition: left 0.3s ease;
+  overflow-y: auto;
+}
+
+.mobile-nav-menu.active {
+  left: 0;
+}
+
+.mobile-nav-menu a {
+  display: block;
+  padding: 15px 20px;
+  margin: 10px 0;
+  color: #0ff;
+  text-decoration: none;
+  border: 1px solid #0ff;
+  border-radius: 8px;
+  background: rgba(0, 255, 255, 0.1);
+  transition: all 0.3s;
+  text-align: center;
+}
+
+.mobile-nav-menu a:hover {
+  background: rgba(0, 255, 255, 0.3);
+  box-shadow: 0 0 15px #0ff;
+  transform: translateX(5px);
+}
+
+.mobile-nav-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 9998;
+}
+
+.mobile-nav-overlay.active {
+  display: block;
+}
+
+/* ===== 平板尺寸優化 (768px 以下) ===== */
+@media (max-width: 768px) {
+  /* 顯示漢堡選單 */
+  .mobile-nav-toggle {
+    display: flex;
+  }
+  
+  .mobile-nav-menu {
+    display: block;
+  }
+  
+  /* 標題區 */
+  h1 {
+    font-size: 2em !important;
+    padding: 0 15px;
+  }
+  
+  h2 {
+    font-size: 1.5em !important;
+  }
+  
+  h3 {
+    font-size: 1.2em !important;
+  }
+  
+  header {
+    padding: 40px 15px !important;
+  }
+  
+  header p {
+    font-size: 0.9em !important;
+    padding: 0 10px;
+  }
+  
+  /* Section 調整 */
+  section {
+    padding: 30px 15px !important;
+  }
+  
+  /* 按鈕群組改為垂直排列 */
+  .lab-buttons {
+    flex-direction: column !important;
+    gap: 12px !important;
+    padding: 0 20px;
+    margin-top: 30px !important;
+  }
+  
+  .lab-btn {
+    width: 100% !important;
+    text-align: center;
+    padding: 14px 20px !important;
+    font-size: 0.95em !important;
+  }
+  
+  /* 卡片容器 */
+  .game-table,
+  .lab-table {
+    gap: 20px !important;
+    margin-top: 60px !important;
+    padding: 20px 10px !important;
+  }
+  
+  .game-card,
+  .lab-card {
+    width: calc(50% - 10px) !important;
+    height: auto !important;
+    min-height: 200px !important;
+    padding: 20px 10px !important;
+  }
+  
+  .game-icon,
+  .lab-icon {
+    font-size: 40px !important;
+    margin-bottom: 10px !important;
+  }
+  
+  /* App 卡片 */
+  .app-card {
+    flex-direction: column !important;
+    text-align: center;
+    padding: 15px !important;
+  }
+  
+  .app-image {
+    width: 80px !important;
+    height: 80px !important;
+  }
+  
+  /* 聊天容器 */
+  #chatContainer {
+    padding: 15px !important;
+    margin: 20px 10px !important;
+  }
+  
+  #chatHistory {
+    height: 250px !important;
+    padding: 10px !important;
+  }
+  
+  .message-bubble {
+    max-width: 85% !important;
+    font-size: 0.9em !important;
+  }
+  
+  .message-avatar {
+    width: 30px !important;
+    height: 30px !important;
+  }
+  
+  #chatInputArea {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  
+  #catInput {
+    width: 100% !important;
+    font-size: 14px !important;
+  }
+  
+  #sendBtn {
+    width: 100% !important;
+    padding: 12px !important;
+  }
+  
+  #quickQuestions {
+    gap: 6px !important;
+  }
+  
+  .quick-btn {
+    font-size: 11px !important;
+    padding: 5px 10px !important;
+  }
+  
+  /* 輪播控制 */
+  .slide-btn {
+    padding: 8px 12px !important;
+    font-size: 18px !important;
+  }
+  
+  .slideshow-container {
+    max-width: 100% !important;
+    padding: 0 10px !important;
+  }
+  
+  /* 媒體區域改為垂直排列 */
+  .media-flex {
+    flex-direction: column !important;
+  }
+  
+  .video-container,
+  .spotify-container {
+    min-width: 100% !important;
+  }
+  
+  /* 背景音樂按鈕 */
+  #bgm-control {
+    width: 45px !important;
+    height: 45px !important;
+    font-size: 20px !important;
+    top: 15px !important;
+    right: 15px !important;
+  }
+  
+  /* 表格容器 */
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  /* Canvas 遊戲區域 */
+  canvas {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
+
+/* ===== 小型手機優化 (480px 以下) ===== */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.8em !important;
+  }
+  
+  h2 {
+    font-size: 1.3em !important;
+  }
+  
+  header p {
+    font-size: 0.8em !important;
+  }
+  
+  .lab-btn {
+    padding: 12px 16px !important;
+    font-size: 0.9em !important;
+  }
+  
+  #chatHistory {
+    height: 200px !important;
+  }
+  
+  .message-bubble {
+    font-size: 0.85em !important;
+    padding: 10px 12px !important;
+  }
+  
+  .game-card,
+  .lab-card {
+    width: 100% !important;
+    max-width: 280px !important;
+    margin: 0 auto !important;
+  }
+  
+  .slide-btn {
+    padding: 6px 10px !important;
+    font-size: 16px !important;
+  }
+  
+  .mobile-nav-menu {
+    width: 90%;
+  }
+  
+  .mobile-nav-toggle {
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+  }
+}
