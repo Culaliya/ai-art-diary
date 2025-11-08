@@ -43,7 +43,7 @@
             justify-content: center;
             gap: 50px;
             flex-wrap: wrap;
-            max-width: 1100px;
+            max-max-width: 100%; width: 800px;
             margin: 20px auto;
             position: relative;
             z-index: 10;
@@ -55,7 +55,7 @@
             border-radius: 30px;
             backdrop-filter: blur(12px);
             box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-            width: 400px;
+            max-width: 100%; width: 800px;
             height: 520px;
             overflow: hidden;
             position: relative;
@@ -245,6 +245,8 @@
             animation: bounceIn 0.5s ease-out forwards;
         }
     </style>
+<link rel="stylesheet" href="mobile-ui.css">
+<script src="mobile-game-helper.js"></script>
 </head>
 <body>
 
@@ -504,5 +506,6 @@
         // 初始
         document.getElementById('startScreen').style.display = 'flex';
     </script>
+<script src="mobile-nav.js"></script>
 </body>
 </html>

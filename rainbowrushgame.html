@@ -181,6 +181,8 @@
     background-clip: text;
   }
 </style>
+<link rel="stylesheet" href="mobile-ui.css">
+<script src="mobile-game-helper.js"></script>
 </head>
 <body>
 <canvas id="game"></canvas>
@@ -215,7 +217,16 @@
 
 <script>
 const canvas = document.getElementById('game');
-const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d');
+        
+        // 初始化手機遊戲輔助
+        const mobileHelper = new MobileGameHelper(canvas, {
+            maxWidth: 800,
+            maxHeight: 600,
+            maintainAspectRatio: true
+        });
+        
+
 canvas.width = 800;
 canvas.height = 600;
 
@@ -832,6 +843,14 @@ function toggleSound() {
 
 // 初始化音效系統
 function initAudio() {
+    // iOS 音效解鎖
+    if (mobileHelper && mobileHelper.audioContext) {
+        mobileHelper.audioContext.resume();
+    }
+    // iOS 音效解鎖
+    if (mobileHelper && mobileHelper.audioContext) {
+        mobileHelper.audioContext.resume();
+    }
   try {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   } catch(e) {
@@ -988,5 +1007,6 @@ function gameLoop() {
 
 gameLoop();
 </script>
+<script src="mobile-nav.js"></script>
 </body>
 </html>

@@ -57,7 +57,7 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
-            min-width: 200px;
+            min-max-width: 100%; width: 800px;
         }
 
         .info-box {
@@ -116,7 +116,7 @@
             padding: 5px 10px;
             border-radius: 5px;
             font-weight: bold;
-            min-width: 30px;
+            min-max-width: 100%; width: 800px;
             text-align: center;
         }
 
@@ -183,6 +183,8 @@
             }
         }
     </style>
+<link rel="stylesheet" href="mobile-ui.css">
+<script src="mobile-game-helper.js"></script>
 </head>
 <body>
     <div class="game-container">
@@ -235,6 +237,15 @@
 
     <script>
         const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // 初始化手機遊戲輔助
+        const mobileHelper = new MobileGameHelper(canvas, {
+            maxWidth: canvas.width,
+            maxHeight: canvas.height,
+            maintainAspectRatio: true
+        });
+        
         const ctx = canvas.getContext('2d');
         const nextCanvas = document.getElementById('nextCanvas');
         const nextCtx = nextCanvas.getContext('2d');
@@ -549,5 +560,6 @@
         drawBoard();
         drawNextPiece();
     </script>
+<script src="mobile-nav.js"></script>
 </body>
 </html>
