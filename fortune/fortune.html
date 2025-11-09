@@ -384,6 +384,85 @@
     </div>
 
     <script>
+        // ===== 二十四節氣計算（用於八字年柱判斷）=====
+        const SOLAR_TERMS = [
+            {'longitude':315, 'minutes':42467, 'cn': '立春', 'en':'Beginning of Spring'},
+            {'longitude':330, 'minutes':63836, 'cn': '雨水', 'en':'Rain Water'},
+            {'longitude':345, 'minutes':85337, 'cn': '惊蛰', 'en':'Awakening of Insects'},
+            {'longitude':0, 'minutes':107014, 'cn': '春分', 'en':'Spring Equinox'},
+            {'longitude':15, 'minutes':128867, 'cn': '清明', 'en':'Pure Brightness'},
+            {'longitude':30, 'minutes':150921, 'cn': '谷雨', 'en':'Grain Rain'},
+            {'longitude':45, 'minutes':173149, 'cn': '立夏', 'en':'Beginning of Summer'},
+            {'longitude':60, 'minutes':195551, 'cn': '小满', 'en':'Grain Buds'},
+            {'longitude':75, 'minutes':218072, 'cn': '芒种', 'en':'Grain in Ear'},
+            {'longitude':90, 'minutes':240693, 'cn': '夏至', 'en':'Summer Solstice'},
+            {'longitude':105, 'minutes':263343, 'cn': '小暑', 'en':'Minor Heat'},
+            {'longitude':120, 'minutes':285989, 'cn': '大暑', 'en':'Major heat'},
+            {'longitude':135, 'minutes':308563, 'cn': '立秋', 'en':'Beginning of Autumn'},
+            {'longitude':150, 'minutes':331033, 'cn': '处暑', 'en':'End of Heat'},
+            {'longitude':165, 'minutes':353350, 'cn': '白露', 'en':'White Dew'},
+            {'longitude':180, 'minutes':375494, 'cn': '秋分', 'en':'Autumn Equinox'},
+            {'longitude':195, 'minutes':397447, 'cn': '寒露', 'en':'Cold Dew'},
+            {'longitude':210, 'minutes':419210, 'cn': '霜降', 'en':'Frosts Descent'},
+            {'longitude':225, 'minutes':440795, 'cn': '立冬', 'en':'Beginning of Winter'},
+            {'longitude':240, 'minutes':462224, 'cn': '小雪', 'en':'Minor Snow'},
+            {'longitude':255, 'minutes':483532, 'cn': '大雪', 'en':'Major Snow'},
+            {'longitude':270, 'minutes':504758, 'cn': '冬至', 'en':'Winter Solstice'},
+            {'longitude':285, 'minutes':0, 'cn': '小寒', 'en':'Minor Cold'},
+            {'longitude':300, 'minutes':21208, 'cn': '大寒', 'en':'Major Cold'}
+        ];
+
+        // 計算某年的立春日期
+        function getLichunDate(year) {
+            const baseTimeForYear = 31556925974.7 * (year - 1900) + Date.UTC(1900,0,6,2,5);
+            const lichunMinutes = SOLAR_TERMS[0].minutes; // 立春是第一個節氣
+            return new Date(baseTimeForYear + lichunMinutes * 60000);
+        }
+
+        // 獲取八字年份（考慮立春）
+        function getBaziYear(date) {
+            const year = date.getFullYear();
+            const lichunThisYear = getLichunDate(year);
+            // 如果在立春之前，使用前一年
+            if (date < lichunThisYear) {
+                return year - 1;
+            }
+            return year;
+        }
+
+        // 根據節氣獲取月支索引
+        function getMonthBranchByDate(date) {
+            const year = date.getFullYear();
+            const baseTimeForYear = 31556925974.7 * (year - 1900) + Date.UTC(1900,0,6,2,5);
+            
+            // 計算當年所有節氣
+            let solarTerms = [];
+            for(let i = 0; i < 24; i++) {
+                solarTerms.push(new Date(baseTimeForYear + SOLAR_TERMS[i].minutes * 60000));
+            }
+            
+            // 月支從寅月（立春）開始：寅(2)、卯(3)、辰(4)...丑(1)
+            // 節氣索引：立春(0)、驚蟄(2)、清明(4)、立夏(6)、芒種(8)、小暑(10)、立秋(12)、白露(14)、寒露(16)、立冬(18)、大雪(20)、小寒(22)
+            const monthStarts = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22]; // 12個月的起始節氣
+            
+            for(let i = 0; i < 12; i++) {
+                const startTerm = solarTerms[monthStarts[i]];
+                const endTerm = i < 11 ? solarTerms[monthStarts[i + 1]] : solarTerms[0]; // 最後一個月到下一年立春
+                
+                if (date >= startTerm && (i < 11 ? date < endTerm : true)) {
+                    return (2 + i) % 12; // 寅月開始，索引為2
+                }
+            }
+            
+            // 如果在小寒之後、立春之前，屬於丑月
+            if (date < solarTerms[0]) {
+                return 1; // 丑
+            }
+            
+            return 2; // 默認寅月
+        }
+
+
         // 生成星空
         function createStars() {
             const starsContainer = document.getElementById('stars');
@@ -456,25 +535,23 @@
             return Math.floor(diff / (1000 * 60 * 60 * 24));
         }
 
-        // 計算八字
+        // 計算八字（已優化：使用立春判斷年柱、使用節氣判斷月柱）
         function calculateBazi(birthDate) {
             const year = birthDate.getFullYear();
             const month = birthDate.getMonth() + 1;
             const day = birthDate.getDate();
             const hour = birthDate.getHours();
 
-            // 年柱計算（以立春為界）
-            let yearOffset = year - 4; // 甲子年開始於公元4年
-            const yearStemIndex = yearOffset % 10;
-            const yearBranchIndex = yearOffset % 12;
+            // 年柱計算（以立春為界）- 已優化
+            const baziYear = getBaziYear(birthDate);
+            let yearOffset = baziYear - 4; // 甲子年開始於公元4年
+            const yearStemIndex = ((yearOffset % 10) + 10) % 10;
+            const yearBranchIndex = ((yearOffset % 12) + 12) % 12;
             const yearStem = heavenlyStems[yearStemIndex];
             const yearBranch = earthlyBranches[yearBranchIndex];
             
-            // 月柱計算（根據年干推算月干）
-            // 月支固定：寅月(立春-驚蟄)、卯月(驚蟄-清明)等
-            // 簡化處理：1月=寅，2月=卯...12月=丑
-            let monthBranchIndex = (month + 1) % 12; // 1月對應寅(2)
-            if (monthBranchIndex === 0) monthBranchIndex = 1; // 12月對應丑(1)
+            // 月柱計算（根據節氣判斷月支）- 已優化
+            const monthBranchIndex = getMonthBranchByDate(birthDate);
             
             // 月干根據年干推算（五虎遁月口訣）
             // 甲己之年丙作首，乙庚之年戊為頭
@@ -482,7 +559,9 @@
             // 若問戊癸何方發，甲寅之上好追求
             const monthStemStart = [2, 4, 6, 8, 0]; // 丙、戊、庚、壬、甲
             const yearStemMod = yearStemIndex % 5;
-            const monthStemIndex = (monthStemStart[yearStemMod] + month - 1) % 10;
+            // 月支從寅月開始計算，寅=0, 卯=1, ..., 丑=11
+            const monthOffset = (monthBranchIndex - 2 + 12) % 12;
+            const monthStemIndex = (monthStemStart[yearStemMod] + monthOffset) % 10;
             
             const monthStem = heavenlyStems[monthStemIndex];
             const monthBranch = earthlyBranches[monthBranchIndex];
