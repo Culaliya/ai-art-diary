@@ -245,6 +245,12 @@
             text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
+        .tengod {
+            font-size: 0.9em;
+            color: #ff69b4;
+            margin-top: 5px;
+            font-weight: bold;
+        }
         .element {
             color: #b8b8d4;
             font-size: 0.9em;
@@ -594,10 +600,575 @@
             };
         }
 
+
+        // ===== 十神計算模組 =====
+        // 十神計算模組
+// 用於八字命理中的十神分析
+
+/**
+ * 十神關係表
+ * 根據日主與其他天干的五行關係和陰陽屬性來判斷十神
+ */
+
+// 天干五行屬性
+const STEM_ELEMENTS = {
+    '甲': '木', '乙': '木',
+    '丙': '火', '丁': '火',
+    '戊': '土', '己': '土',
+    '庚': '金', '辛': '金',
+    '壬': '水', '癸': '水'
+};
+
+// 天干陰陽屬性（陽干：甲丙戊庚壬，陰干：乙丁己辛癸）
+const STEM_YINYANG = {
+    '甲': '陽', '乙': '陰',
+    '丙': '陽', '丁': '陰',
+    '戊': '陽', '己': '陰',
+    '庚': '陽', '辛': '陰',
+    '壬': '陽', '癸': '陰'
+};
+
+// 五行生克關係
+const ELEMENT_RELATIONS = {
+    '木': { generates: '火', controls: '土', controlledBy: '金', generatedBy: '水' },
+    '火': { generates: '土', controls: '金', controlledBy: '水', generatedBy: '木' },
+    '土': { generates: '金', controls: '水', controlledBy: '木', generatedBy: '火' },
+    '金': { generates: '水', controls: '木', controlledBy: '火', generatedBy: '土' },
+    '水': { generates: '木', controls: '火', controlledBy: '土', generatedBy: '金' }
+};
+
+/**
+ * 計算兩個天干之間的十神關係
+ * @param {string} dayStem - 日主天干
+ * @param {string} otherStem - 其他天干
+ * @returns {string} - 十神名稱
+ */
+function calculateTenGod(dayStem, otherStem) {
+    // 如果是同一個天干，返回比肩
+    if (dayStem === otherStem) {
+        return '比肩';
+    }
+    
+    const dayElement = STEM_ELEMENTS[dayStem];
+    const otherElement = STEM_ELEMENTS[otherStem];
+    const dayYinYang = STEM_YINYANG[dayStem];
+    const otherYinYang = STEM_YINYANG[otherStem];
+    
+    // 判斷陰陽是否相同
+    const sameYinYang = dayYinYang === otherYinYang;
+    
+    // 判斷五行關係
+    const relation = ELEMENT_RELATIONS[dayElement];
+    
+    // 1. 同五行：比肩、劫財
+    if (dayElement === otherElement) {
+        return sameYinYang ? '比肩' : '劫財';
+    }
+    
+    // 2. 我生者：食神、傷官
+    if (relation.generates === otherElement) {
+        return sameYinYang ? '食神' : '傷官';
+    }
+    
+    // 3. 我克者：正財、偏財
+    if (relation.controls === otherElement) {
+        return sameYinYang ? '偏財' : '正財';
+    }
+    
+    // 4. 克我者：正官、七殺（偏官）
+    if (relation.controlledBy === otherElement) {
+        return sameYinYang ? '七殺' : '正官';
+    }
+    
+    // 5. 生我者：正印、偏印（梟神）
+    if (relation.generatedBy === otherElement) {
+        return sameYinYang ? '偏印' : '正印';
+    }
+    
+    return '未知';
+}
+
+/**
+ * 計算八字四柱的十神
+ * @param {object} bazi - 八字對象 { year: {stem, branch}, month: {stem, branch}, day: {stem, branch}, hour: {stem, branch} }
+ * @returns {object} - 十神分析結果
+ */
+function analyzeTenGods(bazi) {
+    const dayStem = bazi.day.stem;
+    
+    const tenGods = {
+        year: {
+            stem: calculateTenGod(dayStem, bazi.year.stem),
+            branch: null // 地支藏干需要另外計算
+        },
+        month: {
+            stem: calculateTenGod(dayStem, bazi.month.stem),
+            branch: null
+        },
+        day: {
+            stem: '日主', // 日主本身
+            branch: null
+        },
+        hour: {
+            stem: calculateTenGod(dayStem, bazi.hour.stem),
+            branch: null
+        }
+    };
+    
+    return tenGods;
+}
+
+/**
+ * 獲取十神的詳細說明
+ * @param {string} tenGod - 十神名稱
+ * @returns {object} - 十神詳細資訊
+ */
+function getTenGodDescription(tenGod) {
+    const descriptions = {
+        '比肩': {
+            name: '比肩',
+            category: '平神',
+            meaning: '代表兄弟姐妹、同輩、競爭者',
+            personality: '獨立自主、自尊心強、重視朋友',
+            positive: '堅強、獨立、有主見、重義氣',
+            negative: '固執、孤僻、不善妥協'
+        },
+        '劫財': {
+            name: '劫財',
+            category: '凶神',
+            meaning: '代表競爭、奪取、破財',
+            personality: '積極進取、敢於競爭、重視利益',
+            positive: '勇於開拓、行動力強、善於競爭',
+            negative: '好勝、衝動、易破財、人際關係緊張'
+        },
+        '食神': {
+            name: '食神',
+            category: '吉神',
+            meaning: '代表才華、表達、享受',
+            personality: '樂觀開朗、善於表達、重視享受',
+            positive: '才華橫溢、口才好、福祿雙全',
+            negative: '好逸惡勞、缺乏進取心'
+        },
+        '傷官': {
+            name: '傷官',
+            category: '凶神',
+            meaning: '代表才華、叛逆、傷害',
+            personality: '聰明伶俐、才華出眾、不守規矩',
+            positive: '聰明、多才多藝、創意豐富',
+            negative: '傲慢、叛逆、易得罪人、不利官運'
+        },
+        '正財': {
+            name: '正財',
+            category: '吉神',
+            meaning: '代表穩定收入、妻子、財富',
+            personality: '務實穩重、重視財富、勤勞節儉',
+            positive: '財運穩定、善於理財、勤勞踏實',
+            negative: '過於保守、吝嗇、缺乏冒險精神'
+        },
+        '偏財': {
+            name: '偏財',
+            category: '平神',
+            meaning: '代表意外之財、父親、投資',
+            personality: '慷慨大方、善於交際、重視機會',
+            positive: '財運亨通、善於投資、人緣好',
+            negative: '揮霍、投機、感情不專一'
+        },
+        '正官': {
+            name: '正官',
+            category: '吉神',
+            meaning: '代表權力、地位、丈夫',
+            personality: '正直守法、重視名譽、有責任感',
+            positive: '事業有成、名聲好、有領導才能',
+            negative: '過於保守、壓力大、缺乏創新'
+        },
+        '七殺': {
+            name: '七殺',
+            category: '凶神',
+            meaning: '代表權力、壓力、小人',
+            personality: '果斷剛毅、敢作敢當、重視權力',
+            positive: '決斷力強、有魄力、能成大事',
+            negative: '暴躁、專制、易樹敵、壓力大'
+        },
+        '正印': {
+            name: '正印',
+            category: '吉神',
+            meaning: '代表學問、母親、貴人',
+            personality: '仁慈善良、重視學習、有涵養',
+            positive: '學業有成、有貴人相助、品德高尚',
+            negative: '依賴性強、缺乏主見、行動力不足'
+        },
+        '偏印': {
+            name: '偏印',
+            category: '凶神',
+            meaning: '代表偏門學問、繼母、孤獨',
+            personality: '聰明機智、善於鑽研、喜歡獨處',
+            positive: '悟性高、有特殊才能、善於研究',
+            negative: '孤僻、多疑、人際關係差、易遭小人'
+        },
+        '日主': {
+            name: '日主',
+            category: '本命',
+            meaning: '代表自己、本命、元神',
+            personality: '命主本身',
+            positive: '自我',
+            negative: '自我'
+        }
+    };
+    
+    return descriptions[tenGod] || {
+        name: tenGod,
+        category: '未知',
+        meaning: '未知',
+        personality: '未知',
+        positive: '未知',
+        negative: '未知'
+    };
+}
+
+/**
+ * 統計十神分布
+ * @param {object} tenGods - 十神分析結果
+ * @returns {object} - 十神統計
+ */
+function countTenGods(tenGods) {
+    const count = {};
+    
+    // 統計天干十神
+    ['year', 'month', 'day', 'hour'].forEach(pillar => {
+        const stemGod = tenGods[pillar].stem;
+        if (stemGod && stemGod !== '日主') {
+            count[stemGod] = (count[stemGod] || 0) + 1;
+        }
+    });
+    
+    return count;
+}
+
+/**
+ * 分析十神格局
+ * @param {object} tenGodsCount - 十神統計
+ * @param {object} bazi - 八字對象
+ * @returns {object} - 格局分析
+ */
+function analyzePattern(tenGodsCount, bazi) {
+    const patterns = [];
+    
+    // 判斷是否為從格
+    const dayStem = bazi.day.stem;
+    const dayElement = STEM_ELEMENTS[dayStem];
+    
+    // 判斷主要十神
+    let mainGod = null;
+    let maxCount = 0;
+    for (const god in tenGodsCount) {
+        if (tenGodsCount[god] > maxCount) {
+            maxCount = tenGodsCount[god];
+            mainGod = god;
+        }
+    }
+    
+    // 基本格局判斷
+    if (mainGod) {
+        if (mainGod === '正官' || mainGod === '七殺') {
+            patterns.push('官殺格');
+        } else if (mainGod === '正財' || mainGod === '偏財') {
+            patterns.push('財格');
+        } else if (mainGod === '正印' || mainGod === '偏印') {
+            patterns.push('印格');
+        } else if (mainGod === '食神' || mainGod === '傷官') {
+            patterns.push('食傷格');
+        } else if (mainGod === '比肩' || mainGod === '劫財') {
+            patterns.push('比劫格');
+        }
+    }
+    
+    return {
+        mainGod: mainGod,
+        patterns: patterns,
+        description: patterns.length > 0 ? `此命以${mainGod}為主，屬於${patterns[0]}` : '格局待定'
+    };
+}
+
+// 導出函數
+// if (typeof module !== 'undefined' && // module.exports) {
+    // module.exports = {
+        calculateTenGod,
+        analyzeTenGods,
+        getTenGodDescription,
+        countTenGods,
+        analyzePattern
+    };
+}
+
+
+
+        // ===== 大運推算模組 =====
+        // 大運推算模組
+// 用於八字命理中的大運（十年運）計算
+
+/**
+ * 大運推算規則：
+ * 1. 陽男陰女：順推（月柱順數）
+ * 2. 陰男陽女：逆推（月柱逆數）
+ * 3. 起運歲數：從出生日到下一個/上一個節氣的天數 ÷ 3
+ */
+
+// 天干地支
+const HEAVENLY_STEMS = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+const EARTHLY_BRANCHES = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+
+// 天干陰陽屬性
+const STEM_YINYANG_MAP = {
+    '甲': '陽', '乙': '陰',
+    '丙': '陽', '丁': '陰',
+    '戊': '陽', '己': '陰',
+    '庚': '陽', '辛': '陰',
+    '壬': '陽', '癸': '陰'
+};
+
+/**
+ * 判斷是否為陽年（年干為陽）
+ * @param {string} yearStem - 年柱天干
+ * @returns {boolean}
+ */
+function isYangYear(yearStem) {
+    return STEM_YINYANG_MAP[yearStem] === '陽';
+}
+
+/**
+ * 獲取下一個干支組合
+ * @param {string} stem - 當前天干
+ * @param {string} branch - 當前地支
+ * @param {boolean} forward - 是否順推（true=順推，false=逆推）
+ * @returns {object} - {stem, branch}
+ */
+function getNextGanZhi(stem, branch, forward) {
+    const stemIndex = HEAVENLY_STEMS.indexOf(stem);
+    const branchIndex = EARTHLY_BRANCHES.indexOf(branch);
+    
+    let newStemIndex, newBranchIndex;
+    
+    if (forward) {
+        // 順推
+        newStemIndex = (stemIndex + 1) % 10;
+        newBranchIndex = (branchIndex + 1) % 12;
+    } else {
+        // 逆推
+        newStemIndex = (stemIndex - 1 + 10) % 10;
+        newBranchIndex = (branchIndex - 1 + 12) % 12;
+    }
+    
+    return {
+        stem: HEAVENLY_STEMS[newStemIndex],
+        branch: EARTHLY_BRANCHES[newBranchIndex]
+    };
+}
+
+/**
+ * 計算起運歲數
+ * @param {Date} birthDate - 出生日期
+ * @param {string} yearStem - 年柱天干
+ * @param {string} gender - 性別（'male' 或 'female'）
+ * @param {function} getSolarTermsForYear - 獲取某年節氣的函數
+ * @returns {number} - 起運歲數
+ */
+function calculateStartAge(birthDate, yearStem, gender, getSolarTermsForYear) {
+    const isYang = isYangYear(yearStem);
+    const isMale = gender === 'male';
+    
+    // 判斷是順推還是逆推
+    // 陽男陰女順推，陰男陽女逆推
+    const forward = (isYang && isMale) || (!isYang && !isMale);
+    
+    // 獲取當年的所有節氣
+    const year = birthDate.getFullYear();
+    const solarTerms = getSolarTermsForYear(year);
+    
+    // 找到出生日期所在的節氣區間
+    let targetTerm = null;
+    
+    if (forward) {
+        // 順推：找下一個節氣
+        for (let i = 0; i < solarTerms.length; i++) {
+            if (birthDate < solarTerms[i].date) {
+                targetTerm = solarTerms[i];
+                break;
+            }
+        }
+        // 如果沒找到，使用下一年的立春
+        if (!targetTerm) {
+            const nextYearTerms = getSolarTermsForYear(year + 1);
+            targetTerm = nextYearTerms[0]; // 立春
+        }
+    } else {
+        // 逆推：找上一個節氣
+        for (let i = solarTerms.length - 1; i >= 0; i--) {
+            if (birthDate > solarTerms[i].date) {
+                targetTerm = solarTerms[i];
+                break;
+            }
+        }
+        // 如果沒找到，使用上一年的最後一個節氣
+        if (!targetTerm) {
+            const prevYearTerms = getSolarTermsForYear(year - 1);
+            targetTerm = prevYearTerms[prevYearTerms.length - 1];
+        }
+    }
+    
+    // 計算天數差
+    const daysDiff = Math.abs(Math.floor((targetTerm.date - birthDate) / (1000 * 60 * 60 * 24)));
+    
+    // 三天為一歲
+    const startAge = Math.floor(daysDiff / 3);
+    
+    return startAge;
+}
+
+/**
+ * 推算大運
+ * @param {object} bazi - 八字對象
+ * @param {string} gender - 性別（'male' 或 'female'）
+ * @param {Date} birthDate - 出生日期
+ * @param {function} getSolarTermsForYear - 獲取某年節氣的函數
+ * @param {number} count - 推算大運的數量（默認 8 個，代表 80 年）
+ * @returns {object} - 大運資訊
+ */
+function calculateDayun(bazi, gender, birthDate, getSolarTermsForYear, count = 8) {
+    const yearStem = bazi.year.stem;
+    const isYang = isYangYear(yearStem);
+    const isMale = gender === 'male';
+    
+    // 判斷是順推還是逆推
+    const forward = (isYang && isMale) || (!isYang && !isMale);
+    
+    // 計算起運歲數
+    const startAge = calculateStartAge(birthDate, yearStem, gender, getSolarTermsForYear);
+    
+    // 從月柱開始推算大運
+    let currentStem = bazi.month.stem;
+    let currentBranch = bazi.month.branch;
+    
+    const dayunList = [];
+    
+    for (let i = 0; i < count; i++) {
+        // 獲取下一個干支
+        const nextGanZhi = getNextGanZhi(currentStem, currentBranch, forward);
+        
+        // 計算這個大運的起始年齡
+        const ageStart = startAge + i * 10;
+        const ageEnd = ageStart + 9;
+        
+        dayunList.push({
+            index: i + 1,
+            stem: nextGanZhi.stem,
+            branch: nextGanZhi.branch,
+            ganZhi: nextGanZhi.stem + nextGanZhi.branch,
+            ageStart: ageStart,
+            ageEnd: ageEnd,
+            yearStart: birthDate.getFullYear() + ageStart,
+            yearEnd: birthDate.getFullYear() + ageEnd
+        });
+        
+        currentStem = nextGanZhi.stem;
+        currentBranch = nextGanZhi.branch;
+    }
+    
+    return {
+        startAge: startAge,
+        forward: forward,
+        direction: forward ? '順推' : '逆推',
+        dayunList: dayunList
+    };
+}
+
+/**
+ * 獲取當前所在的大運
+ * @param {object} dayunInfo - 大運資訊
+ * @param {number} currentAge - 當前年齡
+ * @returns {object} - 當前大運
+ */
+function getCurrentDayun(dayunInfo, currentAge) {
+    for (const dayun of dayunInfo.dayunList) {
+        if (currentAge >= dayun.ageStart && currentAge <= dayun.ageEnd) {
+            return dayun;
+        }
+    }
+    return null;
+}
+
+/**
+ * 分析大運吉凶
+ * @param {object} dayun - 大運對象
+ * @param {object} bazi - 八字對象
+ * @returns {object} - 大運分析
+ */
+function analyzeDayunLuck(dayun, bazi) {
+    // 這裡可以加入更複雜的大運吉凶分析
+    // 簡化版本：根據十神關係判斷
+    const dayStem = bazi.day.stem;
+    
+    // 使用十神計算（需要引入 ten-gods-calculator.js）
+    let stemGod = '未知';
+    if (typeof calculateTenGod !== 'undefined') {
+        stemGod = calculateTenGod(dayStem, dayun.stem);
+    }
+    
+    // 根據十神判斷吉凶（簡化版）
+    const goodGods = ['正官', '正財', '正印', '食神'];
+    const badGods = ['七殺', '傷官', '偏印', '劫財'];
+    
+    let luck = '平運';
+    if (goodGods.includes(stemGod)) {
+        luck = '吉運';
+    } else if (badGods.includes(stemGod)) {
+        luck = '凶運';
+    }
+    
+    return {
+        tenGod: stemGod,
+        luck: luck,
+        description: `此大運為${stemGod}，屬於${luck}`
+    };
+}
+
+// 導出函數
+// if (typeof module !== 'undefined' && // module.exports) {
+    // module.exports = {
+        isYangYear,
+        getNextGanZhi,
+        calculateStartAge,
+        calculateDayun,
+        getCurrentDayun,
+        analyzeDayunLuck
+    };
+}
+
+
+        // ===== 輔助函數：獲取某年的所有節氣 =====
+        function getSolarTermsForYear(year) {
+            const baseTimeForYear = 31556925974.7 * (year - 1900) + Date.UTC(1900,0,6,2,5);
+            let solarTermsDates = [];
+            for(let n = 0; n < SOLAR_TERMS.length; n++) {
+                let termDate = new Date(baseTimeForYear + SOLAR_TERMS[n].minutes * 60000);
+                solarTermsDates.push({ 
+                    longitude: SOLAR_TERMS[n].longitude, 
+                    term: SOLAR_TERMS[n].cn, 
+                    date: termDate 
+                });
+            }
+            return solarTermsDates;
+        }
+
+        // ===== 十神分析整合 =====
         // 顯示八字結果
         function displayBazi(bazi, name, gender) {
             const baziDisplay = document.getElementById('baziDisplay');
             const interpretation = document.getElementById('interpretation');
+            
+            // 計算十神
+            const tenGods = analyzeTenGods(bazi);
+            const tenGodsCount = countTenGods(tenGods);
+            const pattern = analyzePattern(tenGodsCount, bazi);
             
             baziDisplay.innerHTML = `
                 <div class="pillar">
@@ -605,33 +1176,57 @@
                     <div class="pillar-char">${bazi.year.stem}</div>
                     <div class="pillar-char">${bazi.year.branch}</div>
                     <div class="element">${elements[heavenlyStems.indexOf(bazi.year.stem)]}/${branchElements[earthlyBranches.indexOf(bazi.year.branch)]}</div>
+                    <div class="tengod">${tenGods.year.stem}</div>
                 </div>
                 <div class="pillar">
                     <div class="pillar-title">月柱</div>
                     <div class="pillar-char">${bazi.month.stem}</div>
                     <div class="pillar-char">${bazi.month.branch}</div>
                     <div class="element">${elements[heavenlyStems.indexOf(bazi.month.stem)]}/${branchElements[earthlyBranches.indexOf(bazi.month.branch)]}</div>
+                    <div class="tengod">${tenGods.month.stem}</div>
                 </div>
                 <div class="pillar">
-                    <div class="pillar-title">日柱</div>
+                    <div class="pillar-title">日柱（日主）</div>
                     <div class="pillar-char">${bazi.day.stem}</div>
                     <div class="pillar-char">${bazi.day.branch}</div>
                     <div class="element">${elements[heavenlyStems.indexOf(bazi.day.stem)]}/${branchElements[earthlyBranches.indexOf(bazi.day.branch)]}</div>
+                    <div class="tengod">本命</div>
                 </div>
                 <div class="pillar">
                     <div class="pillar-title">時柱</div>
                     <div class="pillar-char">${bazi.hour.stem}</div>
                     <div class="pillar-char">${bazi.hour.branch}</div>
                     <div class="element">${elements[heavenlyStems.indexOf(bazi.hour.stem)]}/${branchElements[earthlyBranches.indexOf(bazi.hour.branch)]}</div>
+                    <div class="tengod">${tenGods.hour.stem}</div>
                 </div>
             `;
 
             const dayElement = elements[heavenlyStems.indexOf(bazi.day.stem)];
             const genderText = gender === 'male' ? '先生' : '女士';
 
+            // 生成十神分析文字
+            let tenGodsAnalysis = '<h4 style="color:#ffd700;margin-top:20px;">🔮 十神分析</h4>';
+            tenGodsAnalysis += `<p><strong>命格：</strong>${pattern.description}</p>`;
+            tenGodsAnalysis += '<p><strong>十神分布：</strong>';
+            for (const god in tenGodsCount) {
+                const desc = getTenGodDescription(god);
+                tenGodsAnalysis += `${god}(${desc.category})×${tenGodsCount[god]} `;
+            }
+            tenGodsAnalysis += '</p>';
+            
+            // 主要十神詳解
+            if (pattern.mainGod) {
+                const mainDesc = getTenGodDescription(pattern.mainGod);
+                tenGodsAnalysis += `<p><strong>主星特質：</strong>${mainDesc.personality}</p>`;
+                tenGodsAnalysis += `<p><strong>優點：</strong>${mainDesc.positive}</p>`;
+                tenGodsAnalysis += `<p><strong>注意：</strong>${mainDesc.negative}</p>`;
+            }
+            
             interpretation.innerHTML = `
                 <h3>✨ ${name}${genderText}的命理解析</h3>
                 <p><strong>日主五行：</strong>${dayElement}</p>
+                ${tenGodsAnalysis}
+                <h4 style="color:#ffd700;margin-top:20px;">🌟 五行運勢</h4>
                 <p><strong>性格特質：</strong>${getPersonalityByElement(dayElement)}</p>
                 <p><strong>事業運勢：</strong>${getCareerByElement(dayElement)}</p>
                 <p><strong>財運分析：</strong>${getWealthByElement(dayElement)}</p>
@@ -641,6 +1236,46 @@
                 </p>
             `;
 
+            // 計算大運
+            const dayunInfo = calculateDayun(bazi, gender, birthDate, getSolarTermsForYear, 8);
+            const currentYear = new Date().getFullYear();
+            const currentAge = currentYear - birthDate.getFullYear();
+            const currentDayun = getCurrentDayun(dayunInfo, currentAge);
+            
+            // 顯示大運
+            let dayunHTML = '<h4 style="color:#ffd700;margin-top:20px;">🌠 大運推算</h4>';
+            dayunHTML += `<p><strong>起運歲數：</strong>${dayunInfo.startAge}歲</p>`;
+            dayunHTML += `<p><strong>大運方向：</strong>${dayunInfo.direction}（${isYangYear(bazi.year.stem) ? '陽年' : '陰年'}${gender === 'male' ? '男命' : '女命'}）</p>`;
+            
+            if (currentDayun) {
+                const dayunAnalysis = analyzeDayunLuck(currentDayun, bazi);
+                dayunHTML += `<p style="background:rgba(255,215,0,0.1);padding:10px;border-radius:5px;border-left:3px solid #ffd700;">`;
+                dayunHTML += `<strong>目前大運（${currentAge}歲）：</strong>${currentDayun.ganZhi}（${currentDayun.ageStart}-${currentDayun.ageEnd}歲）<br>`;
+                dayunHTML += `<strong>十神：</strong>${dayunAnalysis.tenGod} | <strong>運勢：</strong>${dayunAnalysis.luck}`;
+                dayunHTML += `</p>`;
+            }
+            
+            dayunHTML += '<div style="margin-top:15px;"><table style="width:100%;border-collapse:collapse;">';
+            dayunHTML += '<tr style="background:rgba(255,215,0,0.2);"><th style="padding:8px;border:1px solid rgba(255,215,0,0.3);">大運</th><th style="padding:8px;border:1px solid rgba(255,215,0,0.3);">干支</th><th style="padding:8px;border:1px solid rgba(255,215,0,0.3);">年齡</th><th style="padding:8px;border:1px solid rgba(255,215,0,0.3);">年份</th><th style="padding:8px;border:1px solid rgba(255,215,0,0.3);">十神</th></tr>';
+            
+            for (const dayun of dayunInfo.dayunList) {
+                const analysis = analyzeDayunLuck(dayun, bazi);
+                const isCurrent = currentDayun && dayun.index === currentDayun.index;
+                const rowStyle = isCurrent ? 'background:rgba(255,215,0,0.15);font-weight:bold;' : '';
+                dayunHTML += `<tr style="${rowStyle}">`;
+                dayunHTML += `<td style="padding:8px;border:1px solid rgba(255,215,0,0.3);text-align:center;">${dayun.index}</td>`;
+                dayunHTML += `<td style="padding:8px;border:1px solid rgba(255,215,0,0.3);text-align:center;">${dayun.ganZhi}</td>`;
+                dayunHTML += `<td style="padding:8px;border:1px solid rgba(255,215,0,0.3);text-align:center;">${dayun.ageStart}-${dayun.ageEnd}</td>`;
+                dayunHTML += `<td style="padding:8px;border:1px solid rgba(255,215,0,0.3);text-align:center;">${dayun.yearStart}-${dayun.yearEnd}</td>`;
+                dayunHTML += `<td style="padding:8px;border:1px solid rgba(255,215,0,0.3);text-align:center;">${analysis.tenGod}</td>`;
+                dayunHTML += `</tr>`;
+            }
+            
+            dayunHTML += '</table></div>';
+            
+            // 將大運HTML加入到 interpretation
+            interpretation.innerHTML += dayunHTML;
+            
             document.getElementById('resultSection').classList.add('show');
             document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
         }
