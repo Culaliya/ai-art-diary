@@ -1,5 +1,13 @@
 [
   {
+    "name": "夢境花園DreamGarden",
+    "desc": "心情花園＋夢的象徵＋溫柔日記",
+    "icon": "assets/icons/dream.png",
+    "link": "https://apps.apple.com/tw/app/%E5%A4%A2%E5%A2%83%E8%8A%B1%E5%9C%92dreamgarden/id6755881746",
+    "version": "1.0.0",
+    "updated": "2025/12/3"
+  },
+  {
     "name": "ChemoCat化學貓",
     "desc": "化學變好玩｜虛擬實驗遊戲",
     "icon": "assets/icons/chemocat.png",
