@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dark Lab — 禁忌調配實驗室</title>
+<style>
+body {
+  background:#020012;
+  color:#fff;
+  font-family:'Comic Sans MS', 'Arial', sans-serif;
+  text-align:center;
+  padding:40px;
+  margin:0;
+}
+h1 {
+  font-size:2.5em;
+  margin-bottom:10px;
+  color:#ff9fcf;
+  text-shadow:0 0 10px #ff9fcf;
+}
+p {
+  font-size:1em;
+  color:#ccc;
+}
+#ingredients {
+  margin-top:30px;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:15px;
+}
+.ingredient {
+  background:linear-gradient(135deg,#ffdfec,#ffd1f5);
+  color:#500048;
+  border-radius:12px;
+  padding:12px 18px;
+  cursor:pointer;
+  box-shadow:0 0 10px rgba(255,255,255,0.3);
+  transition:transform .2s;
+}
+.ingredient.selected {
+  transform:scale(1.1) rotate(-3deg);
+  box-shadow:0 0 15px #ffa8e8;
+}
+#mixBtn {
+  margin-top:30px;
+  background:linear-gradient(135deg,#b9faff,#c9f5c6);
+  color:#003;
+  padding:14px 24px;
+  border:none;
+  border-radius:20px;
+  cursor:pointer;
+  font-size:1.2em;
+  box-shadow:0 0 15px rgba(255,255,255,0.4);
+  transition:transform .2s;
+}
+#mixBtn:hover {
+  transform:scale(1.05);
+}
+#resultCard {
+  margin-top:40px;
+  background:rgba(255,255,255,0.1);
+  border:2px dashed #ff9fcf;
+  border-radius:16px;
+  padding:20px;
+  display:none;
+}
+#resultCard h2 {
+  font-size:2em;
+  margin:0;
+  color:#ff9fcf;
+}
+#resultCard p {
+  font-size:1.1em;
+  color:#e0d3e8;
+}
+</style>
+</head>
+<body>
+<h1>Dark Lab — 禁忌調配實驗室 👻</h1>
+<p>選擇三種可愛卻不對勁的材料，看看你會調出什麼…</p>
+<div id="ingredients">
+  <div class="ingredient" data-name="雫">💧 雫</div>
+  <div class="ingredient" data-name="粉末">🍚 粉末</div>
+  <div class="ingredient" data-name="結晶">💎 結晶</div>
+  <div class="ingredient" data-name="幽光">✨ 幽光</div>
+  <div class="ingredient" data-name="花瓣">🌸 花瓣</div>
+  <div class="ingredient" data-name="羽毛">🪶 羽毛</div>
+</div>
+<button id="mixBtn">開始調配</button>
+<div id="resultCard">
+  <h2 id="resultName"></h2>
+  <p id="resultDesc"></p>
+  <p id="resultRarity"></p>
+  <button onclick="resetGame()" style="margin-top:20px;background:linear-gradient(135deg,#ffd1f5,#ffdfec);color:#500048;padding:10px 20px;border:none;border-radius:20px;cursor:pointer;">再調一次</button>
+</div>
+<script>
+const ingredients = document.querySelectorAll('.ingredient');
+let selected = [];
+
+ingredients.forEach(item => {
+  item.addEventListener('click', () => {
+    if (item.classList.contains('selected')) {
+      item.classList.remove('selected');
+      selected = selected.filter(n => n !== item.dataset.name);
+    } else {
+      if (selected.length < 3) {
+        item.classList.add('selected');
+        selected.push(item.dataset.name);
+      }
+    }
+  });
+});
+
+document.getElementById('mixBtn').addEventListener('click', () => {
+  if (selected.length !== 3) {
+    alert('請先選擇三種材料！');
+    return;
+  }
+  const results = [
+    {name:'星貓湯', rarity:'稀有 ⭐️', desc:'閃爍的湯面反射你的好奇心。'},
+    {name:'奶油泥', rarity:'普通', desc:'看起來可愛，但聞起來好像貓罐頭。'},
+    {name:'靈魂絮語', rarity:'禁忌 ⚠️', desc:'柔軟的絨球私語著不可說的秘密。'},
+    {name:'幻影果醬', rarity:'稀有 ⭐️', desc:'透明果醬裡藏著未來的影子。'},
+    {name:'貓咪雲', rarity:'普通', desc:'像棉花糖一樣的雲朵散發出喵喵香。'},
+    {name:'深淵糖果', rarity:'禁忌 ⚠️', desc:'一口咬下，你聽見了星星的尖叫。'}
+  ];
+  const result = results[Math.floor(Math.random() * results.length)];
+  document.getElementById('resultName').innerText = result.name;
+  document.getElementById('resultDesc').innerText = result.desc;
+  document.getElementById('resultRarity').innerText = result.rarity;
+  document.getElementById('resultCard').style.display = 'block';
+});
+function resetGame() {
+  selected = [];
+  ingredients.forEach(item => item.classList.remove('selected'));
+  document.getElementById('resultCard').style.display = 'none';
+}
+</script>
+</body>
+</html>
