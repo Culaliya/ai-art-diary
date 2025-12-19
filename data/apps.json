@@ -12,8 +12,8 @@
     "desc": "化學變好玩｜虛擬實驗遊戲",
     "icon": "assets/icons/chemocat.png",
     "link": "https://apps.apple.com/tw/app/chemocat%E5%8C%96%E5%AD%B8%E8%B2%93/id6753624892",
-    "version": "1.0.0",
-    "updated": "2025/10/6"
+    "version": "1.1.0",
+    "updated": "2025/12/19"
   },
   {
     "name": "灰貓檔案庫",
@@ -70,5 +70,21 @@
     "link": "https://apps.apple.com/tw/app/quickmood/id6752010083",
     "version": "1.1.0",
     "updated": "2025/10/27"
+  },
+  {
+    "name": "Pawdoro",
+    "desc": "貓爪番茄鐘：專為專注的貓奴設計",
+    "icon": "assets/icons/pawdoro.png",
+    "link": "https://apps.apple.com/us/app/pawdoro/id6756201914",
+    "version": "1.0.0",
+    "updated": "2025/12/19"
+  },
+  {
+    "name": "Starlight Journal",
+    "desc": "星光日記：用星空記錄你的心靈與創作",
+    "icon": "assets/icons/starlightjournal.png",
+    "link": "https://apps.apple.com/us/app/starlight-journal/id6756179454",
+    "version": "1.0.0",
+    "updated": "2025/12/19"
   }
 ]
