@@ -169,7 +169,7 @@ module.exports = async function handler(req, res) {
         };
         const prompt = stylePrompts[style] || `使用上傳圖片中的人物，以高質感攝影風格生成時尚肖像。`;
         
-        const model = "gemini-2.5-flash-image-preview";
+        const model = "gemini-3-pro-image-preview";
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
         const payload = {
