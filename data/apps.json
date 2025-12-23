@@ -1,11 +1,19 @@
 [
   {
-    "name": "夢境花園DreamGarden",
-    "desc": "心情花園＋夢的象徵＋溫柔日記",
-    "icon": "assets/icons/dream.png",
-    "link": "https://apps.apple.com/tw/app/%E5%A4%A2%E5%A2%83%E8%8A%B1%E5%9C%92dreamgarden/id6755881746",
+    "name": "Pawdoro",
+    "desc": "貓咪風格的專注與提醒工具",
+    "icon": "assets/icons/pawdoro.png",
+    "link": "https://apps.apple.com/us/app/pawdoro/id6756201914",
     "version": "1.0.0",
-    "updated": "2025/12/3"
+    "updated": "2025/12/19"
+  },
+  {
+    "name": "Starlight Journal",
+    "desc": "在星光之下寫下每一天的心情",
+    "icon": "assets/icons/starlightjournal.png",
+    "link": "https://apps.apple.com/us/app/starlight-journal/id6756179454",
+    "version": "1.0.0",
+    "updated": "2025/12/19"
   },
   {
     "name": "ChemoCat化學貓",
@@ -16,20 +24,28 @@
     "updated": "2025/12/19"
   },
   {
+    "name": "LazyTrack極簡懶人記帳",
+    "desc": "秒速記帳，一次付費，無廣告",
+    "icon": "assets/icons/lazytrack2.png",
+    "link": "https://apps.apple.com/tw/app/lazytrack%E6%A5%B5%E7%B0%A1%E6%87%B6%E4%BA%BA%E8%A8%98%E5%B8%B3/id6753803644",
+    "version": "1.1.0",
+    "updated": "2025/12/19"
+  },
+  {
+    "name": "夢境花園DreamGarden",
+    "desc": "心情花園＋夢的象徵＋溫柔日記",
+    "icon": "assets/icons/dream.png",
+    "link": "https://apps.apple.com/tw/app/%E5%A4%A2%E5%A2%83%E8%8A%B1%E5%9C%92dreamgarden/id6755881746",
+    "version": "1.0.0",
+    "updated": "2025/12/3"
+  },
+  {
     "name": "灰貓檔案庫",
     "desc": "冷知識也能成為案件",
     "icon": "assets/icons/greycat.png",
     "link": "https://apps.apple.com/tw/app/%E7%81%B0%E8%B2%93%E6%AA%94%E6%A1%88%E5%BA%AB/id6753888547",
     "version": "1.0.0",
     "updated": "2025/10/13"
-  },
-  {
-    "name": "LazyTrack極簡懶人記帳",
-    "desc": "秒速記帳，一次付費，無廣告",
-    "icon": "assets/icons/lazytrack.png",
-    "link": "https://apps.apple.com/tw/app/lazytrack%E6%A5%B5%E7%B0%A1%E6%87%B6%E4%BA%BA%E8%A8%98%E5%B8%B3/id6753803644",
-    "version": "1.0.0",
-    "updated": "2025/10/11"
   },
   {
     "name": "雲朵整理師",
@@ -70,21 +86,5 @@
     "link": "https://apps.apple.com/tw/app/quickmood/id6752010083",
     "version": "1.1.0",
     "updated": "2025/10/27"
-  },
-  {
-    "name": "Pawdoro",
-    "desc": "貓爪番茄鐘：專為專注的貓奴設計",
-    "icon": "assets/icons/pawdoro.png",
-    "link": "https://apps.apple.com/us/app/pawdoro/id6756201914",
-    "version": "1.0.0",
-    "updated": "2025/12/19"
-  },
-  {
-    "name": "Starlight Journal",
-    "desc": "星光日記：用星空記錄你的心靈與創作",
-    "icon": "assets/icons/starlightjournal.png",
-    "link": "https://apps.apple.com/us/app/starlight-journal/id6756179454",
-    "version": "1.0.0",
-    "updated": "2025/12/19"
   }
 ]
