@@ -110,3 +110,439 @@ drawStars();
 <script src="mobile-nav.js"></script>
 </body>
 </html>
+
+<!-- 🎹 Virtual Piano Trigger -->
+<div style="margin: 24px auto; text-align:center;">
+  <button id="openPianoBtn" class="glass-btn">
+    🎹 召喚霜綠玻璃鋼琴
+  </button>
+  <div class="tiny-note">（它很冷，但會唱歌）</div>
+</div>
+
+<!-- 🎹 Piano Modal -->
+<div id="pianoModal" class="piano-modal" aria-hidden="true">
+  <div class="piano-card">
+    <div class="piano-topbar">
+      <div class="piano-title">VIRTUAL PIANO · GLASS NEON A</div>
+      <button id="closePianoBtn" class="piano-close">✕</button>
+    </div>
+
+    <div class="piano-controls">
+      <label class="ctrl">
+        <span>Voice</span>
+        <select id="voiceSel" class="glass-select">
+          <option value="glass">Glass</option>
+          <option value="toy">Toy</option>
+          <option value="pad">Soft Pad</option>
+        </select>
+      </label>
+
+      <label class="ctrl">
+        <span>Sustain</span>
+        <input id="sustainChk" type="checkbox" />
+      </label>
+
+      <button id="recBtn" class="glass-btn small">⏺ REC 10s</button>
+      <button id="playBtn" class="glass-btn small">▶ PLAY</button>
+      <button id="clearBtn" class="glass-btn small ghost">🗑 CLEAR</button>
+    </div>
+
+    <div id="pianoKeys" class="piano-keys"></div>
+
+    <div class="piano-footer" id="pianoLog">
+      霜綠玻璃規則：不要問「為什麼是這個聲音」，只要按下去。👻
+    </div>
+  </div>
+</div>
+
+<style>
+  .glass-btn{
+    padding: 12px 18px;
+    border-radius: 999px;
+    border: 1px solid rgba(120,240,255,.35);
+    background: rgba(20,40,60,.28);
+    color: rgba(200,255,255,.92);
+    box-shadow: 0 0 22px rgba(80,220,255,.18);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    cursor: pointer;
+    transition: transform .12s ease, box-shadow .12s ease;
+    font-weight: 600;
+    letter-spacing: .4px;
+  }
+  .glass-btn:hover{ transform: translateY(-1px); box-shadow: 0 0 28px rgba(80,220,255,.26); }
+  .glass-btn.small{ padding: 10px 14px; font-size: 13px; }
+  .glass-btn.ghost{
+    border-color: rgba(255,120,200,.25);
+    box-shadow: 0 0 18px rgba(255,120,200,.12);
+  }
+  .tiny-note{ margin-top: 10px; font-size: 12px; opacity: .75; }
+
+  .piano-modal{
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,.62);
+    z-index: 9999;
+    padding: 18px;
+  }
+  .piano-modal.show{ display:flex; }
+
+  .piano-card{
+    width: min(980px, 100%);
+    border-radius: 18px;
+    border: 1px solid rgba(120,240,255,.25);
+    background: rgba(10,18,28,.78);
+    box-shadow: 0 0 50px rgba(80,220,255,.12), inset 0 0 40px rgba(80,220,255,.06);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    overflow: hidden;
+  }
+
+  .piano-topbar{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(120,240,255,.18);
+    background: linear-gradient(90deg, rgba(80,220,255,.08), rgba(255,120,200,.06));
+  }
+  .piano-title{
+    font-weight: 800;
+    letter-spacing: 1px;
+    font-size: 13px;
+    opacity: .92;
+  }
+  .piano-close{
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    border: 1px solid rgba(120,240,255,.22);
+    background: rgba(255,255,255,.06);
+    color: rgba(220,255,255,.9);
+    cursor: pointer;
+  }
+
+  .piano-controls{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 10px 12px;
+    padding: 14px 16px;
+    align-items:center;
+    border-bottom: 1px solid rgba(120,240,255,.14);
+  }
+  .ctrl{
+    display:flex;
+    align-items:center;
+    gap: 8px;
+    font-size: 12px;
+    opacity: .9;
+    padding: 8px 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(120,240,255,.16);
+    background: rgba(255,255,255,.04);
+  }
+  .glass-select{
+    border-radius: 10px;
+    border: 1px solid rgba(120,240,255,.22);
+    background: rgba(0,0,0,.22);
+    color: rgba(220,255,255,.9);
+    padding: 6px 10px;
+    outline: none;
+  }
+
+  .piano-keys{
+    padding: 16px;
+    display:flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .key{
+    width: 52px;
+    height: 170px;
+    border-radius: 14px;
+    border: 1px solid rgba(120,240,255,.18);
+    background: rgba(255,255,255,.06);
+    box-shadow: 0 0 18px rgba(80,220,255,.09), inset 0 0 12px rgba(255,255,255,.04);
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    padding-bottom: 10px;
+    color: rgba(210,255,255,.72);
+    font-size: 12px;
+    letter-spacing: .6px;
+  }
+  .key:active, .key.active{
+    background: rgba(80,220,255,.16);
+    box-shadow: 0 0 24px rgba(80,220,255,.22), inset 0 0 18px rgba(255,255,255,.06);
+    transform: translateY(1px);
+  }
+
+  .piano-footer{
+    padding: 12px 16px 16px;
+    font-size: 12px;
+    opacity: .78;
+    border-top: 1px solid rgba(120,240,255,.10);
+  }
+</style>
+
+<script>
+(() => {
+  // --- UI refs
+  const modal = document.getElementById("pianoModal");
+  const openBtn = document.getElementById("openPianoBtn");
+  const closeBtn = document.getElementById("closePianoBtn");
+  const keysWrap = document.getElementById("pianoKeys");
+  const voiceSel = document.getElementById("voiceSel");
+  const sustainChk = document.getElementById("sustainChk");
+  const recBtn = document.getElementById("recBtn");
+  const playBtn = document.getElementById("playBtn");
+  const clearBtn = document.getElementById("clearBtn");
+  const log = document.getElementById("pianoLog");
+
+  // --- Lazy audio init
+  let ctx = null;
+  const activeOsc = new Map(); // note -> {osc, gain}
+  let sustain = false;
+
+  // --- Recording (events, not audio)
+  let isRec = false;
+  let recStart = 0;
+  let recEvents = []; // {t, note, on, voice}
+  const REC_LIMIT = 10000;
+
+  // --- Notes (1.5 octaves: C4 -> E5)
+  const NOTES = [
+    ["C4", 261.63], ["D4", 293.66], ["E4", 329.63], ["F4", 349.23], ["G4", 392.00], ["A4", 440.00], ["B4", 493.88],
+    ["C5", 523.25], ["D5", 587.33], ["E5", 659.25]
+  ];
+
+  function ensureAudio(){
+    if (ctx) return;
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    logMsg("Audio awakened. 霜綠開始呼吸。🧊✨");
+  }
+
+  function logMsg(msg){
+    log.textContent = msg;
+  }
+
+  function makeVoice(freq, voice){
+    // Simple synth voices using WebAudio (no samples)
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const filt = ctx.createBiquadFilter();
+
+    // Base
+    osc.frequency.value = freq;
+
+    if (voice === "glass"){
+      osc.type = "sine";
+      filt.type = "highpass";
+      filt.frequency.value = 240;
+      gain.gain.value = 0.0001;
+    } else if (voice === "toy"){
+      osc.type = "triangle";
+      filt.type = "bandpass";
+      filt.frequency.value = 900;
+      filt.Q.value = 2.2;
+      gain.gain.value = 0.0001;
+    } else { // pad
+      osc.type = "sawtooth";
+      filt.type = "lowpass";
+      filt.frequency.value = 900;
+      filt.Q.value = 0.7;
+      gain.gain.value = 0.0001;
+    }
+
+    osc.connect(filt);
+    filt.connect(gain);
+    gain.connect(ctx.destination);
+
+    return {osc, gain};
+  }
+
+  function envOn(gainNode, voice){
+    const t = ctx.currentTime;
+    // envelope
+    let attack = 0.01, decay = 0.12, sustainLevel = 0.22;
+    if (voice === "pad"){ attack = 0.08; decay = 0.25; sustainLevel = 0.16; }
+    if (voice === "toy"){ attack = 0.005; decay = 0.08; sustainLevel = 0.18; }
+
+    gainNode.gain.cancelScheduledValues(t);
+    gainNode.gain.setValueAtTime(0.0001, t);
+    gainNode.gain.linearRampToValueAtTime(0.26, t + attack);
+    gainNode.gain.linearRampToValueAtTime(sustainLevel, t + attack + decay);
+  }
+
+  function envOff(gainNode, voice){
+    const t = ctx.currentTime;
+    let release = 0.14;
+    if (voice === "pad") release = 0.55;
+    if (voice === "toy") release = 0.08;
+
+    gainNode.gain.cancelScheduledValues(t);
+    gainNode.gain.setValueAtTime(gainNode.gain.value, t);
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, t + release);
+  }
+
+  function noteOn(noteName, freq){
+    ensureAudio();
+    const voice = voiceSel.value;
+
+    if (activeOsc.has(noteName)) return;
+
+    const {osc, gain} = makeVoice(freq, voice);
+    envOn(gain, voice);
+    osc.start();
+    activeOsc.set(noteName, {osc, gain, voice});
+
+    if (isRec){
+      recEvents.push({ t: Date.now() - recStart, note: noteName, on: true, voice });
+    }
+  }
+
+  function noteOff(noteName){
+    const item = activeOsc.get(noteName);
+    if (!item) return;
+
+    if (sustain) return; // hold until sustain off / stopAll
+
+    envOff(item.gain, item.voice);
+    setTimeout(() => {
+      try{ item.osc.stop(); }catch(e){}
+      try{ item.osc.disconnect(); }catch(e){}
+    }, 700);
+    activeOsc.delete(noteName);
+
+    if (isRec){
+      recEvents.push({ t: Date.now() - recStart, note: noteName, on: false, voice: item.voice });
+    }
+  }
+
+  function stopAll(){
+    for (const [note, item] of activeOsc.entries()){
+      envOff(item.gain, item.voice);
+      setTimeout(() => {
+        try{ item.osc.stop(); }catch(e){}
+        try{ item.osc.disconnect(); }catch(e){}
+      }, 700);
+    }
+    activeOsc.clear();
+  }
+
+  function renderKeys(){
+    keysWrap.innerHTML = "";
+    NOTES.forEach(([name, freq]) => {
+      const k = document.createElement("div");
+      k.className = "key";
+      k.textContent = name;
+      k.addEventListener("pointerdown", () => { k.classList.add("active"); noteOn(name, freq); });
+      k.addEventListener("pointerup", () => { k.classList.remove("active"); noteOff(name); });
+      k.addEventListener("pointerleave", () => { k.classList.remove("active"); noteOff(name); });
+      keysWrap.appendChild(k);
+    });
+  }
+
+  function startRec(){
+    recEvents = [];
+    isRec = true;
+    recStart = Date.now();
+    recBtn.textContent = "⏺ REC…";
+    logMsg("錄音開始：10 秒內的咒語都會被記下來。👁️");
+    setTimeout(() => {
+      if (!isRec) return;
+      isRec = false;
+      recBtn.textContent = "⏺ REC 10s";
+      logMsg(`錄音完成：${recEvents.length} 個事件。按 ▶ PLAY 回放。`);
+    }, REC_LIMIT);
+  }
+
+  function playRec(){
+    if (!recEvents.length){
+      logMsg("沒有錄音事件。先錄一段再回放。");
+      return;
+    }
+    ensureAudio();
+    stopAll();
+
+    logMsg("回放中：霜綠玻璃正在重演你的選擇。🧊✨");
+
+    recEvents.forEach(ev => {
+      setTimeout(() => {
+        // set voice for each event (keeps original vibe)
+        const old = voiceSel.value;
+        voiceSel.value = ev.voice || old;
+
+        const found = NOTES.find(n => n[0] === ev.note);
+        if (!found) return;
+
+        if (ev.on) noteOn(found[0], found[1]);
+        else {
+          // allow release even when sustain checked during playback
+          const prevSustain = sustain;
+          sustain = false;
+          noteOff(found[0]);
+          sustain = prevSustain;
+        }
+      }, ev.t);
+    });
+
+    // end message
+    const lastT = Math.max(...recEvents.map(e => e.t));
+    setTimeout(() => logMsg("回放結束。你剛剛寫了一段很冷的歌。"), lastT + 400);
+  }
+
+  // --- Modal events
+  openBtn.addEventListener("click", () => {
+    modal.classList.add("show");
+    modal.setAttribute("aria-hidden", "false");
+    renderKeys();
+    logMsg("霜綠玻璃鋼琴已就位：按鍵是冰的，聲音是亮的。🧊✨");
+  });
+
+  closeBtn.addEventListener("click", () => {
+    modal.classList.remove("show");
+    modal.setAttribute("aria-hidden", "true");
+    stopAll();
+  });
+
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal){
+      modal.classList.remove("show");
+      modal.setAttribute("aria-hidden", "true");
+      stopAll();
+    }
+  });
+
+  sustainChk.addEventListener("change", () => {
+    sustain = sustainChk.checked;
+    if (!sustain){
+      // release all held notes when sustain off
+      stopAll();
+    }
+    logMsg(sustain ? "Sustain ON：你按下去的音會黏著不放。👻" : "Sustain OFF：放手就回到黑暗。");
+  });
+
+  recBtn.addEventListener("click", () => {
+    ensureAudio();
+    if (isRec) return;
+    startRec();
+  });
+
+  playBtn.addEventListener("click", () => playRec());
+
+  clearBtn.addEventListener("click", () => {
+    recEvents = [];
+    isRec = false;
+    recBtn.textContent = "⏺ REC 10s";
+    logMsg("已清空。像什麼都沒發生過一樣。");
+  });
+
+})();
+</script>
