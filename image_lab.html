@@ -2,330 +2,45 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>🪞星幕字卡實驗室✨</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>星幕字卡實驗室 ✨</title>
 <style>
-body {
-  margin:0;
-  font-family:'Orbitron',sans-serif;
-  background:radial-gradient(circle at 40% 20%, #05070f 0%, #0a0b16 60%, #000 100%);
-  color:#cfcfcf;
-  overflow-x:hidden;
-  text-align:center;
-}
-
-/* 標題 */
-h1 {
-  margin-top:50px;
-  font-size:2.4em;
-  color:#ff3eff;
-  text-shadow:0 0 25px #ff3eff, 0 0 50px #0ff;
-  animation:glowPulse 4s infinite alternate;
-}
-@keyframes glowPulse {
-  from { text-shadow:0 0 15px #ff3eff; }
-  to { text-shadow:0 0 35px #ff0044, 0 0 60px #ff3eff; }
-}
-
-/* 副標：血紅緩閃 */
-.subtitle {
-  font-size:1.2em;
-  margin-top:8px;
-  letter-spacing:2px;
-  color:#ff3355;
-  text-shadow:0 0 15px #ff0033;
-  animation:softFlicker 6s infinite ease-in-out;
-}
-@keyframes softFlicker {
-  0%, 90%, 100% { opacity:1; text-shadow:0 0 10px #ff0033; }
-  45%, 50% { opacity:0.7; text-shadow:0 0 20px #ff6666; }
-}
-
-/* 霓虹背景球 */
-.neon-orb {
-  position:absolute;
-  border-radius:50%;
-  filter:blur(100px);
-  opacity:0.35;
-  animation:float 10s infinite ease-in-out alternate;
-}
-@keyframes float {
-  0% { transform:translateY(0); }
-  100% { transform:translateY(-60px) translateX(40px); }
-}
-.orb1 { width:320px;height:320px;background:#ff3eff;top:25%;left:15%;animation-delay:0s;}
-.orb2 { width:400px;height:400px;background:#ff3355;bottom:10%;right:10%;animation-delay:3s;}
-.orb3 { width:260px;height:260px;background:#7700ff;top:60%;left:40%;animation-delay:1.5s;}
-
-/* 卡片 */
-.lab-table {
-  min-height:80vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:40px;
-  margin-top:60px;
-  padding:20px;
-  z-index:5;
-}
-.lab-card {
-  width:240px;height:280px;
-  background:rgba(255,255,255,0.08);
-  border:2px solid #aaa;
-  border-radius:18px;
-  color:#eee;
-  box-shadow:0 0 25px rgba(255,255,255,0.2);
-  display:flex;flex-direction:column;justify-content:center;align-items:center;
-  cursor:pointer;
-  transition:transform .4s, box-shadow .4s, border-color .4s;
-}
-.lab-card:hover {
-  transform:translateY(-15px) scale(1.05);
-  border-color:#fff;
-  box-shadow:0 0 40px #fff, 0 0 60px #ff3eff;
-}
-.lab-card.active {
-  transform:translateY(-60px) scale(1.15);
-  box-shadow:0 0 35px #ff3eff, 0 0 80px #fff;
-}
-.lab-icon {
-  font-size:60px;
-  margin-bottom:15px;
-  text-shadow:0 0 15px #fff;
-}
-.lab-desc {font-size:0.9em;color:#ccc;margin-top:6px;}
-.new-badge {
-  margin-left:8px;
-  padding:2px 6px;
-  border-radius:6px;
-  background:linear-gradient(135deg,#ff0066,#ff3eff);
-  color:#000;
-  font-size:0.7em;
-  font-weight:bold;
-  box-shadow:0 0 10px #ff3355;
-}
-
-/* 按鈕：銀灰色 */
-.back-home {
-  position:fixed;bottom:20px;left:20px;
-  padding:10px 20px;
-  border:2px solid #bbb;border-radius:25px;
-  color:#ddd;text-decoration:none;
-  background:rgba(255,255,255,0.1);
-  font-weight:bold;
-  transition:.3s;
-  box-shadow:0 0 8px rgba(255,255,255,0.3);
-}
-.back-home:hover {
-  background:rgba(255,255,255,0.3);
-  color:#000;
-  box-shadow:0 0 20px #fff;
-}
-#bgParticles {
-  position:fixed;top:0;left:0;width:100%;height:100%;
-  pointer-events:none;z-index:0;
-}
-
-/* 手機響應式 */
-@media (max-width: 768px) {
-  h1 {
-    font-size: 2em;
-    margin-top: 40px;
-  }
-  
-  .subtitle {
-    font-size: 1em;
-    padding: 0 15px;
-  }
-  
-  .lab-table {
-    gap: 25px;
-    padding: 15px;
-  }
-  
-  .lab-card {
-    width: calc(50% - 20px);
-    min-width: 160px;
-    height: 220px;
-  }
-  
-  .lab-icon {
-    font-size: 45px;
-  }
-  
-  .lab-card h3 {
-    font-size: 0.9em;
-  }
-  
-  .lab-desc {
-    font-size: 0.8em;
-  }
-}
-
-@media (max-width: 480px) {
-  .lab-card {
-    width: calc(100% - 30px);
-    max-width: 300px;
-  }
-}
+body { margin: 0; font-family: 'Orbitron', sans-serif; background: radial-gradient(circle at 40% 20%, #05070f 0%, #0a0b16 60%, #000 100%); color: #cfcfcf; text-align: center; }
+h1 { margin-top: 50px; font-size: 2.4em; color: #ff3eff; text-shadow: 0 0 25px #ff3eff, 0 0 50px #0ff; }
+#card-gen { margin-top: 40px; }
+input, button { padding: 8px 12px; border-radius: 8px; border: none; font-size: 16px; margin: 5px; }
+button { cursor: pointer; }
+.star-card { margin-top: 20px; padding: 20px; border-radius: 12px; background: rgba(80, 0, 150, 0.3); box-shadow: 0 0 15px rgba(255, 120, 255, 0.4); color: #fff; font-size: 24px; }
 </style>
-<link rel="stylesheet" href="mobile-ui.css">
 </head>
 <body>
-<div class="neon-orb orb1"></div>
-<div class="neon-orb orb2"></div>
-<div class="neon-orb orb3"></div>
-
-<h1>🪞 AI 星幕字卡實驗室</h1>
-<p class="subtitle">⚠️ 膽小勿入 · 科技與靈異的邊界 ⚡</p>
-
-<canvas id="bgParticles"></canvas>
-<div class="lab-table" id="labTable"></div>
-<a href="index.html" class="back-home">🏠 回首頁</a>
-
-<script>
-async function loadLabs(){
-  const table=document.getElementById("labTable");
-  const labs=[
-    {icon:"🍔",name:"毒舌卡路里計算機",desc:"上傳食物照片,讓 AI 嘴爆你的晚餐。",link:"toxic_calorie.html",updated:"2025/11/02"},
-    {icon:"👻",name:"靈異顯像儀",desc:"自拍？AI 幫你召喚靈體殘影。",link:"ghost_vision.html",updated:"2025/11/02"},
-    {icon:"✨",name:"星幕字卡實驗室",desc:"自拍秒變網美！保持容貌換背景。",link:"selfiebeautify.html",updated:"2025/11/02"},
-    {icon:"🌐",name:"科技全息轉換",desc:"將照片轉為全息未來風格。",link:"hologram_lab.html"},
-    {icon:"💫",name:"賽博重組工坊",desc:"融合電子與霓虹的數位幻身。",link:"cyber_mix.html"}
-  ];
-  const today=new Date();
-  labs.forEach((g,i)=>{
-    const card=document.createElement("div");
-    card.className="lab-card";
-    card.dataset.link=g.link;
-    let isNew=false;
-    if(g.updated){
-      const updatedDate=new Date(g.updated.replace(/\//g,"-"));
-      const diffDays=(today-updatedDate)/(1000*60*60*24);
-      if(diffDays<=7) isNew=true;
-    }
-    card.innerHTML=`
-      <div class="lab-icon">${g.icon}</div>
-      <h3>${g.name}${isNew?'<span class="new-badge">NEW</span>':''}</h3>
-      <p class="lab-desc">${g.desc}</p>
-    `;
-    table.appendChild(card);
-  });
-  initCardEvents();
-}
-
-function initCardEvents(){
-  const cards=document.querySelectorAll(".lab-card");
-  cards.forEach(card=>{
-    card.addEventListener("click",()=>{
-      // 直接跳轉，不需要二次點擊
-      window.location.href=card.dataset.link;
-    });
-    
-    // 加入 hover 預覽效果
-    card.addEventListener("mouseenter",()=>{
-      card.style.transform="translateY(-15px) scale(1.05)";
-    });
-    card.addEventListener("mouseleave",()=>{
-      card.style.transform="";
-    });
-  });
-}
-
-/* 背景粒子 */
-const canvas=document.getElementById("bgParticles");
-const ctx=canvas.getContext("2d");
-let width,height,particles=[];
-function resize(){width=canvas.width=window.innerWidth;height=canvas.height=window.innerHeight;}
-window.addEventListener("resize",resize);resize();
-
-class Particle{
-  constructor(){this.reset();}
-  reset(){
-    this.x=Math.random()*width;
-    this.y=Math.random()*height;
-    this.size=Math.random()*2+1;
-    this.speedY=Math.random()*0.4+0.2;
-    this.alpha=Math.random()*0.6+0.3;
-    this.emoji=Math.random()<0.4?"👁️":"✨";
-  }
-  update(){this.y+=this.speedY;if(this.y>height+20)this.reset();}
-  draw(){
-    ctx.globalAlpha=this.alpha;
-    ctx.font=`${this.size*10}px "Segoe UI Emoji"`;
-    ctx.fillText(this.emoji,this.x,this.y);
-  }
-<!-- Starveil Card Generator Section -->
-<section id="star-card-generator">
-  <h2>星幕字卡生成</h2>
-  <p>輸入一句話、標題或簡短內容，生成星幕風格卡片：</p>
+<h1>星幕字卡實驗室 ✨</h1>
+<p>輸入一句話，生成屬於你的星幕字卡。</p>
+<div id="card-gen">
   <input type="text" id="cardInput" placeholder="輸入文字..." />
-  <button id="generateCardBtn">生成卡片</button>
+  <button id="generateBtn">生成星幕卡片</button>
   <div id="cardOutput"></div>
+</div>
+
+<!-- Placeholder for existing image experiments -->
+<section id="other-features">
+  <h2>其他圖像實驗</h2>
+  <p>原有功能將在此呈現。</p>
 </section>
-<style>
-#star-card-generator {
-  margin: 40px auto;
-  max-width: 600px;
-  text-align: center;
-}
-#star-card-generator input {
-  width: 80%;
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 8px;
-  border: 1px solid #555;
-  background: #111;
-  color: #ccc;
-}
-#star-card-generator button {
-  padding: 10px 20px;
-  border-radius: 8px;
-  background: #552288;
-  color: #fff;
-  cursor: pointer;
-}
-.star-card {
-  margin-top: 20px;
-  padding: 30px;
-  border-radius: 15px;
-  background: linear-gradient(135deg, rgba(20, 20, 60, 0.8), rgba(50, 0, 70, 0.8));
-  color: #cfcfcf;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-  font-size: 1.4em;
-}
-</style>
+
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-  const btn = document.getElementById("generateCardBtn");
-  const input = document.getElementById("cardInput");
-  const output = document.getElementById("cardOutput");
-  if (btn) {
-    btn.addEventListener("click", () => {
-      const text = input.value.trim();
-      if (!text) return;
-      const card = document.createElement("div");
-      card.className = "star-card";
-      card.textContent = text;
-      output.innerHTML = "";
-      output.appendChild(card);
-    });
-  }
+const btn = document.getElementById('generateBtn');
+const input = document.getElementById('cardInput');
+const output = document.getElementById('cardOutput');
+btn.addEventListener('click', () => {
+  const text = input.value.trim();
+  if (!text) { alert('請輸入文字'); return; }
+  output.innerHTML = '';
+  const card = document.createElement('div');
+  card.className = 'star-card';
+  card.textContent = text;
+  output.appendChild(card);
 });
 </script>
-<!-- End of Starveil Card Generator -->
-
-}
-for(let i=0;i<40;i++)particles.push(new Particle());
-function animate(){
-  ctx.clearRect(0,0,width,height);
-  for(const p of particles){p.update();p.draw();}
-  requestAnimationFrame(animate);
-}
-animate();
-loadLabs();
-</script>
-<script src="mobile-nav.js"></script>
 </body>
 </html>
