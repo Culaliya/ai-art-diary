@@ -1,533 +1,269 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>貓咪偵探射擊遊戲！</title>
-    <!-- 引入 Tone.js 用於音效 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            /* 更有偵探夜晚感覺的漸層背景 */
-            background: linear-gradient(135deg, #2c3e50 0%, #4a69bd 100%);
-            font-family: 'Arial', 'Microsoft JhengHei', sans-serif;
-            overflow: hidden;
-            user-select: none;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: white;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>🪞圖像實驗室✨</title>
+<style>
+body {
+  margin:0;
+  font-family:'Orbitron',sans-serif;
+  background:radial-gradient(circle at 40% 20%, #05070f 0%, #0a0b16 60%, #000 100%);
+  color:#cfcfcf;
+  overflow-x:hidden;
+  text-align:center;
+}
 
-        #gameCanvas {
-            display: none; /* 遊戲開始前隱藏 */
-            margin: 0 auto;
-            background-color: #34495e; /* 深色畫布 */
-            border: 3px solid #ecf0f1;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(236, 240, 241, 0.5);
-            cursor: crosshair; /* 準心游標 */
-        }
+/* 標題 */
+h1 {
+  margin-top:50px;
+  font-size:2.4em;
+  color:#ff3eff;
+  text-shadow:0 0 25px #ff3eff, 0 0 50px #0ff;
+  animation:glowPulse 4s infinite alternate;
+}
+@keyframes glowPulse {
+  from { text-shadow:0 0 15px #ff3eff; }
+  to { text-shadow:0 0 35px #ff0044, 0 0 60px #ff3eff; }
+}
 
-        .display-panel {
-            display: flex;
-            justify-content: space-between;
-            width: 800px; /* 與畫布寬度一致 */
-            margin: 10px auto;
-            font-size: 24px;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
+/* 副標：血紅緩閃 */
+.subtitle {
+  font-size:1.2em;
+  margin-top:8px;
+  letter-spacing:2px;
+  color:#ff3355;
+  text-shadow:0 0 15px #ff0033;
+  animation:softFlicker 6s infinite ease-in-out;
+}
+@keyframes softFlicker {
+  0%, 90%, 100% { opacity:1; text-shadow:0 0 10px #ff0033; }
+  45%, 50% { opacity:0.7; text-shadow:0 0 20px #ff6666; }
+}
 
-        #scoreDisplay {
-            color: #f1c40f; /* 金色分數 */
-        }
+/* 霓虹背景球 */
+.neon-orb {
+  position:absolute;
+  border-radius:50%;
+  filter:blur(100px);
+  opacity:0.35;
+  animation:float 10s infinite ease-in-out alternate;
+}
+@keyframes float {
+  0% { transform:translateY(0); }
+  100% { transform:translateY(-60px) translateX(40px); }
+}
+.orb1 { width:320px;height:320px;background:#ff3eff;top:25%;left:15%;animation-delay:0s;}
+.orb2 { width:400px;height:400px;background:#ff3355;bottom:10%;right:10%;animation-delay:3s;}
+.orb3 { width:260px;height:260px;background:#7700ff;top:60%;left:40%;animation-delay:1.5s;}
 
-        #timeDisplay {
-            color: #3498db; /* 藍色時間 */
-        }
+/* 卡片 */
+.lab-table {
+  min-height:80vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:40px;
+  margin-top:60px;
+  padding:20px;
+  z-index:5;
+}
+.lab-card {
+  width:240px;height:280px;
+  background:rgba(255,255,255,0.08);
+  border:2px solid #aaa;
+  border-radius:18px;
+  color:#eee;
+  box-shadow:0 0 25px rgba(255,255,255,0.2);
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  cursor:pointer;
+  transition:transform .4s, box-shadow .4s, border-color .4s;
+}
+.lab-card:hover {
+  transform:translateY(-15px) scale(1.05);
+  border-color:#fff;
+  box-shadow:0 0 40px #fff, 0 0 60px #ff3eff;
+}
+.lab-card.active {
+  transform:translateY(-60px) scale(1.15);
+  box-shadow:0 0 35px #ff3eff, 0 0 80px #fff;
+}
+.lab-icon {
+  font-size:60px;
+  margin-bottom:15px;
+  text-shadow:0 0 15px #fff;
+}
+.lab-desc {font-size:0.9em;color:#ccc;margin-top:6px;}
+.new-badge {
+  margin-left:8px;
+  padding:2px 6px;
+  border-radius:6px;
+  background:linear-gradient(135deg,#ff0066,#ff3eff);
+  color:#000;
+  font-size:0.7em;
+  font-weight:bold;
+  box-shadow:0 0 10px #ff3355;
+}
 
-        /* 遊戲畫面 (開始/結束) */
-        #startScreen, #gameOverScreen {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(255, 255, 255, 0.95);
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            display: none; /* 預設隱藏 */
-            z-index: 10;
-            color: #333;
-            width: 400px;
-        }
-        
-        #startScreen p {
-            text-align: left;
-            line-height: 1.6;
-        }
+/* 按鈕：銀灰色 */
+.back-home {
+  position:fixed;bottom:20px;left:20px;
+  padding:10px 20px;
+  border:2px solid #bbb;border-radius:25px;
+  color:#ddd;text-decoration:none;
+  background:rgba(255,255,255,0.1);
+  font-weight:bold;
+  transition:.3s;
+  box-shadow:0 0 8px rgba(255,255,255,0.3);
+}
+.back-home:hover {
+  background:rgba(255,255,255,0.3);
+  color:#000;
+  box-shadow:0 0 20px #fff;
+}
+#bgParticles {
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  pointer-events:none;z-index:0;
+}
 
-        h1 {
-            color: #2980b9;
-        }
+/* 手機響應式 */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2em;
+    margin-top: 40px;
+  }
+  
+  .subtitle {
+    font-size: 1em;
+    padding: 0 15px;
+  }
+  
+  .lab-table {
+    gap: 25px;
+    padding: 15px;
+  }
+  
+  .lab-card {
+    width: calc(50% - 20px);
+    min-width: 160px;
+    height: 220px;
+  }
+  
+  .lab-icon {
+    font-size: 45px;
+  }
+  
+  .lab-card h3 {
+    font-size: 0.9em;
+  }
+  
+  .lab-desc {
+    font-size: 0.8em;
+  }
+}
 
-        button {
-            background-color: #3498db;
-            border: none;
-            padding: 12px 25px;
-            font-size: 18px;
-            border-radius: 8px;
-            cursor: pointer;
-            color: white;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(52, 152, 219, 0.4);
-        }
-
-        button:hover {
-            background-color: #2980b9;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(52, 152, 219, 0.6);
-        }
-    </style>
-<link rel="stylesheet" href="mobile-ui.css">
+@media (max-width: 480px) {
+  .lab-card {
+    width: calc(100% - 30px);
+    max-width: 300px;
+  }
+}
+</style>
 </head>
 <body>
-    <!-- 遊戲資訊面板 -->
-    <div id="infoPanel" class="display-panel" style="display: none;">
-        <div id="timeDisplay">時間：60秒</div>
-        <div id="scoreDisplay">得分：0</div>
-    </div>
+<div class="neon-orb orb1"></div>
+<div class="neon-orb orb2"></div>
+<div class="neon-orb orb3"></div>
 
-    <!-- 遊戲畫布 -->
-    <canvas id="gameCanvas" width="800" height="500"></canvas>
+<h1>🪞 AI 圖像實驗室</h1>
+<p class="subtitle">⚠️ 膽小勿入 · 科技與靈異的邊界 ⚡</p>
 
-    <!-- 開始畫面 -->
-    <div id="startScreen">
-        <h1>貓咪偵探射擊遊戲！</h1>
-        <p>
-            <strong>玩法說明：</strong><br>
-            - [電腦] 左右方向鍵 (← →) 或 A/D 鍵移動。<br>
-            - [電腦] 空白鍵或滑鼠點擊發射。<br>
-            - [手機] 手指滑動來移動並射擊。<br>
-            - <strong><span style="color: #27ae60;">魚</span></strong>: +10分<br>
-            - <strong><span style="color: #f39c12;">老鼠</span></strong>: +30分 (速度很快!)<br>
-            - <strong><span style="color: #c0392b;">狗狗</span></strong>: -50分 (要閃開!)
-        </p>
-        <button id="startButton">開始遊戲</button>
-    </div>
+<canvas id="bgParticles"></canvas>
+<div class="lab-table" id="labTable"></div>
+<a href="index.html" class="back-home">🏠 回首頁</a>
 
-    <!-- 結束畫面 -->
-    <div id="gameOverScreen">
-        <h1>遊戲結束！</h1>
-        <p id="finalScore">你的得分：0</p>
-        <button id="restartButton">再玩一次</button>
-    </div>
+<script>
+async function loadLabs(){
+  const table=document.getElementById("labTable");
+  const labs=[
+    {icon:"🍔",name:"毒舌卡路里計算機",desc:"上傳食物照片,讓 AI 嘴爆你的晚餐。",link:"toxic_calorie.html",updated:"2025/11/02"},
+    {icon:"👻",name:"靈異顯像儀",desc:"自拍？AI 幫你召喚靈體殘影。",link:"ghost_vision.html",updated:"2025/11/02"},
+    {icon:"✨",name:"網美濾鏡實驗室",desc:"自拍秒變網美！保持容貌換背景。",link:"selfiebeautify.html",updated:"2025/11/02"},
+    {icon:"🌐",name:"科技全息轉換",desc:"將照片轉為全息未來風格。",link:"hologram_lab.html"},
+    {icon:"💫",name:"賽博重組工坊",desc:"融合電子與霓虹的數位幻身。",link:"cyber_mix.html"}
+  ];
+  const today=new Date();
+  labs.forEach((g,i)=>{
+    const card=document.createElement("div");
+    card.className="lab-card";
+    card.dataset.link=g.link;
+    let isNew=false;
+    if(g.updated){
+      const updatedDate=new Date(g.updated.replace(/\//g,"-"));
+      const diffDays=(today-updatedDate)/(1000*60*60*24);
+      if(diffDays<=7) isNew=true;
+    }
+    card.innerHTML=`
+      <div class="lab-icon">${g.icon}</div>
+      <h3>${g.name}${isNew?'<span class="new-badge">NEW</span>':''}</h3>
+      <p class="lab-desc">${g.desc}</p>
+    `;
+    table.appendChild(card);
+  });
+  initCardEvents();
+}
 
-    <script>
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        const infoPanel = document.getElementById('infoPanel');
-        const scoreDisplay = document.getElementById('scoreDisplay');
-        const timeDisplay = document.getElementById('timeDisplay');
-        const startScreen = document.getElementById('startScreen');
-        const gameOverScreen = document.getElementById('gameOverScreen');
-        const startButton = document.getElementById('startButton');
-        const restartButton = document.getElementById('restartButton');
-        const finalScoreDisplay = document.getElementById('finalScore');
+function initCardEvents(){
+  const cards=document.querySelectorAll(".lab-card");
+  cards.forEach(card=>{
+    card.addEventListener("click",()=>{
+      // 直接跳轉，不需要二次點擊
+      window.location.href=card.dataset.link;
+    });
+    
+    // 加入 hover 預覽效果
+    card.addEventListener("mouseenter",()=>{
+      card.style.transform="translateY(-15px) scale(1.05)";
+    });
+    card.addEventListener("mouseleave",()=>{
+      card.style.transform="";
+    });
+  });
+}
 
-        // --- 資源 (使用 SVG Data URL, 無需外部圖片) ---
-        const catImg = new Image();
-        // 一個戴著偵探帽的貓咪 (簡化版)
-        catImg.src = `data:image/svg+xml;base64,${btoa('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g transform="translate(0, 10)"><path fill="#95a5a6" d="M20 90 L 80 90 L 80 70 A 30 30 0 0 0 50 40 A 30 30 0 0 0 20 70 Z" /><path fill="#bdc3c7" d="M50 15 A 35 35 0 0 1 85 50 A 35 35 0 0 1 50 85 A 35 35 0 0 1 15 50 A 35 35 0 0 1 50 15 Z" /><path fill="#95a5a6" d="M15 50 L 5 40 L 20 40 Z" /><path fill="#95a5a6" d="M85 50 L 95 40 L 80 40 Z" /><circle fill="black" cx="35" cy="45" r="5"/><circle fill="black" cx="65" cy="45" r="5"/><polygon fill="#f39c12" points="50,55 45,60 55,60" /><path fill="#795548" d="M30 15 L 70 15 L 70 5 L 60 0 L 40 0 L 30 5 Z" /><path fill="#000" d="M28 15 L 72 15 L 72 18 L 28 18 Z" /></g></svg>')}`;
+/* 背景粒子 */
+const canvas=document.getElementById("bgParticles");
+const ctx=canvas.getContext("2d");
+let width,height,particles=[];
+function resize(){width=canvas.width=window.innerWidth;height=canvas.height=window.innerHeight;}
+window.addEventListener("resize",resize);resize();
 
-        const fishImg = new Image();
-        fishImg.src = `data:image/svg+xml;base64,${btoa('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 80"><path fill="#3498db" d="M90 30 C 70 10, 40 10, 20 30 C 0 50, 0 60, 20 70 C 40 90, 70 90, 90 70 L 100 60 L 100 40 Z" /><circle fill="white" cx="75" cy="40" r="10" /><circle fill="black" cx="78" cy="40" r="5" /><path fill="#2980b9" d="M90 70 L 100 60 L 90 50 Z" /></svg>')}`;
-        
-        const mouseImg = new Image();
-        mouseImg.src = `data:image/svg+xml;base64,${btoa('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 80"><path fill="#f39c12" d="M50 20 C 20 20, 10 50, 10 70 L 90 70 C 90 50, 80 20, 50 20 Z" /><circle fill="#f39c12" cx="20" cy="20" r="15" /><circle fill="#f39c12" cx="80" cy="20" r="15" /><circle fill="black" cx="35" cy="45" r="5" /><circle fill="black" cx="65" cy="45" r="5" /><path stroke="#e67e22" stroke-width="5" fill="none" d="M10 70 Q -10 50, 0 30" /></svg>')}`;
-
-        const dogImg = new Image();
-        dogImg.src = `data:image/svg+xml;base64,${btoa('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="#c0392b" d="M10 80 C 10 50, 30 30, 50 30 C 70 30, 90 50, 90 80 L 80 90 L 20 90 Z" /><path fill="#e74c3c" d="M30 60 C 20 50, 20 30, 30 20 L 40 20 L 40 50 Z" /><path fill="#e74c3c" d="M70 60 C 80 50, 80 30, 70 20 L 60 20 L 60 50 Z" /><circle fill="black" cx="35" cy="55" r="5" /><circle fill="black" cx="65" cy="55" r="5" /><rect fill="white" x="45" y="70" width="10" height="10" rx="2" /><path fill="black" d="M40 70 L 60 70 L 50 60 Z" /></svg>')}`;
-
-
-        let score = 0;
-        let timeLeft = 60;
-        let gameActive = false;
-        let animationId;
-        let timerId;
-        let targetSpawnerId;
-
-        let player = { x: canvas.width / 2 - 25, y: canvas.height - 70, width: 60, height: 60, speed: 7 }; // 增加速度屬性
-        let keysPressed = {}; // 用來追蹤按鍵
-        let bullets = [];
-        let targets = [];
-        let particles = [];
-
-        // --- 音效設定 ---
-        let shootSound, hitSound, badHitSound;
-        function setupAudio() {
-            if (Tone.context.state !== 'running') {
-                Tone.start();
-            }
-            shootSound = new Tone.Synth({
-                oscillator: { type: 'triangle' },
-                envelope: { attack: 0.01, decay: 0.1, sustain: 0, release: 0.1 }
-            }).toDestination();
-            
-            hitSound = new Tone.Synth({
-                oscillator: { type: 'sine' },
-                envelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.1 }
-            }).toDestination();
-            
-            badHitSound = new Tone.Synth({
-                oscillator: { type: 'square' },
-                envelope: { attack: 0.02, decay: 0.3, sustain: 0, release: 0.2 }
-            }).toDestination();
-        }
-
-        // --- 遊戲初始化 ---
-        function init() {
-            score = 0;
-            timeLeft = 60;
-            scoreDisplay.textContent = `得分：${score}`;
-            timeDisplay.textContent = `時間：${timeLeft}秒`;
-            
-            bullets = [];
-            targets = [];
-            particles = [];
-            player.x = canvas.width / 2 - (player.width / 2);
-
-            gameActive = true;
-            startScreen.style.display = 'none';
-            gameOverScreen.style.display = 'none';
-            canvas.style.display = 'block';
-            infoPanel.style.display = 'flex';
-
-            // 清除舊的計時器
-            if (animationId) cancelAnimationFrame(animationId);
-            if (timerId) clearInterval(timerId);
-            if (targetSpawnerId) clearInterval(targetSpawnerId);
-
-            // 啟動遊戲迴圈
-            gameLoop();
-
-            // 啟動計時器 (每秒執行一次)
-            timerId = setInterval(updateTime, 1000);
-
-            // 啟動目標生成器 (每 800 毫秒嘗試生成)
-            targetSpawnerId = setInterval(spawnTarget, 800);
-        }
-
-        // --- 遊戲主迴圈 ---
-        function gameLoop() {
-            if (!gameActive) return;
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // 繪製與更新
-            updatePlayerPosition(); // <-- *** 修正：在這裡加上呼叫 ***
-            drawPlayer();
-            handleBullets();
-            handleTargets();
-            handleParticles();
-            
-            // 碰撞檢測
-            handleCollisions();
-
-            animationId = requestAnimationFrame(gameLoop);
-        }
-
-        // --- 繪圖 ---
-        function drawPlayer() {
-            ctx.drawImage(catImg, player.x, player.y, player.width, player.height);
-        }
-
-        // --- 新增：鍵盤更新玩家位置 ---
-        function updatePlayerPosition() {
-            // 同時支援方向鍵和 WASD
-            if (keysPressed['ArrowLeft'] || keysPressed['a']) {
-                player.x -= player.speed;
-            }
-            if (keysPressed['ArrowRight'] || keysPressed['d']) {
-                player.x += player.speed;
-            }
-
-            // 保持貓咪在畫布內
-            if (player.x < 0) player.x = 0;
-            if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
-        }
-
-        // --- 更新邏輯 ---
-        function handleBullets() {
-            for (let i = bullets.length - 1; i >= 0; i--) {
-                bullets[i].y -= bullets[i].speed;
-                
-                // 畫子彈 (喵波)
-                ctx.fillStyle = bullets[i].color;
-                ctx.beginPath();
-                ctx.arc(bullets[i].x, bullets[i].y, bullets[i].size, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.globalAlpha = 0.5;
-                ctx.strokeStyle = bullets[i].color;
-                ctx.lineWidth = 2;
-                ctx.stroke();
-                ctx.globalAlpha = 1.0;
-
-
-                // 移除超出畫面的子彈
-                if (bullets[i].y < 0) {
-                    bullets.splice(i, 1);
-                }
-            }
-        }
-
-        function handleTargets() {
-            for (let i = targets.length - 1; i >= 0; i--) {
-                const target = targets[i];
-                target.y += target.speed;
-
-                // 畫目標
-                ctx.drawImage(target.img, target.x, target.y, target.size, target.size);
-
-                // 移除超出畫面的目標
-                if (target.y > canvas.height) {
-                    targets.splice(i, 1);
-                }
-            }
-        }
-
-        function handleParticles() {
-            for (let i = particles.length - 1; i >= 0; i--) {
-                const p = particles[i];
-                p.x += p.vx;
-                p.y += p.vy;
-                p.life -= 1;
-                p.alpha -= 0.02;
-
-                if (p.life <= 0 || p.alpha <= 0) {
-                    particles.splice(i, 1);
-                } else {
-                    ctx.globalAlpha = p.alpha;
-                    ctx.fillStyle = p.color;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.globalAlpha = 1.0;
-                }
-            }
-        }
-
-        // --- 遊戲機制 ---
-        function spawnTarget() {
-            if (!gameActive) return;
-
-            const rand = Math.random();
-            let img, type, speed, score, size;
-
-            if (rand < 0.15) { // 15% 機率 狗狗
-                img = dogImg;
-                type = 'dog';
-                speed = 1 + Math.random() * 2;
-                score = -50;
-                size = 50;
-            } else if (rand < 0.4) { // 25% 機率 老鼠
-                img = mouseImg;
-                type = 'mouse';
-                speed = 3 + Math.random() * 3; // 老鼠比較快
-                score = 30;
-                size = 40;
-            } else { // 60% 機率 魚
-                img = fishImg;
-                type = 'fish';
-                speed = 1.5 + Math.random() * 2.5;
-                score = 10;
-                size = 45;
-            }
-
-            targets.push({
-                x: Math.random() * (canvas.width - size),
-                y: -size, // 從頂部外面開始
-                size: size,
-                speed: speed,
-                img: img,
-                type: type,
-                score: score
-            });
-        }
-
-        // 這是修復後的計時器
-        function updateTime() {
-            if (!gameActive) return;
-
-            timeLeft--;
-            timeDisplay.textContent = `時間：${timeLeft}秒`;
-
-            if (timeLeft <= 0) {
-                endGame();
-            }
-        }
-
-        function shoot() { // 移除 e 參數
-            if (!gameActive) return;
-
-            bullets.push({
-                x: player.x + player.width / 2,
-                y: player.y,
-                size: 8,
-                speed: 10,
-                color: '#3498db'
-            });
-
-            // 播放音效
-            if (shootSound) {
-                shootSound.triggerAttackRelease("C5", "8n");
-            }
-        }
-
-        function handleCollisions() {
-            // 子彈 vs 目標
-            for (let i = bullets.length - 1; i >= 0; i--) {
-                for (let j = targets.length - 1; j >= 0; j--) {
-                    const bullet = bullets[i];
-                    const target = targets[j];
-
-                    if (!bullet || !target) continue;
-
-                    // 簡易矩形碰撞
-                    if (bullet.x < target.x + target.size &&
-                        bullet.x + bullet.size > target.x &&
-                        bullet.y < target.y + target.size &&
-                        bullet.y + bullet.size > target.y) {
-
-                        // 擊中！
-                        createParticles(target.x + target.size / 2, target.y + target.size / 2, target.type);
-                        score += target.score;
-                        scoreDisplay.textContent = `得分：${score}`;
-
-                        // 播放音效
-                        if (target.type === 'dog' && badHitSound) {
-                            badHitSound.triggerAttackRelease("E3", "4n");
-                        } else if (hitSound) {
-                            hitSound.triggerAttackRelease("G5", "8n");
-                        }
-
-                        // 移除
-                        bullets.splice(i, 1);
-                        targets.splice(j, 1);
-                        break; // 避免一顆子彈打多個目標
-                    }
-                }
-            }
-        }
-
-        function createParticles(x, y, type) {
-            const particleCount = 15;
-            let color = '#f1c40f'; // 預設金色
-            if (type === 'dog') color = '#c0392b'; // 扣分紅色
-
-            for (let i = 0; i < particleCount; i++) {
-                particles.push({
-                    x: x,
-                    y: y,
-                    vx: (Math.random() - 0.5) * 4,
-                    vy: (Math.random() - 0.5) * 4,
-                    size: Math.random() * 3 + 1,
-                    color: color,
-                    life: 30,
-                    alpha: 1
-                });
-            }
-        }
-
-        function endGame() {
-            gameActive = false;
-            // 停止所有迴圈
-            cancelAnimationFrame(animationId);
-            clearInterval(timerId);
-            clearInterval(targetSpawnerId);
-
-            // 隱藏遊戲畫面，顯示結束畫面
-            canvas.style.display = 'none';
-            infoPanel.style.display = 'none';
-            finalScoreDisplay.textContent = `你的最終得分：${score}`;
-            gameOverScreen.style.display = 'block';
-        }
-
-        // --- 事件監聽 ---
-        startButton.addEventListener('click', () => {
-            setupAudio(); // 第一次點擊時初始化音效
-            init();
-        });
-
-        restartButton.addEventListener('click', init);
-
-        // 移除 'mousemove' 監聽來避免衝突
-        /*
-        canvas.addEventListener('mousemove', (e) => {
-            if (!gameActive) return;
-            const rect = canvas.getBoundingClientRect();
-            let mouseX = e.clientX - rect.left;
-            
-            // 保持貓咪在畫布內
-            player.x = mouseX - player.width / 2;
-            if (player.x < 0) player.x = 0;
-            if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
-        });
-        */
-
-        // 新增：鍵盤監聽
-        window.addEventListener('keydown', (e) => {
-            keysPressed[e.key] = true;
-            // ' ' 是空白鍵
-            if (e.key === ' ' || e.code === 'Space') {
-                shoot();
-                e.preventDefault(); // 防止空白鍵滾動頁面
-            }
-        });
-
-        window.addEventListener('keyup', (e) => {
-            keysPressed[e.key] = false;
-        });
-
-        // 新增：觸控監聽 (手機/平板)
-        function handleTouch(e) {
-            if (!gameActive) return;
-            e.preventDefault(); // 防止畫面滾動
-            
-            const rect = canvas.getBoundingClientRect();
-            let touchX = e.touches[0].clientX - rect.left;
-            
-            // 更新位置
-            player.x = touchX - player.width / 2;
-            
-            // 保持邊界
-            if (player.x < 0) player.x = 0;
-            if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
-        }
-
-        canvas.addEventListener('touchstart', (e) => {
-            handleTouch(e);
-            shoot(); // 觸碰時立即射擊
-        }, { passive: false }); // passive: false 才能 e.preventDefault()
-
-        canvas.addEventListener('touchmove', (e) => {
-            handleTouch(e);
-        }, { passive: false }); // passive: false 才能 e.preventDefault()
-
-        canvas.addEventListener('click', shoot); // 保留桌機的點擊射擊
-
-        // 初始顯示開始畫面
-        startScreen.style.display = 'block';
-
-    </script>
-<script src="mobile-nav.js"></script>
+class Particle{
+  constructor(){this.reset();}
+  reset(){
+    this.x=Math.random()*width;
+    this.y=Math.random()*height;
+    this.size=Math.random()*2+1;
+    this.speedY=Math.random()*0.4+0.2;
+    this.alpha=Math.random()*0.6+0.3;
+    this.emoji=Math.random()<0.4?"👁️":"✨";
+  }
+  update(){this.y+=this.speedY;if(this.y>height+20)this.reset();}
+  draw(){
+    ctx.globalAlpha=this.alpha;
+    ctx.font=`${this.size*10}px "Segoe UI Emoji"`;
+    ctx.fillText(this.emoji,this.x,this.y);
+  }
+}
+for(let i=0;i<40;i++)particles.push(new Particle());
+function animate(){
+  ctx.clearRect(0,0,width,height);
+  for(const p of particles){p.update();p.draw();}
+  requestAnimationFrame(animate);
+}
+animate();
+loadLabs();
+</script>
 </body>
 </html>
-
