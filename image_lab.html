@@ -256,6 +256,66 @@ class Particle{
     ctx.font=`${this.size*10}px "Segoe UI Emoji"`;
     ctx.fillText(this.emoji,this.x,this.y);
   }
+<!-- Starveil Card Generator Section -->
+<section id="star-card-generator">
+  <h2>星幕字卡生成</h2>
+  <p>輸入一句話、標題或簡短內容，生成星幕風格卡片：</p>
+  <input type="text" id="cardInput" placeholder="輸入文字..." />
+  <button id="generateCardBtn">生成卡片</button>
+  <div id="cardOutput"></div>
+</section>
+<style>
+#star-card-generator {
+  margin: 40px auto;
+  max-width: 600px;
+  text-align: center;
+}
+#star-card-generator input {
+  width: 80%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #555;
+  background: #111;
+  color: #ccc;
+}
+#star-card-generator button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  background: #552288;
+  color: #fff;
+  cursor: pointer;
+}
+.star-card {
+  margin-top: 20px;
+  padding: 30px;
+  border-radius: 15px;
+  background: linear-gradient(135deg, rgba(20, 20, 60, 0.8), rgba(50, 0, 70, 0.8));
+  color: #cfcfcf;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  font-size: 1.4em;
+}
+</style>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const btn = document.getElementById("generateCardBtn");
+  const input = document.getElementById("cardInput");
+  const output = document.getElementById("cardOutput");
+  if (btn) {
+    btn.addEventListener("click", () => {
+      const text = input.value.trim();
+      if (!text) return;
+      const card = document.createElement("div");
+      card.className = "star-card";
+      card.textContent = text;
+      output.innerHTML = "";
+      output.appendChild(card);
+    });
+  }
+});
+</script>
+<!-- End of Starveil Card Generator -->
+
 }
 for(let i=0;i<40;i++)particles.push(new Particle());
 function animate(){
