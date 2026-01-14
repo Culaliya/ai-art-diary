@@ -310,7 +310,7 @@
 <section id="update-announcement">
   <div class="update-card">
     <p class="update-title">【🪧 Now Updated】</p>
-    <p class="update-text">Latest drop: Starveil Match v1.0 &amp; 灰貓檔案庫 v1.1</p>
+    <p class="update-text">Latest drop: 喵語學院</p>
     <p class="update-text"><a class="update-link" href="dark_lab.html">→ 進入暗黑實驗室（可愛但不對勁）👻</a></p>
   </div>
 </section>
@@ -750,8 +750,98 @@ showSlides();
 async function loadApps(){
   const c=document.getElementById('app-container');
   try{
-    const res=await fetch('data/apps.json');
-    const apps=await res.json();
+    // 使用新的 JSON 資料，並自動補上缺少的連結
+    const apps = [
+      {
+        "name": "Loopself",
+        "desc": "星迴：一款將星圖收藏與日記結合的工具，所有資料均儲存在本機。",
+        "icon": "assets/icons/looplife.png",
+        "link": "https://apps.apple.com/us/app/%E6%98%9F%E8%BF%B4/id6757077666",
+        "version": "1.0.0",
+        "updated": "2025/12/31"
+      },
+      {
+        "name": "喵語學院",
+        "desc": "喵語學院是一款結合學習與遊戲的貓語課程 App。",
+        "icon": "assets/icons/cat_app_icon.png",
+        "link": "https://apps.apple.com/us/app/%E5%96%B5%E8%AA%9E%E5%AD%B8%E9%99%A2/id6757230422",
+        "version": "1.0.0",
+        "updated": "2025/12/31"
+      },
+      {
+        "name": "Cloud Organizer",
+        "desc": "雲朵整理師：療癒創作遊戲",
+        "icon": "assets/icons/cloud2.png",
+        "link": "https://apps.apple.com/us/app/%E9%9B%B2%E6%9C%B5%E6%95%B4%E7%90%86%E5%B8%AB/id6752541896",
+        "version": "1.2.2",
+        "updated": "2025/12/31"
+      },
+      {
+        "name": "Spiral Wizard",
+        "desc": "螺旋魔法師：結合數學、動物知識與進的教育益智遊戲。",
+        "icon": "assets/icons/mathgame2.png",
+        "link": "https://apps.apple.com/us/app/%E8%9E%BA%E6%97%8B%E9%AD%94%E6%B3%95%E5%B8%ABspiral-wizard/id6752797711",
+        "version": "1.4.0",
+        "updated": "2025/12/31"
+      },
+      {
+        "name": "Starveil Match",
+        "desc": "星幕配對遊戲",
+        "icon": "assets/icons/StarveilMatch.png",
+        "link": "https://apps.apple.com/tw/app/starveil-match/id6756781135",
+        "version": "1.0.0",
+        "updated": "2025/12/19"
+      },
+      {
+        "name": "Pawdoro",
+        "desc": "貓爪番茄鐘，專為專注的貓奴設計",
+        "icon": "assets/icons/pawdoro.png",
+        "link": "https://apps.apple.com/us/app/pawdoro/id6756201914",
+        "version": "1.0.0",
+        "updated": "2025/12/19"
+      },
+      {
+        "name": "Starlight Journal",
+        "desc": "星光日誌：用星空記錄你的心情與創作",
+        "icon": "assets/icons/starlightjournal.png",
+        "link": "https://apps.apple.com/us/app/starlight-journal/id6756179454",
+        "version": "1.0.0",
+        "updated": "2025/12/19"
+      },
+      {
+        "name": "ChemoCat",
+        "desc": "化學貓：讓化學變得有趣",
+        "icon": "assets/icons/chemocat.png",
+        "link": "https://apps.apple.com/us/app/chemocat%E5%8C%96%E5%AD%B8%E8%B2%93/id6753624892",
+        "version": "1.1.0",
+        "updated": "2025/12/19"
+      },
+      {
+        "name": "LazyTrack",
+        "desc": "懶人記帳",
+        "icon": "assets/icons/lazytrack2.png",
+        "link": "https://apps.apple.com/us/app/lazytrack%E6%A5%B5%E7%B0%A1%E6%87%B6%E4%BA%BA%E8%A8%98%E5%B8%B3/id6753803644",
+        "version": "1.1.0",
+        "updated": "2025/12/19"
+      },
+      {
+        "name": "DreamGarden",
+        "desc": "夢境花園：探索夢境與心靈的應用",
+        "icon": "assets/icons/dream.png",
+        "link": "https://apps.apple.com/us/app/%E5%A4%A2%E5%A2%83%E8%8A%B1%E5%9C%92dreamgarden/id6755881746",
+        "version": "1.0.0",
+        "updated": "2025/10/06"
+      },
+      {
+        "name": "灰貓檔案庫",
+        "desc": "灰貓檔案庫：冷知識也能成為案件",
+        "icon": "assets/icons/graycat_2.png",
+        "link": "https://apps.apple.com/us/app/%E7%81%B0%E8%B2%93%E6%AA%94%E6%A1%88%E5%BA%AB/id6753888547",
+        "version": "1.1.0",
+        "updated": "2025/12/19"
+      }
+    ];
+    
     c.innerHTML='';
     const today=new Date();
 
@@ -760,14 +850,19 @@ async function loadApps(){
       card.className='app-card';
 
       let isNew=false;
+      // 簡單判斷：如果是最近更新（例如 30 天內）
       if(app.updated){
-        const updatedDate=new Date(app.updated.replace(/\//g,'-'));
-        const diffDays=(today - updatedDate)/(1000*60*60*24);
-        if(diffDays<=7) isNew=true;
+        const updatedDate=new Date(app.updated);
+        // 這裡可以依需求調整天數，目前若日期較新可顯示 NEW
+        // const diffDays=(today - updatedDate)/(1000*60*60*24);
+        // if(diffDays<=30) isNew=true;
       }
 
+      // 如果圖片載入失敗，使用預設圖
+      const fallbackIcon = 'https://via.placeholder.com/96/000000/0ff?text=App';
+      
       card.innerHTML = `
-        <img class="app-image" src="${app.icon}" alt="${app.name}">
+        <img class="app-image" src="${app.icon}" onerror="this.src='${fallbackIcon}'" alt="${app.name}">
         <div class="app-info">
           <h3>
             ${app.name}
@@ -775,7 +870,7 @@ async function loadApps(){
               padding:2px 6px;border-radius:6px;color:#000;font-weight:bold;box-shadow:0 0 10px #0ff;">🆕 NEW</span>` : ''}
           </h3>
           <p>${app.desc || ''}</p>
-          ${(app.updated || app.version) ? `<div class="app-meta">🗓️ ${app.updated || ''}　|　版本：${app.version || ''}</div>` : ``}
+          ${(app.updated || app.version) ? `<div class="app-meta">📅 ${app.updated} | 版本：${app.version || '1.0'}</div>` : ``}
         </div>
         <div class="app-actions">
           ${app.link ? `<a class="button" href="${app.link}" target="_blank" rel="noopener">App Store</a>` : ``}
@@ -785,7 +880,8 @@ async function loadApps(){
     });
 
     addHoverSounds();
-  }catch{
+  }catch(e){
+    console.log(e);
     c.textContent='⚠️ 無法載入 app 資料';
   }
 }
