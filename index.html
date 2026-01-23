@@ -310,7 +310,7 @@
 <section id="update-announcement">
   <div class="update-card">
     <p class="update-title">【🪧 Now Updated】</p>
-    <p class="update-text">Latest drop: 喵語學院</p>
+    <p class="update-text">Latest drop: 茶語 Tea Mind</p>
     <p class="update-text"><a class="update-link" href="dark_lab.html">→ 進入暗黑實驗室（可愛但不對勁）👻</a></p>
   </div>
 </section>
@@ -750,13 +750,23 @@ showSlides();
 async function loadApps(){
   const c=document.getElementById('app-container');
   try{
-    // 使用新的 JSON 資料，並自動補上缺少的連結
+    // ID 我都幫你從連結裡抓出來了
     const apps = [
+      {
+        "name": "茶語 Tea Mind",
+        "desc": "靜心品茶，探索茶的智慧與靜心時刻。",
+        "icon": "assets/apps/teamind.png", 
+        "link": "https://apps.apple.com/us/app/%E8%8C%B6%E8%AA%9E-tea-mind/id6757837745",
+        "id": "6757837745",
+        "version": "1.0.0",
+        "updated": "2026/01/23"
+      },
       {
         "name": "Loopself",
         "desc": "星迴：一款將星圖收藏與日記結合的工具，所有資料均儲存在本機。",
         "icon": "assets/icons/looplife.png",
         "link": "https://apps.apple.com/us/app/%E6%98%9F%E8%BF%B4/id6757077666",
+        "id": "6757077666",
         "version": "1.0.0",
         "updated": "2025/12/31"
       },
@@ -765,6 +775,7 @@ async function loadApps(){
         "desc": "喵語學院是一款結合學習與遊戲的貓語課程 App。",
         "icon": "assets/icons/cat_app_icon.png",
         "link": "https://apps.apple.com/us/app/%E5%96%B5%E8%AA%9E%E5%AD%B8%E9%99%A2/id6757230422",
+        "id": "6757230422",
         "version": "1.0.0",
         "updated": "2025/12/31"
       },
@@ -773,6 +784,7 @@ async function loadApps(){
         "desc": "雲朵整理師：療癒創作遊戲",
         "icon": "assets/icons/cloud2.png",
         "link": "https://apps.apple.com/us/app/%E9%9B%B2%E6%9C%B5%E6%95%B4%E7%90%86%E5%B8%AB/id6752541896",
+        "id": "6752541896",
         "version": "1.2.2",
         "updated": "2025/12/31"
       },
@@ -781,6 +793,7 @@ async function loadApps(){
         "desc": "螺旋魔法師：結合數學、動物知識與進的教育益智遊戲。",
         "icon": "assets/icons/mathgame2.png",
         "link": "https://apps.apple.com/us/app/%E8%9E%BA%E6%97%8B%E9%AD%94%E6%B3%95%E5%B8%ABspiral-wizard/id6752797711",
+        "id": "6752797711",
         "version": "1.4.0",
         "updated": "2025/12/31"
       },
@@ -789,6 +802,7 @@ async function loadApps(){
         "desc": "星幕配對遊戲",
         "icon": "assets/icons/StarveilMatch.png",
         "link": "https://apps.apple.com/tw/app/starveil-match/id6756781135",
+        "id": "6756781135",
         "version": "1.0.0",
         "updated": "2025/12/19"
       },
@@ -797,6 +811,7 @@ async function loadApps(){
         "desc": "貓爪番茄鐘，專為專注的貓奴設計",
         "icon": "assets/icons/pawdoro.png",
         "link": "https://apps.apple.com/us/app/pawdoro/id6756201914",
+        "id": "6756201914",
         "version": "1.0.0",
         "updated": "2025/12/19"
       },
@@ -805,6 +820,7 @@ async function loadApps(){
         "desc": "星光日誌：用星空記錄你的心情與創作",
         "icon": "assets/icons/starlightjournal.png",
         "link": "https://apps.apple.com/us/app/starlight-journal/id6756179454",
+        "id": "6756179454",
         "version": "1.0.0",
         "updated": "2025/12/19"
       },
@@ -813,6 +829,7 @@ async function loadApps(){
         "desc": "化學貓：讓化學變得有趣",
         "icon": "assets/icons/chemocat.png",
         "link": "https://apps.apple.com/us/app/chemocat%E5%8C%96%E5%AD%B8%E8%B2%93/id6753624892",
+        "id": "6753624892",
         "version": "1.1.0",
         "updated": "2025/12/19"
       },
@@ -821,6 +838,7 @@ async function loadApps(){
         "desc": "懶人記帳",
         "icon": "assets/icons/lazytrack2.png",
         "link": "https://apps.apple.com/us/app/lazytrack%E6%A5%B5%E7%B0%A1%E6%87%B6%E4%BA%BA%E8%A8%98%E5%B8%B3/id6753803644",
+        "id": "6753803644",
         "version": "1.1.0",
         "updated": "2025/12/19"
       },
@@ -829,6 +847,7 @@ async function loadApps(){
         "desc": "夢境花園：探索夢境與心靈的應用",
         "icon": "assets/icons/dream.png",
         "link": "https://apps.apple.com/us/app/%E5%A4%A2%E5%A2%83%E8%8A%B1%E5%9C%92dreamgarden/id6755881746",
+        "id": "6755881746",
         "version": "1.0.0",
         "updated": "2025/10/06"
       },
@@ -837,6 +856,7 @@ async function loadApps(){
         "desc": "灰貓檔案庫：冷知識也能成為案件",
         "icon": "assets/icons/graycat_2.png",
         "link": "https://apps.apple.com/us/app/%E7%81%B0%E8%B2%93%E6%AA%94%E6%A1%88%E5%BA%AB/id6753888547",
+        "id": "6753888547",
         "version": "1.1.0",
         "updated": "2025/12/19"
       }
@@ -845,7 +865,7 @@ async function loadApps(){
     c.innerHTML='';
     const today=new Date();
 
-    apps.forEach(app=>{
+    for(const app of apps){
       const card=document.createElement('div');
       card.className='app-card';
 
@@ -853,16 +873,35 @@ async function loadApps(){
       // 簡單判斷：如果是最近更新（例如 30 天內）
       if(app.updated){
         const updatedDate=new Date(app.updated);
-        // 這裡可以依需求調整天數，目前若日期較新可顯示 NEW
-        // const diffDays=(today - updatedDate)/(1000*60*60*24);
-        // if(diffDays<=30) isNew=true;
+        const diffDays=(today - updatedDate)/(1000*60*60*24);
+        if(diffDays<=30) isNew=true;
       }
 
-      // 如果圖片載入失敗，使用預設圖
+      // 預設使用本地圖示
+      let iconSrc = app.icon;
+      
+      // === 這裡就是自動抓取 Apple App Store 圖片的魔法 ===
+      // 如果有 app.id，嘗試去 iTunes API 抓高清大圖
+      if(app.id) {
+        try {
+           // 使用 jsonp 方式或直接 fetch (Apple iTunes API 支援 CORS 查詢)
+           const appleRes = await fetch(`https://itunes.apple.com/lookup?id=${app.id}&country=tw`);
+           const appleData = await appleRes.json();
+           if(appleData.resultCount > 0 && appleData.results[0].artworkUrl512){
+             // 抓到了！換成高清圖
+             iconSrc = appleData.results[0].artworkUrl512;
+           }
+        } catch(err){
+           // 抓取失敗就安靜地用回本地圖片，不報錯
+           // console.log('Fetch icon failed for', app.name);
+        }
+      }
+
+      // 如果圖片還是載入失敗（例如本地也沒有），使用預設方塊圖
       const fallbackIcon = 'https://via.placeholder.com/96/000000/0ff?text=App';
       
       card.innerHTML = `
-        <img class="app-image" src="${app.icon}" onerror="this.src='${fallbackIcon}'" alt="${app.name}">
+        <img class="app-image" src="${iconSrc}" onerror="this.src='${fallbackIcon}'" alt="${app.name}">
         <div class="app-info">
           <h3>
             ${app.name}
@@ -877,7 +916,7 @@ async function loadApps(){
         </div>
       `;
       c.appendChild(card);
-    });
+    }
 
     addHoverSounds();
   }catch(e){
