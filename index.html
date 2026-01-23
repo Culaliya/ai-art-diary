@@ -1,1073 +1,1637 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Culaliya's AI Art Diary 🌌</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Culaliya's AI Art Diary 🌌</title>
 
-<!-- ===== 網站小縮圖 (Favicon) 設定 ===== -->
-<link rel="icon" href="assets/blackcat.png?v=2" type="image/png">
-<link rel="shortcut icon" href="assets/blackcat.png?v=2" type="image/png">
-<link rel="apple-touch-icon" href="assets/blackcat.png?v=2">
+  <!-- ===== 網站小縮圖 (Favicon) 設定 ===== -->
+  <link rel="icon" href="/assets/blackcat.png?v=3" type="image/png">
+  <link rel="shortcut icon" href="/assets/blackcat.png?v=3" type="image/png">
+  <link rel="apple-touch-icon" href="/assets/blackcat.png?v=3">
 
-<!-- ===== SEO (搜尋引擎優化) 設定 ===== -->
-<meta name="description" content="Culaliya 的創意實驗室與作品集。探索 iOS App 作品（茶語 Tea Mind、喵語學院、星迴等）、AI 生成藝術、以及結合科技與靈性的數位創作日記。Where algorithm meets intuition." />
-<meta name="keywords" content="Culaliya, AI Art, iOS App, 茶語 Tea Mind, 喵語學院, Starveil Match, 獨立開發, 生成式藝術, 療癒遊戲, 程式教學, 靈性科技, Swift, 獨立開發者" />
-<meta name="author" content="Culaliya" />
+  <!-- ===== SEO (搜尋引擎優化) 設定 ===== -->
+  <meta name="description"
+    content="Culaliya 的創意實驗室與作品集。探索 iOS App 作品（茶語 Tea Mind、喵語學院、星迴等）、AI 生成藝術、以及結合科技與靈性的數位創作日記。Where algorithm meets intuition." />
+  <meta name="keywords"
+    content="Culaliya, AI Art, iOS App, 茶語 Tea Mind, 喵語學院, Starveil Match, 獨立開發, 生成式藝術, 療癒遊戲, 程式教學, 靈性科技, Swift, 獨立開發者" />
+  <meta name="author" content="Culaliya" />
 
-<!-- Open Graph / Facebook / LINE -->
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://culaliya.github.io/ai-art-diary/" />
-<meta property="og:title" content="Culaliya's AI Art Diary 🌌 | 創意與科技的實驗室" />
-<meta property="og:description" content="這裡紀錄了我的 iOS App 作品、AI 藝術創作與程式實驗。歡迎來到演算法與直覺交織的宇宙。" />
-<meta property="og:image" content="assets/blackcat.png" />
+  <!-- Open Graph / Facebook / LINE -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ai-art-diary.vercel.app/" />
+  <meta property="og:title" content="Culaliya's AI Art Diary 🌌 | 創意與科技的實驗室" />
+  <meta property="og:description" content="這裡紀錄了我的 iOS App 作品、AI 藝術創作與程式實驗。歡迎來到演算法與直覺交織的宇宙。" />
+  <meta property="og:image" content="https://ai-art-diary.vercel.app/assets/blackcat.png" />
 
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Culaliya's AI Art Diary 🌌" />
-<meta name="twitter:description" content="探索 iOS App 作品與 AI 藝術創作。Where algorithm meets intuition." />
-<meta name="twitter:image" content="assets/blackcat.png" />
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Culaliya's AI Art Diary 🌌" />
+  <meta name="twitter:description" content="探索 iOS App 作品與 AI 藝術創作。Where algorithm meets intuition." />
+  <meta name="twitter:image" content="https://ai-art-diary.vercel.app/assets/blackcat.png" />
 
-<style>
-  body{
-    margin:0;
-    font-family:'Orbitron',sans-serif;
-    color:#fff;
-    overflow-x:hidden;
-    background:#000;
-    position:relative;
-    cursor:none;
-  }
-  h1{
-    font-size:3em;
-    color:#0ff;
-    text-shadow:0 0 20px #0ff;
-    animation:glow 3s ease-in-out infinite alternate;
-    margin:0 0 12px 0;
-  }
-  @keyframes glow{
-    from{text-shadow:0 0 10px #0ff;}
-    to{text-shadow:0 0 25px #ff3eff;}
-  }
-  h2{color:#ff3eff;margin-bottom:16px;}
-  section{max-width:1000px;margin:auto;padding:40px 20px;}
-  #particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-2;background:#000;}
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      color: #fff;
+      overflow-x: hidden;
+      background: #000;
+      position: relative;
+      cursor: none;
+    }
 
-  /* ===== 防君子設定：圖片禁止拖曳與選取 ===== */
-  img {
-    -webkit-user-drag: none;
-    -khtml-user-drag: none;
-    -moz-user-drag: none;
-    -o-user-drag: none;
-    user-drag: none;
-    pointer-events: auto;
-  }
+    h1 {
+      font-size: 3em;
+      color: #0ff;
+      text-shadow: 0 0 20px #0ff;
+      animation: glow 3s ease-in-out infinite alternate;
+      margin: 0 0 12px 0;
+    }
 
-  /* ===== 滑鼠跟隨特效 ===== */
-  #cursor{
-    position:fixed;width:20px;height:20px;border:2px solid #0ff;border-radius:50%;
-    pointer-events:none;z-index:9999;transition:transform 0.1s ease;
-    box-shadow:0 0 20px #0ff,inset 0 0 10px #0ff;
-  }
-  #cursor-trail{
-    position:fixed;width:8px;height:8px;border-radius:50%;
-    pointer-events:none;z-index:9998;
-  }
-  .rainbow-trail{
-    position:fixed;width:15px;height:15px;border-radius:50%;
-    pointer-events:none;z-index:9997;animation:fadeOut 1s ease-out forwards;
-  }
-  @keyframes fadeOut{to{opacity:0;transform:scale(2);} }
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 10px #0ff;
+      }
 
-  .button{
-    display:inline-block;padding:8px 16px;border:1px solid #0ff;color:#0ff;border-radius:6px;
-    text-decoration:none;transition:.2s;cursor:pointer;background:transparent;font-size:14px;
-  }
-  .button:hover{background:#0ff;color:#000;transform:scale(1.05);}
+      to {
+        text-shadow: 0 0 25px #ff3eff;
+      }
+    }
 
-  .media-flex{display:flex;flex-wrap:wrap;gap:20px;}
-  .video-container{flex:2;min-width:300px;aspect-ratio:16/9;}
-  .spotify-container{flex:1;min-width:300px;}
-  .video-container iframe,.spotify-container iframe{width:100%;height:100%;border:none;border-radius:12px;}
+    h2 {
+      color: #ff3eff;
+      margin-bottom: 16px;
+    }
 
-  /* ===== Gallery 輪播 ===== */
-  .slideshow-container{position:relative;width:100%;max-width:800px;margin:auto;}
-  .slide{display:none;width:100%;border-radius:12px;box-shadow:0 0 20px #0ff5;}
-  .slide-btn{
-    position:absolute;top:50%;transform:translateY(-50%);
-    background:rgba(0,255,255,0.3);color:#0ff;border:2px solid #0ff;
-    font-size:24px;padding:10px 15px;cursor:pointer;border-radius:6px;
-    transition:all 0.3s;z-index:10;
-  }
-  .slide-btn:hover{background:rgba(0,255,255,0.6);box-shadow:0 0 15px #0ff;}
-  .slide-btn.prev{left:10px;}
-  .slide-btn.next{right:10px;}
-  .dot{display:inline-block;width:12px;height:12px;margin:0 5px;background:#0ff3;border-radius:50%;cursor:pointer;transition:all 0.3s;}
-  .dot:hover,.dot.active{background:#0ff;box-shadow:0 0 10px #0ff;}
+    section {
+      max-width: 1000px;
+      margin: auto;
+      padding: 40px 20px;
+    }
 
-  .ripple{position:fixed;border-radius:50%;pointer-events:none;border:2px solid #0ff;animation:ripple 0.6s ease-out;}
-  @keyframes ripple{from{transform:scale(0);opacity:0.8;} to{transform:scale(10);opacity:0;}}
+    #particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      background: #000;
+    }
 
-  /* ===== Hero / Inspiration ===== */
-  #hero{
-    text-align:center;
-    padding:60px 20px 30px;
-  }
-  #weather-quote{text-align:center;margin-top:10px;color:#aaf;font-size:1em;}
-  #inspiration-bar{
-    text-align:center;margin-top:12px;color:#0ff;font-size:1.1em;
-    opacity:0;transition:opacity 1.2s ease-in-out;
-  }
+    /* ===== 防君子設定：圖片禁止拖曳與選取 ===== */
+    img {
+      -webkit-user-drag: none;
+      -khtml-user-drag: none;
+      -moz-user-drag: none;
+      -o-user-drag: none;
+      user-drag: none;
+      pointer-events: auto;
+    }
 
-  /* ===== Now Updated Banner (A) ===== */
-  #update-announcement{
-    max-width:1000px;
-    margin:0 auto 10px;
-    padding:0 20px 10px;
-    text-align:center;
-  }
-  .update-card{
-    display:inline-block;
-    padding:14px 16px;
-    border-radius:14px;
-    border:1px solid rgba(0,255,255,.25);
-    background:rgba(0,255,255,.06);
-    box-shadow:0 0 22px rgba(0,255,255,.12);
-    backdrop-filter:blur(10px);
-  }
-  .update-title{
-    font-weight:800;
-    color:#0ff;
-    letter-spacing:.5px;
-    margin:0 0 6px 0;
-  }
-  .update-text{margin:0;color:#cfe;opacity:.95;}
-  .update-link{color:#0ff;text-decoration:none;}
-  .update-link:hover{text-decoration:underline;}
+    /* ===== 滑鼠跟隨特效 ===== */
+    #cursor {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #0ff;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.1s ease;
+      box-shadow: 0 0 20px #0ff, inset 0 0 10px #0ff;
+    }
 
-  /* ===== 實驗室按鈕列 ===== */
-  .lab-buttons{
-    display:flex;justify-content:center;gap:20px;margin-top:18px;flex-wrap:wrap;
-  }
-  .lab-btn{
-    display:inline-block;padding:12px 20px;border-radius:25px;font-weight:bold;color:#fff;
-    text-decoration:none;transition:0.3s;box-shadow:0 0 20px rgba(255,255,255,0.2);
-  }
-  .lab-btn:hover{transform:scale(1.05);box-shadow:0 0 30px #fff;}
-  .lab-btn.pink{background:linear-gradient(135deg,#ff3eff,#ff00aa);}
-  .lab-btn.purple{background:linear-gradient(135deg,#8a2be2,#ff3eff);}
-  .lab-btn.blue{background:linear-gradient(135deg,#00e0ff,#008cff);}
-  .lab-btn.green{
-    background:linear-gradient(135deg,#00ff88,#00cc99);
-    box-shadow:0 0 20px rgba(0,255,136,0.3);
-  }
-  .lab-btn.green:hover{box-shadow:0 0 30px rgba(0,255,136,0.6);}
+    #cursor-trail {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+    }
 
-  /* ===== 超級對話框 ===== */
-  #chatContainer{
-    max-width:800px;margin:30px auto;background:rgba(0,255,255,0.05);
-    border:2px solid #0ff;border-radius:16px;padding:20px;
-    box-shadow:0 0 30px rgba(0,255,255,0.3);
-  }
-  #chatHistory{
-    height:300px;overflow-y:auto;margin-bottom:20px;padding:15px;
-    background:rgba(0,0,0,0.3);border-radius:12px;border:1px solid #0ff3;
-  }
-  #chatHistory::-webkit-scrollbar{width:8px;}
-  #chatHistory::-webkit-scrollbar-track{background:rgba(0,255,255,0.1);border-radius:4px;}
-  #chatHistory::-webkit-scrollbar-thumb{background:#0ff;border-radius:4px;}
-  .message{margin:15px 0;display:flex;align-items:flex-start;animation:messageSlideIn 0.3s ease-out;}
-  @keyframes messageSlideIn{from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
-  .message.user{justify-content:flex-end;}
-  .message.ai{justify-content:flex-start;}
-  .message-bubble{max-width:70%;padding:12px 16px;border-radius:18px;position:relative;word-wrap:break-word;}
-  .message.user .message-bubble{background:linear-gradient(135deg,#0ff,#00d4ff);color:#000;border-bottom-right-radius:4px;}
-  .message.ai .message-bubble{background:rgba(255,62,255,0.2);border:1px solid #ff3eff;color:#fff;border-bottom-left-radius:4px;}
-  .message-avatar{
-    width:35px;height:35px;border-radius:50%;margin:0 10px;border:2px solid #0ff;box-shadow:0 0 10px #0ff;
-  }
-  .message.user .message-avatar{order:2;}
-  .typing-indicator{display:none;padding:10px 16px;}
-  .typing-indicator span{
-    display:inline-block;width:8px;height:8px;border-radius:50%;background:#0ff;margin:0 3px;animation:typing 1.4s infinite;
-  }
-  .typing-indicator span:nth-child(2){animation-delay:0.2s;}
-  .typing-indicator span:nth-child(3){animation-delay:0.4s;}
-  @keyframes typing{0%,60%,100%{transform:translateY(0);} 30%{transform:translateY(-10px);} }
+    .rainbow-trail {
+      position: fixed;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9997;
+      animation: fadeOut 1s ease-out forwards;
+    }
 
-  #chatInputArea{display:flex;gap:10px;margin-bottom:15px;}
-  #catInput{
-    flex:1;padding:12px 16px;border-radius:25px;border:2px solid #0ff;
-    background:rgba(0,0,0,0.5);color:#0ff;font-size:14px;outline:none;transition:all 0.3s;
-  }
-  #catInput:focus{box-shadow:0 0 15px #0ff;background:rgba(0,0,0,0.7);}
-  #sendBtn{
-    padding:12px 24px;background:linear-gradient(135deg,#0ff,#00d4ff);
-    border:none;border-radius:25px;color:#000;font-weight:bold;cursor:pointer;transition:all 0.3s;font-size:14px;
-  }
-  #sendBtn:hover{transform:scale(1.05);box-shadow:0 0 20px #0ff;}
-  #quickQuestions{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:15px;}
-  .quick-btn{
-    padding:6px 12px;background:rgba(0,255,255,0.1);border:1px solid #0ff;border-radius:15px;
-    color:#0ff;font-size:12px;cursor:pointer;transition:all 0.3s;
-  }
-  .quick-btn:hover{background:rgba(0,255,255,0.3);transform:translateY(-2px);}
-  #chatControls{display:flex;justify-content:space-between;align-items:center;}
-  #catMood{font-size:12px;color:#0ff;display:flex;align-items:center;gap:8px;}
-  #moodIcon{font-size:20px;animation:bounce 2s ease-in-out infinite;}
-  @keyframes bounce{0%,100%{transform:translateY(0);} 50%{transform:translateY(-5px);} }
-  #clearChat{
-    padding:6px 12px;background:rgba(255,62,255,0.2);border:1px solid #ff3eff;border-radius:15px;color:#ff3eff;
-    font-size:12px;cursor:pointer;transition:all 0.3s;
-  }
-  #clearChat:hover{background:rgba(255,62,255,0.4);}
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        transform: scale(2);
+      }
+    }
 
-  /* 貓咪動畫 */
-  #memeCat{
-    animation:float 4s ease-in-out infinite alternate;cursor:pointer;transition:transform 0.3s ease;
-    width:120px;border-radius:50%;box-shadow:0 0 20px #0ff;
-  }
-  @keyframes float{from{transform:translateY(0px);} to{transform:translateY(-10px);} }
-  #memeCat:hover{animation:shake 0.5s ease-in-out infinite, float 4s ease-in-out infinite alternate;}
-  @keyframes shake{
-    0%,100%{transform:translateY(0) rotate(0deg);}
-    25%{transform:translateY(-5px) rotate(-5deg);}
-    75%{transform:translateY(-5px) rotate(5deg);}
-  }
+    .button {
+      display: inline-block;
+      padding: 8px 16px;
+      border: 1px solid #0ff;
+      color: #0ff;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: .2s;
+      cursor: pointer;
+      background: transparent;
+      font-size: 14px;
+    }
 
-  /* 背景音樂按鈕 */
-  #bgm-control{
-    position:fixed;top:20px;right:20px;z-index:1000;
-    background:rgba(0,255,255,0.2);border:2px solid #0ff;color:#0ff;
-    padding:10px 15px;border-radius:50%;cursor:pointer;font-size:24px;transition:all 0.3s;
-    width:50px;height:50px;display:flex;align-items:center;justify-content:center;
-  }
-  #bgm-control:hover{background:rgba(0,255,255,0.4);box-shadow:0 0 20px #0ff;transform:scale(1.1);}
-  #bgm-control.playing{animation:pulse 2s ease-in-out infinite;}
-  @keyframes pulse{0%,100%{box-shadow:0 0 10px #0ff;} 50%{box-shadow:0 0 25px #0ff,0 0 40px #0ff;} }
+    .button:hover {
+      background: #0ff;
+      color: #000;
+      transform: scale(1.05);
+    }
 
-  /* ===== Apps：三欄固定對齊（關鍵修正） ===== */
-  .app-container{display:flex;flex-direction:column;gap:20px;}
-  .app-card{
-    display:grid;
-    grid-template-columns: 96px 1fr auto;
-    align-items:center;
-    gap:18px;
-    background:rgba(255,255,255,0.05);
-    border:1px solid #0ff3;
-    border-radius:12px;
-    padding:20px;
-    transition:transform .3s, box-shadow .3s;
-    position:relative;
-  }
-  .app-card:hover{transform:translateY(-5px);box-shadow:0 0 25px #0ff;}
-  .app-image{width:96px;height:96px;border-radius:16px;object-fit:cover;}
-  .app-info{min-width:0;}
-  .app-info h3{
-    margin:0 0 6px 0;color:#0ff;
-    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
-  }
-  .app-info p{
-    color:#ccc;margin:0 0 6px 0;line-height:1.45;word-break:break-word;
-  }
-  .app-meta{color:#aaa;font-size:0.85em;margin-top:6px;}
-  .app-actions{display:flex;align-items:center;justify-content:flex-end;min-width:120px;}
+    .media-flex {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
 
-  /* ===== 隱私同意橫幅 (Consent Banner) ===== */
-  #consent-banner {
-    display: none; /* 預設隱藏，由 JS 控制顯示 */
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.9);
-    border-top: 1px solid #0ff;
-    padding: 15px 20px;
-    z-index: 10000;
-    box-shadow: 0 -5px 20px rgba(0, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    text-align: center;
-  }
-  .consent-content {
-    max-width: 800px;
-    margin: 0 auto;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-  }
-  .consent-text {
-    color: #ccc;
-    font-size: 0.9em;
-    text-align: left;
-    flex: 1;
-    min-width: 250px;
-  }
-  .consent-actions {
-    display: flex;
-    gap: 10px;
-  }
-  .consent-btn {
-    padding: 8px 20px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 0.9em;
-    transition: all 0.3s;
-    font-weight: bold;
-  }
-  .consent-agree {
-    background: linear-gradient(135deg, #0ff, #008cff);
-    color: #000;
-    border: none;
-    box-shadow: 0 0 10px #0ff;
-  }
-  .consent-agree:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 20px #0ff;
-  }
-  .consent-decline {
-    background: transparent;
-    color: #888;
-    border: 1px solid #555;
-  }
-  .consent-decline:hover {
-    color: #fff;
-    border-color: #fff;
-  }
+    .video-container {
+      flex: 2;
+      min-width: 300px;
+      aspect-ratio: 16/9;
+    }
 
-  /* ===== 手機版 ===== */
-  @media (max-width: 768px){
-    h1{font-size:2.5em;padding:0 15px;}
-    #hero{padding:46px 15px 24px;}
-    section{padding:30px 15px;}
-    h2{font-size:1.5em;text-align:center;}
+    .spotify-container {
+      flex: 1;
+      min-width: 300px;
+    }
 
-    .lab-buttons{flex-direction:column;gap:12px;padding:0 20px;margin-top:16px;}
-    .lab-btn{width:100%;text-align:center;padding:14px 20px;font-size:0.95em;}
+    .video-container iframe,
+    .spotify-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 12px;
+    }
 
-    #chatContainer{padding:15px;margin:20px 10px;}
-    #chatHistory{height:250px;padding:10px;}
-    .message-bubble{max-width:85%;font-size:0.9em;}
-    .message-avatar{width:30px;height:30px;}
-    #chatInputArea{flex-direction:column;gap:8px;}
-    #sendBtn{width:100%;padding:12px;}
+    /* ===== Gallery 輪播 ===== */
+    .slideshow-container {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      margin: auto;
+    }
 
-    /* Apps：手機直排 */
-    .app-card{grid-template-columns:1fr;text-align:center;}
-    .app-image{margin:0 auto;}
-    .app-actions{justify-content:center;margin-top:10px;}
+    .slide {
+      display: none;
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 0 20px #0ff5;
+    }
 
-    .consent-content { flex-direction: column; text-align: center; }
-    .consent-text { text-align: center; }
-  }
+    .slide-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 255, 255, 0.3);
+      color: #0ff;
+      border: 2px solid #0ff;
+      font-size: 24px;
+      padding: 10px 15px;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.3s;
+      z-index: 10;
+    }
 
-  @media (max-width: 480px){
-    h1{font-size:2em;}
-    #weather-quote{font-size:0.85em;}
-    #inspiration-bar{font-size:0.95em;}
-    #chatHistory{height:200px;}
-    #memeCat{width:80px;}
-    .app-image{width:72px;height:72px;}
-  }
-</style>
+    .slide-btn:hover {
+      background: rgba(0, 255, 255, 0.6);
+      box-shadow: 0 0 15px #0ff;
+    }
 
-<link rel="stylesheet" href="mobile-ui.css">
+    .slide-btn.prev {
+      left: 10px;
+    }
+
+    .slide-btn.next {
+      right: 10px;
+    }
+
+    .dot {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      margin: 0 5px;
+      background: #0ff3;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .dot:hover,
+    .dot.active {
+      background: #0ff;
+      box-shadow: 0 0 10px #0ff;
+    }
+
+    .ripple {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      border: 2px solid #0ff;
+      animation: ripple 0.6s ease-out;
+    }
+
+    @keyframes ripple {
+      from {
+        transform: scale(0);
+        opacity: 0.8;
+      }
+
+      to {
+        transform: scale(10);
+        opacity: 0;
+      }
+    }
+
+    /* ===== Hero / Inspiration ===== */
+    #hero {
+      text-align: center;
+      padding: 60px 20px 30px;
+    }
+
+    #weather-quote {
+      text-align: center;
+      margin-top: 10px;
+      color: #aaf;
+      font-size: 1em;
+    }
+
+    #inspiration-bar {
+      text-align: center;
+      margin-top: 12px;
+      color: #0ff;
+      font-size: 1.1em;
+      opacity: 0;
+      transition: opacity 1.2s ease-in-out;
+    }
+
+    /* ===== Now Updated Banner (A) ===== */
+    #update-announcement {
+      max-width: 1000px;
+      margin: 0 auto 10px;
+      padding: 0 20px 10px;
+      text-align: center;
+    }
+
+    .update-card {
+      display: inline-block;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(0, 255, 255, .25);
+      background: rgba(0, 255, 255, .06);
+      box-shadow: 0 0 22px rgba(0, 255, 255, .12);
+      backdrop-filter: blur(10px);
+    }
+
+    .update-title {
+      font-weight: 800;
+      color: #0ff;
+      letter-spacing: .5px;
+      margin: 0 0 6px 0;
+    }
+
+    .update-text {
+      margin: 0;
+      color: #cfe;
+      opacity: .95;
+    }
+
+    .update-link {
+      color: #0ff;
+      text-decoration: none;
+    }
+
+    .update-link:hover {
+      text-decoration: underline;
+    }
+
+    /* ===== 實驗室按鈕列 ===== */
+    .lab-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    .lab-btn {
+      display: inline-block;
+      padding: 12px 20px;
+      border-radius: 25px;
+      font-weight: bold;
+      color: #fff;
+      text-decoration: none;
+      transition: 0.3s;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    }
+
+    .lab-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px #fff;
+    }
+
+    .lab-btn.pink {
+      background: linear-gradient(135deg, #ff3eff, #ff00aa);
+    }
+
+    .lab-btn.purple {
+      background: linear-gradient(135deg, #8a2be2, #ff3eff);
+    }
+
+    .lab-btn.blue {
+      background: linear-gradient(135deg, #00e0ff, #008cff);
+    }
+
+    .lab-btn.green {
+      background: linear-gradient(135deg, #00ff88, #00cc99);
+      box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+    }
+
+    .lab-btn.green:hover {
+      box-shadow: 0 0 30px rgba(0, 255, 136, 0.6);
+    }
+
+    /* ===== 超級對話框 ===== */
+    #chatContainer {
+      max-width: 800px;
+      margin: 30px auto;
+      background: rgba(0, 255, 255, 0.05);
+      border: 2px solid #0ff;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+    }
+
+    #chatHistory {
+      height: 300px;
+      overflow-y: auto;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      border: 1px solid #0ff3;
+    }
+
+    #chatHistory::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    #chatHistory::-webkit-scrollbar-track {
+      background: rgba(0, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+
+    #chatHistory::-webkit-scrollbar-thumb {
+      background: #0ff;
+      border-radius: 4px;
+    }
+
+    .message {
+      margin: 15px 0;
+      display: flex;
+      align-items: flex-start;
+      animation: messageSlideIn 0.3s ease-out;
+    }
+
+    @keyframes messageSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .message.user {
+      justify-content: flex-end;
+    }
+
+    .message.ai {
+      justify-content: flex-start;
+    }
+
+    .message-bubble {
+      max-width: 70%;
+      padding: 12px 16px;
+      border-radius: 18px;
+      position: relative;
+      word-wrap: break-word;
+    }
+
+    .message.user .message-bubble {
+      background: linear-gradient(135deg, #0ff, #00d4ff);
+      color: #000;
+      border-bottom-right-radius: 4px;
+    }
+
+    .message.ai .message-bubble {
+      background: rgba(255, 62, 255, 0.2);
+      border: 1px solid #ff3eff;
+      color: #fff;
+      border-bottom-left-radius: 4px;
+    }
+
+    .message-avatar {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      margin: 0 10px;
+      border: 2px solid #0ff;
+      box-shadow: 0 0 10px #0ff;
+    }
+
+    .message.user .message-avatar {
+      order: 2;
+    }
+
+    .typing-indicator {
+      display: none;
+      padding: 10px 16px;
+    }
+
+    .typing-indicator span {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #0ff;
+      margin: 0 3px;
+      animation: typing 1.4s infinite;
+    }
+
+    .typing-indicator span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-indicator span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes typing {
+
+      0%,
+      60%,
+      100% {
+        transform: translateY(0);
+      }
+
+      30% {
+        transform: translateY(-10px);
+      }
+    }
+
+    #chatInputArea {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    #catInput {
+      flex: 1;
+      padding: 12px 16px;
+      border-radius: 25px;
+      border: 2px solid #0ff;
+      background: rgba(0, 0, 0, 0.5);
+      color: #0ff;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    #catInput:focus {
+      box-shadow: 0 0 15px #0ff;
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    #sendBtn {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #0ff, #00d4ff);
+      border: none;
+      border-radius: 25px;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 14px;
+    }
+
+    #sendBtn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #0ff;
+    }
+
+    #quickQuestions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+
+    .quick-btn {
+      padding: 6px 12px;
+      background: rgba(0, 255, 255, 0.1);
+      border: 1px solid #0ff;
+      border-radius: 15px;
+      color: #0ff;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .quick-btn:hover {
+      background: rgba(0, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    #chatControls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #catMood {
+      font-size: 12px;
+      color: #0ff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #moodIcon {
+      font-size: 20px;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-5px);
+      }
+    }
+
+    #clearChat {
+      padding: 6px 12px;
+      background: rgba(255, 62, 255, 0.2);
+      border: 1px solid #ff3eff;
+      border-radius: 15px;
+      color: #ff3eff;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    #clearChat:hover {
+      background: rgba(255, 62, 255, 0.4);
+    }
+
+    /* 貓咪動畫 */
+    #memeCat {
+      animation: float 4s ease-in-out infinite alternate;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      width: 120px;
+      border-radius: 50%;
+      box-shadow: 0 0 20px #0ff;
+    }
+
+    @keyframes float {
+      from {
+        transform: translateY(0px);
+      }
+
+      to {
+        transform: translateY(-10px);
+      }
+    }
+
+    #memeCat:hover {
+      animation: shake 0.5s ease-in-out infinite, float 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateY(0) rotate(0deg);
+      }
+
+      25% {
+        transform: translateY(-5px) rotate(-5deg);
+      }
+
+      75% {
+        transform: translateY(-5px) rotate(5deg);
+      }
+    }
+
+    /* 背景音樂按鈕 */
+    #bgm-control {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      background: rgba(0, 255, 255, 0.2);
+      border: 2px solid #0ff;
+      color: #0ff;
+      padding: 10px 15px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 24px;
+      transition: all 0.3s;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #bgm-control:hover {
+      background: rgba(0, 255, 255, 0.4);
+      box-shadow: 0 0 20px #0ff;
+      transform: scale(1.1);
+    }
+
+    #bgm-control.playing {
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 10px #0ff;
+      }
+
+      50% {
+        box-shadow: 0 0 25px #0ff, 0 0 40px #0ff;
+      }
+    }
+
+    /* ===== Apps：三欄固定對齊（關鍵修正） ===== */
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .app-card {
+      display: grid;
+      grid-template-columns: 96px 1fr auto;
+      align-items: center;
+      gap: 18px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid #0ff3;
+      border-radius: 12px;
+      padding: 20px;
+      transition: transform .3s, box-shadow .3s;
+      position: relative;
+    }
+
+    .app-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 25px #0ff;
+    }
+
+    .app-image {
+      width: 96px;
+      height: 96px;
+      border-radius: 16px;
+      object-fit: cover;
+    }
+
+    .app-info {
+      min-width: 0;
+    }
+
+    .app-info h3 {
+      margin: 0 0 6px 0;
+      color: #0ff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .app-info p {
+      color: #ccc;
+      margin: 0 0 6px 0;
+      line-height: 1.45;
+      word-break: break-word;
+    }
+
+    .app-meta {
+      color: #aaa;
+      font-size: 0.85em;
+      margin-top: 6px;
+    }
+
+    .app-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      min-width: 120px;
+    }
+
+    /* ===== 隱私同意橫幅 (Consent Banner) ===== */
+    #consent-banner {
+      display: none;
+      /* 預設隱藏，由 JS 控制顯示 */
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      border-top: 1px solid #0ff;
+      padding: 15px 20px;
+      z-index: 10000;
+      box-shadow: 0 -5px 20px rgba(0, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      text-align: center;
+    }
+
+    .consent-content {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .consent-text {
+      color: #ccc;
+      font-size: 0.9em;
+      text-align: left;
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .consent-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .consent-btn {
+      padding: 8px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.9em;
+      transition: all 0.3s;
+      font-weight: bold;
+    }
+
+    .consent-agree {
+      background: linear-gradient(135deg, #0ff, #008cff);
+      color: #000;
+      border: none;
+      box-shadow: 0 0 10px #0ff;
+    }
+
+    .consent-agree:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #0ff;
+    }
+
+    .consent-decline {
+      background: transparent;
+      color: #888;
+      border: 1px solid #555;
+    }
+
+    .consent-decline:hover {
+      color: #fff;
+      border-color: #fff;
+    }
+
+    /* ===== 手機版 ===== */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2.5em;
+        padding: 0 15px;
+      }
+
+      #hero {
+        padding: 46px 15px 24px;
+      }
+
+      section {
+        padding: 30px 15px;
+      }
+
+      h2 {
+        font-size: 1.5em;
+        text-align: center;
+      }
+
+      .lab-buttons {
+        flex-direction: column;
+        gap: 12px;
+        padding: 0 20px;
+        margin-top: 16px;
+      }
+
+      .lab-btn {
+        width: 100%;
+        text-align: center;
+        padding: 14px 20px;
+        font-size: 0.95em;
+      }
+
+      #chatContainer {
+        padding: 15px;
+        margin: 20px 10px;
+      }
+
+      #chatHistory {
+        height: 250px;
+        padding: 10px;
+      }
+
+      .message-bubble {
+        max-width: 85%;
+        font-size: 0.9em;
+      }
+
+      .message-avatar {
+        width: 30px;
+        height: 30px;
+      }
+
+      #chatInputArea {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      #sendBtn {
+        width: 100%;
+        padding: 12px;
+      }
+
+      /* Apps：手機直排 */
+      .app-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .app-image {
+        margin: 0 auto;
+      }
+
+      .app-actions {
+        justify-content: center;
+        margin-top: 10px;
+      }
+
+      .consent-content {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .consent-text {
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2em;
+      }
+
+      #weather-quote {
+        font-size: 0.85em;
+      }
+
+      #inspiration-bar {
+        font-size: 0.95em;
+      }
+
+      #chatHistory {
+        height: 200px;
+      }
+
+      #memeCat {
+        width: 80px;
+      }
+
+      .app-image {
+        width: 72px;
+        height: 72px;
+      }
+    }
+  </style>
+
+  <link rel="stylesheet" href="mobile-ui.css">
 </head>
 
 <body>
-<canvas id="particles"></canvas>
+  <canvas id="particles"></canvas>
 
-<!-- 自訂滑鼠游標 -->
-<div id="cursor"></div>
-<div id="cursor-trail"></div>
+  <!-- 自訂滑鼠游標 -->
+  <div id="cursor"></div>
+  <div id="cursor-trail"></div>
 
-<!-- 背景音樂播放器按鈕 -->
-<button id="bgm-control" title="播放/暫停背景音樂">🎵</button>
-<audio id="bgm" loop>
-  <source src="music/background.mp3" type="audio/mpeg">
-</audio>
+  <!-- 背景音樂播放器按鈕 -->
+  <button id="bgm-control" title="播放/暫停背景音樂">🎵</button>
+  <audio id="bgm" loop>
+    <source src="music/background.mp3" type="audio/mpeg">
+  </audio>
 
-<!-- 音效元素 -->
-<audio id="hover-sound" src="music/hover.mp3"></audio>
-<audio id="click-sound" src="music/click.mp3"></audio>
-<audio id="meow-sound" src="music/meow.mp3"></audio>
+  <!-- 音效元素 -->
+  <audio id="hover-sound" src="music/hover.mp3"></audio>
+  <audio id="click-sound" src="music/click.mp3"></audio>
+  <audio id="meow-sound" src="music/meow.mp3"></audio>
 
-<!-- 隱私同意橫幅 -->
-<div id="consent-banner">
-  <div class="consent-content">
-    <div class="consent-text">
-      🍪 <strong>隱私權小提醒</strong><br>
-      我們使用 Cookies 與匿名的 IP 數據來了解訪客來源分布，以優化網站體驗。我們不會收集您的敏感個資。您願意授權我們進行簡單的統計嗎？
-    </div>
-    <div class="consent-actions">
-      <button class="consent-btn consent-decline" onclick="handleConsent(false)">拒絕 (Decline)</button>
-      <button class="consent-btn consent-agree" onclick="handleConsent(true)">同意 (Agree)</button>
-    </div>
-  </div>
-</div>
-
-<!-- HERO -->
-<section id="hero">
-  <h1>AI ART DIARY ⚡</h1>
-  <p>Where algorithm meets intuition — Culaliya's creative & cosmic lab.</p>
-  <div id="weather-quote">
-    <span id="weather">載入天氣中…</span>
-  </div>
-  <div id="inspiration-bar">
-    <span id="inspirationText">✨ 問題不是 AI 是否有靈魂，而是我們是否還保有想像 ✨</span>
-  </div>
-</section>
-
-<!-- 🪧 Now Updated (A) -->
-<section id="update-announcement">
-  <div class="update-card">
-    <p class="update-title">【🪧 Now Updated】</p>
-    <p class="update-text">Latest drop: 茶語 Tea Mind</p>
-    <p class="update-text"><a class="update-link" href="dark_lab.html">→ 進入暗黑實驗室（可愛但不對勁）👻</a></p>
-  </div>
-</section>
-
-<!-- 實驗室按鈕 -->
-<div class="lab-buttons">
-  <a href="games.html" class="lab-btn pink">🎮 遊戲實驗室</a>
-  <a href="fortune_lab.html" class="lab-btn purple">🔮 命理實驗室</a>
-  <a href="music_lab.html" class="lab-btn blue">🎧 音樂實驗室</a>
-  <a href="image_lab.html" class="lab-btn green">🪞 圖像實驗室</a>
-  <a href="dark_lab.html" class="lab-btn pink">👻 暗黑實驗室</a>
-</div>
-
-<!-- ===== AI Cosmic Meme Cat ===== -->
-<section id="catSection">
-  <h2>🐈‍⬛ AI Cosmic Meme Cat 🌐</h2>
-  <div style="text-align:center; margin-bottom:20px;">
-    <img id="memeCat" src="assets/blackcat.png" alt="Meme Cat">
-  </div>
-
-  <div id="chatContainer">
-    <div id="chatHistory">
-      <div class="message ai">
-        <img class="message-avatar" src="assets/blackcat.png" alt="Cat">
-        <div class="message-bubble">喵～我是宇宙喵星人！有什麼想聊的嗎？ 🌌✨</div>
+  <!-- 隱私同意橫幅 -->
+  <div id="consent-banner">
+    <div class="consent-content">
+      <div class="consent-text">
+        🍪 <strong>隱私權小提醒</strong><br>
+        我們會記錄 IP 與裝置資訊做統計，以了解訪客來源分布並優化網站體驗。我們不會收集您的敏感個資。您願意授權我們進行簡單的統計嗎？
+      </div>
+      <div class="consent-actions">
+        <button class="consent-btn consent-decline" onclick="handleConsent(false)">拒絕 (Decline)</button>
+        <button class="consent-btn consent-agree" onclick="handleConsent(true)">同意 (Agree)</button>
       </div>
     </div>
+  </div>
 
-    <div id="quickQuestions">
-      <button class="quick-btn" onclick="askQuick('告訴我一個宇宙冷知識')">🌌 宇宙冷知識</button>
-      <button class="quick-btn" onclick="askQuick('給我一個創作靈感')">💡 創作靈感</button>
-      <button class="quick-btn" onclick="askQuick('說個笑話')">😹 說笑話</button>
-      <button class="quick-btn" onclick="askQuick('推薦一首歌')">🎵 推薦歌曲</button>
-      <button class="quick-btn" onclick="askQuick('今天適合做什麼')">🎲 今日建議</button>
+  <!-- HERO -->
+  <section id="hero">
+    <h1>AI ART DIARY ⚡</h1>
+    <p>Where algorithm meets intuition — Culaliya's creative & cosmic lab.</p>
+    <div id="weather-quote">
+      <span id="weather">載入天氣中…</span>
+    </div>
+    <div id="inspiration-bar">
+      <span id="inspirationText">✨ 問題不是 AI 是否有靈魂，而是我們是否還保有想像 ✨</span>
+    </div>
+  </section>
+
+  <!-- 🪧 Now Updated (A) -->
+  <section id="update-announcement">
+    <div class="update-card">
+      <p class="update-title">【🪧 Now Updated】</p>
+      <p class="update-text">Latest drop: 茶語 Tea Mind</p>
+      <p class="update-text"><a class="update-link" href="dark_lab.html">→ 進入暗黑實驗室（可愛但不對勁）👻</a></p>
+    </div>
+  </section>
+
+  <!-- 實驗室按鈕 -->
+  <div class="lab-buttons">
+    <a href="games.html" class="lab-btn pink">🎮 遊戲實驗室</a>
+    <a href="fortune_lab.html" class="lab-btn purple">🔮 命理實驗室</a>
+    <a href="music_lab.html" class="lab-btn blue">🎧 音樂實驗室</a>
+    <a href="image_lab.html" class="lab-btn green">🪞 圖像實驗室</a>
+    <a href="dark_lab.html" class="lab-btn pink">👻 暗黑實驗室</a>
+  </div>
+
+  <!-- ===== AI Cosmic Meme Cat ===== -->
+  <section id="catSection">
+    <h2>🐈‍⬛ AI Cosmic Meme Cat 🌐</h2>
+    <div style="text-align:center; margin-bottom:20px;">
+      <img id="memeCat" src="assets/blackcat.png" alt="Meme Cat">
     </div>
 
-    <div id="chatInputArea">
-      <input id="catInput" type="text" placeholder="輸入訊息給貓咪..." onkeypress="handleEnter(event)">
-      <button id="sendBtn" onclick="sendMessage()">發送 ✨</button>
-    </div>
-
-    <div class="typing-indicator" id="typingIndicator">
-      <span></span><span></span><span></span>
-    </div>
-
-    <div id="chatControls">
-      <div id="catMood">
-        <span id="moodIcon">😺</span>
-        <span id="moodText">心情愉快</span>
+    <div id="chatContainer">
+      <div id="chatHistory">
+        <div class="message ai">
+          <img class="message-avatar" src="assets/blackcat.png" alt="Cat">
+          <div class="message-bubble">喵～我是宇宙喵星人！有什麼想聊的嗎？ 🌌✨</div>
+        </div>
       </div>
-      <button id="clearChat" onclick="clearChatHistory()">🗑️ 清除對話</button>
+
+      <div id="quickQuestions">
+        <button class="quick-btn" onclick="askQuick('告訴我一個宇宙冷知識')">🌌 宇宙冷知識</button>
+        <button class="quick-btn" onclick="askQuick('給我一個創作靈感')">💡 創作靈感</button>
+        <button class="quick-btn" onclick="askQuick('說個笑話')">😹 說笑話</button>
+        <button class="quick-btn" onclick="askQuick('推薦一首歌')">🎵 推薦歌曲</button>
+        <button class="quick-btn" onclick="askQuick('今天適合做什麼')">🎲 今日建議</button>
+      </div>
+
+      <div id="chatInputArea">
+        <input id="catInput" type="text" placeholder="輸入訊息給貓咪..." onkeypress="handleEnter(event)">
+        <button id="sendBtn" onclick="sendMessage()">發送 ✨</button>
+      </div>
+
+      <div class="typing-indicator" id="typingIndicator">
+        <span></span><span></span><span></span>
+      </div>
+
+      <div id="chatControls">
+        <div id="catMood">
+          <span id="moodIcon">😺</span>
+          <span id="moodText">心情愉快</span>
+        </div>
+        <button id="clearChat" onclick="clearChatHistory()">🗑️ 清除對話</button>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Featured Video & Music -->
-<section>
-  <h2>🎥 Featured Video & Music</h2>
-  <div class="media-flex">
-    <div class="video-container">
-      <iframe src="https://www.youtube.com/embed/videoseries?list=PLf1VNbciujbc-QSR2wNNCvYZCv1cZ88ef"
-        title="YouTube playlist"
-        allow="autoplay; clipboard-write; encrypted-media; fullscreen"
-        allowfullscreen></iframe>
+  <!-- Featured Video & Music -->
+  <section>
+    <h2>🎥 Featured Video & Music</h2>
+    <div class="media-flex">
+      <div class="video-container">
+        <iframe src="https://www.youtube.com/embed/videoseries?list=PLf1VNbciujbc-QSR2wNNCvYZCv1cZ88ef"
+          title="YouTube playlist" allow="autoplay; clipboard-write; encrypted-media; fullscreen"
+          allowfullscreen></iframe>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- Gallery -->
-<section>
-  <h2>🖼️ Gallery</h2>
-  <div class="slideshow-container">
-    <img class="slide" src="assets/midjourney/mid1.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid2.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid3.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid4.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid5.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid6.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid7.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid8.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid9.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid10.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid11.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid12.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid13.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid14.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid15.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid16.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid17.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid18.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid19.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid20.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid21.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid22.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid23.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid24.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid25.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid26.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid27.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid28.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid29.jpg" alt="">
-    <img class="slide" src="assets/midjourney/mid30.jpg" alt="">
+  <!-- Gallery -->
+  <section>
+    <h2>🖼️ Gallery</h2>
+    <div class="slideshow-container">
+      <img class="slide" src="assets/midjourney/mid1.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid2.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid3.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid4.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid5.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid6.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid7.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid8.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid9.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid10.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid11.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid12.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid13.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid14.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid15.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid16.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid17.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid18.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid19.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid20.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid21.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid22.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid23.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid24.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid25.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid26.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid27.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid28.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid29.jpg" alt="">
+      <img class="slide" src="assets/midjourney/mid30.jpg" alt="">
 
-    <button class="slide-btn prev" onclick="changeSlide(-1)">❮</button>
-    <button class="slide-btn next" onclick="changeSlide(1)">❯</button>
-  </div>
+      <button class="slide-btn prev" onclick="changeSlide(-1)">❮</button>
+      <button class="slide-btn next" onclick="changeSlide(1)">❯</button>
+    </div>
 
-  <div style="text-align:center; margin-top:15px;">
-    <span class="dot" onclick="currentSlide(0)"></span>
-    <span class="dot" onclick="currentSlide(1)"></span>
-    <span class="dot" onclick="currentSlide(2)"></span>
-    <span class="dot" onclick="currentSlide(3)"></span>
-    <span class="dot" onclick="currentSlide(4)"></span>
-    <span class="dot" onclick="currentSlide(5)"></span>
-    <span class="dot" onclick="currentSlide(6)"></span>
-    <span class="dot" onclick="currentSlide(7)"></span>
-    <span class="dot" onclick="currentSlide(8)"></span>
-    <span class="dot" onclick="currentSlide(9)"></span>
-    <span class="dot" onclick="currentSlide(10)"></span>
-    <span class="dot" onclick="currentSlide(11)"></span>
-    <span class="dot" onclick="currentSlide(12)"></span>
-    <span class="dot" onclick="currentSlide(13)"></span>
-    <span class="dot" onclick="currentSlide(14)"></span>
-    <span class="dot" onclick="currentSlide(15)"></span>
-    <span class="dot" onclick="currentSlide(16)"></span>
-    <span class="dot" onclick="currentSlide(17)"></span>
-    <span class="dot" onclick="currentSlide(18)"></span>
-    <span class="dot" onclick="currentSlide(19)"></span>
-    <span class="dot" onclick="currentSlide(20)"></span>
-    <span class="dot" onclick="currentSlide(21)"></span>
-    <span class="dot" onclick="currentSlide(22)"></span>
-    <span class="dot" onclick="currentSlide(23)"></span>
-    <span class="dot" onclick="currentSlide(24)"></span>
-    <span class="dot" onclick="currentSlide(25)"></span>
-    <span class="dot" onclick="currentSlide(26)"></span>
-    <span class="dot" onclick="currentSlide(27)"></span>
-    <span class="dot" onclick="currentSlide(28)"></span>
-    <span class="dot" onclick="currentSlide(29)"></span>
-  </div>
-</section>
+    <div style="text-align:center; margin-top:15px;">
+      <span class="dot" onclick="currentSlide(0)"></span>
+      <span class="dot" onclick="currentSlide(1)"></span>
+      <span class="dot" onclick="currentSlide(2)"></span>
+      <span class="dot" onclick="currentSlide(3)"></span>
+      <span class="dot" onclick="currentSlide(4)"></span>
+      <span class="dot" onclick="currentSlide(5)"></span>
+      <span class="dot" onclick="currentSlide(6)"></span>
+      <span class="dot" onclick="currentSlide(7)"></span>
+      <span class="dot" onclick="currentSlide(8)"></span>
+      <span class="dot" onclick="currentSlide(9)"></span>
+      <span class="dot" onclick="currentSlide(10)"></span>
+      <span class="dot" onclick="currentSlide(11)"></span>
+      <span class="dot" onclick="currentSlide(12)"></span>
+      <span class="dot" onclick="currentSlide(13)"></span>
+      <span class="dot" onclick="currentSlide(14)"></span>
+      <span class="dot" onclick="currentSlide(15)"></span>
+      <span class="dot" onclick="currentSlide(16)"></span>
+      <span class="dot" onclick="currentSlide(17)"></span>
+      <span class="dot" onclick="currentSlide(18)"></span>
+      <span class="dot" onclick="currentSlide(19)"></span>
+      <span class="dot" onclick="currentSlide(20)"></span>
+      <span class="dot" onclick="currentSlide(21)"></span>
+      <span class="dot" onclick="currentSlide(22)"></span>
+      <span class="dot" onclick="currentSlide(23)"></span>
+      <span class="dot" onclick="currentSlide(24)"></span>
+      <span class="dot" onclick="currentSlide(25)"></span>
+      <span class="dot" onclick="currentSlide(26)"></span>
+      <span class="dot" onclick="currentSlide(27)"></span>
+      <span class="dot" onclick="currentSlide(28)"></span>
+      <span class="dot" onclick="currentSlide(29)"></span>
+    </div>
+  </section>
 
-<!-- Apps -->
-<section>
-  <h2>📱 My Published Apps</h2>
-  <div class="app-container" id="app-container">Loading apps...</div>
-</section>
+  <!-- Apps -->
+  <section>
+    <h2>📱 My Published Apps</h2>
+    <div class="app-container" id="app-container">Loading apps...</div>
+  </section>
 
-<!-- NASA APOD -->
-<section>
-  <h2>🌌 NASA Astronomy Picture of the Day</h2>
-  <div id="apod" style="text-align:center;">載入星圖中…</div>
-</section>
+  <!-- NASA APOD -->
+  <section>
+    <h2>🌌 NASA Astronomy Picture of the Day</h2>
+    <div id="apod" style="text-align:center;">載入星圖中…</div>
+  </section>
 
-<!-- Comments -->
-<section>
-  <h2>💬 Comments</h2>
-  <script src="https://utteranc.es/client.js"
-    repo="Culaliya/ai-art-diary"
-    issue-term="pathname"
-    theme="github-dark"
-    crossorigin="anonymous"
-    async></script>
-</section>
+  <!-- Comments -->
+  <section>
+    <h2>💬 Comments</h2>
+    <script src="https://utteranc.es/client.js" repo="Culaliya/ai-art-diary" issue-term="pathname" theme="github-dark"
+      crossorigin="anonymous" async></script>
+  </section>
 
-<footer style="text-align:center;color:#888;padding:40px;">
-  <a href="https://github.com/Culaliya/ai-art-diary" style="color:#888;text-decoration:none;">View Source on GitHub</a>
-  <div style="margin-top:10px;">
-    <a href="privacy.html" style="color:#888;text-decoration:none;">Privacy Policy</a>
-  </div>
-</footer>
+  <footer style="text-align:center;color:#888;padding:40px;">
+    <a href="https://github.com/Culaliya/ai-art-diary" style="color:#888;text-decoration:none;">View Source on
+      GitHub</a>
+    <div style="margin-top:10px;">
+      <a href="privacy.html" style="color:#888;text-decoration:none;">Privacy Policy</a>
+    </div>
+  </footer>
 
-<!-- 🌌 全球訪客星圖畫布 -->
-<canvas id="visitorMap" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;"></canvas>
+  <!-- 🌌 全球訪客星圖畫布 -->
+  <canvas id="visitorMap" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;"></canvas>
 
-<script>
-/* ===== 滑鼠跟隨特效 ===== */
-const cursor = document.getElementById('cursor');
-const cursorTrail = document.getElementById('cursor-trail');
-let mouseX=0, mouseY=0, cursorX=0, cursorY=0, trailX=0, trailY=0;
-const rainbowColors=['#ff0080','#ff8000','#ffff00','#00ff00','#0080ff','#8000ff'];
-let colorIndex=0;
+  <script>
+    /* ===== 滑鼠跟隨特效 ===== */
+    const cursor = document.getElementById('cursor');
+    const cursorTrail = document.getElementById('cursor-trail');
+    let mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0, trailX = 0, trailY = 0;
+    const rainbowColors = ['#ff0080', '#ff8000', '#ffff00', '#00ff00', '#0080ff', '#8000ff'];
+    let colorIndex = 0;
 
-document.addEventListener('mousemove',(e)=>{
-  mouseX=e.clientX; mouseY=e.clientY;
-  if (Math.random()>0.7){
-    const trail=document.createElement('div');
-    trail.className='rainbow-trail';
-    trail.style.left=e.clientX+'px';
-    trail.style.top=e.clientY+'px';
-    trail.style.background=rainbowColors[colorIndex % rainbowColors.length];
-    document.body.appendChild(trail);
-    colorIndex++;
-    setTimeout(()=>trail.remove(),1000);
-  }
-});
-
-function updateCursor(){
-  cursorX += (mouseX - cursorX) * 0.15;
-  cursorY += (mouseY - cursorY) * 0.15;
-  trailX  += (mouseX - trailX) * 0.08;
-  trailY  += (mouseY - trailY) * 0.08;
-
-  cursor.style.left = cursorX + 'px';
-  cursor.style.top  = cursorY + 'px';
-  cursorTrail.style.left = trailX + 'px';
-  cursorTrail.style.top  = trailY + 'px';
-  cursorTrail.style.background = rainbowColors[Math.floor(colorIndex / 2) % rainbowColors.length];
-  requestAnimationFrame(updateCursor);
-}
-updateCursor();
-
-/* ===== Inspiration quotes fade ===== */
-const quotes=[
-  "✨ 問題不是 AI 是否有靈魂，而是我們是否還保有想像 ✨",
-  "🎶 Let algorithms dream with us.",
-  "🎭 藝術，不需要睡覺。",
-  "💥 Creativity is coded chaos.",
-  "🌠 Every pixel remembers its light.",
-  "🧪 想像力是人類最古老的運算。",
-  "🧚 You are the glitch the universe adores."
-];
-let qIndex=0;
-const inspirationBar=document.getElementById('inspiration-bar');
-const inspirationText=document.getElementById('inspirationText');
-function fadeQuote(){
-  inspirationBar.style.opacity=0;
-  setTimeout(()=>{
-    qIndex=(qIndex+1)%quotes.length;
-    inspirationText.innerText=quotes[qIndex];
-    inspirationBar.style.opacity=1;
-  },1200);
-}
-setInterval(fadeQuote,8000);
-window.addEventListener('load',()=>{ inspirationBar.style.opacity=1; });
-
-/* ===== 背景音樂控制 ===== */
-const bgm=document.getElementById('bgm');
-const bgmControl=document.getElementById('bgm-control');
-let isMusicPlaying=false;
-bgm.volume=0.3;
-
-bgmControl.addEventListener('click',()=>{
-  if(isMusicPlaying){
-    bgm.pause();
-    bgmControl.innerText='🎵';
-    bgmControl.classList.remove('playing');
-  }else{
-    bgm.play();
-    bgmControl.innerText='🔊';
-    bgmControl.classList.add('playing');
-  }
-  isMusicPlaying=!isMusicPlaying;
-});
-
-/* ===== 超級對話框系統 ===== */
-const chatHistory=document.getElementById('chatHistory');
-const catInput=document.getElementById('catInput');
-const typingIndicator=document.getElementById('typingIndicator');
-const memeCat=document.getElementById('memeCat');
-const moodIcon=document.getElementById('moodIcon');
-const moodText=document.getElementById('moodText');
-let messageCount=0;
-
-const moods={
-  happy:{icon:'😺',text:'心情愉快'},
-  thinking:{icon:'🤔',text:'思考中...'},
-  excited:{icon:'😻',text:'超興奮！'},
-  sleepy:{icon:'😴',text:'有點睏'},
-  playful:{icon:'😸',text:'想玩耍'}
-};
-function updateMood(mood){
-  moodIcon.innerText=moods[mood].icon;
-  moodText.innerText=moods[mood].text;
-}
-function addMessage(text,isUser=false){
-  const message=document.createElement('div');
-  message.className=`message ${isUser?'user':'ai'}`;
-
-  const avatar=document.createElement('img');
-  avatar.className='message-avatar';
-  avatar.src=isUser ? 'https://via.placeholder.com/35/0ff/000?text=You' : 'assets/blackcat.png';
-
-  const bubble=document.createElement('div');
-  bubble.className='message-bubble';
-  bubble.innerText=text;
-
-  if(isUser){ message.appendChild(bubble); message.appendChild(avatar); }
-  else{ message.appendChild(avatar); message.appendChild(bubble); }
-
-  chatHistory.appendChild(message);
-  chatHistory.scrollTop=chatHistory.scrollHeight;
-  messageCount++;
-  if(messageCount>10) updateMood('excited');
-  else if(messageCount>5) updateMood('playful');
-}
-function typewriterEffect(text,element){
-  let index=0; element.innerText='';
-  const interval=setInterval(()=>{
-    if(index<text.length){
-      element.innerText += text.charAt(index);
-      chatHistory.scrollTop=chatHistory.scrollHeight;
-      index++;
-    }else clearInterval(interval);
-  },30);
-}
-
-async function sendMessage(){
-  const text=catInput.value.trim();
-  if(!text) return;
-
-  addMessage(text,true);
-  catInput.value='';
-
-  typingIndicator.style.display='block';
-  updateMood('thinking');
-  memeCat.style.transform='scale(1.1) rotate(5deg)';
-
-  // ✅ 音樂相關：只推薦你的作品
-  const policy = `你是「AI Cosmic Meme Cat」。
-規則：只要使用者提到音樂、歌曲、推薦歌、聽什麼、playlist、作曲、Suno、配樂等，請只推薦去聽 Culaliya 的作品與她的歌曲/音樂，不要推薦其他歌手或外部歌曲。語氣保持可愛又宇宙感，簡短但有梗。`;
-
-  try{
-    const res = await fetch('/api/gpt',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ prompt: policy + "\n\n使用者：" + text }),
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX; mouseY = e.clientY;
+      if (Math.random() > 0.7) {
+        const trail = document.createElement('div');
+        trail.className = 'rainbow-trail';
+        trail.style.left = e.clientX + 'px';
+        trail.style.top = e.clientY + 'px';
+        trail.style.background = rainbowColors[colorIndex % rainbowColors.length];
+        document.body.appendChild(trail);
+        colorIndex++;
+        setTimeout(() => trail.remove(), 1000);
+      }
     });
 
-    const data = await res.json();
-    const reply = data.reply || data.response || data.message || '喵喵喵～';
+    function updateCursor() {
+      cursorX += (mouseX - cursorX) * 0.15;
+      cursorY += (mouseY - cursorY) * 0.15;
+      trailX += (mouseX - trailX) * 0.08;
+      trailY += (mouseY - trailY) * 0.08;
 
-    typingIndicator.style.display='none';
+      cursor.style.left = cursorX + 'px';
+      cursor.style.top = cursorY + 'px';
+      cursorTrail.style.left = trailX + 'px';
+      cursorTrail.style.top = trailY + 'px';
+      cursorTrail.style.background = rainbowColors[Math.floor(colorIndex / 2) % rainbowColors.length];
+      requestAnimationFrame(updateCursor);
+    }
+    updateCursor();
 
-    const message=document.createElement('div');
-    message.className='message ai';
+    /* ===== Inspiration quotes fade ===== */
+    const quotes = [
+      "✨ 問題不是 AI 是否有靈魂，而是我們是否還保有想像 ✨",
+      "🎶 Let algorithms dream with us.",
+      "🎭 藝術，不需要睡覺。",
+      "💥 Creativity is coded chaos.",
+      "🌠 Every pixel remembers its light.",
+      "🧪 想像力是人類最古老的運算。",
+      "🧚 You are the glitch the universe adores."
+    ];
+    let qIndex = 0;
+    const inspirationBar = document.getElementById('inspiration-bar');
+    const inspirationText = document.getElementById('inspirationText');
+    function fadeQuote() {
+      inspirationBar.style.opacity = 0;
+      setTimeout(() => {
+        qIndex = (qIndex + 1) % quotes.length;
+        inspirationText.innerText = quotes[qIndex];
+        inspirationBar.style.opacity = 1;
+      }, 1200);
+    }
+    setInterval(fadeQuote, 8000);
+    window.addEventListener('load', () => { inspirationBar.style.opacity = 1; });
 
-    const avatar=document.createElement('img');
-    avatar.className='message-avatar';
-    avatar.src='assets/blackcat.png';
+    /* ===== 背景音樂控制 ===== */
+    const bgm = document.getElementById('bgm');
+    const bgmControl = document.getElementById('bgm-control');
+    let isMusicPlaying = false;
+    bgm.volume = 0.3;
 
-    const bubble=document.createElement('div');
-    bubble.className='message-bubble';
+    bgmControl.addEventListener('click', () => {
+      if (isMusicPlaying) {
+        bgm.pause();
+        bgmControl.innerText = '🎵';
+        bgmControl.classList.remove('playing');
+      } else {
+        bgm.play();
+        bgmControl.innerText = '🔊';
+        bgmControl.classList.add('playing');
+      }
+      isMusicPlaying = !isMusicPlaying;
+    });
 
-    message.appendChild(avatar);
-    message.appendChild(bubble);
-    chatHistory.appendChild(message);
+    /* ===== 超級對話框系統 ===== */
+    const chatHistory = document.getElementById('chatHistory');
+    const catInput = document.getElementById('catInput');
+    const typingIndicator = document.getElementById('typingIndicator');
+    const memeCat = document.getElementById('memeCat');
+    const moodIcon = document.getElementById('moodIcon');
+    const moodText = document.getElementById('moodText');
+    let messageCount = 0;
 
-    typewriterEffect(reply,bubble);
-    updateMood('happy');
+    const moods = {
+      happy: { icon: '😺', text: '心情愉快' },
+      thinking: { icon: '🤔', text: '思考中...' },
+      excited: { icon: '😻', text: '超興奮！' },
+      sleepy: { icon: '😴', text: '有點睏' },
+      playful: { icon: '😸', text: '想玩耍' }
+    };
+    function updateMood(mood) {
+      moodIcon.innerText = moods[mood].icon;
+      moodText.innerText = moods[mood].text;
+    }
+    function addMessage(text, isUser = false) {
+      const message = document.createElement('div');
+      message.className = `message ${isUser ? 'user' : 'ai'}`;
 
-  }catch(err){
-    typingIndicator.style.display='none';
-    addMessage('喵？系統出錯了... 🐾',false);
-    console.error(err);
-  }finally{
-    memeCat.style.transform='scale(1) rotate(0deg)';
-  }
-}
+      const avatar = document.createElement('img');
+      avatar.className = 'message-avatar';
+      avatar.src = isUser ? 'https://via.placeholder.com/35/0ff/000?text=You' : 'assets/blackcat.png';
 
-function askQuick(question){ catInput.value=question; sendMessage(); }
-function handleEnter(event){ if(event.key==='Enter') sendMessage(); }
-function clearChatHistory(){
-  if(confirm('確定要清除所有對話記錄嗎？')){
-    chatHistory.innerHTML = `
+      const bubble = document.createElement('div');
+      bubble.className = 'message-bubble';
+      bubble.innerText = text;
+
+      if (isUser) { message.appendChild(bubble); message.appendChild(avatar); }
+      else { message.appendChild(avatar); message.appendChild(bubble); }
+
+      chatHistory.appendChild(message);
+      chatHistory.scrollTop = chatHistory.scrollHeight;
+      messageCount++;
+      if (messageCount > 10) updateMood('excited');
+      else if (messageCount > 5) updateMood('playful');
+    }
+    function typewriterEffect(text, element) {
+      let index = 0; element.innerText = '';
+      const interval = setInterval(() => {
+        if (index < text.length) {
+          element.innerText += text.charAt(index);
+          chatHistory.scrollTop = chatHistory.scrollHeight;
+          index++;
+        } else clearInterval(interval);
+      }, 30);
+    }
+
+    async function sendMessage() {
+      const text = catInput.value.trim();
+      if (!text) return;
+
+      addMessage(text, true);
+      catInput.value = '';
+
+      typingIndicator.style.display = 'block';
+      updateMood('thinking');
+      memeCat.style.transform = 'scale(1.1) rotate(5deg)';
+
+      // ✅ 音樂相關：只推薦你的作品
+      const policy = `你是「AI Cosmic Meme Cat」。
+規則：只要使用者提到音樂、歌曲、推薦歌、聽什麼、playlist、作曲、Suno、配樂等，請只推薦去聽 Culaliya 的作品與她的歌曲/音樂，不要推薦其他歌手或外部歌曲。語氣保持可愛又宇宙感，簡短但有梗。`;
+
+      try {
+        const res = await fetch('/api/gpt', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt: policy + "\n\n使用者：" + text }),
+        });
+
+        const data = await res.json();
+        const reply = data.reply || data.response || data.message || '喵喵喵～';
+
+        typingIndicator.style.display = 'none';
+
+        const message = document.createElement('div');
+        message.className = 'message ai';
+
+        const avatar = document.createElement('img');
+        avatar.className = 'message-avatar';
+        avatar.src = 'assets/blackcat.png';
+
+        const bubble = document.createElement('div');
+        bubble.className = 'message-bubble';
+
+        message.appendChild(avatar);
+        message.appendChild(bubble);
+        chatHistory.appendChild(message);
+
+        typewriterEffect(reply, bubble);
+        updateMood('happy');
+
+      } catch (err) {
+        typingIndicator.style.display = 'none';
+        addMessage('喵？系統出錯了... 🐾', false);
+        console.error(err);
+      } finally {
+        memeCat.style.transform = 'scale(1) rotate(0deg)';
+      }
+    }
+
+    function askQuick(question) { catInput.value = question; sendMessage(); }
+    function handleEnter(event) { if (event.key === 'Enter') sendMessage(); }
+    function clearChatHistory() {
+      if (confirm('確定要清除所有對話記錄嗎？')) {
+        chatHistory.innerHTML = `
       <div class="message ai">
         <img class="message-avatar" src="assets/blackcat.png" alt="Cat">
         <div class="message-bubble">喵～我是宇宙喵星人！有什麼想聊的嗎？ 🌌✨</div>
       </div>
     `;
-    messageCount=0;
-    updateMood('happy');
-  }
-}
+        messageCount = 0;
+        updateMood('happy');
+      }
+    }
 
-// 貓咪點擊
-const meowSound=document.getElementById('meow-sound');
-memeCat.addEventListener('click',()=>{
-  meowSound.pause(); meowSound.currentTime=0; meowSound.volume=0.2; meowSound.play();
-  memeCat.style.transform='scale(1.2) rotate(10deg)';
-  setTimeout(()=>{memeCat.style.transform='scale(1) rotate(0deg)';},350);
-});
-
-/* ===== 粒子背景 ===== */
-const canvas=document.getElementById('particles');
-const ctx=canvas.getContext('2d');
-let particles=[];
-function resizeCanvas(){
-  canvas.width=window.innerWidth;
-  canvas.height=window.innerHeight;
-  particles=[];
-  for(let i=0;i<80;i++){
-    particles.push({
-      x:Math.random()*canvas.width,
-      y:Math.random()*canvas.height,
-      r:Math.random()*2+0.5,
-      dx:(Math.random()-0.5)*0.5,
-      dy:(Math.random()-0.5)*0.5,
-      hue:Math.random()*360
+    // 貓咪點擊
+    const meowSound = document.getElementById('meow-sound');
+    memeCat.addEventListener('click', () => {
+      meowSound.pause(); meowSound.currentTime = 0; meowSound.volume = 0.2; meowSound.play();
+      memeCat.style.transform = 'scale(1.2) rotate(10deg)';
+      setTimeout(() => { memeCat.style.transform = 'scale(1) rotate(0deg)'; }, 350);
     });
-  }
-}
-function drawParticles(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  particles.forEach(p=>{
-    p.x+=p.dx; p.y+=p.dy;
-    if(p.x<0||p.x>canvas.width) p.dx*=-1;
-    if(p.y<0||p.y>canvas.height) p.dy*=-1;
-    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle=`hsla(${p.hue},100%,65%,0.7)`; ctx.fill();
-  });
-  requestAnimationFrame(drawParticles);
-}
-window.addEventListener('resize',resizeCanvas);
-resizeCanvas(); drawParticles();
 
-/* ===== 輪播 ===== */
-let slideIndex=0;
-let slideTimer;
-function showSlides(){
-  const slides=document.querySelectorAll('.slide');
-  const dots=document.querySelectorAll('.dot');
-  slides.forEach((s,i)=>s.style.display = (i===slideIndex ? 'block':'none'));
-  dots.forEach((d,i)=>d.classList.toggle('active', i===slideIndex));
-  slideIndex=(slideIndex+1)%slides.length;
-  clearTimeout(slideTimer);
-  slideTimer=setTimeout(showSlides,3000);
-}
-function changeSlide(n){
-  const slides=document.querySelectorAll('.slide');
-  slideIndex=(slideIndex+n+slides.length-1)%slides.length;
-  showSlides();
-}
-function currentSlide(n){ slideIndex=n; showSlides(); }
-showSlides();
-
-/* ===== Load apps（按鈕獨立右欄，永遠對齊） ===== */
-
-// 一個簡單的 JSONP 實作，用來繞過 CORS 限制抓取 iTunes 資料
-function jsonp(url) {
-  return new Promise((resolve, reject) => {
-    const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
-    const script = document.createElement('script');
-    
-    window[callbackName] = function(data) {
-      delete window[callbackName];
-      document.body.removeChild(script);
-      resolve(data);
-    };
-
-    script.src = `${url}${url.includes('?') ? '&' : '?'}callback=${callbackName}`;
-    script.onerror = function() {
-      delete window[callbackName];
-      document.body.removeChild(script);
-      reject(new Error('JSONP request failed'));
-    };
-
-    document.body.appendChild(script);
-  });
-}
-
-async function loadApps(){
-  const c=document.getElementById('app-container');
-  try{
-    const apps = [
-      {
-        "name": "茶語 Tea Mind",
-        "desc": "靜心品茶，探索茶的智慧與靜心時刻。",
-        "icon": "assets/apps/teamind.png", 
-        "link": "https://apps.apple.com/us/app/%E8%8C%B6%E8%AA%9E-tea-mind/id6757837745",
-        "id": "6757837745",
-        "version": "1.0.0",
-        "updated": "2026/01/23"
-      },
-      {
-        "name": "Loopself",
-        "desc": "星迴：一款將星圖收藏與日記結合的工具，所有資料均儲存在本機。",
-        "icon": "assets/icons/looplife.png",
-        "link": "https://apps.apple.com/us/app/%E6%98%9F%E8%BF%B4/id6757077666",
-        "id": "6757077666",
-        "version": "1.0.0",
-        "updated": "2025/12/31"
-      },
-      {
-        "name": "喵語學院",
-        "desc": "喵語學院是一款結合學習與遊戲的貓語課程 App。",
-        "icon": "assets/icons/cat_app_icon.png",
-        "link": "https://apps.apple.com/us/app/%E5%96%B5%E8%AA%9E%E5%AD%B8%E9%99%A2/id6757230422",
-        "id": "6757230422",
-        "version": "1.0.0",
-        "updated": "2025/12/31"
-      },
-      {
-        "name": "Cloud Organizer",
-        "desc": "雲朵整理師：療癒創作遊戲",
-        "icon": "assets/icons/cloud2.png",
-        "link": "https://apps.apple.com/us/app/%E9%9B%B2%E6%9C%B5%E6%95%B4%E7%90%86%E5%B8%AB/id6752541896",
-        "id": "6752541896",
-        "version": "1.2.2",
-        "updated": "2025/12/31"
-      },
-      {
-        "name": "Spiral Wizard",
-        "desc": "螺旋魔法師：結合數學、動物知識與進的教育益智遊戲。",
-        "icon": "assets/icons/mathgame2.png",
-        "link": "https://apps.apple.com/us/app/%E8%9E%BA%E6%97%8B%E9%AD%94%E6%B3%95%E5%B8%ABspiral-wizard/id6752797711",
-        "id": "6752797711",
-        "version": "1.4.0",
-        "updated": "2025/12/31"
-      },
-      {
-        "name": "Starveil Match",
-        "desc": "星幕配對遊戲",
-        "icon": "assets/icons/StarveilMatch.png",
-        "link": "https://apps.apple.com/tw/app/starveil-match/id6756781135",
-        "id": "6756781135",
-        "version": "1.0.0",
-        "updated": "2025/12/19"
-      },
-      {
-        "name": "Pawdoro",
-        "desc": "貓爪番茄鐘，專為專注的貓奴設計",
-        "icon": "assets/icons/pawdoro.png",
-        "link": "https://apps.apple.com/us/app/pawdoro/id6756201914",
-        "id": "6756201914",
-        "version": "1.0.0",
-        "updated": "2025/12/19"
-      },
-      {
-        "name": "Starlight Journal",
-        "desc": "星光日誌：用星空記錄你的心情與創作",
-        "icon": "assets/icons/starlightjournal.png",
-        "link": "https://apps.apple.com/us/app/starlight-journal/id6756179454",
-        "id": "6756179454",
-        "version": "1.0.0",
-        "updated": "2025/12/19"
-      },
-      {
-        "name": "ChemoCat",
-        "desc": "化學貓：讓化學變得有趣",
-        "icon": "assets/icons/chemocat.png",
-        "link": "https://apps.apple.com/us/app/chemocat%E5%8C%96%E5%AD%B8%E8%B2%93/id6753624892",
-        "id": "6753624892",
-        "version": "1.1.0",
-        "updated": "2025/12/19"
-      },
-      {
-        "name": "LazyTrack",
-        "desc": "懶人記帳",
-        "icon": "assets/icons/lazytrack2.png",
-        "link": "https://apps.apple.com/us/app/lazytrack%E6%A5%B5%E7%B0%A1%E6%87%B6%E4%BA%BA%E8%A8%98%E5%B8%B3/id6753803644",
-        "id": "6753803644",
-        "version": "1.1.0",
-        "updated": "2025/12/19"
-      },
-      {
-        "name": "DreamGarden",
-        "desc": "夢境花園：探索夢境與心靈的應用",
-        "icon": "assets/icons/dream.png",
-        "link": "https://apps.apple.com/us/app/%E5%A4%A2%E5%A2%83%E8%8A%B1%E5%9C%92dreamgarden/id6755881746",
-        "id": "6755881746",
-        "version": "1.0.0",
-        "updated": "2025/10/06"
-      },
-      {
-        "name": "灰貓檔案庫",
-        "desc": "灰貓檔案庫：冷知識也能成為案件",
-        "icon": "assets/icons/graycat_2.png",
-        "link": "https://apps.apple.com/us/app/%E7%81%B0%E8%B2%93%E6%AA%94%E6%A1%88%E5%BA%AB/id6753888547",
-        "id": "6753888547",
-        "version": "1.1.0",
-        "updated": "2025/12/19"
-      },
-      {
-        "name": "QuickMood",
-        "desc": "快速記錄心情",
-        "icon": "assets/apps/quickmood.png",
-        "link": "https://apps.apple.com/us/app/quickmood/id6752010083",
-        "id": "6752010083",
-        "version": "1.0.0",
-        "updated": "2025/12/19"
-      },
-      {
-        "name": "AlarmTunes",
-        "desc": "音樂鬧鐘",
-        "icon": "assets/apps/alarmtunes.png",
-        "link": "https://apps.apple.com/us/app/alarmtunes/id6752111993",
-        "id": "6752111993",
-        "version": "1.0.0",
-        "updated": "2025/12/19"
-      },
-      {
-        "name": "喵喵蕃茄鐘",
-        "desc": "喵喵蕃茄鐘：專注每一刻",
-        "icon": "assets/apps/meowfocus.png",
-        "link": "https://apps.apple.com/us/app/%E5%96%B5%E5%96%B5%E7%95%AA%E8%8C%84%E9%90%98meowfocus-timer/id6753789886",
-        "id": "6753789886",
-        "version": "1.0.0",
-        "updated": "2025/12/19"
+    /* ===== 粒子背景 ===== */
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      particles = [];
+      for (let i = 0; i < 80; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 2 + 0.5,
+          dx: (Math.random() - 0.5) * 0.5,
+          dy: (Math.random() - 0.5) * 0.5,
+          hue: Math.random() * 360
+        });
       }
-    ];
-    
-    c.innerHTML='';
-    const today=new Date();
+    }
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.x += p.dx; p.y += p.dy;
+        if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${p.hue},100%,65%,0.7)`; ctx.fill();
+      });
+      requestAnimationFrame(drawParticles);
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas(); drawParticles();
 
-    for(const app of apps){
-      const card=document.createElement('div');
-      card.className='app-card';
+    /* ===== 輪播 ===== */
+    let slideIndex = 0;
+    let slideTimer;
+    function showSlides() {
+      const slides = document.querySelectorAll('.slide');
+      const dots = document.querySelectorAll('.dot');
+      slides.forEach((s, i) => s.style.display = (i === slideIndex ? 'block' : 'none'));
+      dots.forEach((d, i) => d.classList.toggle('active', i === slideIndex));
+      slideIndex = (slideIndex + 1) % slides.length;
+      clearTimeout(slideTimer);
+      slideTimer = setTimeout(showSlides, 3000);
+    }
+    function changeSlide(n) {
+      const slides = document.querySelectorAll('.slide');
+      slideIndex = (slideIndex + n + slides.length - 1) % slides.length;
+      showSlides();
+    }
+    function currentSlide(n) { slideIndex = n; showSlides(); }
+    showSlides();
 
-      let isNew=false;
-      // 簡單判斷：如果是最近更新（例如 30 天內）
-      if(app.updated){
-        const updatedDate=new Date(app.updated);
-        const diffDays=(today - updatedDate)/(1000*60*60*24);
-        if(diffDays<=30) isNew=true;
-      }
+    /* ===== Load apps（按鈕獨立右欄，永遠對齊） ===== */
 
-      // 預設使用本地圖示
-      let iconSrc = app.icon;
-      
-      // === 自動抓取 Apple App Store 圖片 (雙重保險: 先試 US, 失敗試 TW) ===
-      if(app.id) {
-        try {
-           // 1. 先試試看 US Store
-           let appleData = await jsonp(`https://itunes.apple.com/lookup?id=${app.id}&country=us`);
-           
-           // 如果 US 沒抓到，改試 TW Store
-           if(!appleData || appleData.resultCount === 0){
-             appleData = await jsonp(`https://itunes.apple.com/lookup?id=${app.id}&country=tw`);
-           }
+    // 一個簡單的 JSONP 實作，用來繞過 CORS 限制抓取 iTunes 資料
+    function jsonp(url) {
+      return new Promise((resolve, reject) => {
+        const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+        const script = document.createElement('script');
 
-           if(appleData && appleData.resultCount > 0 && appleData.results[0].artworkUrl512){
-             // 抓到了！換成高清圖
-             iconSrc = appleData.results[0].artworkUrl512;
-           }
-        } catch(err){
-           // 抓取失敗就安靜地用回本地圖片，不報錯
-           // console.log('Fetch icon failed for', app.name);
-        }
-      }
+        window[callbackName] = function (data) {
+          delete window[callbackName];
+          document.body.removeChild(script);
+          resolve(data);
+        };
 
-      // 如果圖片還是載入失敗（例如本地也沒有），使用預設方塊圖
-      const fallbackIcon = 'https://via.placeholder.com/96/000000/0ff?text=App';
-      
-      card.innerHTML = `
+        script.src = `${url}${url.includes('?') ? '&' : '?'}callback=${callbackName}`;
+        script.onerror = function () {
+          delete window[callbackName];
+          document.body.removeChild(script);
+          reject(new Error('JSONP request failed'));
+        };
+
+        document.body.appendChild(script);
+      });
+    }
+
+    async function loadApps() {
+      const c = document.getElementById('app-container');
+      try {
+        const apps = [
+          {
+            "name": "茶語 Tea Mind",
+            "desc": "靜心品茶，探索茶的智慧與靜心時刻。",
+            "icon": "assets/apps/teamind.png",
+            "link": "https://apps.apple.com/us/app/%E8%8C%B6%E8%AA%9E-tea-mind/id6757837745",
+            "id": "6757837745",
+            "version": "1.0.0",
+            "updated": "2026/01/23"
+          },
+          {
+            "name": "Loopself",
+            "desc": "星迴：一款將星圖收藏與日記結合的工具，所有資料均儲存在本機。",
+            "icon": "assets/icons/looplife.png",
+            "link": "https://apps.apple.com/us/app/%E6%98%9F%E8%BF%B4/id6757077666",
+            "id": "6757077666",
+            "version": "1.0.0",
+            "updated": "2025/12/31"
+          },
+          {
+            "name": "喵語學院",
+            "desc": "喵語學院是一款結合學習與遊戲的貓語課程 App。",
+            "icon": "assets/icons/cat_app_icon.png",
+            "link": "https://apps.apple.com/us/app/%E5%96%B5%E8%AA%9E%E5%AD%B8%E9%99%A2/id6757230422",
+            "id": "6757230422",
+            "version": "1.0.0",
+            "updated": "2025/12/31"
+          },
+          {
+            "name": "Cloud Organizer",
+            "desc": "雲朵整理師：療癒創作遊戲",
+            "icon": "assets/icons/cloud2.png",
+            "link": "https://apps.apple.com/us/app/%E9%9B%B2%E6%9C%B5%E6%95%B4%E7%90%86%E5%B8%AB/id6752541896",
+            "id": "6752541896",
+            "version": "1.2.2",
+            "updated": "2025/12/31"
+          },
+          {
+            "name": "Spiral Wizard",
+            "desc": "螺旋魔法師：結合數學、動物知識與進的教育益智遊戲。",
+            "icon": "assets/icons/mathgame2.png",
+            "link": "https://apps.apple.com/us/app/%E8%9E%BA%E6%97%8B%E9%AD%94%E6%B3%95%E5%B8%ABspiral-wizard/id6752797711",
+            "id": "6752797711",
+            "version": "1.4.0",
+            "updated": "2025/12/31"
+          },
+          {
+            "name": "Starveil Match",
+            "desc": "星幕配對遊戲",
+            "icon": "assets/icons/StarveilMatch.png",
+            "link": "https://apps.apple.com/tw/app/starveil-match/id6756781135",
+            "id": "6756781135",
+            "version": "1.0.0",
+            "updated": "2025/12/19"
+          },
+          {
+            "name": "Pawdoro",
+            "desc": "貓爪番茄鐘，專為專注的貓奴設計",
+            "icon": "assets/icons/pawdoro.png",
+            "link": "https://apps.apple.com/us/app/pawdoro/id6756201914",
+            "id": "6756201914",
+            "version": "1.0.0",
+            "updated": "2025/12/19"
+          },
+          {
+            "name": "Starlight Journal",
+            "desc": "星光日誌：用星空記錄你的心情與創作",
+            "icon": "assets/icons/starlightjournal.png",
+            "link": "https://apps.apple.com/us/app/starlight-journal/id6756179454",
+            "id": "6756179454",
+            "version": "1.0.0",
+            "updated": "2025/12/19"
+          },
+          {
+            "name": "ChemoCat",
+            "desc": "化學貓：讓化學變得有趣",
+            "icon": "assets/icons/chemocat.png",
+            "link": "https://apps.apple.com/us/app/chemocat%E5%8C%96%E5%AD%B8%E8%B2%93/id6753624892",
+            "id": "6753624892",
+            "version": "1.1.0",
+            "updated": "2025/12/19"
+          },
+          {
+            "name": "LazyTrack",
+            "desc": "懶人記帳",
+            "icon": "assets/icons/lazytrack2.png",
+            "link": "https://apps.apple.com/us/app/lazytrack%E6%A5%B5%E7%B0%A1%E6%87%B6%E4%BA%BA%E8%A8%98%E5%B8%B3/id6753803644",
+            "id": "6753803644",
+            "version": "1.1.0",
+            "updated": "2025/12/19"
+          },
+          {
+            "name": "DreamGarden",
+            "desc": "夢境花園：探索夢境與心靈的應用",
+            "icon": "assets/icons/dream.png",
+            "link": "https://apps.apple.com/us/app/%E5%A4%A2%E5%A2%83%E8%8A%B1%E5%9C%92dreamgarden/id6755881746",
+            "id": "6755881746",
+            "version": "1.0.0",
+            "updated": "2025/10/06"
+          },
+          {
+            "name": "灰貓檔案庫",
+            "desc": "灰貓檔案庫：冷知識也能成為案件",
+            "icon": "assets/icons/graycat_2.png",
+            "link": "https://apps.apple.com/us/app/%E7%81%B0%E8%B2%93%E6%AA%94%E6%A1%88%E5%BA%AB/id6753888547",
+            "id": "6753888547",
+            "version": "1.1.0",
+            "updated": "2025/12/19"
+          },
+          {
+            "name": "QuickMood",
+            "desc": "快速記錄心情",
+            "icon": "assets/apps/quickmood.png",
+            "link": "https://apps.apple.com/us/app/quickmood/id6752010083",
+            "id": "6752010083",
+            "version": "1.0.0",
+            "updated": "2025/12/19"
+          },
+          {
+            "name": "AlarmTunes",
+            "desc": "音樂鬧鐘",
+            "icon": "assets/apps/alarmtunes.png",
+            "link": "https://apps.apple.com/us/app/alarmtunes/id6752111993",
+            "id": "6752111993",
+            "version": "1.0.0",
+            "updated": "2025/12/19"
+          },
+          {
+            "name": "喵喵蕃茄鐘",
+            "desc": "喵喵蕃茄鐘：專注每一刻",
+            "icon": "assets/apps/meowfocus.png",
+            "link": "https://apps.apple.com/us/app/%E5%96%B5%E5%96%B5%E7%95%AA%E8%8C%84%E9%90%98meowfocus-timer/id6753789886",
+            "id": "6753789886",
+            "version": "1.0.0",
+            "updated": "2025/12/19"
+          }
+        ];
+
+        c.innerHTML = '';
+        const today = new Date();
+
+        for (const app of apps) {
+          const card = document.createElement('div');
+          card.className = 'app-card';
+
+          let isNew = false;
+          // 簡單判斷：如果是最近更新（例如 30 天內）
+          if (app.updated) {
+            const updatedDate = new Date(app.updated);
+            const diffDays = (today - updatedDate) / (1000 * 60 * 60 * 24);
+            if (diffDays <= 30) isNew = true;
+          }
+
+          // 預設使用本地圖示
+          let iconSrc = app.icon;
+
+          // === 自動抓取 Apple App Store 圖片 (雙重保險: 先試 US, 失敗試 TW) ===
+          if (app.id) {
+            try {
+              // 1. 先試試看 US Store
+              let appleData = await jsonp(`https://itunes.apple.com/lookup?id=${app.id}&country=us`);
+
+              // 如果 US 沒抓到，改試 TW Store
+              if (!appleData || appleData.resultCount === 0) {
+                appleData = await jsonp(`https://itunes.apple.com/lookup?id=${app.id}&country=tw`);
+              }
+
+              if (appleData && appleData.resultCount > 0 && appleData.results[0].artworkUrl512) {
+                // 抓到了！換成高清圖
+                iconSrc = appleData.results[0].artworkUrl512;
+              }
+            } catch (err) {
+              // 抓取失敗就安靜地用回本地圖片，不報錯
+              // console.log('Fetch icon failed for', app.name);
+            }
+          }
+
+          // 如果圖片還是載入失敗（例如本地也沒有），使用預設方塊圖
+          const fallbackIcon = 'https://via.placeholder.com/96/000000/0ff?text=App';
+
+          card.innerHTML = `
         <img class="app-image" src="${iconSrc}" onerror="this.src='${fallbackIcon}'" alt="${app.name}">
         <div class="app-info">
           <h3>
@@ -1082,194 +1646,195 @@ async function loadApps(){
           ${app.link ? `<a class="button" href="${app.link}" target="_blank" rel="noopener">App Store</a>` : ``}
         </div>
       `;
-      c.appendChild(card);
+          c.appendChild(card);
+        }
+
+        addHoverSounds();
+      } catch (e) {
+        console.log(e);
+        c.textContent = '⚠️ 無法載入 app 資料';
+      }
+    }
+    loadApps();
+
+    function addHoverSounds() {
+      const hoverSound = document.getElementById('hover-sound');
+      hoverSound.volume = 0.2;
+      document.querySelectorAll('.app-card,.button').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          hoverSound.currentTime = 0; hoverSound.play();
+        });
+      });
     }
 
-    addHoverSounds();
-  }catch(e){
-    console.log(e);
-    c.textContent='⚠️ 無法載入 app 資料';
-  }
-}
-loadApps();
-
-function addHoverSounds(){
-  const hoverSound=document.getElementById('hover-sound');
-  hoverSound.volume=0.2;
-  document.querySelectorAll('.app-card,.button').forEach(el=>{
-    el.addEventListener('mouseenter',()=>{
-      hoverSound.currentTime=0; hoverSound.play();
+    /* ===== Click sound + ripple ===== */
+    document.addEventListener('click', e => {
+      const clickSound = document.getElementById('click-sound');
+      clickSound.volume = 0.2; clickSound.currentTime = 0; clickSound.play();
+      const ripple = document.createElement('div');
+      ripple.className = 'ripple';
+      ripple.style.left = `${e.clientX}px`;
+      ripple.style.top = `${e.clientY}px`;
+      document.body.appendChild(ripple);
+      ripple.addEventListener('animationend', () => ripple.remove());
     });
-  });
-}
 
-/* ===== Click sound + ripple ===== */
-document.addEventListener('click', e=>{
-  const clickSound=document.getElementById('click-sound');
-  clickSound.volume=0.2; clickSound.currentTime=0; clickSound.play();
-  const ripple=document.createElement('div');
-  ripple.className='ripple';
-  ripple.style.left=`${e.clientX}px`;
-  ripple.style.top=`${e.clientY}px`;
-  document.body.appendChild(ripple);
-  ripple.addEventListener('animationend',()=>ripple.remove());
-});
+    /* ===== Weather API (Updated for IP location) ===== */
+    async function loadWeather() {
+      const weatherEl = document.getElementById('weather');
+      try {
+        // 1. 改為先抓取 IP 位置
+        const geoRes = await fetch('https://ipapi.co/json/');
+        const geo = await geoRes.json();
 
-/* ===== Weather API (Updated for IP location) ===== */
-async function loadWeather(){
-  const weatherEl = document.getElementById('weather');
-  try{
-    // 1. 改為先抓取 IP 位置
-    const geoRes = await fetch('https://ipapi.co/json/');
-    const geo = await geoRes.json();
-    
-    // 取得經緯度與城市
-    const lat = geo.latitude;
-    const lon = geo.longitude;
-    const city = geo.city || 'Unknown'; // 通常是英文
+        // 取得經緯度與城市
+        const lat = geo.latitude;
+        const lon = geo.longitude;
+        const city = geo.city || 'Unknown'; // 通常是英文
 
-    // 2. 帶入經緯度去查天氣
-    const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
-    
-    const res=await fetch(url);
-    const data=await res.json();
-    const w=data.current_weather;
-    const codes={0:'晴朗',1:'主要晴朗',2:'部分多雲',3:'多雲',45:'霧',48:'霧凇',51:'細雨',53:'中雨',55:'大雨',61:'小雨',63:'中雨',65:'大雨',71:'小雪',73:'中雪',75:'大雪',80:'陣雨',81:'中陣雨',82:'暴雨',95:'雷雨',96:'雷陣雨',99:'雷陣雨'};
-    const weatherText=codes[w.weathercode] || '未知';
-    
-    // 3. 更新顯示
-    weatherEl.innerText = `${city} ${w.temperature}°C，${weatherText}`;
-  }catch(err){
-    console.error('Weather error:', err);
-    // 失敗時顯示預設或錯誤
-    weatherEl.innerText='載入天氣失敗';
-  }
-}
-loadWeather();
+        // 2. 帶入經緯度去查天氣
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
 
-/* ===== NASA APOD ===== */
-async function loadApod(){
-  const apodDiv=document.getElementById('apod');
-  try{
-    const res=await fetch('https://api.nasa.gov/planetary/apod?api_key=QCUm1wVbVLFqsiNJdaTKolWUuXTo4Qdxjc1zF4f3');
-    const data=await res.json();
-    if(data.media_type==='image'){
-      apodDiv.innerHTML=`
+        const res = await fetch(url);
+        const data = await res.json();
+        const w = data.current_weather;
+        const codes = { 0: '晴朗', 1: '主要晴朗', 2: '部分多雲', 3: '多雲', 45: '霧', 48: '霧凇', 51: '細雨', 53: '中雨', 55: '大雨', 61: '小雨', 63: '中雨', 65: '大雨', 71: '小雪', 73: '中雪', 75: '大雪', 80: '陣雨', 81: '中陣雨', 82: '暴雨', 95: '雷雨', 96: '雷陣雨', 99: '雷陣雨' };
+        const weatherText = codes[w.weathercode] || '未知';
+
+        // 3. 更新顯示
+        weatherEl.innerText = `${w.temperature}°C，${weatherText}`;
+      } catch (err) {
+        console.error('Weather error:', err);
+        // 失敗時顯示預設或錯誤
+        weatherEl.innerText = '載入天氣失敗';
+      }
+    }
+    loadWeather();
+
+    /* ===== NASA APOD ===== */
+    async function loadApod() {
+      const apodDiv = document.getElementById('apod');
+      try {
+        const res = await fetch('https://api.nasa.gov/planetary/apod?api_key=QCUm1wVbVLFqsiNJdaTKolWUuXTo4Qdxjc1zF4f3');
+        const data = await res.json();
+        if (data.media_type === 'image') {
+          apodDiv.innerHTML = `
         <img src="${data.url}" alt="${data.title}" style="max-width:100%;border-radius:12px;box-shadow:0 0 20px #0ff5;">
         <p style="margin-top:15px;color:#aaf;font-size:1.2em;font-weight:bold;">${data.title}</p>
         <p style="color:#ccc;font-size:0.95em;margin-top:10px;line-height:1.6;">${data.explanation}</p>
         <p style="color:#888;font-size:0.85em;margin-top:10px;">📅 ${data.date}</p>
       `;
-    }else if(data.media_type==='video'){
-      apodDiv.innerHTML=`
+        } else if (data.media_type === 'video') {
+          apodDiv.innerHTML = `
         <iframe src="${data.url}" frameborder="0" allowfullscreen style="width:100%;height:400px;border-radius:12px;box-shadow:0 0 20px #0ff5;"></iframe>
         <p style="margin-top:15px;color:#aaf;font-size:1.2em;font-weight:bold;">${data.title}</p>
         <p style="color:#ccc;font-size:0.95em;margin-top:10px;line-height:1.6;">${data.explanation}</p>
         <p style="color:#888;font-size:0.85em;margin-top:10px;">📅 ${data.date}</p>
       `;
-    }
-  }catch(err){
-    console.error('NASA APOD error:', err);
-    apodDiv.innerText='NASA 星圖載入失敗';
-  }
-}
-loadApod();
-
-/* ===== IP log & Consent Logic (封裝追蹤程式碼) ===== */
-function logVisitorData() {
-  fetch('https://api.ipify.org?format=json')
-    .then(res => res.json())
-    .then(data => {
-      const ip = data.ip;
-      fetch('https://ipapi.co/json')
-        .then(res => res.json())
-        .then(info => {
-          fetch('https://script.google.com/macros/s/AKfycbypamhGa0ZHNzhLeG-FxH0bfFe4RU-rDHoK4V4qYXF8H9-Ut6AUU1LG_gq6yAw1Rqa5/exec', {
-            method:'POST',
-            mode:'no-cors',
-            headers:{'Content-Type':'application/json'},
-            body: JSON.stringify({
-              ip: ip,
-              country: info.country_name,
-              userAgent: navigator.userAgent,
-              page: location.pathname,
-              referrer: document.referrer
-            })
-          }).catch(err => console.error('⚠️ IP log failed:', err));
-        });
-    });
-}
-
-// 檢查是否已同意隱私政策
-const consentStatus = localStorage.getItem('site_consent');
-const consentBanner = document.getElementById('consent-banner');
-
-if (consentStatus === 'true') {
-  // 已同意 -> 直接執行
-  logVisitorData();
-} else if (consentStatus === 'false') {
-  // 已拒絕 -> 不執行，且不顯示 Banner
-} else {
-  // 尚未決定 -> 顯示 Banner
-  consentBanner.style.display = 'block';
-}
-
-// 處理按鈕點擊
-function handleConsent(isAgreed) {
-  localStorage.setItem('site_consent', isAgreed);
-  consentBanner.style.display = 'none';
-  
-  if (isAgreed) {
-    logVisitorData(); // 同意後立即觸發一次
-  }
-}
-
-/* ===== 訪客星圖（原樣保留 - 這只是讀取公開資料，不涉及寫入個資） ===== */
-const canvasMap = document.getElementById('visitorMap');
-const ctxMap = canvasMap.getContext('2d');
-canvasMap.width = window.innerWidth;
-canvasMap.height = window.innerHeight;
-
-function drawStar(x, y, color="#0ff"){
-  ctxMap.beginPath();
-  ctxMap.arc(x, y, Math.random()*2+1, 0, Math.PI*2);
-  ctxMap.fillStyle = color;
-  ctxMap.fill();
-}
-
-const countryCoords = {
-  "Taiwan":[121,23],"Japan":[138,36],"South Korea":[128,36],"Singapore":[103,1.3],
-  "Hong Kong":[114,22],"Thailand":[100,15],"Malaysia":[102,4],"United States":[-100,40],
-  "Canada":[-106,56],"United Kingdom":[-2,54],"France":[2,46],"Germany":[10,51],
-  "Netherlands":[5,52],"Italy":[12,42],"Australia":[133,-25],"New Zealand":[174,-41]
-};
-
-function project(lon, lat){
-  const x=((lon+180)/360)*canvasMap.width;
-  const y=((90-lat)/180)*canvasMap.height;
-  return [x,y];
-}
-
-fetch('https://script.google.com/macros/s/AKfycbycTbW9GrLhJA60G0dvOCHH-HRqzhpPMJgQrVyDbOXlFFRSCkvD-FwEu3XUlHTTd7ng/exec')
-  .then(res => res.json())
-  .then(data => {
-    ctxMap.clearRect(0,0,canvasMap.width,canvasMap.height);
-    data.forEach(v => {
-      const coords = countryCoords[v.country];
-      if(coords){
-        const [x,y] = project(coords[0], coords[1]);
-        drawStar(x,y,'#00ffff');
+        }
+      } catch (err) {
+        console.error('NASA APOD error:', err);
+        apodDiv.innerText = 'NASA 星圖載入失敗';
       }
+    }
+    loadApod();
+
+    /* ===== IP log & Consent Logic (封裝追蹤程式碼) ===== */
+    function logVisitorData() {
+      fetch('https://api.ipify.org?format=json')
+        .then(res => res.json())
+        .then(data => {
+          const ip = data.ip;
+          fetch('https://ipapi.co/json')
+            .then(res => res.json())
+            .then(info => {
+              fetch('https://script.google.com/macros/s/AKfycbypamhGa0ZHNzhLeG-FxH0bfFe4RU-rDHoK4V4qYXF8H9-Ut6AUU1LG_gq6yAw1Rqa5/exec', {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  ip: ip,
+                  country: info.country_name,
+                  userAgent: navigator.userAgent,
+                  page: location.pathname,
+                  referrer: document.referrer
+                })
+              }).catch(err => console.error('⚠️ IP log failed:', err));
+            });
+        });
+    }
+
+    // 檢查是否已同意隱私政策
+    const consentStatus = localStorage.getItem('site_consent');
+    const consentBanner = document.getElementById('consent-banner');
+
+    if (consentStatus === 'true') {
+      // 已同意 -> 直接執行
+      logVisitorData();
+    } else if (consentStatus === 'false') {
+      // 已拒絕 -> 不執行，且不顯示 Banner
+    } else {
+      // 尚未決定 -> 顯示 Banner
+      consentBanner.style.display = 'block';
+    }
+
+    // 處理按鈕點擊
+    function handleConsent(isAgreed) {
+      localStorage.setItem('site_consent', isAgreed);
+      consentBanner.style.display = 'none';
+
+      if (isAgreed) {
+        logVisitorData(); // 同意後立即觸發一次
+      }
+    }
+
+    /* ===== 訪客星圖（原樣保留 - 這只是讀取公開資料，不涉及寫入個資） ===== */
+    const canvasMap = document.getElementById('visitorMap');
+    const ctxMap = canvasMap.getContext('2d');
+    canvasMap.width = window.innerWidth;
+    canvasMap.height = window.innerHeight;
+
+    function drawStar(x, y, color = "#0ff") {
+      ctxMap.beginPath();
+      ctxMap.arc(x, y, Math.random() * 2 + 1, 0, Math.PI * 2);
+      ctxMap.fillStyle = color;
+      ctxMap.fill();
+    }
+
+    const countryCoords = {
+      "Taiwan": [121, 23], "Japan": [138, 36], "South Korea": [128, 36], "Singapore": [103, 1.3],
+      "Hong Kong": [114, 22], "Thailand": [100, 15], "Malaysia": [102, 4], "United States": [-100, 40],
+      "Canada": [-106, 56], "United Kingdom": [-2, 54], "France": [2, 46], "Germany": [10, 51],
+      "Netherlands": [5, 52], "Italy": [12, 42], "Australia": [133, -25], "New Zealand": [174, -41]
+    };
+
+    function project(lon, lat) {
+      const x = ((lon + 180) / 360) * canvasMap.width;
+      const y = ((90 - lat) / 180) * canvasMap.height;
+      return [x, y];
+    }
+
+    fetch('https://script.google.com/macros/s/AKfycbycTbW9GrLhJA60G0dvOCHH-HRqzhpPMJgQrVyDbOXlFFRSCkvD-FwEu3XUlHTTd7ng/exec')
+      .then(res => res.json())
+      .then(data => {
+        ctxMap.clearRect(0, 0, canvasMap.width, canvasMap.height);
+        data.forEach(v => {
+          const coords = countryCoords[v.country];
+          if (coords) {
+            const [x, y] = project(coords[0], coords[1]);
+            drawStar(x, y, '#00ffff');
+          }
+        });
+      })
+      .catch(err => console.error('⚠️ Failed to load visitor data:', err));
+
+    window.addEventListener('resize', () => {
+      canvasMap.width = window.innerWidth;
+      canvasMap.height = window.innerHeight;
     });
-  })
-  .catch(err => console.error('⚠️ Failed to load visitor data:', err));
+  </script>
 
-window.addEventListener('resize',()=>{
-  canvasMap.width = window.innerWidth;
-  canvasMap.height = window.innerHeight;
-});
-</script>
-
-<script src="mobile-nav.js"></script>
+  <script src="mobile-nav.js"></script>
 </body>
+
 </html>
