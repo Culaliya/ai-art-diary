@@ -964,12 +964,17 @@ async function loadApps(){
       // 預設使用本地圖示
       let iconSrc = app.icon;
       
-      // === 這裡就是自動抓取 Apple App Store 圖片的魔法 (JSONP版) ===
+      // === 自動抓取 Apple App Store 圖片 (雙重保險: 先試 US, 失敗試 TW) ===
       if(app.id) {
         try {
-           // 使用 JSONP 方式，並且指定 country=us，因為你的連結都是 us 商店
-           const appleData = await jsonp(`https://itunes.apple.com/lookup?id=${app.id}&country=us`);
+           // 1. 先試試看 US Store
+           let appleData = await jsonp(`https://itunes.apple.com/lookup?id=${app.id}&country=us`);
            
+           // 如果 US 沒抓到，改試 TW Store
+           if(!appleData || appleData.resultCount === 0){
+             appleData = await jsonp(`https://itunes.apple.com/lookup?id=${app.id}&country=tw`);
+           }
+
            if(appleData && appleData.resultCount > 0 && appleData.results[0].artworkUrl512){
              // 抓到了！換成高清圖
              iconSrc = appleData.results[0].artworkUrl512;
