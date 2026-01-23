@@ -909,18 +909,34 @@ document.addEventListener('click', e=>{
   ripple.addEventListener('animationend',()=>ripple.remove());
 });
 
-/* ===== Weather API ===== */
+/* ===== Weather API (Updated for IP location) ===== */
 async function loadWeather(){
-  const url='https://api.open-meteo.com/v1/forecast?latitude=24.8138&longitude=120.9675&current_weather=true';
+  const weatherEl = document.getElementById('weather');
   try{
+    // 1. 改為先抓取 IP 位置
+    const geoRes = await fetch('https://ipapi.co/json/');
+    const geo = await geoRes.json();
+    
+    // 取得經緯度與城市
+    const lat = geo.latitude;
+    const lon = geo.longitude;
+    const city = geo.city || 'Unknown'; // 通常是英文
+
+    // 2. 帶入經緯度去查天氣
+    const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
+    
     const res=await fetch(url);
     const data=await res.json();
     const w=data.current_weather;
-    const codes={0:'晴朗',1:'主要晴朗',2:'部分多雲',3:'多雲',45:'霧',48:'霧凇',51:'細雨',53:'中雨',55:'大雨',61:'小雨',63:'中雨',65:'大雨',71:'小雪',73:'中雪',75:'大雪',80:'陣雨',81:'中陣雨',82:'暴雨'};
+    const codes={0:'晴朗',1:'主要晴朗',2:'部分多雲',3:'多雲',45:'霧',48:'霧凇',51:'細雨',53:'中雨',55:'大雨',61:'小雨',63:'中雨',65:'大雨',71:'小雪',73:'中雪',75:'大雪',80:'陣雨',81:'中陣雨',82:'暴雨',95:'雷雨',96:'雷陣雨',99:'雷陣雨'};
     const weatherText=codes[w.weathercode] || '未知';
-    document.getElementById('weather').innerText = `新竹 ${w.temperature}°C，${weatherText}`;
-  }catch{
-    document.getElementById('weather').innerText='天氣載入失敗';
+    
+    // 3. 更新顯示
+    weatherEl.innerText = `${city} ${w.temperature}°C，${weatherText}`;
+  }catch(err){
+    console.error('Weather error:', err);
+    // 失敗時顯示預設或錯誤
+    weatherEl.innerText='載入天氣失敗';
   }
 }
 loadWeather();
