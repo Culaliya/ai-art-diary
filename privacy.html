@@ -1,65 +1,352 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Privacy Policy</title>
-  <style>
-    body {background:#000;color:#fff;font-family:'Orbitron',sans-serif;padding:40px;}
-    h1, h2 {color:#ff3eff;}
-    section {margin-bottom:40px;}
-    ul {list-style:none;padding-left:0;}
-    li {margin-bottom:8px;}
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Privacy Policy | Culaliya's AI Art Diary</title>
+
+    <!-- ===== 網站小縮圖 (Favicon) 設定 ===== -->
+    <link rel="icon" href="/assets/blackcat.png?v=3" type="image/png">
+    <link rel="shortcut icon" href="/assets/blackcat.png?v=3" type="image/png">
+    <link rel="apple-touch-icon" href="/assets/blackcat.png?v=3">
+
+    <!-- ===== SEO 設定 ===== -->
+    <meta name="description" content="Culaliya's AI Art Diary 隱私權政策。說明我們如何收集、使用和保護您的資料。" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://ai-art-diary.vercel.app/privacy.html" />
+    <meta property="og:title" content="Privacy Policy | Culaliya's AI Art Diary" />
+    <meta property="og:description" content="隱私權政策 - 說明我們如何收集、使用和保護您的資料。" />
+    <meta property="og:image" content="https://ai-art-diary.vercel.app/assets/blackcat.png" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Privacy Policy | Culaliya's AI Art Diary" />
+    <meta name="twitter:description" content="隱私權政策 - 說明我們如何收集、使用和保護您的資料。" />
+    <meta name="twitter:image" content="https://ai-art-diary.vercel.app/assets/blackcat.png" />
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+            color: #e0e0e0;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 50%, #0f0f23 100%);
+            min-height: 100vh;
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 24px;
+        }
+
+        h1 {
+            font-size: 2.2em;
+            color: #ff3eff;
+            text-shadow: 0 0 20px rgba(255, 62, 255, 0.4);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 0.95em;
+            margin-bottom: 30px;
+        }
+
+        .intro {
+            font-size: 1.1em;
+            color: #ccc;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 62, 255, 0.08);
+            border-left: 3px solid #ff3eff;
+            border-radius: 0 12px 12px 0;
+        }
+
+        h2 {
+            font-size: 1.4em;
+            color: #0ff;
+            margin-top: 50px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+        }
+
+        h3 {
+            font-size: 1.1em;
+            color: #ff3eff;
+            margin-top: 24px;
+            margin-bottom: 12px;
+        }
+
+        p,
+        li {
+            color: #ccc;
+            font-size: 1em;
+        }
+
+        ul {
+            padding-left: 0;
+            list-style: none;
+        }
+
+        li {
+            margin-bottom: 10px;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        li::before {
+            content: "•";
+            color: #0ff;
+            position: absolute;
+            left: 8px;
+        }
+
+        .highlight-box {
+            background: rgba(0, 255, 255, 0.08);
+            border: 1px solid rgba(0, 255, 255, 0.25);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background: rgba(255, 62, 255, 0.08);
+            border: 1px solid rgba(255, 62, 255, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .app-section {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .app-section h3 {
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        th {
+            color: #0ff;
+            font-weight: 600;
+        }
+
+        td {
+            color: #bbb;
+        }
+
+        a {
+            color: #0ff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #0ff, #008cff);
+            color: #000;
+            border-radius: 25px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            text-decoration: none;
+        }
+
+        footer {
+            text-align: center;
+            color: #666;
+            padding: 40px 20px;
+            font-size: 0.9em;
+        }
+
+        code {
+            background: rgba(0, 255, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #0ff;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 40px 16px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            h2 {
+                font-size: 1.2em;
+            }
+        }
+    </style>
 </head>
+
 <body>
-  <h1>Privacy Policy（隱私權政策）</h1>
-  <p>我不喜歡追蹤你。也不靠販售資料維生。<br>
-  這個宇宙的規則很簡單：<strong>能不收就不收，必須用到才用，而且說清楚。</strong></p>
+    <div class="container">
+        <h1>🔒 Privacy Policy（隱私權政策）</h1>
+        <p class="subtitle">最後更新：2026 年 1 月 23 日</p>
 
-  <h2>通用原則</h2>
-  <ul>
-    <li>不販售個人資料</li>
-    <li>不做廣告追蹤</li>
-    <li>若使用第三方服務（例如：當機回報/分析），會在各 App 條目中標示用途</li>
-  </ul>
+        <div class="intro">
+            我不喜歡追蹤你。也不靠販售資料維生。<br>
+            這個宇宙的規則很簡單：<strong>能不收就不收，必須用到才用，而且說清楚。</strong>
+        </div>
 
-  <h2>DreamGarden（夢境花園）</h2>
-  <ul>
-    <li>收集資料：〔填：例如 本機日記/心情資料 / 或 不收集〕</li>
-    <li>雲端同步：〔填：無 / iCloud / Firebase〕</li>
-    <li>第三方服務：〔填：無 / Firebase Analytics / Crash logs…〕</li>
-    <li>用途：提供功能、同步、改善穩定性</li>
-    <li>聯絡：〔你的支援信箱〕</li>
-  </ul>
+        <!-- ===== 通用原則 ===== -->
+        <h2>🌟 通用原則</h2>
+        <ul>
+            <li><strong>不販售個人資料</strong></li>
+            <li><strong>不做廣告追蹤</strong></li>
+            <li>若使用第三方服務（例如：當機回報/分析），會在各 App 條目中標示用途</li>
+        </ul>
 
-  <h2>ChemoCat（化學貓）</h2>
-  <ul>
-    <li>收集資料：〔填寫〕</li>
-    <li>雲端同步：〔填寫〕</li>
-    <li>第三方服務：〔填寫〕</li>
-    <li>用途：提供功能、同步、改善穩定性</li>
-    <li>聯絡：〔你的支援信箱〕</li>
-  </ul>
+        <!-- ===== 網站訪客統計 ===== -->
+        <h2>🌐 網站訪客統計（AI Art Diary）</h2>
 
-  <h2>灰貓檔案庫</h2>
-  <ul>
-    <li>收集資料：〔填寫〕</li>
-    <li>雲端同步：〔填寫〕</li>
-    <li>第三方服務：〔填寫〕</li>
-    <li>用途：提供功能、同步、改善穩定性</li>
-    <li>聯絡：〔你的支援信箱〕</li>
-  </ul>
+        <p>當您同意隱私權政策後，我們會收集以下資料用於訪客統計：</p>
 
-  <h2>LazyTrack</h2>
-  <ul>
-    <li>收集資料：〔填寫〕</li>
-    <li>雲端同步：〔填寫〕</li>
-    <li>第三方服務：〔填寫〕</li>
-    <li>用途：提供功能、同步、改善穩定性</li>
-    <li>聯絡：〔你的支援信箱〕</li>
-  </ul>
+        <table>
+            <thead>
+                <tr>
+                    <th>資料項目</th>
+                    <th>說明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>IP 位址</strong></td>
+                    <td>您的網路 IP 位址</td>
+                </tr>
+                <tr>
+                    <td><strong>國家/地區</strong></td>
+                    <td>根據 IP 推算的所在國家</td>
+                </tr>
+                <tr>
+                    <td><strong>裝置資訊</strong></td>
+                    <td>瀏覽器 User Agent 字串</td>
+                </tr>
+                <tr>
+                    <td><strong>瀏覽頁面</strong></td>
+                    <td>您訪問的頁面路徑</td>
+                </tr>
+                <tr>
+                    <td><strong>來源網址</strong></td>
+                    <td>您從哪個網站連結過來</td>
+                </tr>
+            </tbody>
+        </table>
 
-  <p>Last updated: 2025-12-19</p>
+        <h3>✨ 訪客星圖</h3>
+        <p>首頁背景的「訪客星圖」會根據訪客的國家分布繪製星點。這些星點僅呈現國家層級的統計，不會顯示任何個人資訊。</p>
+
+        <h3>⏱️ 資料保存期限</h3>
+        <ul>
+            <li><strong>原始訪客記錄：</strong>保存 180 天後自動刪除</li>
+            <li><strong>彙整統計資料：</strong>僅保留國家層級數字，無法追溯個人</li>
+        </ul>
+
+        <h3>🍪 Cookie 說明</h3>
+        <p>本網站使用 <code>localStorage</code> 記住您的隱私權同意狀態，不用於廣告投放或跨站追蹤。</p>
+
+        <!-- ===== iOS Apps ===== -->
+        <h2>📱 iOS Apps</h2>
+
+        <div class="app-section">
+            <h3>🌸 DreamGarden（夢境花園）</h3>
+            <ul>
+                <li><strong>收集資料：</strong>〔填：例如 本機日記/心情資料 / 或 不收集〕</li>
+                <li><strong>雲端同步：</strong>〔填：無 / iCloud / Firebase〕</li>
+                <li><strong>第三方服務：</strong>〔填：無 / Firebase Analytics / Crash logs…〕</li>
+                <li><strong>用途：</strong>提供功能、同步、改善穩定性</li>
+            </ul>
+        </div>
+
+        <div class="app-section">
+            <h3>🧪 ChemoCat（化學貓）</h3>
+            <ul>
+                <li><strong>收集資料：</strong>〔填寫〕</li>
+                <li><strong>雲端同步：</strong>〔填寫〕</li>
+                <li><strong>第三方服務：</strong>〔填寫〕</li>
+                <li><strong>用途：</strong>提供功能、同步、改善穩定性</li>
+            </ul>
+        </div>
+
+        <div class="app-section">
+            <h3>📚 灰貓檔案庫</h3>
+            <ul>
+                <li><strong>收集資料：</strong>〔填寫〕</li>
+                <li><strong>雲端同步：</strong>〔填寫〕</li>
+                <li><strong>第三方服務：</strong>〔填寫〕</li>
+                <li><strong>用途：</strong>提供功能、同步、改善穩定性</li>
+            </ul>
+        </div>
+
+        <div class="app-section">
+            <h3>⏰ LazyTrack</h3>
+            <ul>
+                <li><strong>收集資料：</strong>〔填寫〕</li>
+                <li><strong>雲端同步：</strong>〔填寫〕</li>
+                <li><strong>第三方服務：</strong>〔填寫〕</li>
+                <li><strong>用途：</strong>提供功能、同步、改善穩定性</li>
+            </ul>
+        </div>
+
+        <!-- ===== 刪除與聯絡 ===== -->
+        <h2>🗑️ 如何要求刪除資料？</h2>
+
+        <div class="highlight-box">
+            <strong>📧 聯絡方式：</strong><br>
+            請發送電子郵件至 <a href="mailto:culaliya.tw@gmail.com">culaliya.tw@gmail.com</a>，說明您想刪除的資料類型與大約時間範圍。<br><br>
+            我們將在收到請求後的 <strong>14 個工作天內</strong> 處理。
+        </div>
+
+        <h2>🔄 政策更新</h2>
+        <p>我們可能會不定期更新本隱私權政策。重大變更時會在網站上公告。</p>
+
+        <a href="/" class="back-link">← 返回首頁</a>
+    </div>
+
+    <footer>
+        © 2026 Culaliya's AI Art Diary. All rights reserved.
+    </footer>
 </body>
+
 </html>
