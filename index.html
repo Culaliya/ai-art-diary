@@ -966,7 +966,7 @@
     <div class="consent-content">
       <div class="consent-text">
         🍪 <strong>隱私權小提醒</strong><br>
-        我們會記錄 IP 與裝置資訊做統計，以了解訪客來源分布並優化網站體驗。我們不會收集您的敏感個資。您願意授權我們進行簡單的統計嗎？
+        我們不會收集姓名、電話、精確地址等敏感資料。同意後會記錄 IP 與裝置資訊做統計。詳見 <a href="privacy.html" style="color:#0ff;">Privacy Policy</a>。
       </div>
       <div class="consent-actions">
         <button class="consent-btn consent-decline" onclick="handleConsent(false)">拒絕 (Decline)</button>
@@ -980,7 +980,25 @@
     <h1>AI ART DIARY ⚡</h1>
     <p>Where algorithm meets intuition — Culaliya's creative & cosmic lab.</p>
     <div id="weather-quote">
-      <span id="weather">載入天氣中…</span>
+      <select id="city-select"
+        style="background:rgba(0,0,0,0.5);color:#0ff;border:1px solid #0ff;border-radius:8px;padding:4px 8px;font-size:0.9em;cursor:pointer;">
+        <option value="">🌍 選擇城市查看天氣</option>
+        <option value="25.03,121.57">台北 Taipei</option>
+        <option value="22.63,120.30">高雄 Kaohsiung</option>
+        <option value="24.15,120.68">台中 Taichung</option>
+        <option value="25.13,121.74">基隆 Keelung</option>
+        <option value="24.80,121.00">新竹 Hsinchu</option>
+        <option value="23.00,120.22">台南 Tainan</option>
+        <option value="35.68,139.69">東京 Tokyo</option>
+        <option value="37.57,126.98">首爾 Seoul</option>
+        <option value="22.28,114.16">香港 Hong Kong</option>
+        <option value="1.35,103.82">新加坡 Singapore</option>
+        <option value="40.71,-74.01">紐約 New York</option>
+        <option value="51.51,-0.13">倫敦 London</option>
+        <option value="48.86,2.35">巴黎 Paris</option>
+        <option value="-33.87,151.21">雪梨 Sydney</option>
+      </select>
+      <span id="weather" style="margin-left:10px;"></span>
     </div>
     <div id="inspiration-bar">
       <span id="inspirationText">✨ 問題不是 AI 是否有靈魂，而是我們是否還保有想像 ✨</span>
@@ -1679,37 +1697,38 @@
       ripple.addEventListener('animationend', () => ripple.remove());
     });
 
-    /* ===== Weather API (Updated for IP location) ===== */
-    async function loadWeather() {
-      const weatherEl = document.getElementById('weather');
+    /* ===== Weather API (City Dropdown Selection) ===== */
+    const citySelect = document.getElementById('city-select');
+    const weatherEl = document.getElementById('weather');
+    const weatherCodes = { 0: '☀️ 晴朗', 1: '🌤 主要晴朗', 2: '⛅ 部分多雲', 3: '☁️ 多雲', 45: '🌫 霧', 48: '🌫 霧凇', 51: '🌧 細雨', 53: '🌧 中雨', 55: '🌧 大雨', 61: '🌧 小雨', 63: '🌧 中雨', 65: '🌧 大雨', 71: '❄️ 小雪', 73: '❄️ 中雪', 75: '❄️ 大雪', 80: '🌦 陣雨', 81: '🌦 中陣雨', 82: '⛈ 暴雨', 95: '⛈ 雷雨', 96: '⛈ 雷陣雨', 99: '⛈ 雷陣雨' };
+
+    async function loadWeather(lat, lon) {
+      if (!lat || !lon) {
+        weatherEl.innerText = '';
+        return;
+      }
       try {
-        // 1. 改為先抓取 IP 位置
-        const geoRes = await fetch('https://ipapi.co/json/');
-        const geo = await geoRes.json();
-
-        // 取得經緯度與城市
-        const lat = geo.latitude;
-        const lon = geo.longitude;
-        const city = geo.city || 'Unknown'; // 通常是英文
-
-        // 2. 帶入經緯度去查天氣
+        weatherEl.innerText = '載入中…';
         const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
-
         const res = await fetch(url);
         const data = await res.json();
         const w = data.current_weather;
-        const codes = { 0: '晴朗', 1: '主要晴朗', 2: '部分多雲', 3: '多雲', 45: '霧', 48: '霧凇', 51: '細雨', 53: '中雨', 55: '大雨', 61: '小雨', 63: '中雨', 65: '大雨', 71: '小雪', 73: '中雪', 75: '大雪', 80: '陣雨', 81: '中陣雨', 82: '暴雨', 95: '雷雨', 96: '雷陣雨', 99: '雷陣雨' };
-        const weatherText = codes[w.weathercode] || '未知';
-
-        // 3. 更新顯示
-        weatherEl.innerText = `${w.temperature}°C，${weatherText}`;
+        const weatherText = weatherCodes[w.weathercode] || '未知';
+        weatherEl.innerText = `${w.temperature}°C ${weatherText}`;
       } catch (err) {
         console.error('Weather error:', err);
-        // 失敗時顯示預設或錯誤
-        weatherEl.innerText = '載入天氣失敗';
+        weatherEl.innerText = '載入失敗';
       }
     }
-    loadWeather();
+
+    citySelect.addEventListener('change', function () {
+      const coords = this.value.split(',');
+      if (coords.length === 2) {
+        loadWeather(coords[0], coords[1]);
+      } else {
+        weatherEl.innerText = '';
+      }
+    });
 
     /* ===== NASA APOD ===== */
     async function loadApod() {
@@ -1740,28 +1759,23 @@
     loadApod();
 
     /* ===== IP log & Consent Logic (封裝追蹤程式碼) ===== */
+    // Google Apps Script 端點已移至後端代理，避免直接暴露
+    const VISITOR_LOG_ENDPOINT = '/api/log-visitor';
+
     function logVisitorData() {
-      fetch('https://api.ipify.org?format=json')
-        .then(res => res.json())
-        .then(data => {
-          const ip = data.ip;
-          fetch('https://ipapi.co/json')
-            .then(res => res.json())
-            .then(info => {
-              fetch('https://script.google.com/macros/s/AKfycbypamhGa0ZHNzhLeG-FxH0bfFe4RU-rDHoK4V4qYXF8H9-Ut6AUU1LG_gq6yAw1Rqa5/exec', {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  ip: ip,
-                  country: info.country_name,
-                  userAgent: navigator.userAgent,
-                  page: location.pathname,
-                  referrer: document.referrer
-                })
-              }).catch(err => console.error('⚠️ IP log failed:', err));
-            });
-        });
+      // 只收集基本資訊，透過後端代理發送
+      const payload = {
+        userAgent: navigator.userAgent,
+        page: location.pathname,
+        referrer: document.referrer,
+        timestamp: new Date().toISOString()
+      };
+
+      fetch(VISITOR_LOG_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).catch(err => console.error('⚠️ Log failed:', err));
     }
 
     // 檢查是否已同意隱私政策
