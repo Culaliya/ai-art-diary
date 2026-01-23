@@ -747,10 +747,33 @@ function currentSlide(n){ slideIndex=n; showSlides(); }
 showSlides();
 
 /* ===== Load apps（按鈕獨立右欄，永遠對齊） ===== */
+
+// 一個簡單的 JSONP 實作，用來繞過 CORS 限制抓取 iTunes 資料
+function jsonp(url) {
+  return new Promise((resolve, reject) => {
+    const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+    const script = document.createElement('script');
+    
+    window[callbackName] = function(data) {
+      delete window[callbackName];
+      document.body.removeChild(script);
+      resolve(data);
+    };
+
+    script.src = `${url}${url.includes('?') ? '&' : '?'}callback=${callbackName}`;
+    script.onerror = function() {
+      delete window[callbackName];
+      document.body.removeChild(script);
+      reject(new Error('JSONP request failed'));
+    };
+
+    document.body.appendChild(script);
+  });
+}
+
 async function loadApps(){
   const c=document.getElementById('app-container');
   try{
-    // ID 我都幫你從連結裡抓出來了
     const apps = [
       {
         "name": "茶語 Tea Mind",
@@ -859,6 +882,33 @@ async function loadApps(){
         "id": "6753888547",
         "version": "1.1.0",
         "updated": "2025/12/19"
+      },
+      {
+        "name": "QuickMood",
+        "desc": "快速記錄心情",
+        "icon": "assets/apps/quickmood.png",
+        "link": "https://apps.apple.com/us/app/quickmood/id6752010083",
+        "id": "6752010083",
+        "version": "1.0.0",
+        "updated": "2025/12/19"
+      },
+      {
+        "name": "AlarmTunes",
+        "desc": "音樂鬧鐘",
+        "icon": "assets/apps/alarmtunes.png",
+        "link": "https://apps.apple.com/us/app/alarmtunes/id6752111993",
+        "id": "6752111993",
+        "version": "1.0.0",
+        "updated": "2025/12/19"
+      },
+      {
+        "name": "喵喵蕃茄鐘",
+        "desc": "喵喵蕃茄鐘：專注每一刻",
+        "icon": "assets/apps/meowfocus.png",
+        "link": "https://apps.apple.com/us/app/%E5%96%B5%E5%96%B5%E7%95%AA%E8%8C%84%E9%90%98meowfocus-timer/id6753789886",
+        "id": "6753789886",
+        "version": "1.0.0",
+        "updated": "2025/12/19"
       }
     ];
     
@@ -880,14 +930,13 @@ async function loadApps(){
       // 預設使用本地圖示
       let iconSrc = app.icon;
       
-      // === 這裡就是自動抓取 Apple App Store 圖片的魔法 ===
-      // 如果有 app.id，嘗試去 iTunes API 抓高清大圖
+      // === 這裡就是自動抓取 Apple App Store 圖片的魔法 (JSONP版) ===
       if(app.id) {
         try {
-           // 使用 jsonp 方式或直接 fetch (Apple iTunes API 支援 CORS 查詢)
-           const appleRes = await fetch(`https://itunes.apple.com/lookup?id=${app.id}&country=tw`);
-           const appleData = await appleRes.json();
-           if(appleData.resultCount > 0 && appleData.results[0].artworkUrl512){
+           // 使用 JSONP 方式，並且指定 country=us，因為你的連結都是 us 商店
+           const appleData = await jsonp(`https://itunes.apple.com/lookup?id=${app.id}&country=us`);
+           
+           if(appleData && appleData.resultCount > 0 && appleData.results[0].artworkUrl512){
              // 抓到了！換成高清圖
              iconSrc = appleData.results[0].artworkUrl512;
            }
