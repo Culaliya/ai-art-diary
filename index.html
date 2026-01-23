@@ -5,6 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Culaliya's AI Art Diary 🌌</title>
 
+<!-- ===== 網站小縮圖 (Favicon) ===== -->
+<link rel="icon" href="assets/blackcat.png" type="image/png">
+<link rel="shortcut icon" href="assets/blackcat.png" type="image/png">
+
+<!-- ===== SEO (搜尋引擎優化) 設定 ===== -->
+<meta name="description" content="Culaliya 的創意實驗室與作品集。探索 iOS App 作品（茶語 Tea Mind、喵語學院、星迴等）、AI 生成藝術、以及結合科技與靈性的數位創作日記。Where algorithm meets intuition." />
+<meta name="keywords" content="Culaliya, AI Art, iOS App, 茶語 Tea Mind, 喵語學院, Starveil Match, 獨立開發, 生成式藝術, 療癒遊戲, 程式教學, 靈性科技, Swift, 獨立開發者" />
+<meta name="author" content="Culaliya" />
+
+<!-- Open Graph / Facebook / LINE (讓分享連結變漂亮) -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://culaliya.github.io/ai-art-diary/" /> <!-- 預設為你的 GitHub Pages 網址 -->
+<meta property="og:title" content="Culaliya's AI Art Diary 🌌 | 創意與科技的實驗室" />
+<meta property="og:description" content="這裡紀錄了我的 iOS App 作品、AI 藝術創作與程式實驗。歡迎來到演算法與直覺交織的宇宙。" />
+<meta property="og:image" content="assets/blackcat.png" /> <!-- 分享時顯示的圖片 (設為你的黑貓) -->
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Culaliya's AI Art Diary 🌌" />
+<meta name="twitter:description" content="探索 iOS App 作品與 AI 藝術創作。Where algorithm meets intuition." />
+<meta name="twitter:image" content="assets/blackcat.png" />
+
 <style>
   body{
     margin:0;
@@ -29,6 +51,16 @@
   h2{color:#ff3eff;margin-bottom:16px;}
   section{max-width:1000px;margin:auto;padding:40px 20px;}
   #particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-2;background:#000;}
+
+  /* ===== 防君子設定：圖片禁止拖曳與選取 ===== */
+  img {
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+    pointer-events: auto; /* 保持點擊事件 (如連結) */
+  }
 
   /* ===== 滑鼠跟隨特效 ===== */
   #cursor{
