@@ -4,337 +4,334 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>🎨 AI 圖像實驗室</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>🪞圖像實驗室✨</title>
   <style>
     body {
       margin: 0;
-      font-family: 'Outfit', 'Noto Sans TC', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-      min-height: 100vh;
+      font-family: 'Orbitron', sans-serif;
+      background: radial-gradient(circle at 40% 20%, #05070f 0%, #0a0b16 60%, #000 100%);
+      color: #cfcfcf;
       overflow-x: hidden;
+      text-align: center;
     }
 
-    /* 背景裝飾 */
-    .bg-shapes {
+    /* 標題 */
+    h1 {
+      margin-top: 50px;
+      font-size: 2.4em;
+      color: #ff3eff;
+      text-shadow: 0 0 25px #ff3eff, 0 0 50px #0ff;
+      animation: glowPulse 4s infinite alternate;
+    }
+
+    @keyframes glowPulse {
+      from {
+        text-shadow: 0 0 15px #ff3eff;
+      }
+
+      to {
+        text-shadow: 0 0 35px #ff0044, 0 0 60px #ff3eff;
+      }
+    }
+
+    /* 副標：柔和漸變 */
+    .subtitle {
+      font-size: 1.2em;
+      margin-top: 8px;
+      letter-spacing: 2px;
+      color: #c9a3ff;
+      text-shadow: 0 0 15px #a855f7;
+      animation: softGlow 4s infinite ease-in-out alternate;
+    }
+
+    @keyframes softGlow {
+      0% {
+        opacity: 0.9;
+        text-shadow: 0 0 10px #a855f7;
+      }
+
+      100% {
+        opacity: 1;
+        text-shadow: 0 0 25px #c084fc;
+      }
+    }
+
+    /* 霓虹背景球 */
+    .neon-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.35;
+      animation: float 10s infinite ease-in-out alternate;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0);
+      }
+
+      100% {
+        transform: translateY(-60px) translateX(40px);
+      }
+    }
+
+    .orb1 {
+      width: 320px;
+      height: 320px;
+      background: #ff3eff;
+      top: 25%;
+      left: 15%;
+      animation-delay: 0s;
+    }
+
+    .orb2 {
+      width: 400px;
+      height: 400px;
+      background: #ff3355;
+      bottom: 10%;
+      right: 10%;
+      animation-delay: 3s;
+    }
+
+    .orb3 {
+      width: 260px;
+      height: 260px;
+      background: #7700ff;
+      top: 60%;
+      left: 40%;
+      animation-delay: 1.5s;
+    }
+
+    /* 卡片 */
+    .lab-table {
+      min-height: 80vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 40px;
+      margin-top: 60px;
+      padding: 20px;
+      z-index: 5;
+    }
+
+    .lab-card {
+      width: 240px;
+      height: 280px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 2px solid #aaa;
+      border-radius: 18px;
+      color: #eee;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: transform .4s, box-shadow .4s, border-color .4s;
+    }
+
+    .lab-card:hover {
+      transform: translateY(-15px) scale(1.05);
+      border-color: #fff;
+      box-shadow: 0 0 40px #fff, 0 0 60px #ff3eff;
+    }
+
+    .lab-card.active {
+      transform: translateY(-60px) scale(1.15);
+      box-shadow: 0 0 35px #ff3eff, 0 0 80px #fff;
+    }
+
+    .lab-icon {
+      font-size: 60px;
+      margin-bottom: 15px;
+      text-shadow: 0 0 15px #fff;
+    }
+
+    .lab-desc {
+      font-size: 0.9em;
+      color: #ccc;
+      margin-top: 6px;
+    }
+
+    .new-badge {
+      margin-left: 8px;
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, #ff0066, #ff3eff);
+      color: #000;
+      font-size: 0.7em;
+      font-weight: bold;
+      box-shadow: 0 0 10px #ff3355;
+    }
+
+    /* 按鈕：銀灰色 */
+    .back-home {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      padding: 10px 20px;
+      border: 2px solid #bbb;
+      border-radius: 25px;
+      color: #ddd;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.1);
+      font-weight: bold;
+      transition: .3s;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+    }
+
+    .back-home:hover {
+      background: rgba(255, 255, 255, 0.3);
+      color: #000;
+      box-shadow: 0 0 20px #fff;
+    }
+
+    #bgParticles {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       pointer-events: none;
-      overflow: hidden;
       z-index: 0;
     }
 
-    .shape {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.4;
-      animation: floatShape 15s ease-in-out infinite;
-    }
-
-    .shape1 {
-      width: 400px;
-      height: 400px;
-      background: linear-gradient(135deg, #ffecd2, #fcb69f);
-      top: -100px;
-      right: -100px;
-      animation-delay: 0s;
-    }
-
-    .shape2 {
-      width: 300px;
-      height: 300px;
-      background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
-      bottom: 10%;
-      left: -80px;
-      animation-delay: 3s;
-    }
-
-    .shape3 {
-      width: 250px;
-      height: 250px;
-      background: linear-gradient(135deg, #f5af19, #f12711);
-      top: 50%;
-      right: 20%;
-      animation-delay: 6s;
-    }
-
-    @keyframes floatShape {
-
-      0%,
-      100% {
-        transform: translateY(0) scale(1);
-      }
-
-      50% {
-        transform: translateY(-30px) scale(1.05);
-      }
-    }
-
-    /* 主容器 */
-    .container {
-      position: relative;
-      z-index: 1;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 40px 20px 80px;
-      text-align: center;
-    }
-
-    /* 標題區 */
-    .header {
-      margin-bottom: 50px;
-    }
-
-    .header-icon {
-      font-size: 4rem;
-      margin-bottom: 10px;
-      display: block;
-      animation: bounce 2s ease-in-out infinite;
-    }
-
-    @keyframes bounce {
-
-      0%,
-      100% {
-        transform: translateY(0);
-      }
-
-      50% {
-        transform: translateY(-10px);
-      }
-    }
-
-    h1 {
-      font-size: 2.5em;
-      font-weight: 700;
-      color: #fff;
-      margin: 0 0 12px;
-      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    }
-
-    .subtitle {
-      font-size: 1.1em;
-      color: rgba(255, 255, 255, 0.9);
-      font-weight: 400;
-      letter-spacing: 1px;
-    }
-
-    /* 卡片網格 */
-    .lab-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 24px;
-      padding: 10px;
-    }
-
-    /* 卡片樣式 */
-    .lab-card {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 24px;
-      padding: 30px 24px;
-      cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-      text-decoration: none;
-      display: block;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .lab-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 5px;
-      background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-
-    .lab-card:hover {
-      transform: translateY(-12px) scale(1.02);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-    }
-
-    .lab-card:hover::before {
-      opacity: 1;
-    }
-
-    .lab-icon {
-      font-size: 3.5rem;
-      margin-bottom: 16px;
-      display: block;
-    }
-
-    .lab-card h3 {
-      font-size: 1.3em;
-      font-weight: 700;
-      color: #333;
-      margin: 0 0 10px;
-    }
-
-    .lab-desc {
-      font-size: 0.95em;
-      color: #666;
-      line-height: 1.5;
-      margin: 0;
-    }
-
-    .new-badge {
-      display: inline-block;
-      margin-left: 8px;
-      padding: 3px 10px;
-      border-radius: 20px;
-      background: linear-gradient(135deg, #ff6b6b, #ffa502);
-      color: #fff;
-      font-size: 0.7em;
-      font-weight: 700;
-      vertical-align: middle;
-      animation: pulse 1.5s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-
-      0%,
-      100% {
-        transform: scale(1);
-      }
-
-      50% {
-        transform: scale(1.08);
-      }
-    }
-
-    /* 返回按鈕 */
-    .back-home {
-      position: fixed;
-      bottom: 24px;
-      left: 24px;
-      padding: 12px 24px;
-      border-radius: 50px;
-      background: rgba(255, 255, 255, 0.95);
-      color: #764ba2;
-      text-decoration: none;
-      font-weight: 600;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-      transition: all 0.3s;
-      z-index: 100;
-    }
-
-    .back-home:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-      background: #fff;
-    }
-
-    /* 響應式 */
+    /* 手機響應式 */
     @media (max-width: 768px) {
       h1 {
         font-size: 2em;
-      }
-
-      .header-icon {
-        font-size: 3rem;
+        margin-top: 40px;
       }
 
       .subtitle {
         font-size: 1em;
-        padding: 0 10px;
+        padding: 0 15px;
       }
 
-      .lab-grid {
-        grid-template-columns: 1fr;
-        gap: 18px;
+      .lab-table {
+        gap: 25px;
+        padding: 15px;
       }
 
       .lab-card {
-        padding: 24px 20px;
+        width: calc(50% - 20px);
+        min-width: 160px;
+        height: 220px;
       }
 
       .lab-icon {
-        font-size: 3rem;
+        font-size: 45px;
+      }
+
+      .lab-card h3 {
+        font-size: 0.9em;
+      }
+
+      .lab-desc {
+        font-size: 0.8em;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .lab-card {
+        width: calc(100% - 30px);
+        max-width: 300px;
       }
     }
   </style>
 </head>
 
 <body>
+  <div class="neon-orb orb1"></div>
+  <div class="neon-orb orb2"></div>
+  <div class="neon-orb orb3"></div>
 
-  <div class="bg-shapes">
-    <div class="shape shape1"></div>
-    <div class="shape shape2"></div>
-    <div class="shape shape3"></div>
-  </div>
+  <h1>🪞 AI 圖像實驗室</h1>
+  <p class="subtitle">用 AI 魔法探索影像的無限可能 ✨</p>
 
-  <div class="container">
-    <div class="header">
-      <span class="header-icon">🎨</span>
-      <h1>AI 圖像實驗室</h1>
-      <p class="subtitle">用 AI 魔法探索影像的無限可能 ✨</p>
-    </div>
-
-    <div class="lab-grid" id="labGrid"></div>
-  </div>
-
+  <canvas id="bgParticles"></canvas>
+  <div class="lab-table" id="labTable"></div>
   <a href="index.html" class="back-home">🏠 回首頁</a>
 
   <script>
     async function loadLabs() {
-      const grid = document.getElementById("labGrid");
+      const table = document.getElementById("labTable");
       const labs = [
-        {
-          icon: "🍔",
-          name: "毒舌卡路里計算機",
-          desc: "上傳食物照片，讓 AI 嘴爆你的晚餐！",
-          link: "toxic_calorie.html",
-          updated: "2025/11/02"
-        },
-        {
-          icon: "👻",
-          name: "靈異顯像儀",
-          desc: "自拍照變身靈異風格，膽大者專屬！",
-          link: "ghost_vision.html",
-          updated: "2025/11/02"
-        },
-        {
-          icon: "💖",
-          name: "網美濾鏡實驗室",
-          desc: "上傳自拍秒變網美，保持容貌換超美背景。",
-          link: "selfiebeautify.html",
-          updated: "2025/11/02"
-        }
+        { icon: "🍔", name: "毒舌卡路里計算機", desc: "上傳食物照片,讓 AI 嘴爆你的晚餐。", link: "toxic_calorie.html", updated: "2025/11/02" },
+        { icon: "👻", name: "靈異顯像儀", desc: "自拍？AI 幫你召喚靈體殘影。", link: "ghost_vision.html", updated: "2025/11/02" },
+        { icon: "✨", name: "網美濾鏡實驗室", desc: "自拍秒變網美！保持容貌換背景。", link: "selfiebeautify.html", updated: "2025/11/02" }
       ];
-
       const today = new Date();
-
-      labs.forEach((lab) => {
-        const card = document.createElement("a");
+      labs.forEach((g, i) => {
+        const card = document.createElement("div");
         card.className = "lab-card";
-        card.href = lab.link;
-
+        card.dataset.link = g.link;
         let isNew = false;
-        if (lab.updated) {
-          const updatedDate = new Date(lab.updated.replace(/\//g, "-"));
+        if (g.updated) {
+          const updatedDate = new Date(g.updated.replace(/\//g, "-"));
           const diffDays = (today - updatedDate) / (1000 * 60 * 60 * 24);
           if (diffDays <= 7) isNew = true;
         }
-
         card.innerHTML = `
-      <span class="lab-icon">${lab.icon}</span>
-      <h3>${lab.name}${isNew ? '<span class="new-badge">NEW</span>' : ''}</h3>
-      <p class="lab-desc">${lab.desc}</p>
+      <div class="lab-icon">${g.icon}</div>
+      <h3>${g.name}${isNew ? '<span class="new-badge">NEW</span>' : ''}</h3>
+      <p class="lab-desc">${g.desc}</p>
     `;
+        table.appendChild(card);
+      });
+      initCardEvents();
+    }
 
-        grid.appendChild(card);
+    function initCardEvents() {
+      const cards = document.querySelectorAll(".lab-card");
+      cards.forEach(card => {
+        card.addEventListener("click", () => {
+          window.location.href = card.dataset.link;
+        });
+
+        card.addEventListener("mouseenter", () => {
+          card.style.transform = "translateY(-15px) scale(1.05)";
+        });
+        card.addEventListener("mouseleave", () => {
+          card.style.transform = "";
+        });
       });
     }
 
+    /* 背景粒子：改為 ✨💗🌟 */
+    const canvas = document.getElementById("bgParticles");
+    const ctx = canvas.getContext("2d");
+    let width, height, particles = [];
+    function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
+    window.addEventListener("resize", resize); resize();
+
+    class Particle {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.size = Math.random() * 2 + 1;
+        this.speedY = Math.random() * 0.4 + 0.2;
+        this.alpha = Math.random() * 0.6 + 0.3;
+        // 隨機選擇 emoji：✨💗🌟
+        const emojis = ["✨", "💗", "🌟"];
+        this.emoji = emojis[Math.floor(Math.random() * emojis.length)];
+      }
+      update() { this.y += this.speedY; if (this.y > height + 20) this.reset(); }
+      draw() {
+        ctx.globalAlpha = this.alpha;
+        ctx.font = `${this.size * 10}px "Segoe UI Emoji"`;
+        ctx.fillText(this.emoji, this.x, this.y);
+      }
+    }
+    for (let i = 0; i < 40; i++)particles.push(new Particle());
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      for (const p of particles) { p.update(); p.draw(); }
+      requestAnimationFrame(animate);
+    }
+    animate();
     loadLabs();
   </script>
 </body>
