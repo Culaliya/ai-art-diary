@@ -1,142 +1,918 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dark Lab — 禁忌調配實驗室</title>
-<style>
-body {
-  background:#020012;
-  color:#fff;
-  font-family:'Comic Sans MS', 'Arial', sans-serif;
-  text-align:center;
-  padding:40px;
-  margin:0;
-}
-h1 {
-  font-size:2.5em;
-  margin-bottom:10px;
-  color:#ff9fcf;
-  text-shadow:0 0 10px #ff9fcf;
-}
-p {
-  font-size:1em;
-  color:#ccc;
-}
-#ingredients {
-  margin-top:30px;
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:15px;
-}
-.ingredient {
-  background:linear-gradient(135deg,#ffdfec,#ffd1f5);
-  color:#500048;
-  border-radius:12px;
-  padding:12px 18px;
-  cursor:pointer;
-  box-shadow:0 0 10px rgba(255,255,255,0.3);
-  transition:transform .2s;
-}
-.ingredient.selected {
-  transform:scale(1.1) rotate(-3deg);
-  box-shadow:0 0 15px #ffa8e8;
-}
-#mixBtn {
-  margin-top:30px;
-  background:linear-gradient(135deg,#b9faff,#c9f5c6);
-  color:#003;
-  padding:14px 24px;
-  border:none;
-  border-radius:20px;
-  cursor:pointer;
-  font-size:1.2em;
-  box-shadow:0 0 15px rgba(255,255,255,0.4);
-  transition:transform .2s;
-}
-#mixBtn:hover {
-  transform:scale(1.05);
-}
-#resultCard {
-  margin-top:40px;
-  background:rgba(255,255,255,0.1);
-  border:2px dashed #ff9fcf;
-  border-radius:16px;
-  padding:20px;
-  display:none;
-}
-#resultCard h2 {
-  font-size:2em;
-  margin:0;
-  color:#ff9fcf;
-}
-#resultCard p {
-  font-size:1.1em;
-  color:#e0d3e8;
-}
-</style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>👻 暗黑實驗室 | Dark Lab</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="/assets/blackcat.png?v=3" type="image/png">
+    <link rel="shortcut icon" href="/assets/blackcat.png?v=3" type="image/png">
+    <link rel="apple-touch-icon" href="/assets/blackcat.png?v=3">
+
+    <!-- SEO -->
+    <meta name="description" content="暗黑實驗室 - 調配神秘配方，創造奇妙效果！一個可愛但不太對勁的互動遊戲。" />
+    <meta property="og:title" content="👻 暗黑實驗室 | Dark Lab" />
+    <meta property="og:description" content="調配神秘配方，創造奇妙效果！" />
+    <meta property="og:image" content="https://ai-art-diary.vercel.app/assets/blackcat.png" />
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Creepster&family=Noto+Sans+TC:wght@400;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: linear-gradient(135deg, #0d0015 0%, #1a0a2e 50%, #0a0a1a 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        /* 背景動畫粒子 */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #9b59b6;
+            border-radius: 50%;
+            animation: float 15s infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.6;
+            }
+
+            90% {
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: translateY(-100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-family: 'Creepster', cursive;
+            font-size: 3em;
+            text-align: center;
+            color: #9b59b6;
+            text-shadow: 0 0 20px #9b59b6, 0 0 40px #6c3483;
+            margin-bottom: 10px;
+            animation: flicker 3s infinite;
+        }
+
+        @keyframes flicker {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+
+            52% {
+                opacity: 1;
+            }
+
+            54% {
+                opacity: 0.9;
+            }
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        /* 大鍋 */
+        .cauldron-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 30px 0;
+        }
+
+        .cauldron {
+            width: 200px;
+            height: 180px;
+            background: linear-gradient(180deg, #2c2c2c 0%, #1a1a1a 100%);
+            border-radius: 0 0 100px 100px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 -20px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .cauldron:hover {
+            transform: scale(1.05);
+        }
+
+        .cauldron::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -10px;
+            right: -10px;
+            height: 30px;
+            background: #3d3d3d;
+            border-radius: 10px;
+        }
+
+        .potion-liquid {
+            position: absolute;
+            bottom: 0;
+            left: 10%;
+            width: 80%;
+            height: 60%;
+            background: linear-gradient(180deg, var(--potion-color, #2ecc71) 0%, var(--potion-dark, #27ae60) 100%);
+            border-radius: 0 0 80px 80px;
+            animation: bubble 2s ease-in-out infinite;
+            transition: background 0.5s, height 0.3s;
+        }
+
+        @keyframes bubble {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: rise 2s ease-in infinite;
+        }
+
+        @keyframes rise {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translateY(-60px) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        /* 材料區 */
+        .ingredients-section {
+            margin: 40px 0;
+        }
+
+        .ingredients-section h2 {
+            color: #9b59b6;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .ingredients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .ingredient {
+            background: rgba(155, 89, 182, 0.1);
+            border: 2px solid rgba(155, 89, 182, 0.3);
+            border-radius: 12px;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            user-select: none;
+        }
+
+        .ingredient:hover {
+            background: rgba(155, 89, 182, 0.2);
+            border-color: #9b59b6;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(155, 89, 182, 0.3);
+        }
+
+        .ingredient.selected {
+            background: rgba(155, 89, 182, 0.4);
+            border-color: #e74c3c;
+            box-shadow: 0 0 15px rgba(231, 76, 60, 0.5);
+        }
+
+        .ingredient-icon {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .ingredient-name {
+            font-size: 0.85em;
+            color: #ccc;
+        }
+
+        /* 已選材料 */
+        .selected-area {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px dashed #9b59b6;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 80px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .selected-item {
+            background: linear-gradient(135deg, #9b59b6, #6c3483);
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0);
+            }
+
+            70% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .selected-item .remove {
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .selected-item .remove:hover {
+            opacity: 1;
+        }
+
+        .placeholder-text {
+            color: #666;
+            font-style: italic;
+        }
+
+        /* 按鈕 */
+        .brew-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(231, 76, 60, 0.4);
+        }
+
+        .brew-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 30px rgba(231, 76, 60, 0.6);
+        }
+
+        .brew-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .clear-btn {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 25px;
+            background: transparent;
+            color: #888;
+            border: 1px solid #555;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .clear-btn:hover {
+            color: #fff;
+            border-color: #888;
+        }
+
+        /* 結果區 */
+        .result-area {
+            background: rgba(155, 89, 182, 0.1);
+            border: 2px solid rgba(155, 89, 182, 0.3);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+            display: none;
+        }
+
+        .result-area.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+        }
+
+        .result-name {
+            font-size: 1.8em;
+            color: #9b59b6;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .result-desc {
+            color: #aaa;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .result-effect {
+            background: rgba(231, 76, 60, 0.2);
+            padding: 10px 20px;
+            border-radius: 10px;
+            color: #e74c3c;
+            font-size: 0.9em;
+            display: inline-block;
+        }
+
+        /* 配方書 */
+        .recipe-book {
+            margin-top: 40px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #333;
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .recipe-book h3 {
+            color: #9b59b6;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .recipe-list {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .recipe-list.show {
+            display: flex;
+        }
+
+        .recipe-item {
+            background: rgba(155, 89, 182, 0.1);
+            padding: 12px 15px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+        }
+
+        .recipe-item.discovered {
+            opacity: 1;
+            border-left: 3px solid #2ecc71;
+        }
+
+        .recipe-item .recipe-name {
+            font-weight: bold;
+            color: #9b59b6;
+        }
+
+        .recipe-item .recipe-ingredients {
+            font-size: 0.85em;
+            color: #888;
+        }
+
+        /* 返回連結 */
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #9b59b6, #6c3483);
+            color: #fff;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(155, 89, 182, 0.5);
+        }
+
+        footer {
+            text-align: center;
+            color: #666;
+            padding: 40px 20px;
+            font-size: 0.9em;
+        }
+
+        /* 特效 */
+        .explosion {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .explosion span {
+            position: absolute;
+            font-size: 2em;
+            animation: explode 1s ease-out forwards;
+        }
+
+        @keyframes explode {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(var(--x), var(--y)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* 手機版 */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.2em;
+            }
+
+            .cauldron {
+                width: 150px;
+                height: 140px;
+            }
+
+            .ingredients-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+            }
+
+            .ingredient {
+                padding: 10px 5px;
+            }
+
+            .ingredient-icon {
+                font-size: 1.5em;
+            }
+        }
+    </style>
 </head>
+
 <body>
-<h1>Dark Lab — 禁忌調配實驗室 👻</h1>
-<p>選擇三種可愛卻不對勁的材料，看看你會調出什麼…</p>
-<div id="ingredients">
-  <div class="ingredient" data-name="雫">💧 雫</div>
-  <div class="ingredient" data-name="粉末">🍚 粉末</div>
-  <div class="ingredient" data-name="結晶">💎 結晶</div>
-  <div class="ingredient" data-name="幽光">✨ 幽光</div>
-  <div class="ingredient" data-name="花瓣">🌸 花瓣</div>
-  <div class="ingredient" data-name="羽毛">🪶 羽毛</div>
-</div>
-<button id="mixBtn">開始調配</button>
-<div id="resultCard">
-  <h2 id="resultName"></h2>
-  <p id="resultDesc"></p>
-  <p id="resultRarity"></p>
-  <button onclick="resetGame()" style="margin-top:20px;background:linear-gradient(135deg,#ffd1f5,#ffdfec);color:#500048;padding:10px 20px;border:none;border-radius:20px;cursor:pointer;">再調一次</button>
-</div>
-<script>
-const ingredients = document.querySelectorAll('.ingredient');
-let selected = [];
+    <!-- 背景粒子 -->
+    <div class="particles" id="particles"></div>
 
-ingredients.forEach(item => {
-  item.addEventListener('click', () => {
-    if (item.classList.contains('selected')) {
-      item.classList.remove('selected');
-      selected = selected.filter(n => n !== item.dataset.name);
-    } else {
-      if (selected.length < 3) {
-        item.classList.add('selected');
-        selected.push(item.dataset.name);
-      }
-    }
-  });
-});
+    <div class="container">
+        <h1>👻 暗黑實驗室</h1>
+        <p class="subtitle">調配神秘配方，創造奇妙效果... 🧪✨</p>
 
-document.getElementById('mixBtn').addEventListener('click', () => {
-  if (selected.length !== 3) {
-    alert('請先選擇三種材料！');
-    return;
-  }
-  const results = [
-    {name:'星貓湯', rarity:'稀有 ⭐️', desc:'閃爍的湯面反射你的好奇心。'},
-    {name:'奶油泥', rarity:'普通', desc:'看起來可愛，但聞起來好像貓罐頭。'},
-    {name:'靈魂絮語', rarity:'禁忌 ⚠️', desc:'柔軟的絨球私語著不可說的秘密。'},
-    {name:'幻影果醬', rarity:'稀有 ⭐️', desc:'透明果醬裡藏著未來的影子。'},
-    {name:'貓咪雲', rarity:'普通', desc:'像棉花糖一樣的雲朵散發出喵喵香。'},
-    {name:'深淵糖果', rarity:'禁忌 ⚠️', desc:'一口咬下，你聽見了星星的尖叫。'}
-  ];
-  const result = results[Math.floor(Math.random() * results.length)];
-  document.getElementById('resultName').innerText = result.name;
-  document.getElementById('resultDesc').innerText = result.desc;
-  document.getElementById('resultRarity').innerText = result.rarity;
-  document.getElementById('resultCard').style.display = 'block';
-});
-function resetGame() {
-  selected = [];
-  ingredients.forEach(item => item.classList.remove('selected'));
-  document.getElementById('resultCard').style.display = 'none';
-}
-</script>
+        <!-- 大鍋 -->
+        <div class="cauldron-area">
+            <div class="cauldron" id="cauldron" onclick="brew()">
+                <div class="potion-liquid" id="potion"></div>
+            </div>
+            <p style="color:#666;margin-top:15px;font-size:0.9em;">點擊大鍋開始調配！</p>
+        </div>
+
+        <!-- 已選材料 -->
+        <div class="selected-area" id="selectedArea">
+            <span class="placeholder-text">選擇材料放入大鍋...</span>
+        </div>
+
+        <!-- 按鈕 -->
+        <button class="brew-btn" id="brewBtn" onclick="brew()" disabled>🔮 開始調配</button>
+        <button class="clear-btn" onclick="clearSelection()">🗑️ 清空材料</button>
+
+        <!-- 材料區 -->
+        <div class="ingredients-section">
+            <h2>🧪 選擇材料</h2>
+            <div class="ingredients-grid" id="ingredientsGrid"></div>
+        </div>
+
+        <!-- 結果區 -->
+        <div class="result-area" id="resultArea">
+            <div class="result-icon" id="resultIcon">🍵</div>
+            <div class="result-name" id="resultName">神秘藥水</div>
+            <p class="result-desc" id="resultDesc">你創造了一個神秘的東西...</p>
+            <div class="result-effect" id="resultEffect">⚠️ 效果：未知</div>
+        </div>
+
+        <!-- 配方書 -->
+        <div class="recipe-book">
+            <h3 onclick="toggleRecipeBook()">📖 配方書 <span id="recipeCount">(0/12)</span></h3>
+            <div class="recipe-list" id="recipeList"></div>
+        </div>
+
+        <div style="text-align:center;">
+            <a href="/" class="back-link">← 返回首頁</a>
+        </div>
+    </div>
+
+    <footer>
+        © 2026 Culaliya's AI Art Diary. 可愛但不太對勁 👻
+    </footer>
+
+    <script>
+        // 材料清單
+        const ingredients = [
+            { id: 'moon', icon: '🌙', name: '月光碎片' },
+            { id: 'cat', icon: '🐱', name: '貓毛' },
+            { id: 'skull', icon: '💀', name: '神秘骨頭' },
+            { id: 'star', icon: '⭐', name: '星星粉末' },
+            { id: 'tear', icon: '💧', name: '妖精眼淚' },
+            { id: 'fire', icon: '🔥', name: '龍焰精華' },
+            { id: 'eye', icon: '👁️', name: '預言之眼' },
+            { id: 'mushroom', icon: '🍄', name: '魔法蘑菇' },
+            { id: 'crystal', icon: '💎', name: '暗影水晶' },
+            { id: 'feather', icon: '🪶', name: '鳳凰羽毛' },
+            { id: 'snake', icon: '🐍', name: '蛇皮碎片' },
+            { id: 'flower', icon: '🌸', name: '幽靈櫻花' }
+        ];
+
+        // 配方清單
+        const recipes = [
+            {
+                ingredients: ['moon', 'cat'],
+                result: { icon: '😺', name: '月光喵喵', desc: '一隻會發光的幽靈貓咪出現了！牠會在夜晚陪伴你。', effect: '獲得夜視能力 3 小時', color: '#3498db' }
+            },
+            {
+                ingredients: ['skull', 'fire'],
+                result: { icon: '💀', name: '骷髏烈焰', desc: '危險的配方！燃燒著藍色火焰的骷髏在笑。', effect: '周圍溫度上升 10°C', color: '#e74c3c' }
+            },
+            {
+                ingredients: ['star', 'tear'],
+                result: { icon: '✨', name: '星淚精華', desc: '閃閃發光的液體，據說能實現一個小願望。', effect: '今日運氣 +50%', color: '#f1c40f' }
+            },
+            {
+                ingredients: ['eye', 'crystal'],
+                result: { icon: '🔮', name: '預言水晶球', desc: '能看見未來 5 秒鐘的神奇道具。', effect: '獲得微弱的預知能力', color: '#9b59b6' }
+            },
+            {
+                ingredients: ['mushroom', 'cat'],
+                result: { icon: '🍄', name: '貓咪蘑菇', desc: '吃下去會長出貓耳朵的蘑菇！效果持續 1 小時。', effect: '變身：貓耳娘', color: '#e91e63' }
+            },
+            {
+                ingredients: ['feather', 'fire'],
+                result: { icon: '🦅', name: '不死鳥之淚', desc: '傳說中的配方，能讓你從任何宿醉中復活。', effect: '完全恢復精力', color: '#ff5722' }
+            },
+            {
+                ingredients: ['snake', 'mushroom'],
+                result: { icon: '🧪', name: '變形藥水', desc: '喝下後會變成一隻小蛇 10 分鐘。', effect: '變身：小蛇', color: '#27ae60' }
+            },
+            {
+                ingredients: ['flower', 'tear'],
+                result: { icon: '🌸', name: '幽靈花香水', desc: '聞起來很香，但只有幽靈聞得到。', effect: '吸引幽靈朋友', color: '#ff69b4' }
+            },
+            {
+                ingredients: ['moon', 'crystal', 'star'],
+                result: { icon: '🌌', name: '宇宙碎片', desc: '捕捉了一小塊宇宙！裡面有迷你星系在旋轉。', effect: '獲得宇宙智慧', color: '#1a1a2e' }
+            },
+            {
+                ingredients: ['cat', 'cat', 'cat'],
+                result: { icon: '😹', name: '超級貓咪', desc: '三倍貓毛的力量！現在你可以聽懂貓語了。', effect: '貓語精通', color: '#ff9800' }
+            },
+            {
+                ingredients: ['skull', 'eye', 'snake'],
+                result: { icon: '👻', name: '幽靈召喚術', desc: '呃...你召喚了一個無聊的幽靈。牠想跟你聊天。', effect: '獲得幽靈朋友', color: '#607d8b' }
+            },
+            {
+                ingredients: ['fire', 'tear', 'crystal'],
+                result: { icon: '⚗️', name: '矛盾精華', desc: '同時是冰又是火的神奇液體。物理學家會哭。', effect: '無視溫度', color: '#00bcd4' }
+            }
+        ];
+
+        let selectedIngredients = [];
+        let discoveredRecipes = new Set();
+
+        // 初始化
+        function init() {
+            createParticles();
+            renderIngredients();
+            loadProgress();
+            renderRecipeBook();
+        }
+
+        // 創建背景粒子
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // 渲染材料
+        function renderIngredients() {
+            const grid = document.getElementById('ingredientsGrid');
+            grid.innerHTML = ingredients.map(ing => `
+        <div class="ingredient" data-id="${ing.id}" onclick="selectIngredient('${ing.id}')">
+          <div class="ingredient-icon">${ing.icon}</div>
+          <div class="ingredient-name">${ing.name}</div>
+        </div>
+      `).join('');
+        }
+
+        // 選擇材料
+        function selectIngredient(id) {
+            if (selectedIngredients.length >= 3) {
+                shakeElement(document.getElementById('selectedArea'));
+                return;
+            }
+
+            selectedIngredients.push(id);
+            updateSelectedArea();
+            updatePotionColor();
+
+            // 播放音效般的視覺效果
+            const ing = ingredients.find(i => i.id === id);
+            createBubble();
+        }
+
+        // 更新已選區域
+        function updateSelectedArea() {
+            const area = document.getElementById('selectedArea');
+            const btn = document.getElementById('brewBtn');
+
+            if (selectedIngredients.length === 0) {
+                area.innerHTML = '<span class="placeholder-text">選擇材料放入大鍋...</span>';
+                btn.disabled = true;
+            } else {
+                area.innerHTML = selectedIngredients.map((id, index) => {
+                    const ing = ingredients.find(i => i.id === id);
+                    return `<div class="selected-item">
+            ${ing.icon} ${ing.name}
+            <span class="remove" onclick="removeIngredient(${index})">✕</span>
+          </div>`;
+                }).join('');
+                btn.disabled = selectedIngredients.length < 2;
+            }
+        }
+
+        // 移除材料
+        function removeIngredient(index) {
+            selectedIngredients.splice(index, 1);
+            updateSelectedArea();
+            updatePotionColor();
+        }
+
+        // 清空材料
+        function clearSelection() {
+            selectedIngredients = [];
+            updateSelectedArea();
+            updatePotionColor();
+            document.getElementById('resultArea').classList.remove('show');
+        }
+
+        // 更新藥水顏色
+        function updatePotionColor() {
+            const potion = document.getElementById('potion');
+            const colors = {
+                'moon': '#3498db', 'cat': '#e67e22', 'skull': '#95a5a6',
+                'star': '#f1c40f', 'tear': '#00bcd4', 'fire': '#e74c3c',
+                'eye': '#9b59b6', 'mushroom': '#e91e63', 'crystal': '#673ab7',
+                'feather': '#ff5722', 'snake': '#27ae60', 'flower': '#ff69b4'
+            };
+
+            if (selectedIngredients.length === 0) {
+                potion.style.setProperty('--potion-color', '#2ecc71');
+                potion.style.setProperty('--potion-dark', '#27ae60');
+                potion.style.height = '60%';
+            } else {
+                const mainColor = colors[selectedIngredients[selectedIngredients.length - 1]];
+                potion.style.setProperty('--potion-color', mainColor);
+                potion.style.setProperty('--potion-dark', mainColor);
+                potion.style.height = (60 + selectedIngredients.length * 10) + '%';
+            }
+        }
+
+        // 創建氣泡
+        function createBubble() {
+            const potion = document.getElementById('potion');
+            for (let i = 0; i < 3; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                bubble.style.width = (5 + Math.random() * 10) + 'px';
+                bubble.style.height = bubble.style.width;
+                bubble.style.left = (20 + Math.random() * 60) + '%';
+                bubble.style.bottom = '10%';
+                bubble.style.animationDelay = (i * 0.2) + 's';
+                potion.appendChild(bubble);
+                setTimeout(() => bubble.remove(), 2000);
+            }
+        }
+
+        // 調配
+        function brew() {
+            if (selectedIngredients.length < 2) return;
+
+            const sortedIngredients = [...selectedIngredients].sort();
+            let result = null;
+
+            // 檢查配方
+            for (const recipe of recipes) {
+                const sortedRecipe = [...recipe.ingredients].sort();
+                if (JSON.stringify(sortedIngredients) === JSON.stringify(sortedRecipe)) {
+                    result = recipe.result;
+                    discoveredRecipes.add(recipe.ingredients.join('+'));
+                    break;
+                }
+            }
+
+            // 沒找到配方 = 失敗
+            if (!result) {
+                result = {
+                    icon: '💥',
+                    name: '神秘爆炸物',
+                    desc: '這個配方組合...不太對勁。大鍋發出了奇怪的聲音然後冒煙了。',
+                    effect: '⚠️ 失敗！再試試其他組合吧',
+                    color: '#555'
+                };
+            }
+
+            // 顯示結果
+            showResult(result);
+            createExplosion();
+            saveProgress();
+            renderRecipeBook();
+        }
+
+        // 顯示結果
+        function showResult(result) {
+            const area = document.getElementById('resultArea');
+            document.getElementById('resultIcon').textContent = result.icon;
+            document.getElementById('resultName').textContent = result.name;
+            document.getElementById('resultDesc').textContent = result.desc;
+            document.getElementById('resultEffect').textContent = result.effect;
+
+            const potion = document.getElementById('potion');
+            potion.style.setProperty('--potion-color', result.color);
+            potion.style.setProperty('--potion-dark', result.color);
+
+            area.classList.add('show');
+            area.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // 爆炸特效
+        function createExplosion() {
+            const cauldron = document.getElementById('cauldron');
+            const rect = cauldron.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            const explosion = document.createElement('div');
+            explosion.className = 'explosion';
+            explosion.style.left = centerX + 'px';
+            explosion.style.top = centerY + 'px';
+
+            const emojis = ['✨', '💫', '⭐', '🌟', '💥'];
+            for (let i = 0; i < 8; i++) {
+                const span = document.createElement('span');
+                span.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                const angle = (i / 8) * Math.PI * 2;
+                const distance = 100 + Math.random() * 50;
+                span.style.setProperty('--x', Math.cos(angle) * distance + 'px');
+                span.style.setProperty('--y', Math.sin(angle) * distance + 'px');
+                explosion.appendChild(span);
+            }
+
+            document.body.appendChild(explosion);
+            setTimeout(() => explosion.remove(), 1000);
+        }
+
+        // 搖動元素
+        function shakeElement(el) {
+            el.style.animation = 'none';
+            el.offsetHeight; // trigger reflow
+            el.style.animation = 'shake 0.3s ease';
+        }
+
+        // 切換配方書
+        function toggleRecipeBook() {
+            document.getElementById('recipeList').classList.toggle('show');
+        }
+
+        // 渲染配方書
+        function renderRecipeBook() {
+            const list = document.getElementById('recipeList');
+            const count = document.getElementById('recipeCount');
+
+            count.textContent = `(${discoveredRecipes.size}/${recipes.length})`;
+
+            list.innerHTML = recipes.map(recipe => {
+                const key = recipe.ingredients.join('+');
+                const discovered = discoveredRecipes.has(key);
+                const ingNames = recipe.ingredients.map(id => {
+                    const ing = ingredients.find(i => i.id === id);
+                    return ing ? ing.icon : '?';
+                }).join(' + ');
+
+                return `<div class="recipe-item ${discovered ? 'discovered' : ''}">
+          <div>
+            <span class="recipe-name">${discovered ? recipe.result.icon + ' ' + recipe.result.name : '???'}</span>
+          </div>
+          <span class="recipe-ingredients">${discovered ? ingNames : '? + ?'}</span>
+        </div>`;
+            }).join('');
+        }
+
+        // 儲存進度
+        function saveProgress() {
+            localStorage.setItem('darklab_recipes', JSON.stringify([...discoveredRecipes]));
+        }
+
+        // 載入進度
+        function loadProgress() {
+            const saved = localStorage.getItem('darklab_recipes');
+            if (saved) {
+                discoveredRecipes = new Set(JSON.parse(saved));
+            }
+        }
+
+        // 啟動
+        init();
+    </script>
 </body>
+
 </html>
