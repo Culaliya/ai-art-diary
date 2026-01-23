@@ -6,22 +6,21 @@
 <title>Culaliya's AI Art Diary 🌌</title>
 
 <!-- ===== 網站小縮圖 (Favicon) 設定 ===== -->
-<!-- 加了 ?v=2 強制瀏覽器重新抓取圖片 -->
 <link rel="icon" href="assets/blackcat.png?v=2" type="image/png">
 <link rel="shortcut icon" href="assets/blackcat.png?v=2" type="image/png">
-<link rel="apple-touch-icon" href="assets/blackcat.png?v=2"> <!-- iOS 主畫面圖示 -->
+<link rel="apple-touch-icon" href="assets/blackcat.png?v=2">
 
 <!-- ===== SEO (搜尋引擎優化) 設定 ===== -->
 <meta name="description" content="Culaliya 的創意實驗室與作品集。探索 iOS App 作品（茶語 Tea Mind、喵語學院、星迴等）、AI 生成藝術、以及結合科技與靈性的數位創作日記。Where algorithm meets intuition." />
 <meta name="keywords" content="Culaliya, AI Art, iOS App, 茶語 Tea Mind, 喵語學院, Starveil Match, 獨立開發, 生成式藝術, 療癒遊戲, 程式教學, 靈性科技, Swift, 獨立開發者" />
 <meta name="author" content="Culaliya" />
 
-<!-- Open Graph / Facebook / LINE (讓分享連結變漂亮) -->
+<!-- Open Graph / Facebook / LINE -->
 <meta property="og:type" content="website" />
-<meta property="og:url" content="https://culaliya.github.io/ai-art-diary/" /> <!-- 預設為你的 GitHub Pages 網址 -->
+<meta property="og:url" content="https://culaliya.github.io/ai-art-diary/" />
 <meta property="og:title" content="Culaliya's AI Art Diary 🌌 | 創意與科技的實驗室" />
 <meta property="og:description" content="這裡紀錄了我的 iOS App 作品、AI 藝術創作與程式實驗。歡迎來到演算法與直覺交織的宇宙。" />
-<meta property="og:image" content="assets/blackcat.png" /> <!-- 分享時顯示的圖片 (設為你的黑貓) -->
+<meta property="og:image" content="assets/blackcat.png" />
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />
@@ -61,7 +60,7 @@
     -moz-user-drag: none;
     -o-user-drag: none;
     user-drag: none;
-    pointer-events: auto; /* 保持點擊事件 (如連結) */
+    pointer-events: auto;
   }
 
   /* ===== 滑鼠跟隨特效 ===== */
@@ -274,6 +273,69 @@
   .app-meta{color:#aaa;font-size:0.85em;margin-top:6px;}
   .app-actions{display:flex;align-items:center;justify-content:flex-end;min-width:120px;}
 
+  /* ===== 隱私同意橫幅 (Consent Banner) ===== */
+  #consent-banner {
+    display: none; /* 預設隱藏，由 JS 控制顯示 */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    border-top: 1px solid #0ff;
+    padding: 15px 20px;
+    z-index: 10000;
+    box-shadow: 0 -5px 20px rgba(0, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    text-align: center;
+  }
+  .consent-content {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+  }
+  .consent-text {
+    color: #ccc;
+    font-size: 0.9em;
+    text-align: left;
+    flex: 1;
+    min-width: 250px;
+  }
+  .consent-actions {
+    display: flex;
+    gap: 10px;
+  }
+  .consent-btn {
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: all 0.3s;
+    font-weight: bold;
+  }
+  .consent-agree {
+    background: linear-gradient(135deg, #0ff, #008cff);
+    color: #000;
+    border: none;
+    box-shadow: 0 0 10px #0ff;
+  }
+  .consent-agree:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px #0ff;
+  }
+  .consent-decline {
+    background: transparent;
+    color: #888;
+    border: 1px solid #555;
+  }
+  .consent-decline:hover {
+    color: #fff;
+    border-color: #fff;
+  }
+
   /* ===== 手機版 ===== */
   @media (max-width: 768px){
     h1{font-size:2.5em;padding:0 15px;}
@@ -295,6 +357,9 @@
     .app-card{grid-template-columns:1fr;text-align:center;}
     .app-image{margin:0 auto;}
     .app-actions{justify-content:center;margin-top:10px;}
+
+    .consent-content { flex-direction: column; text-align: center; }
+    .consent-text { text-align: center; }
   }
 
   @media (max-width: 480px){
@@ -327,6 +392,20 @@
 <audio id="hover-sound" src="music/hover.mp3"></audio>
 <audio id="click-sound" src="music/click.mp3"></audio>
 <audio id="meow-sound" src="music/meow.mp3"></audio>
+
+<!-- 隱私同意橫幅 -->
+<div id="consent-banner">
+  <div class="consent-content">
+    <div class="consent-text">
+      🍪 <strong>隱私權小提醒</strong><br>
+      我們使用 Cookies 與匿名的 IP 數據來了解訪客來源分布，以優化網站體驗。我們不會收集您的敏感個資。您願意授權我們進行簡單的統計嗎？
+    </div>
+    <div class="consent-actions">
+      <button class="consent-btn consent-decline" onclick="handleConsent(false)">拒絕 (Decline)</button>
+      <button class="consent-btn consent-agree" onclick="handleConsent(true)">同意 (Agree)</button>
+    </div>
+  </div>
+</div>
 
 <!-- HERO -->
 <section id="hero">
@@ -1096,30 +1175,56 @@ async function loadApod(){
 }
 loadApod();
 
-/* ===== IP log（原樣保留） ===== */
-fetch('https://api.ipify.org?format=json')
-  .then(res => res.json())
-  .then(data => {
-    const ip = data.ip;
-    fetch('https://ipapi.co/json')
-      .then(res => res.json())
-      .then(info => {
-        fetch('https://script.google.com/macros/s/AKfycbypamhGa0ZHNzhLeG-FxH0bfFe4RU-rDHoK4V4qYXF8H9-Ut6AUU1LG_gq6yAw1Rqa5/exec', {
-          method:'POST',
-          mode:'no-cors',
-          headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({
-            ip: ip,
-            country: info.country_name,
-            userAgent: navigator.userAgent,
-            page: location.pathname,
-            referrer: document.referrer
-          })
-        }).catch(err => console.error('⚠️ IP log failed:', err));
-      });
-  });
+/* ===== IP log & Consent Logic (封裝追蹤程式碼) ===== */
+function logVisitorData() {
+  fetch('https://api.ipify.org?format=json')
+    .then(res => res.json())
+    .then(data => {
+      const ip = data.ip;
+      fetch('https://ipapi.co/json')
+        .then(res => res.json())
+        .then(info => {
+          fetch('https://script.google.com/macros/s/AKfycbypamhGa0ZHNzhLeG-FxH0bfFe4RU-rDHoK4V4qYXF8H9-Ut6AUU1LG_gq6yAw1Rqa5/exec', {
+            method:'POST',
+            mode:'no-cors',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({
+              ip: ip,
+              country: info.country_name,
+              userAgent: navigator.userAgent,
+              page: location.pathname,
+              referrer: document.referrer
+            })
+          }).catch(err => console.error('⚠️ IP log failed:', err));
+        });
+    });
+}
 
-/* ===== 訪客星圖（原樣保留） ===== */
+// 檢查是否已同意隱私政策
+const consentStatus = localStorage.getItem('site_consent');
+const consentBanner = document.getElementById('consent-banner');
+
+if (consentStatus === 'true') {
+  // 已同意 -> 直接執行
+  logVisitorData();
+} else if (consentStatus === 'false') {
+  // 已拒絕 -> 不執行，且不顯示 Banner
+} else {
+  // 尚未決定 -> 顯示 Banner
+  consentBanner.style.display = 'block';
+}
+
+// 處理按鈕點擊
+function handleConsent(isAgreed) {
+  localStorage.setItem('site_consent', isAgreed);
+  consentBanner.style.display = 'none';
+  
+  if (isAgreed) {
+    logVisitorData(); // 同意後立即觸發一次
+  }
+}
+
+/* ===== 訪客星圖（原樣保留 - 這只是讀取公開資料，不涉及寫入個資） ===== */
 const canvasMap = document.getElementById('visitorMap');
 const ctxMap = canvasMap.getContext('2d');
 canvasMap.width = window.innerWidth;
