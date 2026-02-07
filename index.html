@@ -1083,9 +1083,15 @@
   <section id="app-updates">
     <div class="update-card">
       <p class="update-title">【📱 App Updates】</p>
+      <p class="update-text">🐾 <a class="update-link"
+          href="https://apps.apple.com/us/app/%E5%96%B5%E8%AA%9E%E5%AD%B8%E9%99%A2/id6757230422">喵語學院</a>
+        v1.1 (2026/02/07)</p>
+      <p class="update-text">🐈 <a class="update-link"
+          href="https://apps.apple.com/us/app/%E7%81%B0%E8%B2%93%E6%AA%94%E6%A1%88%E5%BA%AB/id6753888547">灰貓檔案庫</a>
+        v1.2 (2026/02/07)</p>
       <p class="update-text">🧮 <a class="update-link"
           href="https://apps.apple.com/tw/app/glassycalc-%E7%8E%BB%E7%92%83%E5%B0%8F%E7%AE%97%E7%9B%A4/id6758384259">GlassyCalc
-          玻璃小算盤</a> v1.0 (2026/01/30) — 全新上架！</p>
+          玻璃小算盤</a> v1.1 (2026/01/30) — 全新上架！</p>
       <p class="update-text">🌙 <a class="update-link"
           href="https://apps.apple.com/us/app/%E5%A4%A2%E5%A2%83%E8%8A%B1%E5%9C%92dreamgarden/id6755881746">DreamGarden
           夢境花園</a> v1.1 (2026/01/29)</p>
@@ -1099,6 +1105,10 @@
   <section id="update-announcement">
     <div class="update-card">
       <p class="update-title">【🪧 Now Updated】</p>
+      <p class="update-text">🐾 <a class="update-link"
+          href="https://apps.apple.com/us/app/%E5%96%B5%E8%AA%9E%E5%AD%B8%E9%99%A2/id6757230422">喵語學院 v1.1 已更新</a></p>
+      <p class="update-text">🐈 <a class="update-link"
+          href="https://apps.apple.com/us/app/%E7%81%B0%E8%B2%93%E6%AA%94%E6%A1%88%E5%BA%AB/id6753888547">灰貓檔案庫 v1.2 已更新</a></p>
       <p class="update-text"><a class="update-link" href="dark_lab.html">→ 進入暗黑實驗室（可愛但不對勁）👻</a></p>
     </div>
   </section>
@@ -1619,8 +1629,8 @@
             "icon": "assets/icons/cat_app_icon.png",
             "link": "https://apps.apple.com/us/app/%E5%96%B5%E8%AA%9E%E5%AD%B8%E9%99%A2/id6757230422",
             "id": "6757230422",
-            "version": "1.0.0",
-            "updated": "2025/12/31"
+            "version": "1.1",
+            "updated": "2026/02/07"
           },
           {
             "name": "Cloud Organizer",
@@ -1691,8 +1701,8 @@
             "icon": "assets/icons/graycat_2.png",
             "link": "https://apps.apple.com/us/app/%E7%81%B0%E8%B2%93%E6%AA%94%E6%A1%88%E5%BA%AB/id6753888547",
             "id": "6753888547",
-            "version": "1.1.0",
-            "updated": "2025/12/19"
+            "version": "1.2",
+            "updated": "2026/02/07"
           },
           {
             "name": "AlarmTunes",
@@ -1707,8 +1717,14 @@
 
         c.innerHTML = '';
         const today = new Date();
+        const parseUpdatedAt = (v) => {
+          if (!v) return 0;
+          const ts = new Date(v.replace(/\//g, '-')).getTime();
+          return Number.isFinite(ts) ? ts : 0;
+        };
+        const appsSorted = [...apps].sort((a, b) => parseUpdatedAt(b.updated) - parseUpdatedAt(a.updated));
 
-        for (const app of apps) {
+        for (const app of appsSorted) {
           const card = document.createElement('div');
           card.className = 'app-card';
 
