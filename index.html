@@ -805,6 +805,42 @@
       flex-wrap: wrap;
     }
 
+    .update-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.72em;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      border: 1px solid rgba(0, 255, 255, 0.45);
+      color: #cfffff;
+      background: rgba(0, 255, 255, 0.16);
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+    }
+
+    .update-badge.latest {
+      border: 1px solid rgba(255, 235, 59, 0.6);
+      color: #1a1200;
+      background: linear-gradient(135deg, #fff07b 0%, #ffca28 50%, #ff9f1a 100%);
+      box-shadow: 0 0 14px rgba(255, 171, 64, 0.65);
+      animation: latestBadgePulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes latestBadgePulse {
+      0%,
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 12px rgba(255, 171, 64, 0.55);
+      }
+      50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(255, 171, 64, 0.85);
+      }
+    }
+
     .app-info p {
       color: #ccc;
       margin: 0 0 6px 0;
@@ -1083,6 +1119,12 @@
   <section id="app-updates">
     <div class="update-card">
       <p class="update-title">【📱 App Updates】</p>
+      <p class="update-text">🌌 <a class="update-link"
+          href="https://apps.apple.com/us/app/%E6%98%9F%E8%BF%B4/id6757077666">星迴</a>
+        v1.1 (2026/02/08)</p>
+      <p class="update-text">🐾 <a class="update-link"
+          href="https://apps.apple.com/us/app/pawdoro/id6756201914">Pawdoro</a>
+        v1.1 (2026/02/08)</p>
       <p class="update-text">🐾 <a class="update-link"
           href="https://apps.apple.com/us/app/%E5%96%B5%E8%AA%9E%E5%AD%B8%E9%99%A2/id6757230422">喵語學院</a>
         v1.1 (2026/02/07)</p>
@@ -1105,6 +1147,10 @@
   <section id="update-announcement">
     <div class="update-card">
       <p class="update-title">【🪧 Now Updated】</p>
+      <p class="update-text">🌌 <a class="update-link"
+          href="https://apps.apple.com/us/app/%E6%98%9F%E8%BF%B4/id6757077666">星迴 v1.1 已更新（2026/02/08）</a></p>
+      <p class="update-text">🐾 <a class="update-link"
+          href="https://apps.apple.com/us/app/pawdoro/id6756201914">Pawdoro v1.1 已更新（2026/02/08）</a></p>
       <p class="update-text">🐾 <a class="update-link"
           href="https://apps.apple.com/us/app/%E5%96%B5%E8%AA%9E%E5%AD%B8%E9%99%A2/id6757230422">喵語學院 v1.1 已更新</a></p>
       <p class="update-text">🐈 <a class="update-link"
@@ -1615,13 +1661,13 @@
             "updated": "2026/01/23"
           },
           {
-            "name": "Loopself",
+            "name": "星迴",
             "desc": "星迴：一款將星圖收藏與日記結合的工具，所有資料均儲存在本機。",
             "icon": "assets/icons/looplife.png",
             "link": "https://apps.apple.com/us/app/%E6%98%9F%E8%BF%B4/id6757077666",
             "id": "6757077666",
-            "version": "1.0.0",
-            "updated": "2025/12/31"
+            "version": "1.1",
+            "updated": "2026/02/08"
           },
           {
             "name": "喵語學院",
@@ -1665,8 +1711,8 @@
             "icon": "assets/icons/pawdoro.png",
             "link": "https://apps.apple.com/us/app/pawdoro/id6756201914",
             "id": "6756201914",
-            "version": "1.0.0",
-            "updated": "2025/12/19"
+            "version": "1.1",
+            "updated": "2026/02/08"
           },
           {
             "name": "Starlight Journal",
@@ -1723,18 +1769,19 @@
           return Number.isFinite(ts) ? ts : 0;
         };
         const appsSorted = [...apps].sort((a, b) => parseUpdatedAt(b.updated) - parseUpdatedAt(a.updated));
+        const latestUpdatedAt = appsSorted.length ? parseUpdatedAt(appsSorted[0].updated) : 0;
 
         for (const app of appsSorted) {
           const card = document.createElement('div');
           card.className = 'app-card';
 
-          let isNew = false;
-          // 簡單判斷：如果是最近更新（例如 30 天內）
-          if (app.updated) {
-            const updatedDate = new Date(app.updated);
-            const diffDays = (today - updatedDate) / (1000 * 60 * 60 * 24);
-            if (diffDays <= 30) isNew = true;
-          }
+          const updatedAt = parseUpdatedAt(app.updated);
+          const diffDays = updatedAt ? (today.getTime() - updatedAt) / (1000 * 60 * 60 * 24) : Infinity;
+          const isNew = diffDays <= 30;
+          const isLatest = latestUpdatedAt > 0 && updatedAt === latestUpdatedAt;
+          const statusBadge = isLatest
+            ? `<span class="update-badge latest">最新</span>`
+            : (isNew ? `<span class="update-badge">已更新</span>` : '');
 
           // 預設使用本地圖示
           let iconSrc = app.icon;
@@ -1768,8 +1815,7 @@
         <div class="app-info">
           <h3>
             ${app.name}
-            ${isNew ? `<span style="font-size:0.75em;background:linear-gradient(135deg,#00ffff,#ff3eff);
-              padding:2px 6px;border-radius:6px;color:#000;font-weight:bold;box-shadow:0 0 10px #0ff;">🆕 NEW</span>` : ''}
+            ${statusBadge}
           </h3>
           <p>${app.desc || ''}</p>
           ${(app.updated || app.version) ? `<div class="app-meta">📅 ${app.updated} | 版本：${app.version || '1.0'}</div>` : ``}
