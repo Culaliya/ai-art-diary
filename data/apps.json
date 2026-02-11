@@ -1,6 +1,6 @@
 [
   {
-    "name": "Loopself",
+    "name": "星迴",
     "desc": "星迴：一款將星圖收藏與日記結合的工具，所有資料均儲存在本機。",
     "icon": "assets/icons/looplife.png",
     "link": "",
@@ -64,12 +64,12 @@
     "updated": "2025/12/19"
   },
   {
-    "name": "LazyTrack",
-    "desc": "懶人記帳",
+    "name": "LazyTrack懶人記帳",
+    "desc": "LazyTrack懶人記帳",
     "icon": "assets/icons/lazytrack2.png",
     "link": "",
-    "version": "1.1.0",
-    "updated": "2025/12/19"
+    "version": "1.2",
+    "updated": "2026/02/11"
   },
   {
     "name": "DreamGarden",
