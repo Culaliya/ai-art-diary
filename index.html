@@ -309,6 +309,26 @@
       text-align: left;
     }
 
+    .update-text.special-new {
+      margin: 6px 0;
+      padding: 6px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 223, 102, 0.45);
+      background: linear-gradient(135deg, rgba(255, 186, 72, 0.12), rgba(255, 246, 174, 0.06));
+      box-shadow: 0 0 14px rgba(255, 190, 92, 0.24);
+      animation: specialNewPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes specialNewPulse {
+      0%,
+      100% {
+        box-shadow: 0 0 14px rgba(255, 190, 92, 0.24);
+      }
+      50% {
+        box-shadow: 0 0 24px rgba(255, 190, 92, 0.45);
+      }
+    }
+
     .update-link {
       color: #0ff;
       text-decoration: none;
@@ -840,6 +860,29 @@
       }
     }
 
+    .update-badge.launch {
+      border: 1px solid rgba(255, 210, 112, 0.75);
+      color: #271400;
+      background: linear-gradient(135deg, #ffe9a4 0%, #ffc86a 55%, #ff9d45 100%);
+      box-shadow: 0 0 14px rgba(255, 171, 64, 0.55);
+    }
+
+    .app-card.new-app-spotlight {
+      border-color: rgba(255, 200, 110, 0.9);
+      box-shadow: 0 0 26px rgba(255, 182, 77, 0.35);
+      animation: newAppCardPulse 2.2s ease-in-out infinite;
+    }
+
+    @keyframes newAppCardPulse {
+      0%,
+      100% {
+        box-shadow: 0 0 20px rgba(255, 182, 77, 0.26);
+      }
+      50% {
+        box-shadow: 0 0 34px rgba(255, 182, 77, 0.48);
+      }
+    }
+
     .app-info p {
       color: #ccc;
       margin: 0 0 6px 0;
@@ -1118,9 +1161,15 @@
   <section id="app-updates">
     <div class="update-card">
       <p class="update-title">【📱 App Updates】</p>
-      <p class="update-text">🥟 <a class="update-link"
-          href="privacy_quantumbunslab.html">量子饅頭 QuantumBuns Lab</a>
-        v1.0 (2026/02/18) — NEW</p>
+      <p class="update-text special-new">🍡 <a class="update-link"
+          href="https://apps.apple.com/tw/app/%E7%B3%AF%E7%B3%AF%E5%90%83%E5%90%83%E6%A8%82/id6759190813">糯糯吃吃樂</a>
+        v1.0 (2026/02/19) — NEW</p>
+      <p class="update-text special-new">🧁 <a class="update-link"
+          href="https://apps.apple.com/tw/app/puffle-pick-%E6%B3%A1%E8%8A%99%E9%81%B8%E9%81%B8/id6759190764">Puffle Pick 泡芙選選</a>
+        v1.0 (2026/02/19) — NEW</p>
+      <p class="update-text special-new">🥟 <a class="update-link"
+          href="https://apps.apple.com/tw/app/%E9%87%8F%E5%AD%90%E9%A5%85%E9%A0%ADquantumbuns-lab/id6759184050">量子饅頭 QuantumBuns Lab</a>
+        v1.0 (2026/02/19) — NEW</p>
       <p class="update-text">☁️ <a class="update-link"
           href="https://apps.apple.com/us/app/%E9%9B%B2%E6%9C%B5%E6%95%B4%E7%90%86%E5%B8%AB/id6752541896">雲朵整理師</a>
         v1.3.2 (2026/02/18)</p>
@@ -1145,15 +1194,6 @@
       <p class="update-text">🐈 <a class="update-link"
           href="https://apps.apple.com/us/app/%E7%81%B0%E8%B2%93%E6%AA%94%E6%A1%88%E5%BA%AB/id6753888547">灰貓檔案庫</a>
         v1.2 (2026/02/07)</p>
-      <p class="update-text">🧮 <a class="update-link"
-          href="https://apps.apple.com/tw/app/glassycalc-%E7%8E%BB%E7%92%83%E5%B0%8F%E7%AE%97%E7%9B%A4/id6758384259">GlassyCalc
-          玻璃小算盤</a> v1.1 (2026/01/30) — 全新上架！</p>
-      <p class="update-text">🌙 <a class="update-link"
-          href="https://apps.apple.com/us/app/%E5%A4%A2%E5%A2%83%E8%8A%B1%E5%9C%92dreamgarden/id6755881746">DreamGarden
-          夢境花園</a> v1.1 (2026/01/29)</p>
-      <p class="update-text">🐱 <a class="update-link"
-          href="https://apps.apple.com/us/app/%E5%96%B5%E5%96%B5%E7%95%AA%E8%8C%84%E9%90%98meowfocus-timer/id6753789886">喵喵蕃茄鐘</a>
-        v1.1 (2026/01/28)</p>
     </div>
   </section>
 
@@ -1704,12 +1744,31 @@
             "updated": "2026/02/18"
           },
           {
+            "name": "糯糯吃吃樂",
+            "desc": "可愛療癒的手指拖曳接食遊戲",
+            "icon": "assets/icons/nuonuo.png",
+            "link": "https://apps.apple.com/tw/app/%E7%B3%AF%E7%B3%AF%E5%90%83%E5%90%83%E6%A8%82/id6759190813",
+            "id": "6759190813",
+            "version": "1.0",
+            "updated": "2026/02/19"
+          },
+          {
+            "name": "Puffle Pick 泡芙選選",
+            "desc": "把選擇困難變成可愛的日常決策",
+            "icon": "assets/icons/pufflepick.png",
+            "link": "https://apps.apple.com/tw/app/puffle-pick-%E6%B3%A1%E8%8A%99%E9%81%B8%E9%81%B8/id6759190764",
+            "id": "6759190764",
+            "version": "1.0",
+            "updated": "2026/02/19"
+          },
+          {
             "name": "量子饅頭QuantumBuns Lab",
             "desc": "量子實驗系梗圖包子遊戲",
             "icon": "assets/icons/quantumbuns.png",
-            "link": "",
+            "link": "https://apps.apple.com/tw/app/%E9%87%8F%E5%AD%90%E9%A5%85%E9%A0%ADquantumbuns-lab/id6759184050",
+            "id": "6759184050",
             "version": "1.0",
-            "updated": "2026/02/18"
+            "updated": "2026/02/19"
           },
           {
             "name": "Pawdoro",
@@ -1776,16 +1835,21 @@
         };
         const appsSorted = [...apps].sort((a, b) => parseUpdatedAt(b.updated) - parseUpdatedAt(a.updated));
         const latestUpdatedAt = appsSorted.length ? parseUpdatedAt(appsSorted[0].updated) : 0;
+        const launchSpotlightIds = new Set(["6759190813", "6759190764", "6759184050"]);
 
         for (const app of appsSorted) {
           const card = document.createElement('div');
           card.className = 'app-card';
+          const isLaunchSpotlight = app.id && launchSpotlightIds.has(app.id);
+          if (isLaunchSpotlight) card.classList.add('new-app-spotlight');
 
           const updatedAt = parseUpdatedAt(app.updated);
           const diffDays = updatedAt ? (today.getTime() - updatedAt) / (1000 * 60 * 60 * 24) : Infinity;
           const isNew = diffDays <= 30;
           const isLatest = latestUpdatedAt > 0 && updatedAt === latestUpdatedAt;
-          const statusBadge = isLatest
+          const statusBadge = isLaunchSpotlight
+            ? `<span class="update-badge launch">新上架</span>`
+            : isLatest
             ? `<span class="update-badge latest">最新</span>`
             : (isNew ? `<span class="update-badge">已更新</span>` : '');
 
