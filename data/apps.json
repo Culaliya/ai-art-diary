@@ -16,28 +16,52 @@
     "updated": "2025/12/31"
   },
   {
-    "name": "Cloud Organizer",
+    "name": "雲朵整理師",
     "desc": "雲朵整理師：療癒創作遊戲",
     "icon": "assets/icons/cloud2.png",
     "link": "",
-    "version": "1.2.2",
-    "updated": "2025/12/31"
+    "version": "1.3.2",
+    "updated": "2026/02/18"
   },
   {
     "name": "Spiral Wizard",
     "desc": "螺旋魔法師：結合數學、動物知識與進的教育益智遊戲。",
     "icon": "assets/icons/mathgame2.png",
     "link": "",
-    "version": "1.4.0",
-    "updated": "2025/12/31"
+    "version": "1.5",
+    "updated": "2026/02/12"
   },
   {
     "name": "Starveil Match",
     "desc": "星幕配對遊戲",
     "icon": "assets/icons/StarveilMatch.png",
     "link": "https://apps.apple.com/tw/app/starveil-match/id6756781135",
-    "version": "1.0.0",
-    "updated": "2025/12/19"
+    "version": "1.1.1",
+    "updated": "2026/02/18"
+  },
+  {
+    "name": "糯糯吃吃樂",
+    "desc": "可愛療癒的手指拖曳接食遊戲",
+    "icon": "assets/icons/nuonuo.png",
+    "link": "https://apps.apple.com/tw/app/%E7%B3%AF%E7%B3%AF%E5%90%83%E5%90%83%E6%A8%82/id6759190813",
+    "version": "1.0",
+    "updated": "2026/02/19"
+  },
+  {
+    "name": "Puffle Pick 泡芙選選",
+    "desc": "把選擇困難變成可愛的日常決策",
+    "icon": "assets/icons/pufflepick.png",
+    "link": "https://apps.apple.com/tw/app/puffle-pick-%E6%B3%A1%E8%8A%99%E9%81%B8%E9%81%B8/id6759190764",
+    "version": "1.0",
+    "updated": "2026/02/19"
+  },
+  {
+    "name": "量子饅頭QuantumBuns Lab",
+    "desc": "量子實驗系梗圖包子遊戲",
+    "icon": "assets/icons/quantumbuns.png",
+    "link": "https://apps.apple.com/tw/app/%E9%87%8F%E5%AD%90%E9%A5%85%E9%A0%ADquantumbuns-lab/id6759184050",
+    "version": "1.0",
+    "updated": "2026/02/19"
   },
   {
     "name": "Pawdoro",
