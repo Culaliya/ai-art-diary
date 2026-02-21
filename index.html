@@ -1161,6 +1161,12 @@
   <section id="app-updates">
     <div class="update-card">
       <p class="update-title">【📱 App Updates】</p>
+      <p class="update-text special-new">🫖 <a class="update-link"
+          href="https://apps.apple.com/tw/app/%E5%8F%B8%E5%BA%B7%E4%B8%8B%E5%8D%88%E8%8C%B6/id6759196544">司康下午茶</a>
+        v1.0 (2026/02/21) — NEW</p>
+      <p class="update-text special-new">💞 <a class="update-link"
+          href="https://apps.apple.com/tw/app/pms%E6%83%85%E7%B7%92%E5%AF%A6%E9%A9%97%E5%AE%A4/id6759197124">PMS情緒實驗室</a>
+        v1.0 (2026/02/21) — NEW</p>
       <p class="update-text special-new">🍡 <a class="update-link"
           href="https://apps.apple.com/tw/app/%E7%B3%AF%E7%B3%AF%E5%90%83%E5%90%83%E6%A8%82/id6759190813">糯糯吃吃樂</a>
         v1.0 (2026/02/19) — NEW</p>
@@ -1744,6 +1750,24 @@
             "updated": "2026/02/18"
           },
           {
+            "name": "司康下午茶",
+            "desc": "溫柔節奏的陪伴系小品",
+            "icon": "assets/icons/sconetea.png",
+            "link": "https://apps.apple.com/tw/app/%E5%8F%B8%E5%BA%B7%E4%B8%8B%E5%8D%88%E8%8C%B6/id6759196544",
+            "id": "6759196544",
+            "version": "1.0",
+            "updated": "2026/02/21"
+          },
+          {
+            "name": "PMS情緒實驗室",
+            "desc": "揍豬紓壓・浪漫對話・心情分支",
+            "icon": "assets/icons/pmslab.png",
+            "link": "https://apps.apple.com/tw/app/pms%E6%83%85%E7%B7%92%E5%AF%A6%E9%A9%97%E5%AE%A4/id6759197124",
+            "id": "6759197124",
+            "version": "1.0",
+            "updated": "2026/02/21"
+          },
+          {
             "name": "糯糯吃吃樂",
             "desc": "可愛療癒的手指拖曳接食遊戲",
             "icon": "assets/icons/nuonuo.png",
@@ -1835,7 +1859,7 @@
         };
         const appsSorted = [...apps].sort((a, b) => parseUpdatedAt(b.updated) - parseUpdatedAt(a.updated));
         const latestUpdatedAt = appsSorted.length ? parseUpdatedAt(appsSorted[0].updated) : 0;
-        const launchSpotlightIds = new Set(["6759190813", "6759190764", "6759184050"]);
+        const launchSpotlightIds = new Set(["6759196544", "6759197124", "6759190813", "6759190764", "6759184050"]);
 
         for (const app of appsSorted) {
           const card = document.createElement('div');
