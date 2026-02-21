@@ -40,6 +40,22 @@
     "updated": "2026/02/18"
   },
   {
+    "name": "司康下午茶",
+    "desc": "溫柔節奏的陪伴系小品",
+    "icon": "assets/icons/sconetea.png",
+    "link": "https://apps.apple.com/tw/app/%E5%8F%B8%E5%BA%B7%E4%B8%8B%E5%8D%88%E8%8C%B6/id6759196544",
+    "version": "1.0",
+    "updated": "2026/02/21"
+  },
+  {
+    "name": "PMS情緒實驗室",
+    "desc": "揍豬紓壓・浪漫對話・心情分支",
+    "icon": "assets/icons/pmslab.png",
+    "link": "https://apps.apple.com/tw/app/pms%E6%83%85%E7%B7%92%E5%AF%A6%E9%A9%97%E5%AE%A4/id6759197124",
+    "version": "1.0",
+    "updated": "2026/02/21"
+  },
+  {
     "name": "糯糯吃吃樂",
     "desc": "可愛療癒的手指拖曳接食遊戲",
     "icon": "assets/icons/nuonuo.png",
