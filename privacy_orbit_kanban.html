@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orbit Kanban 分類與隱私填寫（送審用）</title>
+  <style>
+    :root {
+      --bg: #0f1724;
+      --card: #162235;
+      --text: #f0f5ff;
+      --muted: #c6d6f2;
+      --line: #2d476f;
+      --accent: #86d0ff;
+    }
+    body {
+      margin: 0;
+      padding: 32px 18px 60px;
+      background: radial-gradient(circle at top, #1d3458 0%, var(--bg) 46%, #0a1019 100%);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Noto Sans TC", sans-serif;
+      line-height: 1.75;
+    }
+    main {
+      max-width: 920px;
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(22, 34, 53, 0.92);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+      padding: 24px 20px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 1.85rem;
+      color: #fff;
+    }
+    h2 {
+      margin: 24px 0 10px;
+      border-left: 4px solid var(--accent);
+      padding-left: 10px;
+      font-size: 1.12rem;
+      color: #e7f1ff;
+    }
+    h3 {
+      margin: 14px 0 8px;
+      color: #d9eaff;
+      font-size: 1.02rem;
+    }
+    p, li { color: var(--muted); }
+    ul { margin: 10px 0 14px 1.2em; padding: 0; }
+    .date { color: var(--accent); margin: 0 0 16px; }
+    .strong { color: #fff; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Orbit Kanban 分類與隱私填寫（送審用）</h1>
+    <p class="date">更新日期：2026-02-21</p>
+
+    <h2>1) App Store 分類建議</h2>
+    <ul>
+      <li>主要分類：生產力 (Productivity)</li>
+      <li>次要分類（可選）：工具程式 (Utilities)</li>
+    </ul>
+    <p>說明：你的核心是任務管理、週計畫、提醒、看板流程，屬於生產力工具，不是一般工具箱型 App。</p>
+
+    <h2>2) App Privacy（App Store Connect）建議填法</h2>
+    <h3>Data Collection</h3>
+    <ul>
+      <li>Data Not Collected（此 App 不蒐集資料）</li>
+    </ul>
+    <h3>Tracking</h3>
+    <ul>
+      <li>No（不追蹤）</li>
+    </ul>
+    <h3>理由對齊目前版本</h3>
+    <ul>
+      <li>無帳號系統、無註冊登入。</li>
+      <li>任務與設定資料存於本機。</li>
+      <li>目前版本 iCloud 同步功能已停用。</li>
+      <li>未配置 Sentry DSN 時，不會上傳 crash/analytics 到第三方服務。</li>
+    </ul>
+
+    <h2>3) 可直接貼的隱私權政策（zh-TW）</h2>
+    <h3>隱私權政策</h3>
+    <p>Orbit Kanban（環形看板）重視您的隱私。本政策說明我們如何處理資料。</p>
+    <ol>
+      <li><span class="strong">資料蒐集</span><br>本 App 不要求註冊帳號，也不會將您的任務內容、標籤、子任務等個人資料上傳至開發者伺服器。</li>
+      <li><span class="strong">本機資料儲存</span><br>您建立的任務與設定會儲存在您的裝置本機，用於提供待辦管理與畫面顯示功能。</li>
+      <li><span class="strong">通知權限</span><br>若您啟用提醒功能，App 會向系統請求通知權限，僅用於在本機發送提醒通知。</li>
+      <li><span class="strong">第三方服務</span><br>目前版本預設不啟用第三方分析或崩潰回報服務。</li>
+      <li><span class="strong">兒童與隱私</span><br>本 App 不會主動蒐集可識別個人身分的資料。</li>
+      <li><span class="strong">政策更新</span><br>若未來功能有調整（例如啟用雲端同步或第三方崩潰監控），本政策將一併更新並公開最新版本。</li>
+      <li><span class="strong">聯絡方式</span><br>若您對隱私政策有任何問題，請透過 App Store 開發者聯絡方式與我們聯繫。</li>
+    </ol>
+
+    <h2>4) 上線前提醒</h2>
+    <ul>
+      <li>若未來啟用 Sentry 或其他分析/崩潰服務，需回到 App Privacy 改填對應資料類型。</li>
+      <li>若未來重新啟用 iCloud 同步，請同步更新隱私權政策內容。</li>
+    </ul>
+  </main>
+</body>
+</html>
