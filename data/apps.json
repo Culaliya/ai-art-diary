@@ -40,6 +40,22 @@
     "updated": "2026/02/18"
   },
   {
+    "name": "Glimmer Countdown 可愛倒數器",
+    "desc": "療癒又實用的事件倒數工具",
+    "icon": "assets/icons/glimmercountdown.png",
+    "link": "https://apps.apple.com/tw/app/glimmer-countdown/id6759190781",
+    "version": "1.0",
+    "updated": "2026/02/24"
+  },
+  {
+    "name": "Orbit Kanban 環形看板",
+    "desc": "任務管理與週計畫看板工具",
+    "icon": "assets/icons/orbitkanban.png",
+    "link": "https://apps.apple.com/tw/app/orbit-kanban-%E7%92%B0%E5%BD%A2%E7%9C%8B%E6%9D%BF/id6759484342",
+    "version": "1.0",
+    "updated": "2026/02/24"
+  },
+  {
     "name": "司康下午茶",
     "desc": "溫柔節奏的陪伴系小品",
     "icon": "assets/icons/sconetea.png",
