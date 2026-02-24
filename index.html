@@ -1161,6 +1161,12 @@
   <section id="app-updates">
     <div class="update-card">
       <p class="update-title">【📱 App Updates】</p>
+      <p class="update-text special-new">⏳ <a class="update-link"
+          href="https://apps.apple.com/tw/app/glimmer-countdown/id6759190781">Glimmer Countdown 可愛倒數器</a>
+        v1.0 (2026/02/24) — NEW</p>
+      <p class="update-text special-new">🛰️ <a class="update-link"
+          href="https://apps.apple.com/tw/app/orbit-kanban-%E7%92%B0%E5%BD%A2%E7%9C%8B%E6%9D%BF/id6759484342">Orbit Kanban 環形看板</a>
+        v1.0 (2026/02/24) — NEW</p>
       <p class="update-text special-new">🫖 <a class="update-link"
           href="https://apps.apple.com/tw/app/%E5%8F%B8%E5%BA%B7%E4%B8%8B%E5%8D%88%E8%8C%B6/id6759196544">司康下午茶</a>
         v1.0 (2026/02/21) — NEW</p>
@@ -1750,6 +1756,24 @@
             "updated": "2026/02/18"
           },
           {
+            "name": "Glimmer Countdown 可愛倒數器",
+            "desc": "療癒又實用的事件倒數工具",
+            "icon": "assets/icons/glimmercountdown.png",
+            "link": "https://apps.apple.com/tw/app/glimmer-countdown/id6759190781",
+            "id": "6759190781",
+            "version": "1.0",
+            "updated": "2026/02/24"
+          },
+          {
+            "name": "Orbit Kanban 環形看板",
+            "desc": "任務管理與週計畫看板工具",
+            "icon": "assets/icons/orbitkanban.png",
+            "link": "https://apps.apple.com/tw/app/orbit-kanban-%E7%92%B0%E5%BD%A2%E7%9C%8B%E6%9D%BF/id6759484342",
+            "id": "6759484342",
+            "version": "1.0",
+            "updated": "2026/02/24"
+          },
+          {
             "name": "司康下午茶",
             "desc": "溫柔節奏的陪伴系小品",
             "icon": "assets/icons/sconetea.png",
@@ -1859,7 +1883,7 @@
         };
         const appsSorted = [...apps].sort((a, b) => parseUpdatedAt(b.updated) - parseUpdatedAt(a.updated));
         const latestUpdatedAt = appsSorted.length ? parseUpdatedAt(appsSorted[0].updated) : 0;
-        const launchSpotlightIds = new Set(["6759196544", "6759197124", "6759190813", "6759190764", "6759184050"]);
+        const launchSpotlightIds = new Set(["6759190781", "6759484342", "6759196544", "6759197124", "6759190813", "6759190764", "6759184050"]);
 
         for (const app of appsSorted) {
           const card = document.createElement('div');
