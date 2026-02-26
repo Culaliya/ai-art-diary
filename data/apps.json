@@ -56,6 +56,22 @@
     "updated": "2026/02/24"
   },
   {
+    "name": "代號5.2討伐戰",
+    "desc": "諷刺喜劇風格的討伐戰遊戲",
+    "icon": "assets/icons/code52.png",
+    "link": "https://apps.apple.com/tw/app/%E4%BB%A3%E8%99%9F5-2%E8%A8%8E%E4%BC%90%E6%88%B0/id6759612502",
+    "version": "1.0",
+    "updated": "2026/02/26"
+  },
+  {
+    "name": "喵界翻譯官",
+    "desc": "貓語互動翻譯與收藏工具",
+    "icon": "assets/icons/meowtranslator.png",
+    "link": "https://apps.apple.com/tw/app/%E5%96%B5%E7%95%8C%E7%BF%BB%E8%AD%AF%E5%AE%98/id6759610885",
+    "version": "1.0",
+    "updated": "2026/02/26"
+  },
+  {
     "name": "司康下午茶",
     "desc": "溫柔節奏的陪伴系小品",
     "icon": "assets/icons/sconetea.png",
