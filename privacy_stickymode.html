@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>永恆日記 StickyMode Privacy Policy</title>
+  <meta
+    name="description"
+    content="永恆日記 StickyMode 隱私聲明。說明本 App 在本機儲存的資料、使用方式、權限用途與你的資料控制方式。"
+  >
+  <style>
+    :root {
+      --paper: #fffaf2;
+      --paper-strong: #fff4de;
+      --ink: #3f3428;
+      --muted: #786a5e;
+      --line: rgba(106, 87, 66, 0.18);
+      --accent: #f57c73;
+      --accent-deep: #db5d54;
+      --teal: #4c8d8a;
+      --shadow: 0 24px 50px rgba(95, 66, 43, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: "Avenir Next", "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      line-height: 1.8;
+      background:
+        radial-gradient(circle at top left, rgba(245, 124, 115, 0.20), transparent 28%),
+        radial-gradient(circle at top right, rgba(76, 141, 138, 0.18), transparent 24%),
+        linear-gradient(180deg, #fff7ef 0%, #fff2e8 42%, #f6ebe4 100%);
+    }
+
+    .page {
+      width: min(920px, calc(100% - 32px));
+      margin: 40px auto;
+      position: relative;
+    }
+
+    .hero {
+      position: relative;
+      padding: 28px 28px 18px;
+      border-radius: 28px 28px 18px 18px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(255, 244, 222, 0.92));
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 120px;
+      height: 28px;
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid rgba(140, 123, 104, 0.10);
+      backdrop-filter: blur(4px);
+      top: 18px;
+      border-radius: 8px;
+      transform: rotate(-8deg);
+    }
+
+    .hero::before {
+      left: -18px;
+    }
+
+    .hero::after {
+      right: -20px;
+      transform: rotate(9deg);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(245, 124, 115, 0.12);
+      color: var(--accent-deep);
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    h1 {
+      margin: 18px 0 10px;
+      font-size: clamp(2rem, 5vw, 3.3rem);
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+    }
+
+    .subtitle {
+      margin: 0;
+      max-width: 720px;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .meta {
+      margin-top: 18px;
+      color: var(--teal);
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .policy {
+      margin-top: 18px;
+      padding: 22px;
+      border-radius: 0 0 28px 28px;
+      background: rgba(255, 250, 242, 0.95);
+      border: 1px solid rgba(202, 181, 158, 0.35);
+      box-shadow: var(--shadow);
+    }
+
+    .intro {
+      margin: 0 0 22px;
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(245, 124, 115, 0.10), rgba(76, 141, 138, 0.08));
+      color: #5a4c40;
+      border: 1px solid rgba(245, 124, 115, 0.10);
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .card {
+      padding: 22px 20px;
+      border-radius: 20px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 24px rgba(110, 90, 67, 0.08);
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 1.18rem;
+      color: var(--accent-deep);
+    }
+
+    p {
+      margin: 0 0 12px;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 1.2em;
+      color: var(--ink);
+    }
+
+    li + li {
+      margin-top: 8px;
+    }
+
+    .contact-box {
+      background: linear-gradient(135deg, rgba(76, 141, 138, 0.10), rgba(255, 255, 255, 0.86));
+    }
+
+    a {
+      color: var(--teal);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      text-align: center;
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        width: min(100% - 20px, 920px);
+        margin: 20px auto 28px;
+      }
+
+      .hero {
+        padding: 22px 18px 16px;
+        border-radius: 24px 24px 16px 16px;
+      }
+
+      .policy {
+        padding: 16px;
+        border-radius: 0 0 24px 24px;
+      }
+
+      .card {
+        padding: 18px 16px;
+        border-radius: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="eyebrow">Privacy Policy</div>
+      <h1>永恆日記 StickyMode</h1>
+      <p class="subtitle">
+        StickyMode（以下稱「本 App」）重視你的隱私，並致力於讓你的日記內容以本機為主、由你自己掌握。
+      </p>
+      <p class="meta">Last updated: 2026-03-17</p>
+    </header>
+
+    <main class="policy">
+      <p class="intro">
+        本頁說明本 App 可能在你的裝置上保存哪些資料、這些資料如何被使用，以及你可以如何控制或刪除它們。
+      </p>
+
+      <div class="grid">
+        <section class="card">
+          <h2>1. 我們處理哪些資料</h2>
+          <p>本 App 可能在你的裝置本機保存以下內容：</p>
+          <ul>
+            <li>日記文字內容</li>
+            <li>標籤、模板設定、主題與偏好設定</li>
+            <li>你主動加入的照片</li>
+            <li>你主動建立的塗鴉內容</li>
+            <li>未來的信與解鎖日期</li>
+            <li>本機備份檔內容</li>
+            <li>提醒時間設定與 App Lock 偏好</li>
+          </ul>
+        </section>
+
+        <section class="card">
+          <h2>2. 資料如何被使用</h2>
+          <p>上述資料僅用於提供本 App 的核心功能，例如：</p>
+          <ul>
+            <li>顯示與編輯日記</li>
+            <li>建立回憶牆與情緒洞察</li>
+            <li>匯出與匯入本機備份</li>
+            <li>啟用提醒與裝置驗證解鎖</li>
+          </ul>
+        </section>
+
+        <section class="card">
+          <h2>3. 資料儲存位置</h2>
+          <p>
+            本 App 為純本地 app。你的內容預設只儲存在你的 Apple 裝置本機，不會由本 App 自動上傳到開發者伺服器。
+          </p>
+        </section>
+
+        <section class="card">
+          <h2>4. 帳號與伺服器</h2>
+          <p>本 App 不要求建立帳號，也不需要登入才能使用主要功能。</p>
+        </section>
+
+        <section class="card">
+          <h2>5. 照片與權限</h2>
+          <p>若你選擇加入照片，本 App 會透過系統提供的照片選取器讀取你主動選擇的項目。</p>
+          <p>若你啟用每日提醒，本 App 會向系統請求通知權限，以便在你設定的時間提醒你。</p>
+          <p>
+            若你啟用 App Lock，本 App 會使用裝置提供的 Face ID、Touch ID 或裝置密碼來解鎖，不會蒐集或儲存你的生物辨識資料。
+          </p>
+        </section>
+
+        <section class="card">
+          <h2>6. 資料分享</h2>
+          <p>
+            除非你主動使用系統分享功能匯出備份或內容，否則本 App 不會將你的日記內容分享給第三方。
+          </p>
+        </section>
+
+        <section class="card">
+          <h2>7. 資料刪除與控制</h2>
+          <p>你可以在 App 內：</p>
+          <ul>
+            <li>匯出完整備份</li>
+            <li>從備份檔還原</li>
+            <li>刪除單篇日記</li>
+            <li>清除所有本機資料</li>
+          </ul>
+        </section>
+
+        <section class="card">
+          <h2>8. 第三方服務</h2>
+          <p>
+            目前版本不以伺服器為基礎提供主要功能。若未來加入雲端同步、分析或第三方服務，本政策將更新。
+          </p>
+        </section>
+
+        <section class="card contact-box">
+          <h2>9. 聯絡方式</h2>
+          <p>若你對隱私政策有疑問，請聯絡：</p>
+          <ul>
+            <li>Email: <a href="mailto:culaliya@icloud.com">culaliya@icloud.com</a></li>
+            <li>Support URL: <a href="https://ai-art-diary.vercel.app/">https://ai-art-diary.vercel.app/</a></li>
+          </ul>
+        </section>
+      </div>
+
+      <p class="footer-note">
+        StickyMode Privacy Policy
+      </p>
+    </main>
+  </div>
+</body>
+</html>
