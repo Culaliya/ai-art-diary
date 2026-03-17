@@ -1161,6 +1161,9 @@
   <section id="app-updates">
     <div class="update-card">
       <p class="update-title">【📱 App Updates】</p>
+      <p class="update-text special-new">📘 <a class="update-link"
+          href="https://apps.apple.com/us/app/%E6%97%A5%E5%B8%B8%E5%85%AC%E5%BC%8F%E5%AF%B6%E5%BA%AB-formulavault/id6759861118">日常公式寶庫 FormulaVault</a>
+        v1.0 (2026/03/09) — NEW</p>
       <p class="update-text special-new">🐈 <a class="update-link"
           href="https://apps.apple.com/us/app/%E7%81%B0%E8%B2%93%E6%AA%94%E6%A1%88%E5%BA%AB/id6753888547">灰貓檔案庫</a>
         v1.3 (2026/03/04) — NEW</p>
@@ -1678,6 +1681,15 @@
       try {
         const apps = [
           {
+            "name": "日常公式寶庫 FormulaVault",
+            "desc": "生活×健康×理財公式庫，隨時秒查。",
+            "icon": "assets/icons/formulavault.png",
+            "link": "https://apps.apple.com/us/app/%E6%97%A5%E5%B8%B8%E5%85%AC%E5%BC%8F%E5%AF%B6%E5%BA%AB-formulavault/id6759861118",
+            "id": "6759861118",
+            "version": "1.0",
+            "updated": "2026/03/09"
+          },
+          {
             "name": "GlassyCalc",
             "desc": "玻璃小算盤：精緻透明的計算機",
             "icon": "assets/apps/glassycalc.png",
@@ -1913,7 +1925,7 @@
         };
         const appsSorted = [...apps].sort((a, b) => parseUpdatedAt(b.updated) - parseUpdatedAt(a.updated));
         const latestUpdatedAt = appsSorted.length ? parseUpdatedAt(appsSorted[0].updated) : 0;
-        const launchSpotlightIds = new Set(["6759612502", "6759610885", "6759190781", "6759484342", "6759196544", "6759197124", "6759190813", "6759190764", "6759184050"]);
+        const launchSpotlightIds = new Set(["6759861118", "6759612502", "6759610885", "6759190781", "6759484342", "6759196544", "6759197124", "6759190813", "6759190764", "6759184050"]);
 
         for (const app of appsSorted) {
           const card = document.createElement('div');
