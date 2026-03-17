@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Culaliya's AI Art Diary 🌌</title>
+  <title>Culaliya Studio | iOS Apps, Notes & Tiny Worlds</title>
 
   <!-- ===== 網站小縮圖 (Favicon) 設定 ===== -->
   <link rel="icon" href="/assets/blackcat.png?v=3" type="image/png">
@@ -13,22 +13,22 @@
 
   <!-- ===== SEO (搜尋引擎優化) 設定 ===== -->
   <meta name="description"
-    content="Culaliya 的創意實驗室與作品集。探索 iOS App 作品（茶語 Tea Mind、喵語學院、星迴等）、AI 生成藝術、以及結合科技與靈性的數位創作日記。Where algorithm meets intuition." />
+    content="Culaliya Studio 集合了 iOS App、靈感筆記與小小數位世界。用溫柔的玻璃感介面展示作品、更新與創作片段。" />
   <meta name="keywords"
-    content="Culaliya, AI Art, iOS App, 茶語 Tea Mind, 喵語學院, Starveil Match, 獨立開發, 生成式藝術, 療癒遊戲, 程式教學, 靈性科技, Swift, 獨立開發者" />
+    content="Culaliya, Culaliya Studio, iOS App, 獨立開發, Swift, FormulaVault, 茶語 Tea Mind, 喵語學院, StickyMode, 作品集, 療癒 App" />
   <meta name="author" content="Culaliya" />
 
   <!-- Open Graph / Facebook / LINE -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://ai-art-diary.vercel.app/" />
-  <meta property="og:title" content="Culaliya's AI Art Diary 🌌 | 創意與科技的實驗室" />
-  <meta property="og:description" content="這裡紀錄了我的 iOS App 作品、AI 藝術創作與程式實驗。歡迎來到演算法與直覺交織的宇宙。" />
+  <meta property="og:title" content="Culaliya Studio | iOS Apps, Notes & Tiny Worlds" />
+  <meta property="og:description" content="一個更透光也更溫柔的作品首頁，收錄 Culaliya 的 iOS Apps、更新、靈感與小小數位宇宙。" />
   <meta property="og:image" content="https://ai-art-diary.vercel.app/assets/blackcat.png" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Culaliya's AI Art Diary 🌌" />
-  <meta name="twitter:description" content="探索 iOS App 作品與 AI 藝術創作。Where algorithm meets intuition." />
+  <meta name="twitter:title" content="Culaliya Studio" />
+  <meta name="twitter:description" content="iOS Apps, Notes & Tiny Worlds. 以柔和玻璃感整理作品、更新與靈感。" />
   <meta name="twitter:image" content="https://ai-art-diary.vercel.app/assets/blackcat.png" />
 
   <style>
@@ -1090,6 +1090,555 @@
         height: 72px;
       }
     }
+
+    /* ===== 2026 Glass Refresh ===== */
+    :root {
+      --glass-bg: rgba(255, 255, 255, 0.32);
+      --glass-bg-strong: rgba(255, 255, 255, 0.46);
+      --glass-border: rgba(255, 255, 255, 0.54);
+      --glass-shadow: 0 20px 48px rgba(109, 84, 72, 0.14);
+      --page-text: #3d2d28;
+      --page-muted: #755e57;
+      --page-soft: #987a72;
+      --page-accent: #cb6b56;
+      --page-accent-soft: #ffe1d7;
+      --page-warm: #f2a38c;
+      --page-highlight: rgba(255, 255, 255, 0.78);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Avenir Next", "SF Pro Display", "SF Pro Text", "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      color: var(--page-text);
+      background:
+        radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.94) 0%, rgba(255, 249, 245, 0.62) 18%, transparent 38%),
+        radial-gradient(circle at 82% 12%, rgba(255, 219, 201, 0.82) 0%, rgba(255, 219, 201, 0.24) 22%, transparent 40%),
+        radial-gradient(circle at 72% 70%, rgba(255, 192, 170, 0.56) 0%, rgba(255, 192, 170, 0.16) 20%, transparent 40%),
+        linear-gradient(180deg, #fff3ef 0%, #fff0e8 42%, #fce6dc 100%);
+      cursor: auto;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: auto;
+      border-radius: 999px;
+      pointer-events: none;
+      z-index: -3;
+      filter: blur(30px);
+      opacity: 0.75;
+    }
+
+    body::before {
+      width: 280px;
+      height: 280px;
+      top: 70px;
+      left: -80px;
+      background: rgba(255, 255, 255, 0.76);
+    }
+
+    body::after {
+      width: 320px;
+      height: 320px;
+      right: -120px;
+      bottom: 90px;
+      background: rgba(255, 215, 198, 0.6);
+    }
+
+    #particles,
+    #cursor,
+    #cursor-trail,
+    .rainbow-trail,
+    .ripple {
+      display: none !important;
+    }
+
+    #visitorMap {
+      opacity: 0.12;
+      mix-blend-mode: soft-light;
+      filter: blur(0.5px);
+    }
+
+    h1,
+    h2,
+    h3 {
+      text-shadow: none;
+    }
+
+    h2 {
+      color: #1f2d3f;
+      letter-spacing: -0.02em;
+    }
+
+    p,
+    li,
+    label,
+    .subtitle,
+    .consent-text,
+    .update-text,
+    .app-meta,
+    .app-info p {
+      color: var(--page-muted);
+    }
+
+    a {
+      color: var(--page-accent);
+    }
+
+    section {
+      max-width: 1020px;
+      padding: 22px 20px;
+      margin: 0 auto 18px;
+    }
+
+    section:not(#hero):not(#app-updates) {
+      border: 1px solid var(--glass-border);
+      border-radius: 32px;
+      font-size: 0.96rem;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0.24));
+      backdrop-filter: blur(28px) saturate(145%);
+      -webkit-backdrop-filter: blur(28px) saturate(145%);
+      box-shadow: var(--glass-shadow);
+    }
+
+    .button,
+    .lab-btn,
+    #sendBtn,
+    .quick-btn,
+    #clearChat,
+    .consent-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.65);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.34));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 10px 24px rgba(70, 92, 120, 0.14);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      color: #6a433a;
+      font-weight: 700;
+    }
+
+    .button:hover,
+    .lab-btn:hover,
+    #sendBtn:hover,
+    .quick-btn:hover,
+    #clearChat:hover,
+    .consent-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.88), 0 14px 28px rgba(109, 84, 72, 0.16);
+    }
+
+    #hero {
+      max-width: 1020px;
+      margin: 20px auto 14px;
+      padding: 38px 28px 28px;
+      border-radius: 32px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.64), rgba(255, 255, 255, 0.24)),
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.66), transparent 42%);
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      box-shadow: 0 22px 56px rgba(117, 84, 72, 0.16);
+      backdrop-filter: blur(34px) saturate(155%);
+      -webkit-backdrop-filter: blur(34px) saturate(155%);
+      text-align: left;
+      overflow: hidden;
+      position: relative;
+    }
+
+    #hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, rgba(255, 255, 255, 0.48), transparent 34%, transparent 68%, rgba(255, 255, 255, 0.18));
+      pointer-events: none;
+    }
+
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.58);
+      border: 1px solid rgba(255, 255, 255, 0.74);
+      color: #a05a4a;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      width: fit-content;
+      backdrop-filter: blur(16px);
+    }
+
+    #hero h1 {
+      margin: 0 0 14px;
+      color: #4a302b;
+      font-size: clamp(2.5rem, 6vw, 4.6rem);
+      line-height: 0.96;
+      letter-spacing: -0.06em;
+      animation: none;
+    }
+
+    .hero-copy {
+      margin: 0;
+      max-width: 720px;
+      font-size: 0.98rem;
+      line-height: 1.75;
+      color: #7a635d;
+    }
+
+    #weather-quote {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 26px;
+      color: #82655f;
+    }
+
+    .weather-select,
+    #weather {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.56);
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 8px 20px rgba(117, 84, 72, 0.12);
+      backdrop-filter: blur(18px);
+      color: #8e5749;
+      font-size: 0.9rem;
+    }
+
+    .weather-select {
+      min-width: 220px;
+      cursor: pointer;
+      outline: none;
+    }
+
+    #weather {
+      padding-right: 18px;
+    }
+
+    #inspiration-bar {
+      display: inline-flex;
+      align-items: center;
+      margin-top: 16px;
+      padding: 12px 18px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.46);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      color: #8d5d50;
+      font-size: 0.92rem;
+      opacity: 1;
+    }
+
+    #app-updates {
+      max-width: 1020px;
+      padding: 0 8px 4px;
+    }
+
+    .update-card {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0.26));
+      box-shadow: var(--glass-shadow);
+      backdrop-filter: blur(26px) saturate(150%);
+      -webkit-backdrop-filter: blur(26px) saturate(150%);
+    }
+
+    .update-title {
+      color: #7b4f45;
+      margin-bottom: 10px;
+      font-size: 0.94rem;
+    }
+
+    .update-text {
+      padding: 8px 12px;
+      margin-bottom: 6px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.34);
+      border: 1px solid rgba(255, 255, 255, 0.42);
+      font-size: 0.9rem;
+    }
+
+    .update-text.special-new {
+      border: 1px solid rgba(255, 203, 165, 0.88);
+      background: linear-gradient(135deg, rgba(255, 239, 225, 0.78), rgba(255, 255, 255, 0.38));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82), 0 12px 24px rgba(244, 161, 120, 0.12);
+      animation: none;
+    }
+
+    .update-link {
+      color: #bb5d4c;
+      font-weight: 700;
+    }
+
+    .lab-buttons {
+      max-width: 1020px;
+      margin: 0 auto 20px;
+      padding: 0 8px;
+      gap: 10px;
+    }
+
+    .lab-btn,
+    .lab-btn.pink,
+    .lab-btn.purple,
+    .lab-btn.blue,
+    .lab-btn.green {
+      color: #213654;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(255, 255, 255, 0.34));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.84), 0 12px 24px rgba(70, 92, 120, 0.12);
+    }
+
+    #chatContainer {
+      max-width: 100%;
+      margin: 18px auto 0;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.36), rgba(255, 255, 255, 0.22));
+      border: 1px solid rgba(255, 255, 255, 0.65);
+      border-radius: 28px;
+      padding: 18px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), var(--glass-shadow);
+    }
+
+    #chatHistory {
+      background: rgba(255, 255, 255, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.62);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+    }
+
+    #chatHistory::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.28);
+    }
+
+    #chatHistory::-webkit-scrollbar-thumb {
+      background: rgba(95, 120, 156, 0.52);
+    }
+
+    .message.user .message-bubble {
+      background: linear-gradient(180deg, rgba(61, 121, 247, 0.9), rgba(61, 121, 247, 0.78));
+      color: #fff;
+    }
+
+    .message.ai .message-bubble {
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.82);
+      color: #5f4942;
+    }
+
+    .message-avatar {
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      box-shadow: 0 8px 18px rgba(74, 98, 128, 0.12);
+    }
+
+    .typing-indicator span {
+      background: rgba(70, 106, 152, 0.7);
+    }
+
+    #catInput {
+      border: 1px solid rgba(255, 255, 255, 0.68);
+      background: rgba(255, 255, 255, 0.64);
+      color: #5b443c;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78);
+    }
+
+    #catInput:focus {
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: 0 0 0 4px rgba(228, 143, 118, 0.16);
+    }
+
+    .quick-btn {
+      color: #8e5b4d;
+      background: rgba(255, 255, 255, 0.56);
+    }
+
+    #catMood {
+      color: #886960;
+    }
+
+    #moodIcon {
+      animation: none;
+    }
+
+    #clearChat {
+      color: #6f5270;
+    }
+
+    #memeCat {
+      box-shadow: 0 18px 34px rgba(83, 102, 130, 0.16);
+      animation: float 6s ease-in-out infinite alternate;
+    }
+
+    #bgm-control {
+      top: 16px;
+      right: 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.68);
+      color: #8b584c;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82), 0 10px 22px rgba(117, 84, 72, 0.14);
+      width: 52px;
+      height: 52px;
+    }
+
+    #bgm-control:hover,
+    #bgm-control.playing {
+      background: rgba(255, 255, 255, 0.7);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 14px 26px rgba(117, 84, 72, 0.16);
+      animation: none;
+      transform: translateY(-2px);
+    }
+
+    .slide,
+    .video-container iframe,
+    .spotify-container iframe {
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 18px 34px rgba(117, 84, 72, 0.13);
+    }
+
+    .slide-btn {
+      background: rgba(255, 255, 255, 0.52);
+      color: #8f5d4f;
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      box-shadow: 0 10px 18px rgba(117, 84, 72, 0.14);
+    }
+
+    .slide-btn:hover {
+      background: rgba(255, 255, 255, 0.75);
+      box-shadow: 0 14px 24px rgba(117, 84, 72, 0.16);
+    }
+
+    .dot {
+      background: rgba(92, 114, 146, 0.22);
+    }
+
+    .dot:hover,
+    .dot.active {
+      background: rgba(215, 112, 88, 0.76);
+      box-shadow: none;
+    }
+
+    .app-card {
+      border: 1px solid rgba(255, 255, 255, 0.68);
+      border-radius: 24px;
+      padding: 14px 16px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.44), rgba(255, 255, 255, 0.22));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.76), 0 16px 28px rgba(117, 84, 72, 0.11);
+    }
+
+    .app-card:hover {
+      transform: translateY(-4px);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.84), 0 20px 34px rgba(117, 84, 72, 0.14);
+    }
+
+    .app-image {
+      width: 88px;
+      height: 88px;
+      border-radius: 22px;
+      box-shadow: 0 14px 22px rgba(117, 84, 72, 0.14);
+    }
+
+    .app-info h3 {
+      color: #5a3a33;
+      font-size: 1.08rem;
+    }
+
+    .update-badge {
+      border: 1px solid rgba(205, 118, 93, 0.22);
+      color: #9a5848;
+      background: rgba(255, 230, 222, 0.88);
+      box-shadow: none;
+    }
+
+    .update-badge.latest,
+    .update-badge.launch {
+      color: #8b523d;
+      background: rgba(255, 233, 193, 0.96);
+      border: 1px solid rgba(255, 195, 117, 0.8);
+      box-shadow: none;
+      animation: none;
+    }
+
+    .app-card.new-app-spotlight {
+      border-color: rgba(255, 207, 166, 0.95);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.76), 0 16px 32px rgba(244, 170, 122, 0.14);
+      animation: none;
+    }
+
+    #consent-banner {
+      background: rgba(243, 246, 252, 0.76);
+      border-top: 1px solid rgba(255, 255, 255, 0.76);
+      box-shadow: 0 -18px 40px rgba(71, 90, 115, 0.12);
+      backdrop-filter: blur(28px);
+      text-align: left;
+    }
+
+    .consent-agree {
+      color: #244269;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.84), 0 12px 20px rgba(61, 121, 247, 0.12);
+    }
+
+    .consent-decline {
+      color: #60708a;
+      border-color: rgba(255, 255, 255, 0.72);
+    }
+
+    footer,
+    footer a {
+      color: var(--page-soft) !important;
+    }
+
+    @media (max-width: 768px) {
+      #hero {
+        margin: 18px 12px 14px;
+        padding: 30px 20px 24px;
+        border-radius: 28px;
+      }
+
+      .hero-kicker {
+        font-size: 0.76rem;
+      }
+
+      #hero h1 {
+        font-size: clamp(2.5rem, 12vw, 4rem);
+      }
+
+      .hero-copy {
+        font-size: 0.98rem;
+      }
+
+      #weather-quote,
+      #inspiration-bar {
+        width: 100%;
+      }
+
+      .weather-select,
+      #weather {
+        width: 100%;
+        min-width: 0;
+        justify-content: flex-start;
+      }
+
+      #app-updates {
+        padding: 0 12px 4px;
+      }
+
+      .update-card,
+      section:not(#hero):not(#app-updates) {
+        border-radius: 24px;
+      }
+
+      .app-card {
+        border-radius: 22px;
+      }
+    }
   </style>
 
   <link rel="stylesheet" href="mobile-ui.css">
@@ -1129,11 +1678,11 @@
 
   <!-- HERO -->
   <section id="hero">
-    <h1>AI ART DIARY ⚡</h1>
-    <p>Where algorithm meets intuition — Culaliya's creative & cosmic lab.</p>
+    <div class="hero-kicker">Independent iOS Apps · Notes · Tiny Worlds</div>
+    <h1>Culaliya Studio</h1>
+    <p class="hero-copy">把 app、畫面、靈感和一點點宇宙感，整理成一個更透光、更舒服停留的作品首頁。</p>
     <div id="weather-quote">
-      <select id="city-select"
-        style="background:rgba(0,0,0,0.5);color:#0ff;border:1px solid #0ff;border-radius:8px;padding:4px 8px;font-size:0.9em;cursor:pointer;">
+      <select id="city-select" class="weather-select">
         <option value="">🌍 選擇城市查看天氣</option>
         <option value="25.03,121.57">台北 Taipei</option>
         <option value="22.63,120.30">高雄 Kaohsiung</option>
@@ -1150,10 +1699,10 @@
         <option value="48.86,2.35">巴黎 Paris</option>
         <option value="-33.87,151.21">雪梨 Sydney</option>
       </select>
-      <span id="weather" style="margin-left:10px;"></span>
+      <span id="weather"></span>
     </div>
     <div id="inspiration-bar">
-      <span id="inspirationText">✨ 問題不是 AI 是否有靈魂，而是我們是否還保有想像 ✨</span>
+      <span id="inspirationText">做喜歡的 app，也做讓人想停留一下的小世界。</span>
     </div>
   </section>
 
@@ -1173,54 +1722,6 @@
       <p class="update-text special-new">🫖 <a class="update-link"
           href="https://apps.apple.com/us/app/%E8%8C%B6%E8%AA%9E-tea-mind/id6757837745">茶語</a>
         v1.1 (2026/03/04) — NEW</p>
-      <p class="update-text special-new">⚔️ <a class="update-link"
-          href="https://apps.apple.com/tw/app/%E4%BB%A3%E8%99%9F5-2%E8%A8%8E%E4%BC%90%E6%88%B0/id6759612502">代號5.2討伐戰</a>
-        v1.0 (2026/02/26) — NEW</p>
-      <p class="update-text special-new">🐱 <a class="update-link"
-          href="https://apps.apple.com/tw/app/%E5%96%B5%E7%95%8C%E7%BF%BB%E8%AD%AF%E5%AE%98/id6759610885">喵界翻譯官</a>
-        v1.0 (2026/02/26) — NEW</p>
-      <p class="update-text special-new">⏳ <a class="update-link"
-          href="https://apps.apple.com/tw/app/glimmer-countdown/id6759190781">Glimmer Countdown 可愛倒數器</a>
-        v1.0 (2026/02/24) — NEW</p>
-      <p class="update-text special-new">🛰️ <a class="update-link"
-          href="https://apps.apple.com/tw/app/orbit-kanban-%E7%92%B0%E5%BD%A2%E7%9C%8B%E6%9D%BF/id6759484342">Orbit Kanban 環形看板</a>
-        v1.0 (2026/02/24) — NEW</p>
-      <p class="update-text special-new">🫖 <a class="update-link"
-          href="https://apps.apple.com/tw/app/%E5%8F%B8%E5%BA%B7%E4%B8%8B%E5%8D%88%E8%8C%B6/id6759196544">司康下午茶</a>
-        v1.0 (2026/02/21) — NEW</p>
-      <p class="update-text special-new">💞 <a class="update-link"
-          href="https://apps.apple.com/tw/app/pms%E6%83%85%E7%B7%92%E5%AF%A6%E9%A9%97%E5%AE%A4/id6759197124">PMS情緒實驗室</a>
-        v1.0 (2026/02/21) — NEW</p>
-      <p class="update-text special-new">🍡 <a class="update-link"
-          href="https://apps.apple.com/tw/app/%E7%B3%AF%E7%B3%AF%E5%90%83%E5%90%83%E6%A8%82/id6759190813">糯糯吃吃樂</a>
-        v1.0 (2026/02/19) — NEW</p>
-      <p class="update-text special-new">🧁 <a class="update-link"
-          href="https://apps.apple.com/tw/app/puffle-pick-%E6%B3%A1%E8%8A%99%E9%81%B8%E9%81%B8/id6759190764">Puffle Pick 泡芙選選</a>
-        v1.0 (2026/02/19) — NEW</p>
-      <p class="update-text special-new">🥟 <a class="update-link"
-          href="https://apps.apple.com/tw/app/%E9%87%8F%E5%AD%90%E9%A5%85%E9%A0%ADquantumbuns-lab/id6759184050">量子饅頭 QuantumBuns Lab</a>
-        v1.0 (2026/02/19) — NEW</p>
-      <p class="update-text">☁️ <a class="update-link"
-          href="https://apps.apple.com/us/app/%E9%9B%B2%E6%9C%B5%E6%95%B4%E7%90%86%E5%B8%AB/id6752541896">雲朵整理師</a>
-        v1.3.2 (2026/02/18)</p>
-      <p class="update-text">✨ <a class="update-link"
-          href="https://apps.apple.com/tw/app/starveil-match/id6756781135">Starveil Match</a>
-        v1.1.1 (2026/02/18)</p>
-      <p class="update-text">🌀 <a class="update-link"
-          href="https://apps.apple.com/us/app/%E8%9E%BA%E6%97%8B%E9%AD%94%E6%B3%95%E5%B8%ABspiral-wizard/id6752797711">螺旋魔法師</a>
-        v1.5 (2026/02/12)</p>
-      <p class="update-text">🧾 <a class="update-link"
-          href="https://apps.apple.com/us/app/lazytrack%E6%A5%B5%E7%B0%A1%E6%87%B6%E4%BA%BA%E8%A8%98%E5%B8%B3/id6753803644">LazyTrack懶人記帳</a>
-        v1.2 (2026/02/11)</p>
-      <p class="update-text">🌌 <a class="update-link"
-          href="https://apps.apple.com/us/app/%E6%98%9F%E8%BF%B4/id6757077666">星迴</a>
-        v1.1 (2026/02/08)</p>
-      <p class="update-text">🐾 <a class="update-link"
-          href="https://apps.apple.com/us/app/pawdoro/id6756201914">Pawdoro</a>
-        v1.1 (2026/02/08)</p>
-      <p class="update-text">🐾 <a class="update-link"
-          href="https://apps.apple.com/us/app/%E5%96%B5%E8%AA%9E%E5%AD%B8%E9%99%A2/id6757230422">喵語學院</a>
-        v1.1 (2026/02/07)</p>
     </div>
   </section>
 
@@ -1235,7 +1736,7 @@
 
   <!-- ===== AI Cosmic Meme Cat ===== -->
   <section id="catSection">
-    <h2>🐈‍⬛ AI Cosmic Meme Cat 🌐</h2>
+    <h2>🐈‍⬛ Cosmic Meme Cat</h2>
     <div style="text-align:center; margin-bottom:20px;">
       <img id="memeCat" src="assets/blackcat.png" alt="Meme Cat">
     </div>
@@ -1244,7 +1745,7 @@
       <div id="chatHistory">
         <div class="message ai">
           <img class="message-avatar" src="assets/blackcat.png" alt="Cat">
-          <div class="message-bubble">喵～我是宇宙喵星人！有什麼想聊的嗎？ 🌌✨</div>
+          <div class="message-bubble">喵，我在這裡陪你逛逛作品。想聊天、找靈感，或只是發個呆都可以。</div>
         </div>
       </div>
 
@@ -1277,7 +1778,7 @@
 
   <!-- Featured Video & Music -->
   <section>
-    <h2>🎥 Featured Video & Music</h2>
+    <h2>🎥 Featured Motion</h2>
     <div class="media-flex">
       <div class="video-container">
         <iframe src="https://www.youtube.com/embed/videoseries?list=PLf1VNbciujbc-QSR2wNNCvYZCv1cZ88ef"
@@ -1362,20 +1863,20 @@
 
   <!-- Apps -->
   <section>
-    <h2>📱 My Published Apps</h2>
+    <h2>📱 Published Apps</h2>
     <div class="app-container" id="app-container">Loading apps...</div>
   </section>
 
   <!-- NASA APOD -->
   <section>
-    <h2>🌌 NASA Astronomy Picture of the Day</h2>
+    <h2>🌌 Space Postcard of the Day</h2>
     <div id="apod" style="text-align:center;">載入星圖中…</div>
   </section>
 
   <!-- Comments -->
   <section>
     <h2>💬 Comments</h2>
-    <script src="https://utteranc.es/client.js" repo="Culaliya/ai-art-diary" issue-term="pathname" theme="github-dark"
+    <script src="https://utteranc.es/client.js" repo="Culaliya/ai-art-diary" issue-term="pathname" theme="github-light"
       crossorigin="anonymous" async></script>
   </section>
 
@@ -1392,50 +1893,56 @@
 
   <script>
     /* ===== 滑鼠跟隨特效 ===== */
+    const enableDecorativeCursor = false;
+    const enableParticleField = false;
+    const enableClickRipple = false;
     const cursor = document.getElementById('cursor');
     const cursorTrail = document.getElementById('cursor-trail');
     let mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0, trailX = 0, trailY = 0;
     const rainbowColors = ['#ff0080', '#ff8000', '#ffff00', '#00ff00', '#0080ff', '#8000ff'];
     let colorIndex = 0;
 
-    document.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX; mouseY = e.clientY;
-      if (Math.random() > 0.7) {
-        const trail = document.createElement('div');
-        trail.className = 'rainbow-trail';
-        trail.style.left = e.clientX + 'px';
-        trail.style.top = e.clientY + 'px';
-        trail.style.background = rainbowColors[colorIndex % rainbowColors.length];
-        document.body.appendChild(trail);
-        colorIndex++;
-        setTimeout(() => trail.remove(), 1000);
+    if (enableDecorativeCursor) {
+      document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX; mouseY = e.clientY;
+        if (Math.random() > 0.7) {
+          const trail = document.createElement('div');
+          trail.className = 'rainbow-trail';
+          trail.style.left = e.clientX + 'px';
+          trail.style.top = e.clientY + 'px';
+          trail.style.background = rainbowColors[colorIndex % rainbowColors.length];
+          document.body.appendChild(trail);
+          colorIndex++;
+          setTimeout(() => trail.remove(), 1000);
+        }
+      });
+
+      function updateCursor() {
+        cursorX += (mouseX - cursorX) * 0.15;
+        cursorY += (mouseY - cursorY) * 0.15;
+        trailX += (mouseX - trailX) * 0.08;
+        trailY += (mouseY - trailY) * 0.08;
+
+        cursor.style.left = cursorX + 'px';
+        cursor.style.top = cursorY + 'px';
+        cursorTrail.style.left = trailX + 'px';
+        cursorTrail.style.top = trailY + 'px';
+        cursorTrail.style.background = rainbowColors[Math.floor(colorIndex / 2) % rainbowColors.length];
+        requestAnimationFrame(updateCursor);
       }
-    });
 
-    function updateCursor() {
-      cursorX += (mouseX - cursorX) * 0.15;
-      cursorY += (mouseY - cursorY) * 0.15;
-      trailX += (mouseX - trailX) * 0.08;
-      trailY += (mouseY - trailY) * 0.08;
-
-      cursor.style.left = cursorX + 'px';
-      cursor.style.top = cursorY + 'px';
-      cursorTrail.style.left = trailX + 'px';
-      cursorTrail.style.top = trailY + 'px';
-      cursorTrail.style.background = rainbowColors[Math.floor(colorIndex / 2) % rainbowColors.length];
-      requestAnimationFrame(updateCursor);
+      updateCursor();
     }
-    updateCursor();
 
     /* ===== Inspiration quotes fade ===== */
     const quotes = [
-      "✨ 問題不是 AI 是否有靈魂，而是我們是否還保有想像 ✨",
-      "🎶 Let algorithms dream with us.",
-      "🎭 藝術，不需要睡覺。",
-      "💥 Creativity is coded chaos.",
-      "🌠 Every pixel remembers its light.",
-      "🧪 想像力是人類最古老的運算。",
-      "🧚 You are the glitch the universe adores."
+      "做喜歡的 app，也做讓人想停留一下的小世界。",
+      "光感、留白、和一點點宇宙感，剛剛好就很迷人。",
+      "好的作品不必很吵，它會自己把人留下來。",
+      "A tiny digital world can still feel warm.",
+      "有些畫面不是為了炫技，是為了陪伴。",
+      "把靈感做成可以觸碰的介面。",
+      "讓科技有呼吸感，讓作品有溫度。"
     ];
     let qIndex = 0;
     const inspirationBar = document.getElementById('inspiration-bar');
@@ -1582,7 +2089,7 @@
         chatHistory.innerHTML = `
       <div class="message ai">
         <img class="message-avatar" src="assets/blackcat.png" alt="Cat">
-        <div class="message-bubble">喵～我是宇宙喵星人！有什麼想聊的嗎？ 🌌✨</div>
+        <div class="message-bubble">喵，我在這裡陪你逛逛作品。想聊天、找靈感，或只是發個呆都可以。</div>
       </div>
     `;
         messageCount = 0;
@@ -1628,8 +2135,11 @@
       });
       requestAnimationFrame(drawParticles);
     }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas(); drawParticles();
+    if (enableParticleField) {
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+      drawParticles();
+    }
 
     /* ===== 輪播 ===== */
     let slideIndex = 0;
@@ -2009,12 +2519,14 @@
     document.addEventListener('click', e => {
       const clickSound = document.getElementById('click-sound');
       clickSound.volume = 0.2; clickSound.currentTime = 0; clickSound.play();
-      const ripple = document.createElement('div');
-      ripple.className = 'ripple';
-      ripple.style.left = `${e.clientX}px`;
-      ripple.style.top = `${e.clientY}px`;
-      document.body.appendChild(ripple);
-      ripple.addEventListener('animationend', () => ripple.remove());
+      if (enableClickRipple) {
+        const ripple = document.createElement('div');
+        ripple.className = 'ripple';
+        ripple.style.left = `${e.clientX}px`;
+        ripple.style.top = `${e.clientY}px`;
+        document.body.appendChild(ripple);
+        ripple.addEventListener('animationend', () => ripple.remove());
+      }
     });
 
     /* ===== Weather API (City Dropdown Selection) ===== */
@@ -2058,17 +2570,17 @@
         const data = await res.json();
         if (data.media_type === 'image') {
           apodDiv.innerHTML = `
-        <img src="${data.url}" alt="${data.title}" style="max-width:100%;border-radius:12px;box-shadow:0 0 20px #0ff5;">
-        <p style="margin-top:15px;color:#aaf;font-size:1.2em;font-weight:bold;">${data.title}</p>
-        <p style="color:#ccc;font-size:0.95em;margin-top:10px;line-height:1.6;">${data.explanation}</p>
-        <p style="color:#888;font-size:0.85em;margin-top:10px;">📅 ${data.date}</p>
+        <img src="${data.url}" alt="${data.title}" style="max-width:100%;border-radius:24px;border:1px solid rgba(255,255,255,0.6);box-shadow:0 22px 40px rgba(65,86,114,0.14);">
+        <p style="margin-top:15px;color:#203049;font-size:1.2em;font-weight:700;">${data.title}</p>
+        <p style="color:#5f6d83;font-size:0.95em;margin-top:10px;line-height:1.75;">${data.explanation}</p>
+        <p style="color:#7c889a;font-size:0.85em;margin-top:10px;">📅 ${data.date}</p>
       `;
         } else if (data.media_type === 'video') {
           apodDiv.innerHTML = `
-        <iframe src="${data.url}" frameborder="0" allowfullscreen style="width:100%;height:400px;border-radius:12px;box-shadow:0 0 20px #0ff5;"></iframe>
-        <p style="margin-top:15px;color:#aaf;font-size:1.2em;font-weight:bold;">${data.title}</p>
-        <p style="color:#ccc;font-size:0.95em;margin-top:10px;line-height:1.6;">${data.explanation}</p>
-        <p style="color:#888;font-size:0.85em;margin-top:10px;">📅 ${data.date}</p>
+        <iframe src="${data.url}" frameborder="0" allowfullscreen style="width:100%;height:400px;border-radius:24px;border:1px solid rgba(255,255,255,0.6);box-shadow:0 22px 40px rgba(65,86,114,0.14);"></iframe>
+        <p style="margin-top:15px;color:#203049;font-size:1.2em;font-weight:700;">${data.title}</p>
+        <p style="color:#5f6d83;font-size:0.95em;margin-top:10px;line-height:1.75;">${data.explanation}</p>
+        <p style="color:#7c889a;font-size:0.85em;margin-top:10px;">📅 ${data.date}</p>
       `;
         }
       } catch (err) {
