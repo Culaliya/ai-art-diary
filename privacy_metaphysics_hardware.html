@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>形上學五金行 隱私權政策</title>
+  <meta
+    name="description"
+    content="《形上學五金行》隱私權政策。說明本 App 在本機處理的資料、圖片替換功能、Game Center、內購與資料刪除方式。"
+  >
+  <style>
+    :root {
+      --paper: #fffaf6;
+      --paper-soft: #fff1e8;
+      --ink: #493632;
+      --muted: #7a6862;
+      --line: rgba(129, 96, 84, 0.18);
+      --accent: #d8745e;
+      --accent-deep: #bf5543;
+      --shadow: 0 24px 48px rgba(126, 89, 75, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Avenir Next", "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      color: var(--ink);
+      line-height: 1.8;
+      background:
+        radial-gradient(circle at top left, rgba(255, 214, 198, 0.40), transparent 28%),
+        radial-gradient(circle at top right, rgba(255, 239, 224, 0.62), transparent 24%),
+        linear-gradient(180deg, #fff7f2 0%, #fff0e8 46%, #f9e8df 100%);
+    }
+
+    .page {
+      width: min(920px, calc(100% - 32px));
+      margin: 34px auto 40px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 26px 26px 18px;
+      border-radius: 30px 30px 18px 18px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(255, 244, 236, 0.94));
+      border: 1px solid rgba(255, 255, 255, 0.74);
+      box-shadow: var(--shadow);
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      top: 16px;
+      width: 118px;
+      height: 26px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.52);
+      border: 1px solid rgba(150, 122, 110, 0.10);
+      backdrop-filter: blur(4px);
+    }
+
+    .hero::before {
+      left: -18px;
+      transform: rotate(-8deg);
+    }
+
+    .hero::after {
+      right: -18px;
+      transform: rotate(8deg);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(216, 116, 94, 0.12);
+      color: var(--accent-deep);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    h1 {
+      margin: 18px 0 10px;
+      font-size: clamp(2rem, 5vw, 3.1rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .meta {
+      margin-top: 16px;
+      color: var(--accent-deep);
+      font-weight: 700;
+      font-size: 0.94rem;
+    }
+
+    .policy {
+      margin-top: 18px;
+      padding: 22px;
+      border-radius: 0 0 28px 28px;
+      background: rgba(255, 250, 246, 0.95);
+      border: 1px solid rgba(205, 177, 163, 0.36);
+      box-shadow: var(--shadow);
+    }
+
+    .intro {
+      margin: 0 0 20px;
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(216, 116, 94, 0.10), rgba(255, 255, 255, 0.52));
+      border: 1px solid rgba(216, 116, 94, 0.10);
+      color: #63504a;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .card {
+      padding: 20px;
+      border-radius: 20px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 24px rgba(118, 90, 79, 0.08);
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      color: var(--accent-deep);
+      font-size: 1.14rem;
+    }
+
+    p {
+      margin: 0 0 12px;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 1.2em;
+    }
+
+    li + li {
+      margin-top: 8px;
+    }
+
+    .contact-box {
+      background: linear-gradient(135deg, rgba(255, 242, 234, 0.96), rgba(255, 255, 255, 0.84));
+    }
+
+    .contact-list {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+
+    .contact-list li {
+      padding-left: 0;
+    }
+
+    .contact-label {
+      color: var(--accent-deep);
+      font-weight: 700;
+    }
+
+    a {
+      color: #c05b48;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        width: min(100% - 18px, 920px);
+        margin: 18px auto 26px;
+      }
+
+      .hero {
+        padding: 22px 18px 16px;
+        border-radius: 24px 24px 16px 16px;
+      }
+
+      .policy {
+        padding: 16px;
+        border-radius: 0 0 24px 24px;
+      }
+
+      .card {
+        padding: 16px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="privacy-glass.css">
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="eyebrow">Privacy Policy</div>
+      <h1>形上學五金行</h1>
+      <p class="subtitle">《形上學五金行》（以下稱「本 App」）尊重並保護你的隱私。本政策說明本 App 如何處理資料。</p>
+      <p class="meta">最後更新：2026-03-24</p>
+    </header>
+
+    <main class="policy">
+      <p class="intro">
+        這份政策的重點很簡單：目前版本的資料處理以裝置本機為主，只有在你主動操作特定功能時，才會使用對應資料來完成你想做的事情。
+      </p>
+
+      <div class="grid">
+        <section class="card">
+          <h2>1. 我們處理哪些資料</h2>
+          <p>本 App 可能在你的裝置本機處理以下資料，以提供功能：</p>
+          <ul>
+            <li>遊戲進度與設定</li>
+            <li>成就、稱號與任務狀態</li>
+            <li>中途存檔</li>
+            <li>你自訂輸入的神兵別名</li>
+            <li>你主動選擇匯入的自訂圖片</li>
+          </ul>
+        </section>
+
+        <section class="card">
+          <h2>2. 這些資料如何被使用</h2>
+          <p>上述資料僅用於：</p>
+          <ul>
+            <li>保存你的遊戲進度</li>
+            <li>顯示成就、稱號與戰報</li>
+            <li>套用你的個人化設定</li>
+            <li>提供自訂圖片替換功能</li>
+          </ul>
+        </section>
+
+        <section class="card">
+          <h2>3. 圖片替換功能</h2>
+          <p>
+            當你使用圖片替換功能時，本 App 只會在你主動選圖後存取該圖片。圖片會在裝置本機進行裁切、縮放、濾鏡與貼紙處理，處理後檔案會保存在本機儲存空間中，用來替換遊戲內對應圖片。
+          </p>
+          <p>本 App 不會將你選擇的圖片上傳到開發者伺服器。</p>
+        </section>
+
+        <section class="card">
+          <h2>4. 不做的事情</h2>
+          <p>除非未來版本另行說明，否則本 App：</p>
+          <ul>
+            <li>不要求建立帳號</li>
+            <li>不會把你的資料出售給第三方</li>
+            <li>不會用你的資料進行跨 App 或網站追蹤</li>
+            <li>不會把你的本機遊戲進度上傳到開發者伺服器</li>
+          </ul>
+        </section>
+
+        <section class="card">
+          <h2>5. Game Center</h2>
+          <p>
+            本 App 可選擇性支援 Apple Game Center。若你使用 Game Center，相關登入、成就、排行榜或其他 Apple 遊戲服務，將由 Apple 依其條款與隱私政策處理。
+          </p>
+        </section>
+
+        <section class="card">
+          <h2>6. 內購與支持作者</h2>
+          <p>
+            若未來版本提供正式的 App Store 內購，交易、付款與訂單處理將由 Apple 完成。本 App 不會直接取得你的付款卡號等完整付款資訊。
+          </p>
+        </section>
+
+        <section class="card">
+          <h2>7. 資料刪除</h2>
+          <p>
+            你可透過刪除 App 的方式移除本機儲存的遊戲資料與自訂圖片。若未來版本新增雲端資料功能，我們會補充對應的刪除方式。
+          </p>
+        </section>
+
+        <section class="card">
+          <h2>8. 未成年人</h2>
+          <p>
+            本 App 並非專為兒童設計。若未來版本調整年齡定位或加入需要額外保護的功能，我們會更新本政策。
+          </p>
+        </section>
+
+        <section class="card">
+          <h2>9. 政策更新</h2>
+          <p>若本 App 的資料處理方式有變更，我們會更新本隱私政策與 App Store 隱私資訊。</p>
+        </section>
+
+        <section class="card contact-box">
+          <h2>10. 聯絡方式</h2>
+          <p>若你對本政策有疑問，可以透過以下方式聯絡：</p>
+          <ul class="contact-list">
+            <li><span class="contact-label">開發者名稱：</span>CulaliyaWu</li>
+            <li><span class="contact-label">聯絡電子郵件：</span><a href="mailto:culaliya@icloud.com">culaliya@icloud.com</a></li>
+            <li><span class="contact-label">支援頁面：</span><a href="https://ai-art-diary.vercel.app/">https://ai-art-diary.vercel.app/</a></li>
+            <li><span class="contact-label">隱私權頁面：</span><a href="https://ai-art-diary.vercel.app/privacy_metaphysics_hardware.html">https://ai-art-diary.vercel.app/privacy_metaphysics_hardware.html</a></li>
+          </ul>
+        </section>
+      </div>
+
+      <p class="footer-note">形上學五金行 Privacy Policy</p>
+    </main>
+  </div>
+</body>
+</html>
