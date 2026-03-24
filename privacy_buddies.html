@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>奇耙大亂鬥 Buddies 隱私權政策</title>
+  <meta
+    name="description"
+    content="奇耙大亂鬥 Buddies iOS 版隱私權政策。說明本 App 是否蒐集個人資料、本機資料保存方式、分享功能與第三方服務使用情形。"
+  >
+  <style>
+    :root {
+      --paper: #fffaf6;
+      --paper-soft: #fff2ea;
+      --ink: #47322e;
+      --muted: #7b6660;
+      --line: rgba(126, 93, 80, 0.18);
+      --accent: #dd735e;
+      --accent-deep: #c25342;
+      --glass: rgba(255, 255, 255, 0.88);
+      --shadow: 0 24px 48px rgba(128, 89, 74, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Avenir Next", "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      color: var(--ink);
+      line-height: 1.8;
+      background:
+        radial-gradient(circle at top left, rgba(255, 213, 199, 0.42), transparent 26%),
+        radial-gradient(circle at top right, rgba(255, 237, 221, 0.64), transparent 24%),
+        linear-gradient(180deg, #fff7f2 0%, #fff1ea 46%, #f9e8df 100%);
+    }
+
+    .page {
+      width: min(920px, calc(100% - 32px));
+      margin: 34px auto 40px;
+    }
+
+    .hero {
+      padding: 26px 26px 18px;
+      border-radius: 30px 30px 18px 18px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(255, 243, 235, 0.94));
+      border: 1px solid rgba(255, 255, 255, 0.74);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      top: 16px;
+      width: 118px;
+      height: 26px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.52);
+      border: 1px solid rgba(150, 122, 110, 0.10);
+      backdrop-filter: blur(4px);
+    }
+
+    .hero::before {
+      left: -18px;
+      transform: rotate(-8deg);
+    }
+
+    .hero::after {
+      right: -18px;
+      transform: rotate(8deg);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(221, 115, 94, 0.12);
+      color: var(--accent-deep);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    h1 {
+      margin: 18px 0 10px;
+      font-size: clamp(2rem, 5vw, 3.1rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .meta {
+      margin-top: 16px;
+      color: var(--accent-deep);
+      font-weight: 700;
+      font-size: 0.94rem;
+    }
+
+    .policy {
+      margin-top: 18px;
+      padding: 22px;
+      border-radius: 0 0 28px 28px;
+      background: rgba(255, 250, 246, 0.95);
+      border: 1px solid rgba(205, 177, 163, 0.36);
+      box-shadow: var(--shadow);
+    }
+
+    .intro {
+      margin: 0 0 20px;
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(221, 115, 94, 0.10), rgba(255, 255, 255, 0.52));
+      border: 1px solid rgba(221, 115, 94, 0.10);
+      color: #624e48;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .card {
+      padding: 20px;
+      border-radius: 20px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 24px rgba(118, 90, 79, 0.08);
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      color: var(--accent-deep);
+      font-size: 1.14rem;
+    }
+
+    p {
+      margin: 0 0 12px;
+    }
+
+    ul,
+    ol {
+      margin: 0;
+      padding-left: 1.25em;
+    }
+
+    li + li {
+      margin-top: 8px;
+    }
+
+    .contact-box {
+      background: linear-gradient(135deg, rgba(255, 243, 235, 0.96), rgba(255, 255, 255, 0.82));
+    }
+
+    .contact-list {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .contact-list li {
+      padding-left: 0;
+    }
+
+    .contact-label {
+      color: var(--accent-deep);
+      font-weight: 700;
+    }
+
+    code {
+      background: rgba(255, 232, 224, 0.88);
+      color: #a24d3e;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        width: min(100% - 18px, 920px);
+        margin: 18px auto 26px;
+      }
+
+      .hero {
+        padding: 22px 18px 16px;
+        border-radius: 24px 24px 16px 16px;
+      }
+
+      .policy {
+        padding: 16px;
+        border-radius: 0 0 24px 24px;
+      }
+
+      .card {
+        padding: 16px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="privacy-glass.css">
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="eyebrow">Privacy Policy</div>
+      <h1>奇耙大亂鬥 Buddies</h1>
+      <p class="subtitle">本隱私權政策適用於《奇耙大亂鬥》iOS 版（以下稱「本 App」）。</p>
+      <p class="meta">最後更新日期：2026-03-24</p>
+    </header>
+
+    <main class="policy">
+      <p class="intro">
+        我們希望這份政策簡單清楚，讓你快速知道本 App 目前如何處理資料，以及哪些內容只會留在你的裝置本機。
+      </p>
+
+      <div class="grid">
+        <section class="card">
+          <h2>一、我們是否蒐集個人資料</h2>
+          <p>本 App 在目前版本不會向開發者或第三方伺服器蒐集、上傳或出售您的個人資料。</p>
+          <p>
+            本 App 不要求您建立帳號，也不會要求您提供姓名、電子郵件、電話、地址、照片、聯絡人、定位資訊、相機內容或麥克風內容。
+          </p>
+        </section>
+
+        <section class="card">
+          <h2>二、裝置上的本機資料</h2>
+          <p>為了保存遊戲體驗，本 App 可能會在您的裝置本機儲存以下資料：</p>
+          <ol>
+            <li>遊戲進度</li>
+            <li>金幣、解鎖狀態、成就與設定</li>
+            <li>音量、震動、HUD 等偏好設定</li>
+            <li>為除錯或測試用途而產生的本機事件紀錄（如啟用）</li>
+          </ol>
+          <p>上述資料預設僅儲存在您的裝置上，不會自動傳送給開發者。</p>
+        </section>
+
+        <section class="card">
+          <h2>三、分享功能</h2>
+          <p>若您主動使用分享功能，本 App 會呼叫 iOS 系統分享面板，讓您自行決定是否分享圖片或文字內容。</p>
+          <p>未經您明確操作，本 App 不會主動分享任何資料。</p>
+        </section>
+
+        <section class="card">
+          <h2>四、第三方服務</h2>
+          <p>
+            本 App 目前版本不整合廣告 SDK、第三方分析 SDK、第三方登入或遠端追蹤服務。
+          </p>
+          <p>
+            若未來版本加入任何會蒐集、處理或傳送資料的第三方服務，我們將先更新本隱私權政策與 App Store 隱私資訊。
+          </p>
+        </section>
+
+        <section class="card">
+          <h2>五、兒少使用</h2>
+          <p>本 App 不以 11 歲以下兒童為主要設計對象。</p>
+          <p>若您為未成年人，建議由家長或監護人協助了解本政策內容。</p>
+        </section>
+
+        <section class="card">
+          <h2>六、您的選擇</h2>
+          <p>您可以隨時刪除本 App，以移除儲存在裝置本機的相關資料。</p>
+          <p>
+            若未來版本提供資料匯出、刪除或聯絡申請機制，我們也會於本政策中更新說明。
+          </p>
+        </section>
+
+        <section class="card">
+          <h2>七、政策更新</h2>
+          <p>
+            若本 App 的資料處理方式有任何變更，我們會更新本政策，並於新版上架時同步調整 App Store 隱私揭露。
+          </p>
+        </section>
+
+        <section class="card contact-box">
+          <h2>八、聯絡我們</h2>
+          <ul class="contact-list">
+            <li><span class="contact-label">開發者名稱：</span>CulaliyaWu</li>
+            <li><span class="contact-label">聯絡電子郵件：</span><a href="mailto:culaliya@icloud.com">culaliya@icloud.com</a></li>
+            <li><span class="contact-label">支援頁面：</span><a href="https://ai-art-diary.vercel.app/">https://ai-art-diary.vercel.app/</a></li>
+            <li><span class="contact-label">隱私權頁面：</span><a href="https://ai-art-diary.vercel.app/privacy_buddies.html">https://ai-art-diary.vercel.app/privacy_buddies.html</a></li>
+          </ul>
+        </section>
+      </div>
+
+      <p class="footer-note">奇耙大亂鬥 Buddies Privacy Policy</p>
+    </main>
+  </div>
+</body>
+</html>
