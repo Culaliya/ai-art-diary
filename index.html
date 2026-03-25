@@ -1710,6 +1710,12 @@
   <section id="app-updates">
     <div class="update-card">
       <p class="update-title">【📱 App Updates】</p>
+      <p class="update-text special-new">🥊 <a class="update-link"
+          href="https://apps.apple.com/us/app/buddies-%E4%BA%82%E9%AC%A5%E6%B4%BE%E5%B0%8D/id6760216392">Buddies 亂鬥派對</a>
+        v1.0 (2026/03/25) — NEW</p>
+      <p class="update-text special-new">📔 <a class="update-link"
+          href="https://apps.apple.com/us/app/%E6%B0%B8%E6%81%86%E6%97%A5%E8%A8%98stickymode/id6760697871">永恆日記 StickyMode</a>
+        v1.0 (2026/03/23) — NEW</p>
       <p class="update-text special-new">📘 <a class="update-link"
           href="https://apps.apple.com/us/app/%E6%97%A5%E5%B8%B8%E5%85%AC%E5%BC%8F%E5%AF%B6%E5%BA%AB-formulavault/id6759861118">日常公式寶庫 FormulaVault</a>
         v1.0 (2026/03/09) — NEW</p>
@@ -2191,6 +2197,24 @@
       try {
         const apps = [
           {
+            "name": "Buddies 亂鬥派對",
+            "desc": "歡樂亂鬥派對，隨時開打的熱鬧對戰小宇宙。",
+            "icon": "assets/icons/buddies.png",
+            "link": "https://apps.apple.com/us/app/buddies-%E4%BA%82%E9%AC%A5%E6%B4%BE%E5%B0%8D/id6760216392",
+            "id": "6760216392",
+            "version": "1.0",
+            "updated": "2026/03/25"
+          },
+          {
+            "name": "永恆日記 StickyMode",
+            "desc": "把日記、回憶與未來的信，留給更後來的自己。",
+            "icon": "assets/icons/stickymode.png",
+            "link": "https://apps.apple.com/us/app/%E6%B0%B8%E6%81%86%E6%97%A5%E8%A8%98stickymode/id6760697871",
+            "id": "6760697871",
+            "version": "1.0",
+            "updated": "2026/03/23"
+          },
+          {
             "name": "日常公式寶庫 FormulaVault",
             "desc": "生活×健康×理財公式庫，隨時秒查。",
             "icon": "assets/icons/formulavault.png",
@@ -2435,7 +2459,7 @@
         };
         const appsSorted = [...apps].sort((a, b) => parseUpdatedAt(b.updated) - parseUpdatedAt(a.updated));
         const latestUpdatedAt = appsSorted.length ? parseUpdatedAt(appsSorted[0].updated) : 0;
-        const launchSpotlightIds = new Set(["6759861118", "6759612502", "6759610885", "6759190781", "6759484342", "6759196544", "6759197124", "6759190813", "6759190764", "6759184050"]);
+        const launchSpotlightIds = new Set(["6760216392", "6760697871", "6759861118", "6759612502", "6759610885", "6759190781", "6759484342", "6759196544", "6759197124", "6759190813", "6759190764", "6759184050"]);
 
         for (const app of appsSorted) {
           const card = document.createElement('div');
