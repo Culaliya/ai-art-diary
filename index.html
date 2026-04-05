@@ -1503,7 +1503,7 @@
     .featured-play-preview {
       position: relative;
       min-height: 250px;
-      padding: 18px;
+      padding: 14px;
       border-radius: 28px;
       background:
         linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.44)),
@@ -1515,6 +1515,39 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+    }
+
+    .featured-play-preview-link {
+      position: relative;
+      display: block;
+      width: 100%;
+      min-height: 250px;
+      border-radius: 22px;
+      overflow: hidden;
+      text-decoration: none;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+
+    .featured-play-preview-link::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255, 252, 246, 0.02), rgba(121, 79, 67, 0.16));
+      pointer-events: none;
+    }
+
+    .featured-play-preview-image {
+      width: 100%;
+      height: 100%;
+      min-height: 250px;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+      transition: transform 0.35s ease;
+    }
+
+    .featured-play-preview-link:hover .featured-play-preview-image {
+      transform: scale(1.03);
     }
 
     .featured-play-preview::after {
@@ -1540,44 +1573,24 @@
       border: 1px solid rgba(255, 255, 255, 0.88);
       font-size: 0.82rem;
       font-weight: 700;
-      z-index: 1;
+      z-index: 2;
+      position: absolute;
+      top: 18px;
+      left: 18px;
     }
 
-    .featured-play-preview-body {
+    .featured-play-preview-caption {
       position: relative;
-      z-index: 1;
-    }
-
-    .featured-play-preview-title {
-      margin: 12px 0 10px;
-      color: #734543;
-      font-size: 1.18rem;
-      font-weight: 700;
-    }
-
-    .featured-play-preview-copy {
-      margin: 0;
-      color: #8a6863;
-      line-height: 1.7;
-      font-size: 0.92rem;
-    }
-
-    .featured-play-preview-url {
-      position: relative;
-      z-index: 1;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      align-self: flex-start;
-      margin-top: 18px;
-      padding: 10px 14px;
+      z-index: 2;
+      margin-top: auto;
+      padding: 14px 16px;
       border-radius: 18px;
-      background: rgba(255, 255, 255, 0.76);
-      border: 1px solid rgba(255, 255, 255, 0.84);
-      color: #876762;
-      font-size: 0.85rem;
-      text-decoration: none;
-      word-break: break-all;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.88);
+      color: #7a5a55;
+      font-size: 0.88rem;
+      line-height: 1.55;
     }
 
     .update-card {
@@ -1972,31 +1985,30 @@
     <div class="featured-play-card">
       <div class="featured-play-grid">
         <div class="featured-play-content">
-          <div class="featured-play-kicker">✨ Latest Tiny World</div>
-          <h2 class="featured-play-title">潛意識圖鑑：隱藏防禦小怪物</h2>
+          <div class="featured-play-kicker">✨ New Interactive Quiz</div>
+          <h2 class="featured-play-title">來玩一下：測出你的隱藏防禦小怪物</h2>
           <p class="featured-play-copy">
-            新上線的互動心理測驗小宇宙。幾題之後，就會抽出你最像的防禦系小怪物，整體是柔霧奶油感，手機玩起來最有感。
-            如果社群不方便直接貼長網址，就先把大家帶回主網站，再從這裡一鍵點進去玩。
+            一個可愛又有點療癒的互動心理測驗，幾題之後就會抽出你最像的防禦系小怪物，還會得到一張專屬結果卡。
+            整體大約一分鐘，手機玩起來最順，也很適合分享給朋友一起玩。
           </p>
           <div class="featured-play-notes">
-            <span class="featured-play-note">📱 手機體驗最佳</span>
-            <span class="featured-play-note">🎧 可開背景音樂＋音效</span>
-            <span class="featured-play-note">🫧 適合限動／貼文導流</span>
+            <span class="featured-play-note">📱 手機打開更好玩</span>
+            <span class="featured-play-note">⏱ 約 1 分鐘完成</span>
+            <span class="featured-play-note">🎴 會得到專屬結果卡</span>
           </div>
           <div class="featured-play-actions">
-            <a class="button featured-play-primary" href="https://cuteweb-henna.vercel.app" target="_blank" rel="noopener">💫 立即打開測驗</a>
-            <a class="button featured-play-secondary" href="https://cuteweb-henna.vercel.app" target="_blank" rel="noopener">🔗 直接複製遊戲網址</a>
+            <a class="button featured-play-primary" href="https://cuteweb-henna.vercel.app" target="_blank" rel="noopener">💫 開始測驗</a>
+            <a class="button featured-play-secondary" href="https://cuteweb-henna.vercel.app" target="_blank" rel="noopener">🔗 複製測驗網址</a>
           </div>
         </div>
         <div class="featured-play-preview">
-          <span class="featured-play-preview-badge">NEW INTERACTIVE QUIZ</span>
-          <div class="featured-play-preview-body">
-            <div class="featured-play-preview-title">給社群導流用的入口卡</div>
-            <p class="featured-play-preview-copy">
-              可以把這張卡當作首頁最新主打作品。之後 IG bio、限動、Threads 或 Link in Bio 都先導回主網站，再從這裡跳去玩就很順。
-            </p>
+          <span class="featured-play-preview-badge">Tap To Preview</span>
+          <a class="featured-play-preview-link" href="https://cuteweb-henna.vercel.app" target="_blank" rel="noopener" aria-label="打開潛意識圖鑑：隱藏防禦小怪物測驗">
+            <img class="featured-play-preview-image" src="./assets/featured/subconscious-quiz-thumbnail.png" alt="潛意識圖鑑：隱藏防禦小怪物測驗縮圖" loading="lazy" />
+          </a>
+          <div class="featured-play-preview-caption">
+            點一下就會直接開啟測驗。手機上玩會更有氣氛，跑完後可以把自己的結果卡分享出去。
           </div>
-          <a class="featured-play-preview-url" href="https://cuteweb-henna.vercel.app" target="_blank" rel="noopener">cuteweb-henna.vercel.app</a>
         </div>
       </div>
     </div>
