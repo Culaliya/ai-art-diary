@@ -1009,6 +1009,37 @@
         font-size: 0.95em;
       }
 
+      .featured-play-card {
+        padding: 18px;
+        border-radius: 26px;
+      }
+
+      .featured-play-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+
+      .featured-play-title {
+        font-size: 1.55rem;
+      }
+
+      .featured-play-copy {
+        font-size: 0.94rem;
+      }
+
+      .featured-play-actions {
+        flex-direction: column;
+      }
+
+      .featured-play-primary,
+      .featured-play-secondary {
+        width: 100%;
+      }
+
+      .featured-play-preview {
+        min-height: 210px;
+      }
+
       #chatContainer {
         padding: 15px;
         margin: 20px 10px;
@@ -1341,6 +1372,212 @@
     #app-updates {
       max-width: 1020px;
       padding: 0 8px 4px;
+    }
+
+    #featured-play {
+      max-width: 1020px;
+      margin: 0 auto 16px;
+      padding: 0 8px;
+      border: none;
+      background: transparent;
+      box-shadow: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+
+    .featured-play-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 30px;
+      padding: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.78);
+      background:
+        radial-gradient(circle at top right, rgba(255, 235, 203, 0.82), transparent 28%),
+        linear-gradient(135deg, rgba(255, 249, 240, 0.86), rgba(255, 241, 247, 0.58));
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        0 20px 44px rgba(119, 85, 72, 0.14);
+      backdrop-filter: blur(28px) saturate(150%);
+      -webkit-backdrop-filter: blur(28px) saturate(150%);
+    }
+
+    .featured-play-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 18% 24%, rgba(255, 255, 255, 0.58), transparent 18%),
+        radial-gradient(circle at 84% 78%, rgba(234, 220, 255, 0.36), transparent 16%);
+      pointer-events: none;
+    }
+
+    .featured-play-grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(220px, 0.9fr);
+      gap: 22px;
+      align-items: center;
+      z-index: 1;
+    }
+
+    .featured-play-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.66);
+      border: 1px solid rgba(255, 255, 255, 0.82);
+      color: #9e6356;
+      font-size: 0.84rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .featured-play-title {
+      margin: 0 0 10px;
+      color: #754643;
+      font-size: clamp(1.7rem, 3.8vw, 2.5rem);
+      line-height: 1.16;
+      text-shadow: none;
+      animation: none;
+    }
+
+    .featured-play-copy {
+      margin: 0 0 16px;
+      color: #7f5b55;
+      line-height: 1.75;
+      font-size: 0.97rem;
+    }
+
+    .featured-play-notes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .featured-play-note {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.58);
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      color: #7f5b55;
+      font-size: 0.88rem;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.76);
+    }
+
+    .featured-play-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .featured-play-primary,
+    .featured-play-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 170px;
+      padding: 12px 18px;
+      text-decoration: none;
+    }
+
+    .featured-play-primary {
+      color: #6e413a;
+      background: linear-gradient(135deg, rgba(255, 244, 220, 0.96), rgba(255, 228, 208, 0.92));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92), 0 14px 28px rgba(214, 159, 126, 0.18);
+    }
+
+    .featured-play-secondary {
+      color: #7b5b74;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.42));
+    }
+
+    .featured-play-preview {
+      position: relative;
+      min-height: 250px;
+      padding: 18px;
+      border-radius: 28px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.44)),
+        radial-gradient(circle at top, rgba(255, 247, 230, 0.78), transparent 50%);
+      border: 1px solid rgba(255, 255, 255, 0.82);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.88),
+        0 16px 30px rgba(122, 94, 81, 0.12);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .featured-play-preview::after {
+      content: "";
+      position: absolute;
+      right: 18px;
+      bottom: 16px;
+      width: 92px;
+      height: 92px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 223, 196, 0.58), rgba(255, 223, 196, 0));
+      filter: blur(6px);
+    }
+
+    .featured-play-preview-badge {
+      display: inline-flex;
+      align-items: center;
+      align-self: flex-start;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.8);
+      color: #ab6a5f;
+      border: 1px solid rgba(255, 255, 255, 0.88);
+      font-size: 0.82rem;
+      font-weight: 700;
+      z-index: 1;
+    }
+
+    .featured-play-preview-body {
+      position: relative;
+      z-index: 1;
+    }
+
+    .featured-play-preview-title {
+      margin: 12px 0 10px;
+      color: #734543;
+      font-size: 1.18rem;
+      font-weight: 700;
+    }
+
+    .featured-play-preview-copy {
+      margin: 0;
+      color: #8a6863;
+      line-height: 1.7;
+      font-size: 0.92rem;
+    }
+
+    .featured-play-preview-url {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      align-self: flex-start;
+      margin-top: 18px;
+      padding: 10px 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid rgba(255, 255, 255, 0.84);
+      color: #876762;
+      font-size: 0.85rem;
+      text-decoration: none;
+      word-break: break-all;
     }
 
     .update-card {
@@ -1728,6 +1965,40 @@
       <p class="update-text special-new">🫖 <a class="update-link"
           href="https://apps.apple.com/us/app/%E8%8C%B6%E8%AA%9E-tea-mind/id6757837745">茶語</a>
         v1.1 (2026/03/04) — NEW</p>
+    </div>
+  </section>
+
+  <section id="featured-play">
+    <div class="featured-play-card">
+      <div class="featured-play-grid">
+        <div class="featured-play-content">
+          <div class="featured-play-kicker">✨ Latest Tiny World</div>
+          <h2 class="featured-play-title">潛意識圖鑑：隱藏防禦小怪物</h2>
+          <p class="featured-play-copy">
+            新上線的互動心理測驗小宇宙。幾題之後，就會抽出你最像的防禦系小怪物，整體是柔霧奶油感，手機玩起來最有感。
+            如果社群不方便直接貼長網址，就先把大家帶回主網站，再從這裡一鍵點進去玩。
+          </p>
+          <div class="featured-play-notes">
+            <span class="featured-play-note">📱 手機體驗最佳</span>
+            <span class="featured-play-note">🎧 可開背景音樂＋音效</span>
+            <span class="featured-play-note">🫧 適合限動／貼文導流</span>
+          </div>
+          <div class="featured-play-actions">
+            <a class="button featured-play-primary" href="https://cuteweb-henna.vercel.app" target="_blank" rel="noopener">💫 立即打開測驗</a>
+            <a class="button featured-play-secondary" href="https://cuteweb-henna.vercel.app" target="_blank" rel="noopener">🔗 直接複製遊戲網址</a>
+          </div>
+        </div>
+        <div class="featured-play-preview">
+          <span class="featured-play-preview-badge">NEW INTERACTIVE QUIZ</span>
+          <div class="featured-play-preview-body">
+            <div class="featured-play-preview-title">給社群導流用的入口卡</div>
+            <p class="featured-play-preview-copy">
+              可以把這張卡當作首頁最新主打作品。之後 IG bio、限動、Threads 或 Link in Bio 都先導回主網站，再從這裡跳去玩就很順。
+            </p>
+          </div>
+          <a class="featured-play-preview-url" href="https://cuteweb-henna.vercel.app" target="_blank" rel="noopener">cuteweb-henna.vercel.app</a>
+        </div>
+      </div>
     </div>
   </section>
 
