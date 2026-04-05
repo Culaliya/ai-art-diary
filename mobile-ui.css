@@ -192,6 +192,93 @@ p, h1, h2, h3, h4, h5, h6, span, div {
     width: 80px !important;
     height: 80px !important;
   }
+
+  /* Featured quiz card */
+  #featured-play {
+    padding: 0 12px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .featured-play-card {
+    padding: 18px !important;
+    border-radius: 26px !important;
+  }
+
+  .featured-play-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+    align-items: stretch !important;
+  }
+
+  .featured-play-content,
+  .featured-play-preview {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .featured-play-preview {
+    order: -1;
+    min-height: 0 !important;
+    padding: 12px !important;
+  }
+
+  .featured-play-preview-link {
+    min-height: 0 !important;
+    aspect-ratio: 16 / 10;
+  }
+
+  .featured-play-preview-image {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    object-fit: cover !important;
+  }
+
+  .featured-play-preview-badge {
+    top: 16px !important;
+    left: 16px !important;
+    font-size: 0.78rem !important;
+  }
+
+  .featured-play-preview-caption {
+    margin-top: 12px !important;
+    padding: 12px 14px !important;
+  }
+
+  .featured-play-title {
+    font-size: 1.55rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .featured-play-copy {
+    font-size: 0.94rem !important;
+    line-height: 1.75 !important;
+  }
+
+  .featured-play-notes {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .featured-play-note {
+    width: 100% !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  .featured-play-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .featured-play-primary,
+  .featured-play-secondary {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
   
   /* 聊天容器 */
   #chatContainer {
@@ -299,6 +386,43 @@ p, h1, h2, h3, h4, h5, h6, span, div {
   .lab-btn {
     padding: 12px 16px !important;
     font-size: 0.9em !important;
+  }
+
+  #featured-play {
+    padding: 0 10px !important;
+  }
+
+  .featured-play-card {
+    padding: 16px !important;
+    border-radius: 24px !important;
+  }
+
+  .featured-play-title {
+    font-size: 1.42rem !important;
+  }
+
+  .featured-play-copy {
+    font-size: 0.91rem !important;
+  }
+
+  .featured-play-preview-link {
+    aspect-ratio: 5 / 4;
+  }
+
+  .featured-play-preview-caption {
+    font-size: 0.84rem !important;
+    line-height: 1.5 !important;
+  }
+
+  .featured-play-note {
+    font-size: 0.84rem !important;
+    padding: 10px 12px !important;
+  }
+
+  .featured-play-primary,
+  .featured-play-secondary {
+    padding: 12px 16px !important;
+    font-size: 0.94rem !important;
   }
   
   #chatHistory {
