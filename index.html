@@ -1962,6 +1962,9 @@
   <section id="app-updates">
     <div class="update-card">
       <p class="update-title">【📱 App Updates】</p>
+      <p class="update-text special-new">🛠️ <a class="update-link"
+          href="https://apps.apple.com/us/app/%E5%BD%A2%E4%B8%8A%E5%AD%B8%E4%BA%94%E9%87%91%E8%A1%8C/id6761043770">形上學五金行</a>
+        v1.0 (2026/03/31) — NEW</p>
       <p class="update-text special-new">🥊 <a class="update-link"
           href="https://apps.apple.com/us/app/buddies-%E4%BA%82%E9%AC%A5%E6%B4%BE%E5%B0%8D/id6760216392">Buddies 亂鬥派對</a>
         v1.0 (2026/03/25) — NEW</p>
@@ -2478,9 +2481,18 @@
     }
 
     async function loadApps() {
-      const c = document.getElementById('app-container');
+        const c = document.getElementById('app-container');
       try {
         const apps = [
+          {
+            "name": "形上學五金行",
+            "desc": "社畜、學術與辦公室荒謬日常熔成的黑色幽默策略遊戲。",
+            "icon": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/52/27/81/52278183-748b-9c1e-a8b9-a46114467098/AppIcon-0-0-1x_U007epad-0-1-85-220.jpeg/512x512bb.jpg",
+            "link": "https://apps.apple.com/us/app/%E5%BD%A2%E4%B8%8A%E5%AD%B8%E4%BA%94%E9%87%91%E8%A1%8C/id6761043770",
+            "id": "6761043770",
+            "version": "1.0",
+            "updated": "2026/03/31"
+          },
           {
             "name": "Buddies 亂鬥派對",
             "desc": "歡樂亂鬥派對，隨時開打的熱鬧對戰小宇宙。",
@@ -2744,7 +2756,7 @@
         };
         const appsSorted = [...apps].sort((a, b) => parseUpdatedAt(b.updated) - parseUpdatedAt(a.updated));
         const latestUpdatedAt = appsSorted.length ? parseUpdatedAt(appsSorted[0].updated) : 0;
-        const launchSpotlightIds = new Set(["6760216392", "6760697871", "6759861118", "6759612502", "6759610885", "6759190781", "6759484342", "6759196544", "6759197124", "6759190813", "6759190764", "6759184050"]);
+        const launchSpotlightIds = new Set(["6761043770", "6760216392", "6760697871", "6759861118", "6759612502", "6759610885", "6759190781", "6759484342", "6759196544", "6759197124", "6759190813", "6759190764", "6759184050"]);
 
         for (const app of appsSorted) {
           const card = document.createElement('div');

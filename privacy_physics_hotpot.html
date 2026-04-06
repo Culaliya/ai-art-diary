@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>《失控鍋物》隱私權政策</title>
+  <meta
+    name="description"
+    content="《失控鍋物：物理大亂燉》隱私權政策。說明本 App 目前如何處理資訊、本機資料保存方式與分享功能。"
+  >
+  <style>
+    :root {
+      --broth: #fff6ef;
+      --broth-soft: #fff0e4;
+      --ink: #51352b;
+      --muted: #7c6257;
+      --line: rgba(143, 93, 69, 0.18);
+      --accent: #d06e43;
+      --accent-deep: #b34d2d;
+      --steam: rgba(255, 255, 255, 0.72);
+      --shadow: 0 24px 48px rgba(141, 93, 68, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Avenir Next", "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      color: var(--ink);
+      line-height: 1.85;
+      background:
+        radial-gradient(circle at top left, rgba(255, 205, 170, 0.38), transparent 26%),
+        radial-gradient(circle at top right, rgba(255, 236, 213, 0.7), transparent 24%),
+        linear-gradient(180deg, #fffaf5 0%, #fff1e7 50%, #f9e3d6 100%);
+    }
+
+    .page {
+      width: min(920px, calc(100% - 32px));
+      margin: 34px auto 40px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 28px 26px 20px;
+      border-radius: 30px 30px 18px 18px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 244, 236, 0.96));
+      border: 1px solid rgba(255, 255, 255, 0.74);
+      box-shadow: var(--shadow);
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      background: var(--steam);
+      filter: blur(1px);
+      opacity: 0.78;
+    }
+
+    .hero::before {
+      top: 18px;
+      right: 24px;
+      width: 86px;
+      height: 22px;
+    }
+
+    .hero::after {
+      top: 48px;
+      right: 58px;
+      width: 54px;
+      height: 16px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(208, 110, 67, 0.12);
+      color: var(--accent-deep);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    h1 {
+      margin: 18px 0 10px;
+      font-size: clamp(2rem, 5vw, 3.1rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .meta {
+      margin-top: 16px;
+      color: var(--accent-deep);
+      font-weight: 700;
+      font-size: 0.94rem;
+    }
+
+    .policy {
+      margin-top: 18px;
+      padding: 22px;
+      border-radius: 0 0 28px 28px;
+      background: rgba(255, 249, 244, 0.95);
+      border: 1px solid rgba(214, 184, 167, 0.42);
+      box-shadow: var(--shadow);
+    }
+
+    .intro {
+      margin: 0 0 20px;
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(208, 110, 67, 0.12), rgba(255, 255, 255, 0.55));
+      border: 1px solid rgba(208, 110, 67, 0.12);
+      color: #6a4b40;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .card {
+      padding: 20px;
+      border-radius: 20px;
+      background: var(--broth);
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 24px rgba(132, 89, 67, 0.08);
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      color: var(--accent-deep);
+      font-size: 1.14rem;
+    }
+
+    p {
+      margin: 0 0 12px;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 1.2em;
+    }
+
+    li + li {
+      margin-top: 8px;
+    }
+
+    .contact-box {
+      background: linear-gradient(135deg, rgba(255, 240, 230, 0.96), rgba(255, 255, 255, 0.84));
+    }
+
+    .contact-list {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+
+    .contact-label {
+      color: var(--accent-deep);
+      font-weight: 700;
+    }
+
+    a {
+      color: #bb532f;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        width: min(100% - 18px, 920px);
+        margin: 18px auto 26px;
+      }
+
+      .hero {
+        padding: 22px 18px 16px;
+        border-radius: 24px 24px 16px 16px;
+      }
+
+      .policy {
+        padding: 16px;
+        border-radius: 0 0 24px 24px;
+      }
+
+      .card {
+        padding: 16px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="privacy-glass.css">
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="eyebrow">Privacy Policy</div>
+      <h1>《失控鍋物》隱私權政策</h1>
+      <p class="subtitle">本頁適用於《失控鍋物：物理大亂燉》目前版本。</p>
+      <p class="meta">最後更新：2026-04-06</p>
+    </header>
+
+    <main class="policy">
+      <p class="intro">
+        《失控鍋物》重視你的隱私。依目前專案狀態，本 App 為單機、無登入、無第三方分析 SDK，並以裝置本機儲存為主。
+      </p>
+
+      <div class="grid">
+        <section class="card">
+          <h2>1. 蒐集的資訊</h2>
+          <p>《失控鍋物》目前不要求使用者建立帳號，也不會要求登入後才能遊玩。</p>
+          <p>本 App 不以追蹤使用者為目的，也不會主動蒐集可直接識別個人身分的資料，例如姓名、電子郵件地址、電話號碼或精確位置資訊。</p>
+        </section>
+
+        <section class="card">
+          <h2>2. 裝置上的本機資料</h2>
+          <p>為了保存遊戲設定與遊玩進度，本 App 可能會在裝置本機儲存部分資料，例如：</p>
+          <ul>
+            <li>音效或畫面設定</li>
+            <li>已解鎖內容</li>
+            <li>本機遊戲進度</li>
+            <li>部分分享相關偏好設定</li>
+          </ul>
+          <p>這些資料主要儲存在你的裝置上，用於維持遊戲正常運作與改善使用體驗。</p>
+        </section>
+
+        <section class="card">
+          <h2>3. 分享功能</h2>
+          <p>本 App 提供將遊戲結算畫面以靜態圖片方式分享的功能。</p>
+          <p>當你主動使用分享功能時，系統會開啟 iOS 原生分享面板，並由你自行選擇是否分享，以及分享至哪個 App 或服務。</p>
+          <p>本 App 不會因此錄製你的螢幕或音訊。</p>
+        </section>
+
+        <section class="card">
+          <h2>4. 第三方服務</h2>
+          <p>依目前版本內容，本 App 未整合登入、廣告追蹤或第三方分析 SDK 作為主要功能的一部分。</p>
+          <p>若未來版本新增相關服務，本隱私權政策將視需要更新。</p>
+        </section>
+
+        <section class="card">
+          <h2>5. 兒童隱私</h2>
+          <p>本 App 並非以蒐集兒童個人資料為目的。</p>
+          <p>若你是未成年人，建議在家長或監護人陪同下使用。</p>
+        </section>
+
+        <section class="card">
+          <h2>6. 資料安全</h2>
+          <p>本 App 會以合理方式降低不必要的資料處理風險。</p>
+          <p>但任何儲存在裝置上的資料仍可能受到裝置本身狀態、系統設定或使用方式影響。</p>
+        </section>
+
+        <section class="card">
+          <h2>7. 政策更新</h2>
+          <p>本隱私權政策可能因功能調整或法規需求而更新。</p>
+          <p>更新後的版本將公布於對應頁面。</p>
+        </section>
+
+        <section class="card contact-box">
+          <h2>8. 聯絡方式</h2>
+          <p>如果你對本隱私權政策有任何問題，請透過以下方式聯絡：</p>
+          <ul class="contact-list">
+            <li><span class="contact-label">電子郵件：</span><a href="mailto:culaliya@icloud.com">culaliya@icloud.com</a></li>
+          </ul>
+        </section>
+      </div>
+
+      <p class="footer-note">失控鍋物 Privacy Policy</p>
+    </main>
+  </div>
+</body>
+</html>
