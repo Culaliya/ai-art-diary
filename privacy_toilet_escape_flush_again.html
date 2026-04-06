@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>馬桶密室：再沖一次 隱私聲明</title>
+  <meta
+    name="description"
+    content="《馬桶密室：再沖一次》隱私聲明。說明本遊戲目前於裝置本機保存的資料、問題回報方式，以及 App Store Connect 隱私摘要建議。"
+  >
+  <style>
+    :root {
+      --paper: #fbfaf6;
+      --paper-soft: #f3efe4;
+      --ink: #3a3832;
+      --muted: #6e6a61;
+      --line: rgba(116, 110, 93, 0.18);
+      --accent: #6d8f8f;
+      --accent-deep: #4e6d6d;
+      --shadow: 0 24px 48px rgba(102, 96, 82, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Avenir Next", "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      color: var(--ink);
+      line-height: 1.82;
+      background:
+        radial-gradient(circle at top left, rgba(193, 221, 220, 0.34), transparent 28%),
+        radial-gradient(circle at top right, rgba(244, 244, 236, 0.76), transparent 22%),
+        linear-gradient(180deg, #f8fbfb 0%, #f3f2ec 50%, #ebe7dc 100%);
+    }
+
+    .page {
+      width: min(920px, calc(100% - 32px));
+      margin: 34px auto 40px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 28px 26px 20px;
+      border-radius: 30px 30px 18px 18px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(245, 248, 246, 0.96));
+      border: 1px solid rgba(255, 255, 255, 0.78);
+      box-shadow: var(--shadow);
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.64);
+      filter: blur(1px);
+      opacity: 0.84;
+    }
+
+    .hero::before {
+      top: 18px;
+      right: 22px;
+      width: 96px;
+      height: 24px;
+    }
+
+    .hero::after {
+      top: 52px;
+      right: 54px;
+      width: 56px;
+      height: 16px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(109, 143, 143, 0.12);
+      color: var(--accent-deep);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    h1 {
+      margin: 18px 0 10px;
+      font-size: clamp(2rem, 5vw, 3.05rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .meta {
+      margin-top: 16px;
+      color: var(--accent-deep);
+      font-weight: 700;
+      font-size: 0.94rem;
+    }
+
+    .policy {
+      margin-top: 18px;
+      padding: 22px;
+      border-radius: 0 0 28px 28px;
+      background: rgba(251, 250, 246, 0.96);
+      border: 1px solid rgba(196, 191, 177, 0.42);
+      box-shadow: var(--shadow);
+    }
+
+    .intro {
+      margin: 0 0 20px;
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(109, 143, 143, 0.12), rgba(255, 255, 255, 0.58));
+      border: 1px solid rgba(109, 143, 143, 0.14);
+      color: #5b5a53;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .card {
+      padding: 20px;
+      border-radius: 20px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 24px rgba(108, 102, 89, 0.08);
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      color: var(--accent-deep);
+      font-size: 1.14rem;
+    }
+
+    p {
+      margin: 0 0 12px;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 1.2em;
+    }
+
+    li + li {
+      margin-top: 8px;
+    }
+
+    .contact-box,
+    .summary-box {
+      background: linear-gradient(135deg, rgba(241, 246, 244, 0.96), rgba(255, 255, 255, 0.86));
+    }
+
+    .contact-list {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+
+    .contact-label,
+    .summary-label {
+      color: var(--accent-deep);
+      font-weight: 700;
+    }
+
+    .summary-note {
+      margin-top: 12px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(109, 143, 143, 0.08);
+      color: #55544d;
+    }
+
+    a,
+    code {
+      color: #496b6b;
+    }
+
+    a {
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    code {
+      font-family: "SFMono-Regular", "Menlo", "Monaco", monospace;
+      background: rgba(109, 143, 143, 0.08);
+      padding: 0.08em 0.35em;
+      border-radius: 6px;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        width: min(100% - 18px, 920px);
+        margin: 18px auto 26px;
+      }
+
+      .hero {
+        padding: 22px 18px 16px;
+        border-radius: 24px 24px 16px 16px;
+      }
+
+      .policy {
+        padding: 16px;
+        border-radius: 0 0 24px 24px;
+      }
+
+      .card {
+        padding: 16px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="privacy-glass.css">
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="eyebrow">Privacy Notice</div>
+      <h1>馬桶密室：再沖一次 隱私聲明</h1>
+      <p class="subtitle">本頁適用於《馬桶密室：再沖一次》目前版本。</p>
+      <p class="meta">最後更新日期：2026 年 4 月 6 日</p>
+    </header>
+
+    <main class="policy">
+      <p class="intro">
+        《馬桶密室：再沖一次》重視你的隱私。本遊戲目前不需要建立帳號，也不會要求你提供姓名、電話、地址或其他可直接識別個人的資料。
+      </p>
+
+      <div class="grid">
+        <section class="card">
+          <h2>我們會處理哪些資料</h2>
+          <p>本遊戲主要只會在你的裝置本機儲存遊戲相關資料，例如：</p>
+          <ul>
+            <li>遊戲進度與自動存檔</li>
+            <li>死亡次數、通關紀錄、圖鑑與解鎖狀態</li>
+            <li>語言設定</li>
+            <li>音樂與音效設定</li>
+            <li>新手教學顯示偏好</li>
+          </ul>
+          <p>這些資料目前都只保存在你的裝置本機，用來維持遊戲功能與遊玩體驗。</p>
+        </section>
+
+        <section class="card">
+          <h2>我們不做的事</h2>
+          <p>目前版本不會：</p>
+          <ul>
+            <li>建立使用者帳號</li>
+            <li>將遊戲進度同步到雲端</li>
+            <li>追蹤你在其他 App 或網站上的行為</li>
+            <li>投放第三方廣告</li>
+            <li>使用第三方分析 SDK 蒐集個人資料</li>
+            <li>主動蒐集聯絡人、照片、麥克風、相機或定位資料</li>
+          </ul>
+        </section>
+
+        <section class="card">
+          <h2>問題回報</h2>
+          <p>遊戲內的「回報問題」功能會開啟你裝置上的 Mail App，並預先填入一份問題回報範本。</p>
+          <p>是否寄出信件、是否附上截圖或其他內容，都由你自行決定。</p>
+          <p>如果你選擇寄信，該信件中包含的內容會由你主動提供，例如：</p>
+          <ul>
+            <li>問題描述</li>
+            <li>重現步驟</li>
+            <li>截圖或錄影</li>
+            <li>你願意附上的其他資訊</li>
+          </ul>
+          <p>我們只會將這些內容用於確認、排查與回覆你回報的問題。</p>
+        </section>
+
+        <section class="card">
+          <h2>資料保存與刪除</h2>
+          <p>由於目前遊戲資料主要儲存在你的裝置本機，你可以透過以下方式移除：</p>
+          <ul>
+            <li>刪除遊戲 App</li>
+            <li>清除裝置上的 App 資料</li>
+            <li>覆蓋或重新開始新的遊戲進度</li>
+          </ul>
+          <p>如果你曾透過電子郵件回報問題，而希望刪除你主動寄出的內容，請於後續聯絡時說明你的需求。</p>
+        </section>
+
+        <section class="card">
+          <h2>兒童與內容提醒</h2>
+          <p>本遊戲不以蒐集兒童個人資料為目的。</p>
+          <p>本作包含驚悚、詭異與死亡相關表現，請依實際年齡分級與內容承受度評估遊玩。</p>
+        </section>
+
+        <section class="card contact-box">
+          <h2>聯絡方式</h2>
+          <p>若你需要回報問題或詢問隱私相關事項，請使用遊戲內的「回報問題」功能，或來信至：<a href="mailto:culaliya@icloud.com">culaliya@icloud.com</a></p>
+        </section>
+
+        <section class="card summary-box">
+          <h2>給 App Store Connect 的隱私摘要建議</h2>
+          <p><span class="summary-label">依目前 1.0 版本功能，建議在 App Store Connect 的 App Privacy 中填寫為：</span></p>
+          <p><code>Data Not Collected</code></p>
+          <p>理由：</p>
+          <ul>
+            <li>沒有登入系統</li>
+            <li>沒有第三方追蹤</li>
+            <li>沒有分析 SDK</li>
+            <li>沒有伺服器端帳號資料</li>
+            <li>遊戲資料僅保存在裝置本機</li>
+          </ul>
+          <p class="summary-note">若未來加入雲端同步、帳號系統、分析 SDK、客服後台或第三方廣告，請重新檢查並更新此聲明。</p>
+        </section>
+      </div>
+
+      <p class="footer-note">Toilet Escape: Flush Again Privacy Notice</p>
+    </main>
+  </div>
+</body>
+</html>
