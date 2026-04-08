@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>《第 N 次醒來》隱私權聲明</title>
+  <meta
+    name="description"
+    content="《第 N 次醒來》隱私權聲明。說明本 App 目前於裝置本機保存的遊戲資料、使用方式與 App Store Connect 隱私填寫建議。"
+  >
+  <style>
+    :root {
+      --paper: #faf8fb;
+      --paper-soft: #f2edf6;
+      --ink: #342d3f;
+      --muted: #665d75;
+      --line: rgba(113, 98, 137, 0.18);
+      --accent: #7b6ea8;
+      --accent-deep: #5d5284;
+      --shadow: 0 24px 48px rgba(97, 84, 122, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Avenir Next", "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      color: var(--ink);
+      line-height: 1.84;
+      background:
+        radial-gradient(circle at top left, rgba(206, 199, 241, 0.34), transparent 28%),
+        radial-gradient(circle at top right, rgba(243, 238, 250, 0.76), transparent 24%),
+        linear-gradient(180deg, #faf9fd 0%, #f2eef7 52%, #eae4f1 100%);
+    }
+
+    .page {
+      width: min(920px, calc(100% - 32px));
+      margin: 34px auto 40px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 28px 26px 20px;
+      border-radius: 30px 30px 18px 18px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(246, 242, 252, 0.96));
+      border: 1px solid rgba(255, 255, 255, 0.78);
+      box-shadow: var(--shadow);
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.66);
+      filter: blur(1px);
+      opacity: 0.84;
+    }
+
+    .hero::before {
+      top: 18px;
+      right: 24px;
+      width: 90px;
+      height: 24px;
+    }
+
+    .hero::after {
+      top: 50px;
+      right: 56px;
+      width: 54px;
+      height: 16px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(123, 110, 168, 0.12);
+      color: var(--accent-deep);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    h1 {
+      margin: 18px 0 10px;
+      font-size: clamp(2rem, 5vw, 3.05rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .meta {
+      margin-top: 16px;
+      color: var(--accent-deep);
+      font-weight: 700;
+      font-size: 0.94rem;
+    }
+
+    .policy {
+      margin-top: 18px;
+      padding: 22px;
+      border-radius: 0 0 28px 28px;
+      background: rgba(250, 248, 251, 0.96);
+      border: 1px solid rgba(198, 188, 214, 0.42);
+      box-shadow: var(--shadow);
+    }
+
+    .intro {
+      margin: 0 0 20px;
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(123, 110, 168, 0.12), rgba(255, 255, 255, 0.58));
+      border: 1px solid rgba(123, 110, 168, 0.14);
+      color: #524a62;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .card {
+      padding: 20px;
+      border-radius: 20px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 24px rgba(103, 91, 127, 0.08);
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      color: var(--accent-deep);
+      font-size: 1.14rem;
+    }
+
+    p {
+      margin: 0 0 12px;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 1.2em;
+    }
+
+    li + li {
+      margin-top: 8px;
+    }
+
+    .contact-box,
+    .summary-box {
+      background: linear-gradient(135deg, rgba(242, 238, 249, 0.96), rgba(255, 255, 255, 0.86));
+    }
+
+    .contact-list {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+
+    .contact-label {
+      color: var(--accent-deep);
+      font-weight: 700;
+    }
+
+    .summary-note {
+      margin-top: 12px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(123, 110, 168, 0.08);
+      color: #575063;
+    }
+
+    a,
+    code {
+      color: #5f5492;
+    }
+
+    a {
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    code {
+      font-family: "SFMono-Regular", "Menlo", "Monaco", monospace;
+      background: rgba(123, 110, 168, 0.08);
+      padding: 0.08em 0.35em;
+      border-radius: 6px;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        width: min(100% - 18px, 920px);
+        margin: 18px auto 26px;
+      }
+
+      .hero {
+        padding: 22px 18px 16px;
+        border-radius: 24px 24px 16px 16px;
+      }
+
+      .policy {
+        padding: 16px;
+        border-radius: 0 0 24px 24px;
+      }
+
+      .card {
+        padding: 16px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="privacy-glass.css">
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="eyebrow">Privacy Statement</div>
+      <h1>《第 N 次醒來》隱私權聲明</h1>
+      <p class="subtitle">本頁適用於《第 N 次醒來》目前版本。</p>
+      <p class="meta">最後更新日期：2026 年 4 月 9 日</p>
+    </header>
+
+    <main class="policy">
+      <p class="intro">
+        《第 N 次醒來》（以下稱「本 App」）重視您的隱私。本聲明說明本 App 會保存哪些資料、如何使用這些資料，以及目前版本是否會將資料傳送到開發者或第三方伺服器。
+      </p>
+
+      <div class="grid">
+        <section class="card">
+          <h2>一、我們蒐集或保存哪些資料</h2>
+          <p>目前版本的本 App 不要求您註冊帳號，也不會要求您提供姓名、電子郵件、電話號碼、地址或其他可直接識別身分的個人資料。</p>
+          <p>本 App 會在您的裝置本機保存下列遊戲資料，以便提供存檔與設定功能：</p>
+          <ul>
+            <li>遊戲進度與目前天數</li>
+            <li>存檔欄位內容</li>
+            <li>總回溯次數、各日回溯次數與殘痕等進度數值</li>
+            <li>已通關或已解鎖的日數</li>
+            <li>玩家輪廓選擇</li>
+            <li>路線分數、結局判定相關狀態</li>
+            <li>已觀看教學狀態</li>
+            <li>文字速度、自動播放、背景音樂音量、音效音量等偏好設定</li>
+            <li>已解鎖或已觀看的 CG／畫廊狀態</li>
+            <li>「0310：記憶殘留」彩蛋是否已解鎖</li>
+          </ul>
+          <p>上述資料目前僅保存於您的裝置本機，用來支援遊戲功能，不會主動上傳到開發者伺服器。</p>
+        </section>
+
+        <section class="card">
+          <h2>二、我們不會做的事</h2>
+          <p>依據目前版本程式行為：</p>
+          <ul>
+            <li>不會建立或要求登入帳號</li>
+            <li>不會將您的遊戲進度上傳到開發者伺服器</li>
+            <li>不會使用第三方廣告 SDK</li>
+            <li>不會使用第三方分析或追蹤 SDK</li>
+            <li>不會將資料出售、出租或分享給資料經紀商</li>
+          </ul>
+        </section>
+
+        <section class="card">
+          <h2>三、裝置權限與感測資料</h2>
+          <p>目前版本未實作下列資料蒐集功能，亦未看到相對應的實際使用流程：</p>
+          <ul>
+            <li>相機拍攝</li>
+            <li>麥克風錄音</li>
+            <li>照片圖庫讀取</li>
+            <li>位置資訊</li>
+            <li>通訊錄</li>
+            <li>健康資料</li>
+            <li>藍牙</li>
+            <li>廣告追蹤</li>
+          </ul>
+          <p>若未來版本新增上述任一功能，我們將在功能上線前更新本隱私權聲明，並依系統規則向您請求相應權限。</p>
+        </section>
+
+        <section class="card">
+          <h2>四、資料如何被使用</h2>
+          <p>本 App 保存的本機資料，僅用於下列目的：</p>
+          <ul>
+            <li>讓您可以繼續遊戲、讀取存檔與返回已解鎖內容</li>
+            <li>記住您的文字、音量與自動播放設定</li>
+            <li>記錄已解鎖的 CG、結局與畫廊內容</li>
+            <li>支援遊戲內回溯、殘痕與結局計算等機制</li>
+          </ul>
+        </section>
+
+        <section class="card">
+          <h2>五、資料保存位置與期間</h2>
+          <p>本 App 的遊戲資料與偏好設定，會保存在您的裝置本機儲存空間中。除非您主動刪除 App、清除存檔、重設設定，或於未來版本使用其他資料管理功能，相關資料通常會保留在本機，以供下次開啟時繼續使用。</p>
+        </section>
+
+        <section class="card">
+          <h2>六、兒少使用說明</h2>
+          <p>本 App 含有懸疑、恐怖與不安氛圍之內容。若未成年使用者使用本 App，建議由家長、監護人或其他法定代理人陪同評估是否適合。</p>
+        </section>
+
+        <section class="card">
+          <h2>七、第三方服務</h2>
+          <p>根據目前版本程式行為，本 App 未整合第三方分析、廣告或雲端資料蒐集 SDK。若未來版本導入第三方服務，本聲明將同步更新其資料處理內容。</p>
+        </section>
+
+        <section class="card">
+          <h2>八、您的選擇</h2>
+          <p>您可以透過以下方式控制本 App 保存於本機的資料：</p>
+          <ul>
+            <li>在 App 內清除存檔</li>
+            <li>在 App 內返回主選單並重新開始</li>
+            <li>刪除 App，以移除保存在本機的大部分遊戲資料</li>
+          </ul>
+        </section>
+
+        <section class="card">
+          <h2>九、隱私權聲明更新</h2>
+          <p>若本 App 的資料處理方式於未來版本有變更，本隱私權聲明也會一併更新。更新後的版本將以新的日期標示於本頁上方。</p>
+        </section>
+
+        <section class="card contact-box">
+          <h2>十、聯絡方式</h2>
+          <p>若您對本隱私權聲明有任何疑問，請透過以下方式聯絡開發者：</p>
+          <ul class="contact-list">
+            <li><span class="contact-label">開發者／工作室名稱：</span>CulaliyaWu</li>
+            <li><span class="contact-label">聯絡信箱：</span><a href="mailto:culaliya@icloud.com">culaliya@icloud.com</a></li>
+            <li><span class="contact-label">支援頁面：</span><a href="https://ai-art-diary.vercel.app">https://ai-art-diary.vercel.app</a></li>
+          </ul>
+        </section>
+
+        <section class="card summary-box">
+          <h2>App Store Connect 填寫建議</h2>
+          <p>若您目前上架版本的實際程式行為與本聲明一致，可在 App Store Connect 的 App Privacy 中優先檢查：</p>
+          <ul>
+            <li><code>No, we do not collect data from this app</code></li>
+            <li>提供一個可公開存取的隱私權政策網址</li>
+          </ul>
+          <p class="summary-note">若未來版本新增雲端同步、帳號、分析、廣告、真實拍照／錄音、照片匯入等功能，請同步更新本文件與 App Privacy 回答。</p>
+        </section>
+      </div>
+
+      <p class="footer-note">The Nth Awakening Privacy Statement</p>
+    </main>
+  </div>
+</body>
+</html>
