@@ -1,5 +1,21 @@
 [
   {
+    "name": "馬桶密室：再沖一次",
+    "desc": "在詭異馬桶密室裡探索、生存與做選擇的荒謬驚悚逃脫遊戲。",
+    "icon": "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/66/f3/1f/66f31fd9-927b-abf1-276a-41b071102380/AppIcon-0-0-1x_U007epad-0-1-85-220.jpeg/512x512bb.jpg",
+    "link": "https://apps.apple.com/us/app/%E9%A6%AC%E6%A1%B6%E5%AF%86%E5%AE%A4-%E5%86%8D%E6%B2%96%E4%B8%80%E6%AC%A1/id6761712917",
+    "version": "1.0",
+    "updated": "2026/04/09"
+  },
+  {
+    "name": "失控鍋物：物理大亂燉",
+    "desc": "把食材丟進鍋裡，看碰撞、爆炸與突變一路失控的單機物理亂鬥鍋物遊戲。",
+    "icon": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/61/c7/74/61c77475-a69c-e14a-458e-5b7795ea9d91/AppIcon-0-0-1x_U007epad-0-1-85-220.jpeg/512x512bb.jpg",
+    "link": "https://apps.apple.com/us/app/%E5%A4%B1%E6%8E%A7%E9%8D%8B%E7%89%A9-%E7%89%A9%E7%90%86%E5%A4%A7%E4%BA%82%E7%87%89/id6761712131",
+    "version": "1.0",
+    "updated": "2026/04/08"
+  },
+  {
     "name": "形上學五金行",
     "desc": "社畜、學術與辦公室荒謬日常熔成的黑色幽默策略遊戲。",
     "icon": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/52/27/81/52278183-748b-9c1e-a8b9-a46114467098/AppIcon-0-0-1x_U007epad-0-1-85-220.jpeg/512x512bb.jpg",
@@ -8,26 +24,90 @@
     "updated": "2026/03/31"
   },
   {
+    "name": "Buddies 亂鬥派對",
+    "desc": "歡樂亂鬥派對，隨時開打的熱鬧對戰小宇宙。",
+    "icon": "assets/icons/buddies.png",
+    "link": "https://apps.apple.com/us/app/buddies-%E4%BA%82%E9%AC%A5%E6%B4%BE%E5%B0%8D/id6760216392",
+    "version": "1.0",
+    "updated": "2026/03/25"
+  },
+  {
+    "name": "永恆日記 StickyMode",
+    "desc": "把日記、回憶與未來的信，留給更後來的自己。",
+    "icon": "assets/icons/stickymode.png",
+    "link": "https://apps.apple.com/us/app/%E6%B0%B8%E6%81%86%E6%97%A5%E8%A8%98stickymode/id6760697871",
+    "version": "1.0",
+    "updated": "2026/03/23"
+  },
+  {
+    "name": "日常公式寶庫 FormulaVault",
+    "desc": "生活×健康×理財公式庫，隨時秒查。",
+    "icon": "assets/icons/formulavault.png",
+    "link": "https://apps.apple.com/us/app/%E6%97%A5%E5%B8%B8%E5%85%AC%E5%BC%8F%E5%AF%B6%E5%BA%AB-formulavault/id6759861118",
+    "version": "1.0",
+    "updated": "2026/03/09"
+  },
+  {
+    "name": "GlassyCalc",
+    "desc": "玻璃小算盤：精緻透明的計算機",
+    "icon": "assets/apps/glassycalc.png",
+    "link": "https://apps.apple.com/tw/app/glassycalc-%E7%8E%BB%E7%92%83%E5%B0%8F%E7%AE%97%E7%9B%A4/id6758384259",
+    "version": "1.1",
+    "updated": "2026/03/04"
+  },
+  {
+    "name": "DreamGarden",
+    "desc": "夢境花園：探索夢境與心靈的應用",
+    "icon": "assets/icons/dream.png",
+    "link": "https://apps.apple.com/us/app/%E5%A4%A2%E5%A2%83%E8%8A%B1%E5%9C%92dreamgarden/id6755881746",
+    "version": "1.1",
+    "updated": "2026/01/29"
+  },
+  {
+    "name": "喵喵蕃茄鐘",
+    "desc": "喵喵蕃茄鐘：專注每一刻",
+    "icon": "assets/apps/meowfocus.png",
+    "link": "https://apps.apple.com/us/app/%E5%96%B5%E5%96%B5%E7%95%AA%E8%8C%84%E9%90%98meowfocus-timer/id6753789886",
+    "version": "1.2",
+    "updated": "2026/04/06"
+  },
+  {
+    "name": "QuickMood",
+    "desc": "快速記錄心情",
+    "icon": "assets/apps/quickmood.png",
+    "link": "https://apps.apple.com/us/app/quickmood/id6752010083",
+    "version": "1.2",
+    "updated": "2026/01/25"
+  },
+  {
+    "name": "茶語 Tea Mind",
+    "desc": "靜心品茶，探索茶的智慧與靜心時刻。",
+    "icon": "assets/apps/teamind.png",
+    "link": "https://apps.apple.com/us/app/%E8%8C%B6%E8%AA%9E-tea-mind/id6757837745",
+    "version": "1.1",
+    "updated": "2026/03/04"
+  },
+  {
     "name": "星迴",
     "desc": "星迴：一款將星圖收藏與日記結合的工具，所有資料均儲存在本機。",
     "icon": "assets/icons/looplife.png",
-    "link": "",
-    "version": "1.0.0",
-    "updated": "2025/12/31"
+    "link": "https://apps.apple.com/us/app/%E6%98%9F%E8%BF%B4/id6757077666",
+    "version": "1.1",
+    "updated": "2026/02/08"
   },
   {
     "name": "喵語學院",
     "desc": "喵語學院是一款結合學習與遊戲的貓語課程 App。",
     "icon": "assets/icons/cat_app_icon.png",
-    "link": "",
-    "version": "1.0.0",
-    "updated": "2025/12/31"
+    "link": "https://apps.apple.com/us/app/%E5%96%B5%E8%AA%9E%E5%AD%B8%E9%99%A2/id6757230422",
+    "version": "1.1",
+    "updated": "2026/02/07"
   },
   {
     "name": "雲朵整理師",
     "desc": "雲朵整理師：療癒創作遊戲",
     "icon": "assets/icons/cloud2.png",
-    "link": "",
+    "link": "https://apps.apple.com/us/app/%E9%9B%B2%E6%9C%B5%E6%95%B4%E7%90%86%E5%B8%AB/id6752541896",
     "version": "1.3.2",
     "updated": "2026/02/18"
   },
@@ -35,7 +115,7 @@
     "name": "Spiral Wizard",
     "desc": "螺旋魔法師：結合數學、動物知識與進的教育益智遊戲。",
     "icon": "assets/icons/mathgame2.png",
-    "link": "",
+    "link": "https://apps.apple.com/us/app/%E8%9E%BA%E6%97%8B%E9%AD%94%E6%B3%95%E5%B8%ABspiral-wizard/id6752797711",
     "version": "1.5",
     "updated": "2026/02/12"
   },
@@ -124,8 +204,8 @@
     "desc": "貓爪番茄鐘，專為專注的貓奴設計",
     "icon": "assets/icons/pawdoro.png",
     "link": "https://apps.apple.com/us/app/pawdoro/id6756201914",
-    "version": "1.0.0",
-    "updated": "2025/12/19"
+    "version": "1.1",
+    "updated": "2026/02/08"
   },
   {
     "name": "Starlight Journal",
@@ -139,7 +219,7 @@
     "name": "ChemoCat",
     "desc": "化學貓：讓化學變得有趣",
     "icon": "assets/icons/chemocat.png",
-    "link": "",
+    "link": "https://apps.apple.com/us/app/chemocat%E5%8C%96%E5%AD%B8%E8%B2%93/id6753624892",
     "version": "1.1.0",
     "updated": "2025/12/19"
   },
@@ -147,24 +227,24 @@
     "name": "LazyTrack懶人記帳",
     "desc": "LazyTrack懶人記帳",
     "icon": "assets/icons/lazytrack2.png",
-    "link": "",
+    "link": "https://apps.apple.com/us/app/lazytrack%E6%A5%B5%E7%B0%A1%E6%87%B6%E4%BA%BA%E8%A8%98%E5%B8%B3/id6753803644",
     "version": "1.2",
     "updated": "2026/02/11"
-  },
-  {
-    "name": "DreamGarden",
-    "desc": "夢境花園：探索夢境與心靈的應用",
-    "icon": "assets/icons/dream.png",
-    "link": "",
-    "version": "1.0.0",
-    "updated": "2025/10/06"
   },
   {
     "name": "灰貓檔案庫",
     "desc": "灰貓檔案庫：冷知識也能成為案件",
     "icon": "assets/icons/graycat_2.png",
-    "link": "",
-    "version": "1.1.0",
+    "link": "https://apps.apple.com/us/app/%E7%81%B0%E8%B2%93%E6%AA%94%E6%A1%88%E5%BA%AB/id6753888547",
+    "version": "1.3",
+    "updated": "2026/03/04"
+  },
+  {
+    "name": "AlarmTunes",
+    "desc": "音樂鬧鐘",
+    "icon": "assets/apps/alarmtunes.png",
+    "link": "https://apps.apple.com/us/app/alarmtunes/id6752111993",
+    "version": "1.0.0",
     "updated": "2025/12/19"
   }
 ]
