@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>黑場 隱私政策</title>
+  <meta
+    name="description"
+    content="黑場隱私政策。說明本 App 目前採本機儲存為主，不建立帳號、不蒐集可直接識別個人的資料，並提供支援聯絡方式。"
+  >
+  <style>
+    :root {
+      --mist: #f5f4f8;
+      --mist-soft: #ecebf2;
+      --ink: #262232;
+      --muted: #696577;
+      --line: rgba(93, 97, 122, 0.18);
+      --accent: #68748b;
+      --accent-deep: #4d586c;
+      --shadow: 0 24px 48px rgba(44, 45, 58, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Avenir Next", "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      color: var(--ink);
+      line-height: 1.84;
+      background:
+        radial-gradient(circle at top left, rgba(151, 160, 189, 0.26), transparent 26%),
+        radial-gradient(circle at top right, rgba(247, 247, 251, 0.8), transparent 24%),
+        linear-gradient(180deg, #f7f7fa 0%, #efedf4 50%, #e6e3ee 100%);
+    }
+
+    .page {
+      width: min(920px, calc(100% - 32px));
+      margin: 34px auto 40px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 28px 26px 20px;
+      border-radius: 30px 30px 18px 18px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(239, 240, 247, 0.96));
+      border: 1px solid rgba(255, 255, 255, 0.78);
+      box-shadow: var(--shadow);
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.66);
+      opacity: 0.82;
+      filter: blur(1px);
+    }
+
+    .hero::before {
+      top: 18px;
+      right: 24px;
+      width: 90px;
+      height: 24px;
+    }
+
+    .hero::after {
+      top: 50px;
+      right: 58px;
+      width: 56px;
+      height: 16px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(104, 116, 139, 0.12);
+      color: var(--accent-deep);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    h1 {
+      margin: 18px 0 10px;
+      font-size: clamp(2rem, 5vw, 3rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .meta {
+      margin-top: 16px;
+      color: var(--accent-deep);
+      font-weight: 700;
+      font-size: 0.94rem;
+    }
+
+    .policy {
+      margin-top: 18px;
+      padding: 22px;
+      border-radius: 0 0 28px 28px;
+      background: rgba(245, 244, 248, 0.96);
+      border: 1px solid rgba(201, 200, 214, 0.42);
+      box-shadow: var(--shadow);
+    }
+
+    .intro {
+      margin: 0 0 20px;
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(104, 116, 139, 0.12), rgba(255, 255, 255, 0.62));
+      border: 1px solid rgba(104, 116, 139, 0.14);
+      color: #4f4b5d;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .card {
+      padding: 20px;
+      border-radius: 20px;
+      background: var(--mist);
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 24px rgba(80, 83, 104, 0.08);
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      color: var(--accent-deep);
+      font-size: 1.14rem;
+    }
+
+    p {
+      margin: 0 0 12px;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 1.2em;
+    }
+
+    li + li {
+      margin-top: 8px;
+    }
+
+    .contact-box,
+    .support-box,
+    .summary-box {
+      background: linear-gradient(135deg, rgba(236, 237, 244, 0.96), rgba(255, 255, 255, 0.88));
+    }
+
+    .contact-list {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+
+    .contact-label,
+    .summary-label {
+      color: var(--accent-deep);
+      font-weight: 700;
+    }
+
+    .summary-note {
+      margin-top: 12px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(104, 116, 139, 0.08);
+      color: #525061;
+    }
+
+    a,
+    code {
+      color: #4d5b73;
+    }
+
+    a {
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    code {
+      font-family: "SFMono-Regular", "Menlo", "Monaco", monospace;
+      background: rgba(104, 116, 139, 0.08);
+      padding: 0.08em 0.35em;
+      border-radius: 6px;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        width: min(100% - 18px, 920px);
+        margin: 18px auto 26px;
+      }
+
+      .hero {
+        padding: 22px 18px 16px;
+        border-radius: 24px 24px 16px 16px;
+      }
+
+      .policy {
+        padding: 16px;
+        border-radius: 0 0 24px 24px;
+      }
+
+      .card {
+        padding: 16px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="privacy-glass.css">
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="eyebrow">Privacy Statement</div>
+      <h1>黑場 隱私政策</h1>
+      <p class="subtitle">本頁適用於黑場 v1.0 目前版本。</p>
+      <p class="meta">最後更新日期：2026-04-09</p>
+    </header>
+
+    <main class="policy">
+      <p class="intro">
+        黑場重視你的隱私。本應用的設計原則是盡可能少收集資料，並以裝置本機儲存為主。
+      </p>
+
+      <div class="grid">
+        <section class="card">
+          <h2>1. 我們收集哪些資料</h2>
+          <p>黑場不會建立帳號，也不會要求你提供姓名、電話、電子郵件、定位資訊或其他可直接識別個人的資料。</p>
+        </section>
+
+        <section class="card">
+          <h2>2. 本 App 如何使用資料</h2>
+          <p>黑場會在你的裝置本機儲存以下內容，以便提供功能：</p>
+          <ul>
+            <li>儀式與冥想的完成紀錄</li>
+            <li>碎片、印記、成就與連續進度</li>
+            <li>onboarding 與偏好設定</li>
+            <li>每日異象與相關進度</li>
+          </ul>
+          <p>這些資料只用於讓 App 在你的裝置上正常運作。</p>
+        </section>
+
+        <section class="card">
+          <h2>3. 資料是否會上傳</h2>
+          <p>不會。黑場目前不會將你的個人使用資料、儀式紀錄或進度上傳到開發者伺服器。</p>
+        </section>
+
+        <section class="card">
+          <h2>4. 第三方服務</h2>
+          <p>黑場目前不使用第三方廣告 SDK，也不使用第三方分析工具來追蹤你的個人行為。</p>
+        </section>
+
+        <section class="card">
+          <h2>5. 資料保存與刪除</h2>
+          <p>你的資料主要保存在你的裝置本機。如果你刪除 App，相關本機資料可能會一併移除。</p>
+        </section>
+
+        <section class="card">
+          <h2>6. 兒童與敏感內容</h2>
+          <p>黑場提供的是一般放鬆、呼吸調節與情緒舒緩體驗。內容帶有微恐怖與壓迫氛圍，但不以醫療用途為目的。</p>
+        </section>
+
+        <section class="card support-box">
+          <h2>支援資訊</h2>
+          <p>如果你在使用黑場時遇到問題，或想提供回饋，歡迎直接來信。</p>
+          <ul>
+            <li>無法開啟 App 或進入畫面</li>
+            <li>音效或背景音樂異常</li>
+            <li>儀式完成後沒有出現在回聲檔案</li>
+            <li>對視覺、氛圍、節奏設計的建議</li>
+            <li>送審版本中的錯字、破圖或流程問題</li>
+          </ul>
+        </section>
+
+        <section class="card contact-box">
+          <h2>7. 聯絡方式</h2>
+          <ul class="contact-list">
+            <li><span class="contact-label">Email：</span><a href="mailto:culaliya@icloud.com">culaliya@icloud.com</a></li>
+          </ul>
+        </section>
+
+        <section class="card summary-box">
+          <h2>Reviewer 可公開看到的簡版隱私說明</h2>
+          <p>黑場不要求登入，沒有帳號系統，所有進度與紀錄都只保存在使用者裝置本機，不會上傳到外部伺服器。</p>
+          <p class="summary-note"><span class="summary-label">建議來信附上：</span>裝置型號、iOS 版本、問題發生時的畫面描述，以及是否每次都能重現。</p>
+        </section>
+      </div>
+
+      <p class="footer-note">黑場 v1.0 Privacy &amp; Support</p>
+    </main>
+  </div>
+</body>
+</html>
