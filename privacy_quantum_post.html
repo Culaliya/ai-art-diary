@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>《量子郵局》隱私權政策</title>
+  <meta
+    name="description"
+    content="《量子郵局》隱私權政策。說明本 App 不要求登入、不放廣告、不追蹤使用者，並以裝置本機儲存遊戲資料為主。"
+  >
+  <style>
+    :root {
+      --paper: #f8fbff;
+      --paper-soft: #eef6ff;
+      --ink: #263248;
+      --muted: #68738a;
+      --line: rgba(78, 104, 148, 0.18);
+      --accent: #4f80b8;
+      --accent-deep: #315f96;
+      --stamp: #d78c64;
+      --shadow: 0 24px 48px rgba(53, 82, 124, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Avenir Next", "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      color: var(--ink);
+      line-height: 1.84;
+      background:
+        radial-gradient(circle at top left, rgba(159, 204, 242, 0.32), transparent 27%),
+        radial-gradient(circle at top right, rgba(255, 226, 205, 0.52), transparent 24%),
+        linear-gradient(180deg, #fbfdff 0%, #edf6ff 48%, #e7edf8 100%);
+    }
+
+    .page {
+      width: min(920px, calc(100% - 32px));
+      margin: 34px auto 40px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 28px 26px 20px;
+      border-radius: 30px 30px 18px 18px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(239, 247, 255, 0.96));
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: var(--shadow);
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      opacity: 0.78;
+    }
+
+    .hero::before {
+      top: 18px;
+      right: 24px;
+      width: 98px;
+      height: 98px;
+      border: 2px dashed rgba(215, 140, 100, 0.28);
+      transform: rotate(10deg);
+    }
+
+    .hero::after {
+      top: 44px;
+      right: 54px;
+      width: 38px;
+      height: 38px;
+      background: rgba(215, 140, 100, 0.16);
+      border: 1px solid rgba(215, 140, 100, 0.18);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(79, 128, 184, 0.12);
+      color: var(--accent-deep);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    h1 {
+      margin: 18px 0 10px;
+      font-size: clamp(2rem, 5vw, 3.05rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .meta {
+      margin-top: 16px;
+      color: var(--accent-deep);
+      font-weight: 700;
+      font-size: 0.94rem;
+    }
+
+    .policy {
+      margin-top: 18px;
+      padding: 22px;
+      border-radius: 0 0 28px 28px;
+      background: rgba(248, 251, 255, 0.96);
+      border: 1px solid rgba(187, 205, 230, 0.46);
+      box-shadow: var(--shadow);
+    }
+
+    .intro {
+      margin: 0 0 20px;
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(79, 128, 184, 0.12), rgba(255, 255, 255, 0.62));
+      border: 1px solid rgba(79, 128, 184, 0.14);
+      color: #4f5c72;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .card {
+      padding: 20px;
+      border-radius: 20px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 24px rgba(73, 105, 151, 0.08);
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      color: var(--accent-deep);
+      font-size: 1.14rem;
+    }
+
+    p {
+      margin: 0 0 12px;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 1.2em;
+    }
+
+    li + li {
+      margin-top: 8px;
+    }
+
+    .contact-box,
+    .summary-box {
+      background: linear-gradient(135deg, rgba(238, 246, 255, 0.96), rgba(255, 255, 255, 0.88));
+    }
+
+    .contact-list {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+
+    .contact-label,
+    .summary-label {
+      color: var(--accent-deep);
+      font-weight: 700;
+    }
+
+    .summary-note {
+      margin-top: 12px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(79, 128, 184, 0.08);
+      color: #536077;
+    }
+
+    a,
+    code {
+      color: #315f96;
+    }
+
+    a {
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    code {
+      font-family: "SFMono-Regular", "Menlo", "Monaco", monospace;
+      background: rgba(79, 128, 184, 0.08);
+      padding: 0.08em 0.35em;
+      border-radius: 6px;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        width: min(100% - 18px, 920px);
+        margin: 18px auto 26px;
+      }
+
+      .hero {
+        padding: 22px 18px 16px;
+        border-radius: 24px 24px 16px 16px;
+      }
+
+      .policy {
+        padding: 16px;
+        border-radius: 0 0 24px 24px;
+      }
+
+      .card {
+        padding: 16px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="privacy-glass.css">
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="eyebrow">Privacy Policy</div>
+      <h1>《量子郵局》隱私權政策</h1>
+      <p class="subtitle">不要求登入、不放廣告、不追蹤使用者。</p>
+      <p class="meta">最後更新：2026-04-10</p>
+    </header>
+
+    <main class="policy">
+      <p class="intro">
+        感謝你遊玩《量子郵局》。我們重視你的隱私，也盡量讓遊戲保持單純：不要求登入、不放廣告、不追蹤使用者。
+      </p>
+
+      <div class="grid">
+        <section class="card">
+          <h2>我們是否收集個人資料</h2>
+          <p>目前版本的《量子郵局》不會主動收集、上傳或分享你的個人資料。</p>
+          <p>App 不包含：</p>
+          <ul>
+            <li>帳號登入系統</li>
+            <li>第三方廣告 SDK</li>
+            <li>第三方分析 SDK</li>
+            <li>使用者追蹤功能</li>
+            <li>雲端同步功能</li>
+            <li>位置、相機、麥克風或聯絡人存取</li>
+          </ul>
+        </section>
+
+        <section class="card">
+          <h2>儲存在裝置上的資料</h2>
+          <p>為了讓遊戲正常運作，App 會在你的裝置本機儲存以下資料：</p>
+          <ul>
+            <li>遊戲進度</li>
+            <li>任務紀錄</li>
+            <li>收藏與明信片紀錄</li>
+            <li>設定偏好，例如音效、震動、減少動態效果</li>
+            <li>由你主動生成的明信片或回執圖片</li>
+          </ul>
+          <p>這些資料儲存在你的裝置上，不會由 App 自動傳送給我們或第三方。</p>
+        </section>
+
+        <section class="card">
+          <h2>明信片生成與分享</h2>
+          <p>《量子郵局》可以在本機生成明信片或回執圖片。這些圖片會儲存在你的裝置內。</p>
+          <p>如果你使用分享功能，App 會開啟 iOS 系統分享面板。只有在你主動選擇分享對象後，圖片才會交給你選擇的 App 或服務。分享後的資料處理方式，會依照該 App 或服務的隱私政策而定。</p>
+        </section>
+
+        <section class="card">
+          <h2>客服與主動聯絡</h2>
+          <p>如果你透過電子郵件或其他方式主動聯絡開發者，你提供的聯絡資訊與訊息內容只會用於回覆你的問題、處理回報或提供支援。</p>
+          <p>請不要在客服訊息中提供不必要的敏感個人資料。</p>
+        </section>
+
+        <section class="card">
+          <h2>兒童隱私</h2>
+          <p>《量子郵局》不會刻意收集兒童的個人資料。若你認為 App 意外收到兒童個人資料，請聯絡我們，我們會協助處理。</p>
+        </section>
+
+        <section class="card">
+          <h2>資料刪除</h2>
+          <p>你可以在 App 的設定頁使用「清除 / 重置進度」功能，刪除本機遊戲進度與已生成的收藏圖片。</p>
+          <p>你也可以透過刪除 App 的方式，移除儲存在裝置上的 App 資料。</p>
+        </section>
+
+        <section class="card">
+          <h2>第三方服務</h2>
+          <p>目前版本沒有整合第三方分析、廣告、雲端資料庫或追蹤服務。</p>
+          <p>若未來版本加入需要傳輸資料的新功能，我們會更新本隱私權政策，並依照 App Store 規範調整資料揭露。</p>
+        </section>
+
+        <section class="card">
+          <h2>政策更新</h2>
+          <p>我們可能會因功能調整、法規要求或送審需求而更新本政策。更新後的版本會標示新的「最後更新」日期。</p>
+        </section>
+
+        <section class="card contact-box">
+          <h2>聯絡方式</h2>
+          <ul class="contact-list">
+            <li><span class="contact-label">聯絡信箱：</span><a href="mailto:culaliya@icloud.com">culaliya@icloud.com</a></li>
+            <li><span class="contact-label">支援頁面：</span><a href="https://ai-art-diary.vercel.app/">https://ai-art-diary.vercel.app/</a></li>
+          </ul>
+        </section>
+
+        <section class="card summary-box">
+          <h2>App Store Connect 隱私摘要建議</h2>
+          <p>若目前版本功能與本政策一致，可優先檢查是否填寫為 <code>Data Not Collected</code>。</p>
+          <p class="summary-note"><span class="summary-label">原因：</span>目前版本不要求登入、不含第三方廣告或分析 SDK、不做追蹤，遊戲進度與生成圖片主要儲存在裝置本機。</p>
+        </section>
+      </div>
+
+      <p class="footer-note">Quantum Post Privacy Policy</p>
+    </main>
+  </div>
+</body>
+</html>

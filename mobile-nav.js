@@ -61,6 +61,17 @@ document.addEventListener('DOMContentLoaded', function() {
 function syncHomepageAppUpdates() {
   const homepageUpdates = [
     {
+      name: '黑場',
+      desc: '低刺激儀式感的呼吸與放鬆 App，在靜默黑場裡完成短短一輪自我調節。',
+      icon: 'https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/92/c6/5e/92c65e4d-6ab2-9e2f-cd0e-cbcd855bab9c/AppIcon-0-0-1x_U007epad-0-1-85-220.jpeg/512x512bb.jpg',
+      link: 'https://apps.apple.com/us/app/%E9%BB%91%E5%A0%B4/id6761916944',
+      updated: '2026/04/10',
+      version: '1.0',
+      badge: '新上架',
+      spotlight: true,
+      emoji: '🌑'
+    },
+    {
       name: '第N次醒來',
       desc: '日系懸疑視覺小說風格的循環敘事遊戲，在重複甦醒中撿回殘存的真相。',
       icon: 'https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/aa/c4/89/aac489e0-b10c-7df3-131b-23f9f33fd8eb/AppIcon-0-0-1x_U007epad-0-1-85-220.jpeg/512x512bb.jpg',
@@ -116,6 +127,7 @@ function syncHomepageUpdateBanner() {
 
   updateCard.innerHTML = `
     <p class="update-title">【📱 App Updates】</p>
+    <p class="update-text special-new">🌑 <a class="update-link" href="https://apps.apple.com/us/app/%E9%BB%91%E5%A0%B4/id6761916944">黑場</a> v1.0 (2026/04/10) — NEW</p>
     <p class="update-text special-new">⏳ <a class="update-link" href="https://apps.apple.com/us/app/%E7%AC%ACn%E6%AC%A1%E9%86%92%E4%BE%86/id6761845169">第N次醒來</a> v1.0 (2026/04/09) — NEW</p>
     <p class="update-text special-new">🚽 <a class="update-link" href="https://apps.apple.com/us/app/%E9%A6%AC%E6%A1%B6%E5%AF%86%E5%AE%A4-%E5%86%8D%E6%B2%96%E4%B8%80%E6%AC%A1/id6761712917">馬桶密室：再沖一次</a> v1.0 (2026/04/09) — NEW</p>
     <p class="update-text special-new">🍲 <a class="update-link" href="https://apps.apple.com/us/app/%E5%A4%B1%E6%8E%A7%E9%8D%8B%E7%89%A9-%E7%89%A9%E7%90%86%E5%A4%A7%E4%BA%82%E7%87%89/id6761712131">失控鍋物：物理大亂燉</a> v1.0 (2026/04/08) — NEW</p>
